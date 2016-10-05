@@ -1,0 +1,21 @@
+<section ng-controller="ProjectsController" ng-init="findMyProjects()">
+  <div class="page-header">
+    <h1>Projects</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="project in projects" ui-sref="projects.view({projectId: project._id})" class="list-group-item">
+    <!-- ng-show="authentication.user._id == project.user._id" -->
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="project.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="project.user.displayName"></span>
+      </small>
+      <h3 class="list-group-item-heading" ng-bind="project.title"></h3>
+      <h4 class="list-group-item-heading">Bid Deadline: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span> </h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="projects.$resolved && !projects.length">
+    No projects yet, why don't you <a ui-sref="projects.create">create one</a>?
+  </div>
+</section>

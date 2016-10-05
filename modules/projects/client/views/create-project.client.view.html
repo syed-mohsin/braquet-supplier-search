@@ -1,0 +1,69 @@
+<section ng-controller="ProjectsController">
+  <div class="page-header">
+    <h1>New Project</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="projectForm" class="form-horizontal" ng-submit="create(projectForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="title">Title</label>
+          <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="projectForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Project title is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="system_capacity">System Capacity</label>
+          <input name="system_capacity" type="text" ng-model="system_capacity" id="system_capacity" class="form-control" placeholder="System Capacity (kW)" required>
+          <div ng-messages="projectForm.system_capacity.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Bid Deadline is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="bid_deadline">Bid Deadline</label>
+          <input name="bid_deadline" type="date" ng-model="bid_deadline" id="bid_deadline" class="form-control" placeholder="Bid Deadline" required>
+          <div ng-messages="projectForm.bid_deadline.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Bid Deadline is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="shipping_address">Shipping Address</label>
+          <input name="shipping_address" type="text" ng-model="shipping_address" id="shipping_address" class="form-control" placeholder="Shipping Address" required>
+          <div ng-messages="projectForm.shipping_address.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Shipping Address is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="panel_wattage">Panel Wattage</label>
+          <input name="panel_wattage" type="text" ng-model="panel_wattage" id="panel_wattage" class="form-control" placeholder="Panel Wattage" required>
+          <div ng-messages="projectForm.panel_wattage.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Panel Wattage is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="panel_type">Panel Type</label>        
+          <select name="panel_type" ng-model="panel_type" id="panel_type" class="form-control" placeholder="Panel Type (Mono or Poly)" required>
+            <option value="">---Panel Type---</option>
+            <option value="Monocrystalline">Monocrystalline</option>
+            <option value="Polycrystalline">Polycrystalline</option>
+          </select>
+          <div ng-messages="projectForm.panel_type.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Panel Type is required (Monocrystalline or Polycrystalline)</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
