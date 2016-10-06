@@ -49,6 +49,10 @@ var BidSchema = new Schema({
     default: '',
     trim: true,
     required: 'Manufacturer cannot be blank'
+  },
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User'
   }
 });
 

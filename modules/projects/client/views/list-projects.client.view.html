@@ -1,4 +1,4 @@
-<section ng-controller="ProjectsController" ng-init="findMyProjects()">
+<section ng-controller="ProjectsController" ng-init="(authentication.user.roles[0] === 'seller') ? find() : findMyProjects();">
   <div class="page-header">
     <h1>Projects</h1>
   </div>
@@ -15,7 +15,7 @@
       <h4 class="list-group-item-heading">Bid Deadline: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span> </h4>
     </a>
   </div>
-  <div class="alert alert-warning text-center" ng-if="projects.$resolved && !projects.length">
+  <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] != 'seller' && projects.$resolved && !projects.length">
     No projects yet, why don't you <a ui-sref="projects.create">create one</a>?
   </div>
 </section>

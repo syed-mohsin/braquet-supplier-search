@@ -12,16 +12,16 @@ angular.module('bids').run(['Menus',
     });
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'projects', {
+    Menus.addSubMenuItem('topbar', 'bids', {
       title: 'My Bids',
       state: 'bids.list',
       roles: ['seller']
     });
 
     // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'projects', {
+    Menus.addSubMenuItem('topbar', 'bids', {
       title: 'Place Bids',
-      state: 'bids.create',
+      state: 'projects.list',
       roles: ['seller']
     });
   }

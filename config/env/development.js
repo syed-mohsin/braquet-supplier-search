@@ -32,7 +32,7 @@ module.exports = {
     }
   },
   app: {
-    title: defaultEnvConfig.app.title + ' - Development Environment'
+    title: defaultEnvConfig.app.title + ' Development Environment'
   },
   facebook: {
     clientID: process.env.FACEBOOK_ID || 'APP_ID',
@@ -66,12 +66,12 @@ module.exports = {
     sandbox: true
   },
   mailer: {
-    from: process.env.MAILER_FROM || 'MAILER_FROM',
+    from: process.env.MAILER_FROM || 'Braquet',
     options: {
-      service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
+      service: process.env.MAILER_SERVICE_PROVIDER || 'gmail',
       auth: {
-        user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
-        pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+        user: process.env.MAILER_EMAIL_ID || 'braquet.app',
+        pass: process.env.MAILER_PASSWORD || 'braquet2016'
       }
     }
   },
