@@ -68,15 +68,23 @@ section h2 {
   border-radius: 0px;
 }
 
+.glyphicon {
+  margin-right: 7px;
+}
+
 .banner {
-  background: url("http://www.ugei.com/sites/default/files/TCI_8.jpg?1421248952");
+  background: url('/modules/core/client/img/asset/home_banner.jpg');
   background-size: cover;
   margin-bottom: 0px;
 }
 
+.container .banner {
+  border-radius: 0px
+}
+
 .banner .detail {
-  max-width: 543px;
-  margin: 20px 0px;
+  margin: 180px auto 133px auto;
+  max-width: 500px;
 }
 
 .banner h1 {
@@ -92,7 +100,6 @@ section h2 {
 .banner .btn {
   background: #4CAF50;
   color: white;
-  margin-bottom: 210px;
   margin-left: 163px;
   margin-top: -30px;
 }
@@ -139,6 +146,10 @@ section h2 {
     border-radius: 2px;
 }
 
+#hiw {
+  padding-top: 40px 0px;
+}
+
 #hiw .content{
   width: 300px;
   margin: auto auto;
@@ -176,6 +187,7 @@ section h2 {
 
 #fpyl .detail {
   background: white;
+  min-width: 250px;
   width: 67%;
   margin: 45px auto;
 }
