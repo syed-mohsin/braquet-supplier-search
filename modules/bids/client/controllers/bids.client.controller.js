@@ -17,12 +17,11 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
 
       // Create new Bid object
       var bid = new Bids({
-        title: this.title,
-        system_capacity: this.system_capacity,
-        bid_deadline: this.bid_deadline,
-        shipping_address: this.shipping_address,
+        fob_shipping: this.fob_shipping,
+        delivery_date: this.delivery_date,
+        bid_price: this.bid_price,
         panel_wattage: this.panel_wattage,
-        panel_type: this.panel_type
+        manufacturer: this.manufacturer
       });
 
       // Redirect after save
@@ -30,12 +29,11 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         $location.path('bids/' + response._id);
 
         // Clear form fields
-        $scope.title = '';
-        $scope.system_capacity = '';
-        $scope.bid_deadline = '';
-        $scope.shipping_address = '';
+        $scope.fob_shipping = '';
+        $scope.delivery_date = '';
+        $scope.bid_price = '';
         $scope.panel_wattage = '';
-        $scope.panel_type = '';
+        $scope.manufacturer = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
