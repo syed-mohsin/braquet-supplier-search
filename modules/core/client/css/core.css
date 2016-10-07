@@ -34,7 +34,11 @@ a:hover .header-profile-image {
 }
 
 .page-header {
-      margin: 70px 0 20px;
+  margin: 70px 0 20px;
+}
+
+.project-view .page-header {
+  margin: 0px 0 18px;
 }
 
 .content {
@@ -217,6 +221,11 @@ section h2 {
 
 .project-header h2{
   float: left;
+}
+
+.project-header .btn-primary {
+  background: grey;
+  border-style: none;
 }
 
 .edit-delete {
