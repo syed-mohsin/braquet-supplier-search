@@ -211,8 +211,30 @@ section h2 {
   list-style-type: none;
 }
 
+.project-header {
+  height: 109px;
+}
+
+.project-header h2{
+  float: left;
+}
+
+.edit-delete {
+  margin-top: 25px;
+  margin-left: 20px;
+  padding-top: 30px;
+}
+
+.edit-delete a {
+  padding: 1px 4px;
+}
+
 .projects .title {
   text-align: right;
+}
+
+.projects .posted-date {
+  margin-bottom: 20px;
 }
 
 #footer {
