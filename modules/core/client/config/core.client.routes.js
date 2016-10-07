@@ -15,7 +15,15 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     $stateProvider
     .state('home', {
       url: '/',
-      templateUrl: 'modules/core/client/views/home.client.view.html'
+      templateUrl: 'modules/core/client/views/home.client.view.html',
+      controller: function($state, Authentication) {
+        if (Authentication.user) $state.go('projects.list');
+      }
+    })
+    // eventual home page for users
+    .state('dashboard', {
+      url: '/dashboard',
+      templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
     })
     .state('not-found', {
       url: '/not-found',

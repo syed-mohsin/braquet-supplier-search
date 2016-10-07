@@ -9,36 +9,12 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke Projects Permissions
+ * Invoke Bids Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['admin'],
-    allows: [{
-      resources: '/api/projects',
-      permissions: '*'
-    }, {
-      resources: '/api/projects/:projectId',
-      permissions: '*'
-    }]
-  }, {
-    roles: ['user'],
-    allows: [{
-      resources: '/api/projects',
-      permissions: ['get', 'post']
-    }, {
-      resources: '/api/projects/:projectId',
-      permissions: ['get']
-    }]
-  }, {
     roles: ['seller'],
     allows: [{
-      resources: '/api/projects',
-      permissions: ['get']
-    }, {
-      resources: '/api/projects/:projectId',
-      permissions: ['get']
-    }, {
       resources: '/api/bid',
       permissions: ['get', 'post']
     }, {
@@ -49,7 +25,7 @@ exports.invokeRolesPolicies = function () {
 };
 
 /**
- * Check If Projects Policy Allows
+ * Check If Bids Policy Allows
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
