@@ -141,9 +141,9 @@ section h2 {
 
 #projects .edit a {
   background: black;
-    color: white;
-    padding: 6px 10px;
-    border-radius: 2px;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 2px;
 }
 
 #hiw {
@@ -207,6 +207,14 @@ section h2 {
   margin: 3px 0px;
 }
 
+.projects {
+  list-style-type: none;
+}
+
+.projects .title {
+  text-align: right;
+}
+
 #footer {
   background: black;
   color: white;
@@ -214,6 +222,8 @@ section h2 {
   text-align: center;
   padding: 30px 0px;
   margin-top: 50px;
+  position: absolute;
+  bottom: 0;
 }
 
 #footer a {
