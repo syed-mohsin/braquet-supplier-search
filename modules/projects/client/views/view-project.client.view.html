@@ -13,7 +13,7 @@
             </div>
             <!-- only show this bid div to sellers trying to bid on a project -->
             <div class="pull-left" ng-show="authentication.user.roles[0] === 'seller'">
-                <a class="btn btn-primary" ui-sref="projects.bid({projectId:project._id})">
+                <a class="btn btn-primary" ui-sref="bids.create({projectId:project._id})">
                     <i class="glyphicon glyphicon-edit"></i>
                 </a>
             </div>

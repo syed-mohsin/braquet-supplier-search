@@ -2,7 +2,7 @@
 
 // Bids controller
 angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'Bids',
-  function ($scope, $stateParams, $location, $interval, $filter, Authentication, bids) {
+  function ($scope, $stateParams, $location, $interval, $filter, Authentication, Bids) {
     $scope.authentication = Authentication;
 
     // Create new bid

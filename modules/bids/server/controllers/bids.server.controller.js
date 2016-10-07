@@ -37,7 +37,7 @@ exports.read = function (req, res) {
  * List of bids
  */
 exports.list = function (req, res) {
-  bid.find().sort('-created').populate('user', 'displayName').exec(function (err, bids) {
+  Bid.find().sort('-created').populate('user', 'displayName').exec(function (err, bids) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
