@@ -212,7 +212,7 @@ section h2 {
 }
 
 .project-header {
-  height: 109px;
+  height: 95px;
 }
 
 .project-header h2{
@@ -238,6 +238,14 @@ section h2 {
   margin-bottom: 20px;
 }
 
+.form-group {
+  margin-bottom: 0px;
+}
+
+.form-group div {
+  padding-top: 8px;
+}
+
 #footer {
   background: black;
   color: white;
@@ -247,6 +255,7 @@ section h2 {
   margin-top: 50px;
   position: absolute;
   bottom: 0;
+  width: 100%;
 }
 
 #footer a {
