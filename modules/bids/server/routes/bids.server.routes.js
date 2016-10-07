@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var bidsPolicy = require('../policies/bids.server.policy'),
+  projects = require('../../../projects/server/controllers/projects.server.controller'),
   bids = require('../controllers/bids.server.controller');
 
 module.exports = function (app) {
@@ -15,7 +16,9 @@ module.exports = function (app) {
   // Single bid routes
   app.route('/api/bids/:bidId').all(bidsPolicy.isAllowed)
     .get(bids.read)
+    .delete(bids.delete);
 
-  // Finish by binding the bid middleware
+  // Finish by binding the bid+project middleware
+  app.param('projectId', projects.projectByID);
   app.param('bidId', bids.bidByID);
 };

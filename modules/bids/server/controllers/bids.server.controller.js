@@ -49,6 +49,23 @@ exports.list = function (req, res) {
 };
 
 /**
+ * Delete a bid
+ */
+exports.delete = function (req, res) {
+  var bid = req.bid;
+
+  bid.remove(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(bid);
+    }
+  });
+};
+
+/**
  * bid middleware
  */
 exports.bidByID = function (req, res, next, id) {
