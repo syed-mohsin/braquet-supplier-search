@@ -62,7 +62,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
     };
 
     // Find a list of MY Bids
-    $scope.findMybids = function () {
+    $scope.findMyBids = function () {
       $scope.bids = Bids.query({}, function(bids) {
         
         // delete bids that don't have the same user id as current user

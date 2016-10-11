@@ -12,7 +12,10 @@ angular.module('projects').config(['$stateProvider',
       })
       .state('projects.list', {
         url: '',
-        templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
+        templateUrl: 'modules/projects/client/views/list-projects.client.view.html',
+        data: {
+          roles: ['user', 'seller']
+        }
       })
       .state('projects.create', {
         url: '/create',

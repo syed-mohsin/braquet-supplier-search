@@ -15,10 +15,10 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['seller'],
     allows: [{
-      resources: '/api/bid',
+      resources: '/api/bids',
       permissions: ['get', 'post']
     }, {
-      resources: '/api/bid/:bidId',
+      resources: '/api/bids/:bidId',
       permissions: ['get']
     }]
   }]);
