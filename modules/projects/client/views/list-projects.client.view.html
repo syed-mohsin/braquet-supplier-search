@@ -1,6 +1,6 @@
-<section ng-controller="ProjectsController" ng-init="(authentication.user.roles[0] === 'seller') ? find() : findMyProjects();">
+<section class="container" ng-controller="ProjectsController" ng-init="(authentication.user.roles[0] === 'seller') ? find() : findMyProjects();">
   <div class="page-header">
-    <h1>Projects</h1>
+    <h2>Projects</h2>
   </div>
   <div class="list-group">
     <a ng-repeat="project in projects" ui-sref="projects.view({projectId: project._id})" class="list-group-item">
@@ -11,8 +11,8 @@
         by
         <span ng-bind="project.user.displayName"></span>
       </small>
-      <h3 class="list-group-item-heading" ng-bind="project.title"></h3>
-      <h4 class="list-group-item-heading">Bid Deadline: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span> </h4>
+      <h4 class="list-group-item-heading" ng-bind="project.title"></h4>
+      <h5 class="list-group-item-heading">Bid Deadline: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span> </h5>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] != 'seller' && projects.$resolved && !projects.length">
