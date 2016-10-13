@@ -57,6 +57,9 @@ var BidSchema = new Schema({
   project: {
     type: Schema.ObjectId,
     ref: 'Project'
+  },
+  project_title: {
+    type: String,
   }
 });
 

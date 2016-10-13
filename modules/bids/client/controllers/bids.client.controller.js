@@ -1,8 +1,8 @@
 'use strict';
 
 // Bids controller
-angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'Bids',
-  function ($scope, $stateParams, $location, $interval, $filter, Authentication, Bids) {
+angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'Projects', 'Bids',
+  function ($scope, $stateParams, $location, $interval, $filter, Authentication, Projects, Bids) {
     $scope.authentication = Authentication;
 
     // Create new bid
@@ -21,7 +21,9 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         delivery_date: this.delivery_date,
         bid_price: this.bid_price,
         panel_wattage: this.panel_wattage,
-        manufacturer: this.manufacturer
+        manufacturer: this.manufacturer,
+        project: $scope.project,
+        project_title: $scope.project.title
       });
 
       // Redirect after save
@@ -72,10 +74,20 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
       });
     };
 
-    // Find existing Bid
+    // Find existing Bid and it's associated project
     $scope.findOne = function () {
-      $scope.bid = Bids.get({
-        bidId: $stateParams.bidId
+      $scope.bid = Bids.get({bidId: $stateParams.bidId}, function() {
+        // obtain Project from projectId stored in bid object
+        $scope.project = Projects.get({
+          projectId: $scope.bid.project
+        });
+      });
+    };
+
+    // Find existing Project
+    $scope.findProject = function () {
+      $scope.project = Projects.get({
+        projectId: $stateParams.projectId
       });
     };
   }

@@ -11,11 +11,11 @@
         by
         <span ng-bind="bid.user.displayName"></span>
       </small>
-      <h3 class="list-group-item-heading">Project: <span ng-bind="bid.project.title"></span></h3>
+      <h3 class="list-group-item-heading">Project: <span ng-bind="bid.project_title"></span></h3>
       <h4 class="list-group-item-heading">Bid Value: <span ng-bind="bid.bid_price"></span> </h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] != 'seller' && bids.$resolved && !bids.length">
-    No bids yet, why don't you <a ui-sref="bids.create">create one</a>?
+    No bids yet, why don't you <a ui-sref="/projects">create one</a>?
   </div>
 </section>

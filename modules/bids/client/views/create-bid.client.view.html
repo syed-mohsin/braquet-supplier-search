@@ -1,24 +1,8 @@
-<section class="project-view" ng-controller="ProjectsController" ng-init="findOne()">
+<section class="project-view container" ng-controller="ProjectsController" ng-init="findOne()">
     <div class="page-header">
         <div class="project-header">
             <h2 ng-bind="project.title"></h2>
-            <!-- only show this edit/delete option to buyers -->
-            <div class="pull-left edit-delete" ng-show="authentication.user._id == project.user._id">
-                <a class="btn btn-primary" ui-sref="projects.edit({projectId: project._id})">
-                    <i class="glyphicon glyphicon-edit"></i>
-                </a>
-                <a class="btn btn-primary" ng-click="remove();">
-                    <i class="glyphicon glyphicon-trash"></i>
-                </a>
-            </div>
-            <!-- only show this bid div to sellers trying to bid on a project -->
-            <div class="pull-left" ng-show="authentication.user.roles[0] === 'seller'">
-                <a class="btn btn-primary" ui-sref="bids.create({projectId:project._id})">
-                    <i class="glyphicon glyphicon-edit"></i>
-                </a>
-            </div>
         </div>
-
     </div>
 
 <div class="form-horizontal data">
@@ -57,7 +41,7 @@
 </section>
 
 
-<section ng-controller="BidsController">
+<section ng-controller="BidsController" ng-init="findProject()">
   <div class="page-header">
     <h1>Place a Bid</h1>
   </div>
