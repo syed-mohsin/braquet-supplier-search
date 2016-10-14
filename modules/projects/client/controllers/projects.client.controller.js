@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'Projects',
-  function ($scope, $stateParams, $location, $interval, $filter, Authentication, Projects) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'GetBids', 'Projects',
+  function ($scope, $stateParams, $location, $interval, $filter, Authentication, GetBids, Projects) {
     $scope.authentication = Authentication;
 
     // Create new Project
@@ -88,7 +88,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         
         // delete projects that don't have the same user id as current user
         for (var i=$scope.projects.length-1; i>=0;i--)
-          if ($scope.projects[i].user._id !== Authentication.user._id)
+          if ($scope.projects[i].user._id  !== Authentication.user._id)
             $scope.projects.splice(i,1);
       });
     };
@@ -97,6 +97,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.findOne = function () {
       $scope.project = Projects.get({
         projectId: $stateParams.projectId
+      }, function(project) {
+        // get details of all bids associated with current project
+        $scope.bids = GetBids.query({projectId: project._id});
       });
     };
   }

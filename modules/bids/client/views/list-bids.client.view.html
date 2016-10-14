@@ -1,4 +1,4 @@
-<section ng-controller="BidsController" ng-init="(authentication.user.roles[0] === 'seller') ? find() : find();">
+<section ng-controller="BidsController" ng-init="findMyBids();">
   <div class="page-header">
     <h1>My Bids</h1>
   </div>
@@ -15,7 +15,7 @@
       <h4 class="list-group-item-heading">Bid Value: <span ng-bind="bid.bid_price"></span> </h4>
     </a>
   </div>
-  <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] != 'seller' && bids.$resolved && !bids.length">
-    No bids yet, why don't you <a ui-sref="/projects">create one</a>?
+  <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] == 'seller' && bids.$resolved && !bids.length">
+    No bids yet, why don't you <a ui-sref="projects.list">bid on a project</a>?
   </div>
 </section>

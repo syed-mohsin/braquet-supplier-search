@@ -1,4 +1,4 @@
-<section class="project-view container" ng-controller="ProjectsController" ng-init="findOne()">
+<section class="project-view container" ng-controller="ProjectsController" ng-init="findOne();findProjectBids()">
     <div class="page-header">
         <div class="project-header">
             <h2 ng-bind="project.title"></h2>
@@ -54,6 +54,20 @@
     </div>
    
 </div>
+
+<div class="list-group">
+    <a ng-repeat="bid in bids" class="list-group-item">
+    <!-- ng-show="authentication.user._id == project.user._id" -->
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="bid.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="bid.user.displayName"></span>
+      </small>
+      <h5 class="list-group-item-heading">Bid Price: <span ng-bind="bid.bid_price"></span></h5>
+      <h5 class="list-group-item-heading">Delivery Date: <span ng-bind="bid.delivery_date | date:'mediumDate'"></span></h5>
+    </a>
+  </div>
 
     <!-- <ul class="projects col-sm-5">
     <div class="posted-date">

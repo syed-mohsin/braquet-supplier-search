@@ -1,8 +1,8 @@
 'use strict';
 
 // Bids controller
-angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'Projects', 'Bids',
-  function ($scope, $stateParams, $location, $interval, $filter, Authentication, Projects, Bids) {
+angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', 'Authentication', 'Projects', 'StoreBid', 'Bids',
+  function ($scope, $stateParams, $resource, $location, $interval, $filter, Authentication, Projects, StoreBid, Bids) {
     $scope.authentication = Authentication;
 
     // Create new bid
@@ -22,12 +22,15 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         bid_price: this.bid_price,
         panel_wattage: this.panel_wattage,
         manufacturer: this.manufacturer,
-        project: $scope.project,
+        project: $scope.project._id,
         project_title: $scope.project.title
       });
 
       // Redirect after save
       bid.$save(function (response) {
+        // Associate bid with project
+        StoreBid.update({projectId: $scope.project._id, bidId: response._id}, null);
+
         $location.path('bids/' + response._id);
 
         // Clear form fields

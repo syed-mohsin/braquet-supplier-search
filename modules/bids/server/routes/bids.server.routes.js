@@ -19,6 +19,5 @@ module.exports = function (app) {
     .delete(bids.delete);
 
   // Finish by binding the bid+project middleware
-  app.param('projectId', projects.projectByID);
   app.param('bidId', bids.bidByID);
 };

@@ -29,11 +29,20 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/projects/:projectId',
       permissions: ['get']
+    }, {
+      resources: '/api/projects/getbids/:projectId',
+      permissions: ['get']
     }]
   }, {
     roles: ['seller'],
     allows: [{
       resources: '/api/projects',
+      permissions: ['get']
+    }, {
+      resources: '/api/projects/storebid/:projectId/:bidId',
+      permissions: ['put']
+    }, {
+      resources: '/api/projects/getbids/:projectId',
       permissions: ['get']
     }, {
       resources: '/api/projects/:projectId',

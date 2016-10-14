@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Project = mongoose.model('Project'),
+  Bid = mongoose.model('Bid'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
@@ -58,6 +59,26 @@ exports.update = function (req, res) {
 };
 
 /**
+ * Update a project with a bid
+ */
+exports.storeBid = function (req, res) {
+  var project = req.project;
+  var bid = req.bid;
+  console.log(bid);
+  project.bids.push(bid._id);
+
+  project.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(project);
+    }
+  });
+};
+
+/**
  * Delete an project
  */
 exports.delete = function (req, res) {
@@ -85,6 +106,23 @@ exports.list = function (req, res) {
       });
     } else {
       res.json(projects);
+    }
+  });
+};
+
+/**
+ * List of project Bids
+ */
+exports.projectBids = function (req, res) {
+  var project = req.project;
+
+  Bid.find({ _id: { $in : project.bids}}).sort('-bid_price').populate('user', 'displayName').exec(function (err, bids) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(bids);
     }
   });
 };

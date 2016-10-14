@@ -51,7 +51,9 @@ var ProjectSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  bids: [{type: Schema.ObjectId, 
+          ref: 'Bid'}]
 });
 
 mongoose.model('Project', ProjectSchema);
