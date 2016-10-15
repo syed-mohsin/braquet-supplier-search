@@ -98,6 +98,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $scope.project = Projects.get({
         projectId: $stateParams.projectId
       }, function(project) {
+        // get project deadline
+        $scope.bid_deadline = project.bid_deadline;
         // get details of all bids associated with current project
         $scope.bids = GetBids.query({projectId: project._id});
       });
