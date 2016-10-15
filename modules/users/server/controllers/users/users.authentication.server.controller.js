@@ -30,12 +30,9 @@ exports.signup = function (req, res) {
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName;
 
-  // Define user role, prevent signup as a buyer
-  // console.log(user.user_role)
-  // if (user.user_role == '1')
-  //   return res.status(400).send({
-  //     message: 'Solar Supplier roles are currently invite only'
-  //   })
+  // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
+  if (req.body.user_role === '1')
+    user.roles = ['seller'];
 
   // Then save the user
   user.save(function (err) {

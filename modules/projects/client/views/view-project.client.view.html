@@ -31,7 +31,7 @@
     <div class="form-group">
         <label class="control-label col-sm-2">Bid Deadline:</label>
         <div class="col-sm-4">
-            <p ng-bind="project.bid_deadline | date:'mediumDate'"></p>
+            <p ng-bind="project.bid_deadline | date:'medium'"></p>
         </div>
     </div>
     <div class="form-group">
@@ -59,18 +59,18 @@
         </div>
     </div>
 </div>
-
+<br />
 <div class="list-group">
     <a ng-repeat="bid in bids" class="list-group-item">
     <!-- ng-show="authentication.user._id == project.user._id" -->
       <small class="list-group-item-text">
         Posted on
-        <span ng-bind="bid.created | date:'mediumDate'"></span>
+        <span ng-bind="bid.created | date:'medium'"></span>
         by
         <span ng-bind="bid.user.displayName"></span>
       </small>
-      <h5 class="list-group-item-heading">Bid Price: <span ng-bind="bid.bid_price"></span></h5>
-      <h5 class="list-group-item-heading">Delivery Date: <span ng-bind="bid.delivery_date | date:'mediumDate'"></span></h5>
+      <h5 class="list-group-item-heading">Bid Price: $<span ng-bind="bid.bid_price"></span></h5>
+      <h5 class="list-group-item-heading">Delivery Date: <span ng-bind="bid.delivery_date | date:'medium'"></span></h5>
     </a>
 </div>
 

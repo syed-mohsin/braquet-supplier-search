@@ -23,9 +23,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       }
 
       // to be removed later and replaced with logic to assign role as seller
-      if ($scope.user_role === '1') {
-        $scope.$broadcast('error', 'Solar Supplier roles are currently invite only');
-      } 
+      // if ($scope.credentials.user_role === '1') {
+      //   $scope.$broadcast('error', 'Solar Supplier roles are currently invite only');
+      // } 
 
       $http.post('/api/auth/signup', $scope.credentials).success(function (response) {
         // If successful we assign the response to the global user model

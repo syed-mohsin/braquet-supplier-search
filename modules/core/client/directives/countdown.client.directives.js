@@ -4,17 +4,17 @@
 angular.module('core').directive('countdown', [
     'Util',
     '$interval',
-    '$interpolate',
-    function (Util, $interval, $interpolate) {
+    function (Util, $interval) {
         return {
             restrict: 'A',
             scope: { date: '=' },
-            link: function (scope, element, attrs) {
+            link: function (scope, element) {
                 var future;
-                
+
                 // wait for date variable to be initialized
                 var watcher = scope.$watch('date', function() {
-                    if (scope.date === undefined) return;
+                    if (scope.date === undefined) console.log(scope.date);
+                    console.log(scope.date);
                     future = new Date(scope.date);
                 });
 

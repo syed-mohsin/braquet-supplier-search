@@ -87,8 +87,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $scope.projects = Projects.query({}, function(projects) {
         
         // delete projects that don't have the same user id as current user
-        for (var i=$scope.projects.length-1; i>=0;i--)
-          if ($scope.projects[i].user._id  !== Authentication.user._id)
+        for (var i=$scope.projects.length-1; i>=0;i--) 
+          if ($scope.projects[i].user === null || $scope.projects[i].user._id  !== Authentication.user._id)
             $scope.projects.splice(i,1);
       });
     };
