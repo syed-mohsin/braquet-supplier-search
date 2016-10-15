@@ -11,6 +11,7 @@ angular.module('core').directive('countdown', [
             scope: { date: '=' },
             link: function (scope, element, attrs) {
                 var future;
+                
                 // wait for date variable to be initialized
                 var watcher = scope.$watch('date', function() {
                     if (scope.date === undefined) return;
