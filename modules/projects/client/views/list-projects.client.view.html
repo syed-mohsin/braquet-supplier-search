@@ -13,7 +13,7 @@
       </small>
       <h4 class="list-group-item-heading" ng-bind="project.title"></h4>
       <h5 class="list-group-item-heading">Bid Deadline: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span></h5>
-      <h5 class="list-group-item-heading">Time Remaining: <span class="bg-danger" countdown="" date="project.bid_deadline"></span></h5>
+      <h5 class="list-group-item-heading">Time Remaining: <span class="bg-danger" countdown="" date="project.bid_deadline"/></h5>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] != 'seller' && projects.$resolved && !projects.length">

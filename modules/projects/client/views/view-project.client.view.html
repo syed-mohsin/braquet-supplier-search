@@ -52,7 +52,12 @@
             <p ng-bind="project.panel_type"></p>
         </div>
     </div>
-   
+    <div class="form-group">
+        <label class="control-label col-sm-2">Remaining Time:</label>
+        <div class="col-sm-4">
+            <span class="bg-danger" countdown='' date="project.bid_deadline"/>
+        </div>
+    </div>
 </div>
 
 <div class="list-group">
@@ -68,7 +73,7 @@
       <h5 class="list-group-item-heading">Delivery Date: <span ng-bind="bid.delivery_date | date:'mediumDate'"></span></h5>
     </a>
 </div>
-<span class="bg-danger" countdown='' date="project.bid_deadline">&nbsp;</span>
+
     <!-- <ul class="projects col-sm-5">
     <div class="posted-date">
       <em class="text-muted">
