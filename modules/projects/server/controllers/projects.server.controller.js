@@ -99,13 +99,22 @@ exports.delete = function (req, res) {
  * List of Projects
  */
 exports.list = function (req, res) {
-  Project.find().sort('-created').populate('user', 'displayName').populate('bids').exec(function (err, projects) {
+  Project.find().sort('-created').populate('user', 'displayName').populate('bids', null, null, {sort: {'bid_price': 1}}).exec(function (err, projects) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(projects);
+      // populate bids with users 'deep populate'
+      Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        }
+        // return deep populated projects
+        res.json(projects);
+      });
     }
   });
 };
@@ -138,7 +147,7 @@ exports.projectByID = function (req, res, next, id) {
     });
   }
 
-  Project.findById(id).populate('user', 'displayName').populate('bids').exec(function (err, project) {
+  Project.findById(id).populate('user', 'displayName').populate('bids', null, null, {sort: {'bid_price': 1}}).exec(function (err, project) {
     if (err) {
       return next(err);
     } else if (!project) {
