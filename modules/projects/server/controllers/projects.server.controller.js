@@ -116,7 +116,7 @@ exports.list = function (req, res) {
 exports.projectBids = function (req, res) {
   var project = req.project;
 
-  Bid.find({ _id: { $in : project.bids}}).sort('-bid_price').populate('user', 'displayName').exec(function (err, bids) {
+  Bid.find({ _id: { $in : project.bids}}).sort('bid_price').populate('user', 'displayName').exec(function (err, bids) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

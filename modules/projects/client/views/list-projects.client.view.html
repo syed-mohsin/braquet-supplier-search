@@ -16,7 +16,8 @@
       <h5 class="list-group-item-heading">Time Remaining: <span class="bg-danger" countdown="" date="project.bid_deadline"/></h5>
     </a>
   </div>
-  <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] != 'seller' && projects.$resolved && !projects.length">
+  <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] !== 'seller' && projects.$resolved && !projects.length">
     No projects yet, why don't you <a ui-sref="projects.create">create one</a>?
   </div>
+  <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] === 'seller' && projects.$resolved && !projects.length">No projects to bid on!</div>
 </section>
