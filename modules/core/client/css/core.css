@@ -47,6 +47,10 @@ body {
   /* The html and body elements cannot have any padding or margin. */
 }
 
+a:hover {
+  text-decoration: none;
+}
+
 /* Wrapper for page content to push down footer */
 section.content {
   min-height: 82%;
@@ -295,3 +299,21 @@ section h2 {
   margin-top: 30px;
 }
 
+.list-detail {
+  margin-bottom: 35px;
+}
+
+.list-detail h5 {
+  padding-left: 0px;
+}
+
+.project-title {
+  color: #4CAF50;
+}
+
+.place-bid {
+  background: #4CAF50;
+  color: white;
+  padding: 5px;
+  border-radius: 2px;
+}

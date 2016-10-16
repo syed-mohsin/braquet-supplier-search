@@ -3,25 +3,26 @@
     <h2>Projects</h2>
   </div>
   <div class="list-group">
-    <a ng-repeat="project in projects" ui-sref="projects.view({projectId: project._id})" class="list-group-item">
+  <div ng-repeat="project in projects" class="list-group-item">
+    <a class="project-title" ui-sref="projects.view({projectId: project._id})">
     <!-- ng-show="authentication.user._id == project.user._id" -->
-      <small class="list-group-item-text">
+    <h4 class="list-group-item-heading" ng-bind="project.title"></h4>
+    </a>
+    
+<!--       <small class="list-group-item-text">
         Posted on
         <span ng-bind="project.created | date:'mediumDate'"></span>
         by
         <span ng-bind="project.user.displayName"></span>
-      </small>
-      <h4 class="list-group-item-heading" ng-bind="project.title"></h4>
-      <h5 class="list-group-item-heading">Top Bid: <span ng-bind="(project.bids[0]) ? '$' + project.bids[0].bid_price + '/W from ' + project.bids[0].user.displayName : 'Currently No Bids!'"></span></h5>
-      <h5 class="list-group-item-heading">Bid Deadline: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span></h5>
-      <h5 class="list-group-item-heading">Time Remaining: <span class="bg-danger" countdown="" date="project.bid_deadline"/></h5>
-      <!-- only show this bid div to sellers trying to bid on a project -->
-      <!-- <h5 class="list-group-item-heading pull-left edit-delete" ng-show="authentication.user.roles[0] === 'seller'">
-          <a class="btn btn-primary" ui-sref="bids.create({projectId:project._id})">
-              <i class="glyphicon glyphicon-edit"></i>
-          </a>
-      </h5> -->
-    </a>
+      </small> -->
+      <div class="list-detail">
+      <h5 class="list-group-item-heading bid col-sm-6">Top Bid: <span ng-bind="(project.bids[0]) ? '$' + project.bids[0].bid_price + '/W from ' + project.bids[0].user.displayName : 'Currently No Bids!'"></span></h5>
+<!--       <h5 class="list-group-item-heading control-label">Bid Deadline: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span></h5> -->
+      <h5 class="list-group-item-heading col-sm-6"><span class="bg-danger" countdown="" date="project.bid_deadline"></span> left (Ends: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span>)</h5>
+      </div>
+      <div><a class="place-bid" ui-sref="bids.view({projectId: project._id})">Place a Bid</a></div>
+    
+  </div>
   </div>
   <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] !== 'seller' && projects.$resolved && !projects.length">
     No projects yet, why don't you <a ui-sref="projects.create">create one</a>?
