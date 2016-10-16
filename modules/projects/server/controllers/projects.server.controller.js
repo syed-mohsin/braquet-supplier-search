@@ -99,7 +99,7 @@ exports.delete = function (req, res) {
  * List of Projects
  */
 exports.list = function (req, res) {
-  Project.find().sort('-created').populate('user', 'displayName').exec(function (err, projects) {
+  Project.find().sort('-created').populate('user', 'displayName').populate('bids').exec(function (err, projects) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -138,7 +138,7 @@ exports.projectByID = function (req, res, next, id) {
     });
   }
 
-  Project.findById(id).populate('user', 'displayName').exec(function (err, project) {
+  Project.findById(id).populate('user', 'displayName').populate('bids').exec(function (err, project) {
     if (err) {
       return next(err);
     } else if (!project) {
@@ -146,7 +146,18 @@ exports.projectByID = function (req, res, next, id) {
         message: 'No project with that identifier has been found'
       });
     }
-    req.project = project;
-    next();
+
+    // populate bids with users 'deep populate'
+    Bid.populate(project.bids, {path: 'user'}, function (err, bids) {
+      if (err) {
+        return next(err);
+      } else if (!bids) {
+        return res.status(404).send({
+          message: 'Could not load users in bids in project'
+        });
+      }
+      req.project = project;
+      next();
+    });
   });
 };

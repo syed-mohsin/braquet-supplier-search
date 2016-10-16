@@ -97,25 +97,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.findOne = function () {
       $scope.project = Projects.get({
         projectId: $stateParams.projectId
-      }, function(project) {
-        // get project deadline
-        $scope.bid_deadline = project.bid_deadline;
-        // get details of all bids associated with current project, and top bid
-        $scope.bids = GetBids.query({projectId: project._id}, function(bids) {
-          if (bids.length) {
-            console.log(bids[0].bid_price);
-            $scope.top_bid = "$" + bids[0].bid_price + "/W by " + bids[0].user.displayName;
-          }
-          else
-            $scope.top_bid = "Currently no bids!";
-        });
       });
-    };
-
-    // initialize relevant information
-    $scope.init = function () {
-      $scope.findOne();
-      $scope.findMyProjects();
+      // this line was used to independently retrieve the associated bids, but was replaced after
+      // bids were simply 'deep populated' into the project
+      // $scope.bids = GetBids.query({projectId: project._id}, function(bids)
     };
   }
 ]);
