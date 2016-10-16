@@ -20,7 +20,7 @@
 <!--       <h5 class="list-group-item-heading control-label">Bid Deadline: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span></h5> -->
       <h5 class="list-group-item-heading col-sm-6"><span class="bg-danger" countdown="" date="project.bid_deadline"></span> left (Ends: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span>)</h5>
       </div>
-      <div><a class="place-bid" ui-sref="bids.view({projectId: project._id})">Place a Bid</a></div>
+      <div><a class="place-bid" ng-show="authentication.user.roles[0] === 'seller'" ui-sref="bids.create({projectId: project._id})">Place a Bid</a></div>
     
   </div>
   </div>
