@@ -35,6 +35,7 @@ a:hover .header-profile-image {
 
 .page-header {
   margin: 70px 0 20px;
+  padding-bottom: 20px;
 }
 
 .project-view .page-header {
@@ -244,7 +245,7 @@ section h2 {
 }
 
 .project-header {
-  height: 95px;
+  height: 70px;
 }
 
 .project-header h2{

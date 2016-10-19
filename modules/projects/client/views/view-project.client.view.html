@@ -11,13 +11,9 @@
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </div>
-            <!-- only show this bid div to sellers trying to bid on a project -->
-            <div class="pull-left edit-delete" ng-show="authentication.user.roles[0] === 'seller'">
-                <a class="btn btn-primary" ui-sref="bids.create({projectId:project._id})">
-                    <i class="glyphicon glyphicon-edit"></i>
-                </a>
-            </div>
         </div>
+         <!-- only show this bid div to sellers trying to bid on a project -->
+         <a class="place-bid" ng-show="authentication.user.roles[0] === 'seller'" ui-sref="bids.create({projectId: project._id})">Place a Bid</a>
     </div>
 
 <div class="form-horizontal data">
