@@ -41,7 +41,7 @@
 </section>
 
 
-<section class="bid-create container" ng-controller="BidsController" ng-init="findProject()">
+<section class="bid-create container" ng-controller="BidsController" ng-init="findProject();createDate();">
   <div class="page-header">
     <h2>Place a Bid</h2>
   </div>
@@ -58,9 +58,12 @@
 
         <div class="form-group" show-errors>
           <label for="delivery_date">Delivery Date</label>
-          <input name="delivery_date" type="date" ng-model="delivery_date" id="delivery_date" class="form-control" placeholder="Delivery Date" required>
+          <input name="delivery_date" type="date" min="{{date.currentDate | date:'yyyy-MM-dd'}}" max="{{project.bid_deadline | date:'yyyy-MM-dd'}}" ng-model="date.value" id="bid_deadline" class="form-control" required>
           <div ng-messages="bidForm.delivery_date.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Delivery Date is required.</p>
+            <p class="help-block error-text" ng-message="date">Invalid Date.</p>
+            <p class="help-block error-text" ng-message="min">Delivery Date cannot be in the past</p>
+            <p class="help-block error-text" ng-message="max">Delivery Date must be before bid deadline.</p>
           </div>
         </div>
 

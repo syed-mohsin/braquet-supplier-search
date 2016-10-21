@@ -23,9 +23,12 @@
 
         <div class="form-group" show-errors>
           <label for="bid_deadline">Bid Deadline</label>
-          <input name="bid_deadline" type="date" ng-model="project.bid_deadline" id="bid_deadline" class="form-control" placeholder="project.bid_deadline" required>
+          <input name="bid_deadline" type="date" min="{{bid_date.currentDate | date:'yyyy-MM-dd'}}" max="{{bid_date.yearAheadDate | date:'yyyy-MM-dd'}}" ng-model="project.bid_deadline" placeholder="yyyy-MM-dd" id="bid_deadline" class="form-control" required>
           <div ng-messages="projectForm.bid_deadline.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Bid Deadline is required.</p>
+            <p class="help-block error-text" ng-message="date">Invalid Date.</p>
+            <p class="help-block error-text" ng-message="min">Bid deadline cannot be in the past</p>
+            <p class="help-block error-text" ng-message="max">Bid deadline must be within one year from today.</p>
           </div>
         </div>
 

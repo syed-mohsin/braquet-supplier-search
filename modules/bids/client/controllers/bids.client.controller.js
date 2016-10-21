@@ -18,7 +18,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
       // Create new Bid object
       var bid = new Bids({
         fob_shipping: this.fob_shipping,
-        delivery_date: this.delivery_date,
+        delivery_date: this.date.value,
         bid_price: this.bid_price,
         panel_wattage: this.panel_wattage,
         manufacturer: this.manufacturer,
@@ -92,6 +92,14 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
       $scope.project = Projects.get({
         projectId: $stateParams.projectId
       });
+    };
+
+    $scope.createDate = function() {
+      $scope.date = {
+        value: new Date(),
+        currentDate: new Date(),
+        yearAheadDate: new Date().setFullYear(new Date().getFullYear() + 1)
+      };
     };
   }
 ]);
