@@ -102,5 +102,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       // bids were simply 'deep populated' into the project
       // $scope.bids = GetBids.query({projectId: project._id}, function(bids)
     };
+
+    $scope.createInit = function() {
+      $scope.bid_date = {
+        value: new Date(),
+        currentDate: new Date(),
+        yearAheadDate: new Date().setFullYear(new Date().getFullYear() + 1)
+      };
+    };
   }
 ]);
