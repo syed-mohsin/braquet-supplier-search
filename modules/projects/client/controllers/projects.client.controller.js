@@ -98,8 +98,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $scope.project = Projects.get({
         projectId: $stateParams.projectId
       }, function(project) {
-        project.bid_deadline = new Date(project.bid_deadline);
-        
+        $scope.project.bid_deadline = new Date(project.bid_deadline);
         $scope.bid_date = {
           currentDate: new Date(),
           yearAheadDate: new Date().setFullYear(new Date().getFullYear() + 1)

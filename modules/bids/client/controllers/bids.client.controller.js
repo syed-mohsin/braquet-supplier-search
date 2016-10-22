@@ -19,7 +19,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
       var bid = new Bids({
         fob_shipping: this.fob_shipping,
         delivery_date: this.date.value,
-        bid_price: this.bid_price,
+        bid_price: this.bid_price * 100, // must be an integer when inputting to mongoose currency model
         panel_wattage: this.panel_wattage,
         manufacturer: this.manufacturer,
         project: $scope.project._id,
@@ -98,7 +98,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
       $scope.date = {
         value: new Date(),
         currentDate: new Date(),
-        yearAheadDate: new Date().setFullYear(new Date().getFullYear() + 1)
+        threeYearAheadDate: new Date().setFullYear(new Date().getFullYear() + 3)
       };
     };
   }

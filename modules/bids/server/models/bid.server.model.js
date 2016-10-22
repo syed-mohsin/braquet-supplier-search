@@ -36,7 +36,7 @@ var BidSchema = new Schema({
   bid_price: {
     type: Currency,
     min: 0,
-    max: 500000
+    max: 100000000
   },
   panel_wattage: {
     type: String,
