@@ -109,6 +109,55 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       // $scope.bids = GetBids.query({projectId: project._id}, function(bids)
     };
 
+    $scope.myDta = [{
+          value: "AXI plus SE black (poly)",
+          display: "AXI plus SE black (poly)"
+      }, {
+          value: "AXIblackpremium",
+          display: "AXIblackpremium"
+      }, {
+          value: "CP60 250SW",
+          display: "CP60 250SW"
+      }, {
+          value: "Apollo II Solar Roofing System",
+          display: "Apollo II Solar Roofing System"
+      }, {
+          value: "FS-4117-2, FS-4117A-2",
+          display: "FS-4117-2, FS-4117A-2"
+      }, {
+          value: "Q.PRO BFR-G4 265W",
+          display: "Q.PRO BFR-G4 265W"
+      }, {
+          value: "Peak Energy 72 Series",
+          display: "Peak Energy 72 Series"
+      }, {
+          value: "MJE265HD",
+          display: "MJE265HD"
+      }, {
+          value: "OPT325-72-4-100",
+          display: "OPT325-72-4-100"
+      }, {
+          value: "HyPro STP290S-20/Wew",
+          display: "HyPro STP290S-20/Wew"
+      }, {
+          value: "TSM-265PD05.082",
+          display: "TSM-265PD05.082"
+      }, {
+          value: "UP-M250P-T",
+          display: "UP-M250P-T"
+      }, {
+          value: "Eldora VSP.60.250.03",
+          display: "Eldora VSP.60.250.03"
+    }];
+
+    $scope.getMatches = function (text) {
+      var ret = $scope.myDta.filter(function (d) {
+        return d.display.startsWith(text);
+      });
+
+      return ret;
+    };
+
     $scope.createDate = function() {
       $scope.bid_date = {
         value: new Date(),

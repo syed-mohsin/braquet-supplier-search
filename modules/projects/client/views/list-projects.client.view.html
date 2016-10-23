@@ -1,4 +1,4 @@
-<section class="container" ng-controller="ProjectsController" ng-init="(authentication.user.roles[0] === 'seller') ? find() : findMyProjects();">
+<section class="container" ng-controller="ProjectsController" ng-init="(authentication.user.roles[0] === 'seller') ? find() : findMyProjects()">
     <div class="page-header">
         <h2>Projects</h2>
     </div>
@@ -22,3 +22,4 @@
     </div>
     <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] === 'seller' && projects.$resolved && !projects.length">No projects to bid on!</div>
 </section>
+
