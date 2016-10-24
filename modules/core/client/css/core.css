@@ -229,3 +229,8 @@ section h2 {
     padding: 5px;
     border-radius: 2px;
 }
+
+.bid label, .bid p {
+    font-weight: bold;
+    font-size: medium;
+}
