@@ -16,14 +16,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
 
       // Create new Project object
+      console.log($scope.projectForm);
       var project = new Projects({
         title: this.title,
         system_capacity: this.system_capacity,
-        bid_deadline: this.bid_deadline,
-        shipping_address: this.shipping_address
+        bid_deadline: this.bid_date.value,
+        shipping_address: this.shipping_address,
+        panel_model: this.selectedItem.value
         // panel_wattage: this.panel_wattage,
         // panel_type: this.panel_type
       });
+      console.log(project);
 
       // Redirect after save
       project.$save(function (response) {
