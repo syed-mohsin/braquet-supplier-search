@@ -20,9 +20,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         title: this.title,
         system_capacity: this.system_capacity,
         bid_deadline: this.bid_deadline,
-        shipping_address: this.shipping_address,
-        panel_wattage: this.panel_wattage,
-        panel_type: this.panel_type
+        shipping_address: this.shipping_address
+        // panel_wattage: this.panel_wattage,
+        // panel_type: this.panel_type
       });
 
       // Redirect after save
@@ -34,8 +34,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         $scope.system_capacity = '';
         $scope.bid_deadline = '';
         $scope.shipping_address = '';
-        $scope.panel_wattage = '';
-        $scope.panel_type = '';
+        // $scope.panel_wattage = '';
+        // $scope.panel_type = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
@@ -111,19 +111,24 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     $scope.myDta = [{
           value: "AXI plus SE black (poly)",
-          display: "AXI plus SE black (poly)"
+          display: "AXI plus SE black (poly)",
+          company: "AXITEC USA"
       }, {
           value: "AXIblackpremium",
-          display: "AXIblackpremium"
+          display: "AXIblackpremium",
+          company: "AXITEC"
       }, {
           value: "CP60 250SW",
-          display: "CP60 250SW"
+          display: "CP60 250SW",
+          company: "Centrosolar"
       }, {
           value: "Apollo II Solar Roofing System",
-          display: "Apollo II Solar Roofing System"
+          display: "Apollo II Solar Roofing System",
+          company: "CertainTeed"
       }, {
           value: "FS-4117-2, FS-4117A-2",
-          display: "FS-4117-2, FS-4117A-2"
+          display: "FS-4117-2, FS-4117A-2",
+          company: "First Solar"
       }, {
           value: "Q.PRO BFR-G4 265W",
           display: "Q.PRO BFR-G4 265W"

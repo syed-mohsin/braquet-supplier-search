@@ -15,8 +15,19 @@
 
         <div class="form-group" show-errors>
           <label for="panel_model">Panel Model</label>
-          <md-autocomplete id="panel_model" name="panel_model" md-input-name="panel_model" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in getMatches(searchText)" md-item-text="item.display" md-min-length="0" placeholder="Type something" required>
-            <md-item-template> <span md-highlight-text="searchText">{{item.display}}</span></md-item-template>
+          <md-autocomplete id="panel_model" name="panel_model" md-input-name="panel_model" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in getMatches(searchText)" md-item-text="item.display" md-min-length="0" placeholder="Please Select Panel Model" md-menu-class="autocomplete-custom-template" md-select-on-match="true" required>
+            <md-item-template> 
+              <div class="item-title">
+                <span md-highlight-text="searchText">
+                  {{item.display}}
+                </span>
+              </div>
+              <div class="item-metadata">
+                <span class="item-metastat">
+                  {{item.company}}
+                </span>
+              </div>
+            </md-item-template>
             <md-not-found>No matches found.</md-not-found>
           </md-autocomplete>
           <div ng-messages="projectForm.panel_model.$error" role="alert">
@@ -48,26 +59,6 @@
           <input name="shipping_address" type="text" ng-model="shipping_address" id="shipping_address" class="form-control" placeholder="Shipping Address" required>
           <div ng-messages="projectForm.shipping_address.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Shipping Address is required.</p>
-          </div>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label for="panel_wattage">Panel Wattage</label>
-          <input name="panel_wattage" type="text" ng-model="panel_wattage" id="panel_wattage" class="form-control" placeholder="Panel Wattage" required>
-          <div ng-messages="projectForm.panel_wattage.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Panel Wattage is required.</p>
-          </div>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label for="panel_type">Panel Type</label>        
-          <select name="panel_type" ng-model="panel_type" id="panel_type" class="form-control" placeholder="Panel Type (Mono or Poly)" required>
-            <option value="">---Panel Type---</option>
-            <option value="Monocrystalline">Monocrystalline</option>
-            <option value="Polycrystalline">Polycrystalline</option>
-          </select>
-          <div ng-messages="projectForm.panel_type.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Panel Type is required (Monocrystalline or Polycrystalline)</p>
           </div>
         </div>
 

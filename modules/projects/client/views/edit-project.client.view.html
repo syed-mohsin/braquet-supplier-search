@@ -40,26 +40,6 @@
           </div>
         </div>
 
-        <div class="form-group" show-errors>
-          <label for="panel_wattage">Panel Wattage</label>
-          <input name="panel_wattage" type="text" ng-model="project.panel_wattage" id="panel_wattage" class="form-control" placeholder="Panel Wattage" required>
-          <div ng-messages="projectForm.panel_wattage.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Panel Wattage is required.</p>
-          </div>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label for="panel_type">Panel Type</label>        
-          <select name="panel_type" ng-model="project.panel_type" id="panel_type" class="form-control" placeholder="project.panel_type" required>
-            <option value="">---Panel Type---</option>
-            <option value="Monocrystalline">Monocrystalline</option>
-            <option value="Polycrystalline">Polycrystalline</option>
-          </select>
-          <div ng-messages="projectForm.panel_type.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Panel Type is required (Monocrystalline or Polycrystalline)</p>
-          </div>
-        </div>
-
         <div class="form-group">
           <input type="submit" class="btn btn-default">
         </div>
