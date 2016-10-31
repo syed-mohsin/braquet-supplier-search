@@ -103,6 +103,7 @@ section h2 {
 .banner .detail {
     margin: 180px auto 133px auto;
     max-width: 500px;
+    text-align: center;
 }
 .banner h1 {
     text-align: center;
@@ -116,8 +117,6 @@ section h2 {
 .banner .btn {
     background: #4CAF50;
     color: white;
-    margin-left: 163px;
-    margin-top: -30px;
 }
 .hiw {
     padding-top: 40px 0;
@@ -214,6 +213,9 @@ section h2 {
     color: white;
     margin-top: 30px;
 }
+.list-group h4{
+    font-weight: bold;
+}
 .list-detail {
     margin-bottom: 35px;
 }
@@ -229,7 +231,6 @@ section h2 {
     padding: 5px;
     border-radius: 2px;
 }
-
 .bid label, .bid p {
     font-weight: bold;
     font-size: medium;
