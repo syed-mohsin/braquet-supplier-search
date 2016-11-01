@@ -235,3 +235,6 @@ section h2 {
     font-weight: bold;
     font-size: medium;
 }
+.control-label {
+    min-width: 180px;
+}
