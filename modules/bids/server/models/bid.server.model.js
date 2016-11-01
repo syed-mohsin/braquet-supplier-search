@@ -38,18 +38,6 @@ var BidSchema = new Schema({
     min: 0,
     max: 100000000
   },
-  panel_wattage: {
-    type: String,
-    default: '',
-    trim: true,
-    required: 'Panel Wattage cannot be blank'
-  },
-  manufacturer: {
-    type: String,
-    default: '',
-    trim: true,
-    required: 'Manufacturer cannot be blank'
-  },
   user: {
     type: Schema.ObjectId,
     ref: 'User'
