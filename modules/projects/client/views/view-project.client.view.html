@@ -15,7 +15,7 @@
          <!-- only show this bid div to sellers trying to bid on a project -->
          <a class="place-bid" ng-show="authentication.user.roles[0] === 'seller'" ui-sref="bids.create({projectId: project._id})">Place a Bid</a>
     </div>
-
+<!-- I WANT THE BUTTONS FIXED AHHHH -->
 <div class="form-horizontal data">
     <div class="form-group bid">
         <label class="control-label col-sm-2">Winning Bid: </label>
@@ -34,7 +34,11 @@
     <div class="form-group">
         <label class="control-label col-sm-2">Panel Model: </label>
         <div class="col-sm-4">
-            <p ng-bind="project.panel_model"></p>
+            <md-chips ng-model="project.panel_models" readonly="true">
+                <md-chip-template>
+                    <span>{{$chip.model}}</span>
+                </md-chip-template>
+            </md-chip>
         </div>
     </div>
 

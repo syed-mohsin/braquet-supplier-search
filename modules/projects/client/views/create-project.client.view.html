@@ -14,25 +14,27 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label for="panel_model">Panel Model</label>
-          <md-autocomplete id="panel_model" name="panel_model" md-input-name="panel_model" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in getMatches(searchText)" md-item-text="item.display" md-min-length="0" placeholder="Please Select Panel Model" md-menu-class="autocomplete-custom-template" md-select-on-match="true" required>
-            <md-item-template> 
-              <div class="item-title">
+          <label for="panel_models">Panel Models</label>
+          <md-chips name="panel_models" ng-model="panel_models" md-autocomplete-snap md-require-match="true" md-min-chips="1" md-max-chips="5" required>
+            <md-autocomplete  
+              md-selected-item="selectedItem" 
+              md-search-text="searchText" 
+              md-items="item in getMatches(searchText)" 
+              md-item-text="item.model" 
+              md-min-length="0"
+              placeholder="Please Select Panel Model">
                 <span md-highlight-text="searchText">
-                  {{item.display}}
+                  {{item.model}}
                 </span>
-              </div>
-              <div class="item-metadata">
-                <span class="item-metastat">
-                  {{item.company}}
-                </span>
-              </div>
-            </md-item-template>
-            <md-not-found>No matches found.</md-not-found>
-          </md-autocomplete>
-          <div ng-messages="projectForm.panel_model.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Panel Model is required.</p>
-          </div>
+            </md-autocomplete>
+            <md-chip-template>
+              <span>{{$chip.model}}</span><br />
+              <span>{{$chip.manufacturer}}</span>
+            </md-chip-template>
+            </md-chips>
+            <div ng-messages="projectForm.panel_models.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Please select at least 1 panel model.</p>
+            </div>
         </div>
 
         <div class="form-group" show-errors>

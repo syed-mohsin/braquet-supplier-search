@@ -38,30 +38,18 @@ var ProjectSchema = new Schema({
     trim: true,
     required: 'Shipping address cannot be blank'
   },
-  panel_model: {
-    type: String,
-    default: '',
-    trim: true,
-    required: 'Panel Model cannot be blank'
-  },
+  panel_models: [{
+    type: Schema.ObjectId,
+    ref: 'PanelModel'
+    }],
   user: {
     type: Schema.ObjectId,
     ref: 'User'
   },
-  bids: [{type: Schema.ObjectId, 
-          ref: 'Bid'}]
+  bids: [{
+    type: Schema.ObjectId, 
+    ref: 'Bid'
+  }]
 });
 
 mongoose.model('Project', ProjectSchema);
-
-
-  // panel_wattage: {
-  //   type: String,
-  //   default: '',
-  //   trim: true,
-  //   required: 'Panel Wattage cannot be blank'
-  // },
-  // panel_type: {
-  //   type: String,
-  //   required: 'Panel Type is Required (Monocrystalline or Polycrystalline)'
-  // }

@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'GetBids', 'Projects',
-  function ($scope, $stateParams, $location, $interval, $filter, Authentication, GetBids, Projects) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'GetBids', 'PanelModels', 'Projects',
+  function ($scope, $stateParams, $location, $interval, $filter, Authentication, GetBids, PanelModels, Projects) {
     $scope.authentication = Authentication;
 
     // Create new Project
@@ -16,17 +16,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
 
       // Create new Project object
-      console.log($scope.projectForm);
+      console.log(this);
       var project = new Projects({
         title: this.title,
         system_capacity: this.system_capacity,
         bid_deadline: this.bid_date.value,
         shipping_address: this.shipping_address,
-        panel_model: this.selectedItem.value
-        // panel_wattage: this.panel_wattage,
-        // panel_type: this.panel_type
+        panel_models: this.panel_models
       });
-      console.log(project);
 
       // Redirect after save
       project.$save(function (response) {
@@ -37,8 +34,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         $scope.system_capacity = '';
         $scope.bid_deadline = '';
         $scope.shipping_address = '';
-        // $scope.panel_wattage = '';
-        // $scope.panel_type = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
@@ -108,65 +103,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         };
       });
       // this line was used to independently retrieve the associated bids, but was replaced after
-      // bids were simply 'deep populated' into the project
+      // bids were 'deep populated' into the project
       // $scope.bids = GetBids.query({projectId: project._id}, function(bids)
     };
 
-    $scope.myDta = [{
-          value: "AXI plus SE black (poly)",
-          display: "AXI plus SE black (poly)",
-          company: "AXITEC USA"
-      }, {
-          value: "AXIblackpremium",
-          display: "AXIblackpremium",
-          company: "AXITEC"
-      }, {
-          value: "CP60 250SW",
-          display: "CP60 250SW",
-          company: "Centrosolar"
-      }, {
-          value: "Apollo II Solar Roofing System",
-          display: "Apollo II Solar Roofing System",
-          company: "CertainTeed"
-      }, {
-          value: "FS-4117-2, FS-4117A-2",
-          display: "FS-4117-2, FS-4117A-2",
-          company: "First Solar"
-      }, {
-          value: "Q.PRO BFR-G4 265W",
-          display: "Q.PRO BFR-G4 265W"
-      }, {
-          value: "Peak Energy 72 Series",
-          display: "Peak Energy 72 Series"
-      }, {
-          value: "MJE265HD",
-          display: "MJE265HD"
-      }, {
-          value: "OPT325-72-4-100",
-          display: "OPT325-72-4-100"
-      }, {
-          value: "HyPro STP290S-20/Wew",
-          display: "HyPro STP290S-20/Wew"
-      }, {
-          value: "TSM-265PD05.082",
-          display: "TSM-265PD05.082"
-      }, {
-          value: "UP-M250P-T",
-          display: "UP-M250P-T"
-      }, {
-          value: "Eldora VSP.60.250.03",
-          display: "Eldora VSP.60.250.03"
-    }];
+    $scope.myDta = PanelModels.query();
 
     $scope.getMatches = function (text) {
       var ret = $scope.myDta.filter(function (d) {
-        return d.display.startsWith(text);
+        return d.model.startsWith(text);
       });
 
       return ret;
     };
 
     $scope.createDate = function() {
+      $scope.panel_models = [];
       $scope.bid_date = {
         value: new Date(),
         currentDate: new Date(),

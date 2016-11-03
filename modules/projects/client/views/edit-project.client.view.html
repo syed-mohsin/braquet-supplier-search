@@ -1,4 +1,4 @@
-<section class="container" ng-controller="ProjectsController" ng-init="findOne()">
+<section class="container" ng-controller="ProjectsController" ng-init="findOne(); initEdit()">
   <div class="page-header">
     <h2>Edit Project</h2>
   </div>
@@ -12,6 +12,30 @@
             <p class="help-block error-text" ng-message="required">Project title is required.</p>
           </div>
         </div>
+
+        <div class="form-group" show-errors>
+          <label for="panel_models">Panel Models</label>
+          <md-chips name="panel_models" ng-model="project.panel_models" md-autocomplete-snap md-require-match="true" md-min-chips="1" md-max-chips="5" required>
+            <md-autocomplete  
+              md-selected-item="selectedItem" 
+              md-search-text="searchText" 
+              md-items="item in getMatches(searchText)" 
+              md-item-text="item.model" 
+              md-min-length="0"
+              placeholder="Please Select Panel Model">
+                <span md-highlight-text="searchText">
+                  {{item.model}}
+                </span>
+            </md-autocomplete>
+            <md-chip-template>
+              <span>{{$chip.model}}</span>
+            </md-chip-template>
+            </md-chips>
+            <div ng-messages="projectForm.panel_models.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Please select at least 1 panel model.</p>
+            </div>
+        </div>
+        <!-- ADD A BOX DISPLAYING RESULTS OF PANEL MODELS HERE -->
 
         <div class="form-group" show-errors>
           <label for="system_capacity">System Capacity</label>
