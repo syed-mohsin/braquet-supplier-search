@@ -181,10 +181,31 @@ section h2 {
 .edit-delete {
     margin-top: 25px;
     margin-left: 20px;
-    padding-top: 30px;
 }
 .edit-delete a {
-    padding: 1px 4px;
+    padding: 5px 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-right: none;
+    border-color: lightgrey;
+    color: grey;
+    cursor: pointer;
+}
+.edit-delete a:hover {
+    background: rgba(1,1,1,0.1);
+}
+.edit-delete a.first {
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.edit-delete a.last {
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
 }
 .projects .title {
     text-align: right;
