@@ -41,11 +41,10 @@ exports.update = function (req, res) {
   var project = req.project;
 
   project.title = req.body.title;
+  project.panel_models = req.body.panel_models;
   project.system_capacity = req.body.system_capacity;
   project.bid_deadline = req.body.bid_deadline;
   project.shipping_address = req.body.shipping_address;
-  project.panel_wattage = req.body.panel_wattage;
-  project.panel_type = req.body.panel_type;
 
   project.save(function (err) {
     if (err) {
@@ -147,7 +146,11 @@ exports.projectByID = function (req, res, next, id) {
     });
   }
 
-  Project.findById(id).populate('user', 'displayName').populate('bids', null, null, {sort: {'bid_price': 1}}).exec(function (err, project) {
+  Project.findById(id)
+    .populate('user', 'displayName')
+    .populate('bids', null, null, {sort: {'bid_price': 1}})
+    .populate('panel_models', null, null, {sort: {'model': 1}})
+    .exec(function (err, project) {
     if (err) {
       return next(err);
     } else if (!project) {

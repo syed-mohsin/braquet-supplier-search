@@ -20,8 +20,6 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         fob_shipping: this.fob_shipping,
         delivery_date: this.date.value,
         bid_price: this.bid_price * 100, // must be an integer when inputting to mongoose currency model
-        panel_wattage: this.panel_wattage,
-        manufacturer: this.manufacturer,
         project: $scope.project._id,
         project_title: $scope.project.title
       });
@@ -37,8 +35,6 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         $scope.fob_shipping = '';
         $scope.delivery_date = '';
         $scope.bid_price = '';
-        $scope.panel_wattage = '';
-        $scope.manufacturer = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
