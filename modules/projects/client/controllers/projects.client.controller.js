@@ -1,9 +1,26 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'GetBids', 'PanelModels', 'Projects',
-  function ($scope, $stateParams, $location, $interval, $filter, Authentication, GetBids, PanelModels, Projects) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects',
+  function ($scope, $stateParams, $location, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects) {
     $scope.authentication = Authentication;
+
+    // Connect socket
+    if (!Socket.socket) {
+      Socket.connect();
+      console.log("connected to server");
+    }
+
+    // Remove the event listener when the controller instance is destroyed
+    $scope.$on('$destroy', function () {
+      Socket.removeListener('chatMessage');
+    });
+
+    Socket.on('refresh_view', function(message) {
+      console.log(message);
+     if ($location.url() === '/projects/' + $scope.project._id)
+        $scope.findOne();
+    });
 
     // Create new Project
     $scope.create = function (isValid) {
@@ -16,7 +33,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
 
       // Create new Project object
-      console.log(this);
       var project = new Projects({
         title: this.title,
         system_capacity: this.system_capacity,
