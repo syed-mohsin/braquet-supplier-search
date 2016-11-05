@@ -78,6 +78,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     // Find a list of ALL Projects
     $scope.find = function () {
       $scope.projects = Projects.query();
+      console.log($scope.projects);
     };
 
     // Find a list of MY projects

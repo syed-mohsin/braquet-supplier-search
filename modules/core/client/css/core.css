@@ -234,11 +234,22 @@ section h2 {
     color: white;
     margin-top: 30px;
 }
+.project .list-group-item {
+    height: 183px;
+}
+.project .list-group img {
+    float: left;
+    margin-right: 30px;
+}
+.project .detail {
+    float: left;
+}
 .list-group h4{
     font-weight: bold;
 }
 .list-detail {
-    margin-bottom: 35px;
+    margin-top: 10px;
+    margin-bottom: 17px;
 }
 .list-detail h5 {
     padding-left: 0;
