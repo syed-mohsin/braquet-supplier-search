@@ -63,7 +63,7 @@ exports.update = function (req, res) {
 exports.storeBid = function (req, res) {
   var project = req.project;
   var bid = req.bid;
-  console.log(bid);
+
   project.bids.push(bid._id);
 
   project.save(function (err) {
@@ -72,6 +72,18 @@ exports.storeBid = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      // notify project owner that bid was added
+      var io = req.app.get('socketio');
+      
+      // get array of user sockets
+      var user_sockets = req.app.get('socket-users')[project.user._id];
+      console.log(user_sockets);
+
+      // send notification
+      user_sockets.forEach(function(id) {
+        io.to(id).emit('refresh_view', 'refresh it');
+      });
+
       res.json(project);
     }
   });

@@ -99,10 +99,20 @@ module.exports = function (app, db) {
 
   // Add an event listener to the 'connection' event
   io.on('connection', function (socket) {
+    // retrieve global socket-users array
+    var users = app.get('socket-users');
+
+    // iniitialize or add socket ID to user
+    if(!users[socket.request.user._id]) users[socket.request.user._id] = [];
+    users[socket.request.user._id].push(socket.id);
+
     config.files.server.sockets.forEach(function (socketConfiguration) {
       require(path.resolve(socketConfiguration))(io, socket);
     });
   });
+
+
+  app.set('socketio', io);
 
   return server;
 };
