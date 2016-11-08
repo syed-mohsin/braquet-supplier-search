@@ -112,6 +112,7 @@ module.exports = function (app, db) {
   });
 
 
+  // make socket io object available globally for controllers
   app.set('socketio', io);
 
   return server;

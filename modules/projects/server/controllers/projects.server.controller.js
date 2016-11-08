@@ -22,6 +22,12 @@ exports.create = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      // notify project owner that bid was added
+      var io = req.app.get('socketio');
+      
+      // send notification to project bidders on list page
+      io.emit('refreshProjectList', 'refresh');
+
       res.json(project);
     }
   });
@@ -77,12 +83,9 @@ exports.storeBid = function (req, res) {
       
       // get array of user sockets
       var user_sockets = req.app.get('socket-users')[project.user._id];
-      console.log(user_sockets);
 
-      // send notification
-      user_sockets.forEach(function(id) {
-        io.to(id).emit('refresh_view', 'refresh it');
-      });
+      // send to all users currently viewing project
+      io.emit('refreshProjectView', project._id);
 
       res.json(project);
     }
@@ -101,6 +104,12 @@ exports.delete = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      // notify project owner that bid was added
+      var io = req.app.get('socketio');
+      
+      // send notification to project bidders on list page
+      io.emit('refreshProjectList', 'refresh');
+      
       res.json(project);
     }
   });
