@@ -53,7 +53,7 @@ module.exports.initMiddleware = function (app) {
   // Showing stack errors
   app.set('showStackError', true);
 
-  // global user-sockets array
+  // Global user-sockets array
   app.set('socket-users', []);
 
   // Enable jsonp

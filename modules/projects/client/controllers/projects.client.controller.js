@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects',
-  function ($scope, $stateParams, $location, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects',
+  function ($scope, $stateParams, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects) {
     $scope.authentication = Authentication;
 
     // Connect socket
@@ -16,10 +16,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       Socket.removeListener('chatMessage');
     });
 
-    Socket.on('refresh_view', function(message) {
-      console.log(message);
-     if ($location.url() === '/projects/' + $scope.project._id)
+    Socket.on('refreshProjectView', function(project_id) {
+     if ($stateParams.projectId === project_id) {
         $scope.findOne();
+      }
+    });
+
+    Socket.on('refreshProjectList', function(msg) {
+      if (Authentication.user.roles[0] === 'seller' && 
+            $location.url() === '/projects') {
+        $scope.find();
+      }
     });
 
     // Create new Project
