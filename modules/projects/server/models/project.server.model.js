@@ -52,4 +52,11 @@ var ProjectSchema = new Schema({
   }]
 });
 
+ProjectSchema.pre('remove', function (next) {
+  var project = this;
+
+  // delete all bids that contain project_id
+  Bid.remove({project: this._id}, next);
+});
+
 mongoose.model('Project', ProjectSchema);
