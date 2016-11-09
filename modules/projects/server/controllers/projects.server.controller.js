@@ -110,6 +110,9 @@ exports.delete = function (req, res) {
       // send notification to project bidders on list page
       io.emit('refreshProjectList', 'refresh');
 
+      // send notification to bid list view to refresh
+      io.emit('refreshBidList', 'refresh');
+
       res.json(project);
     }
   });
