@@ -109,7 +109,7 @@ exports.delete = function (req, res) {
       
       // send notification to project bidders on list page
       io.emit('refreshProjectList', 'refresh');
-      
+
       res.json(project);
     }
   });
@@ -119,7 +119,12 @@ exports.delete = function (req, res) {
  * List of Projects
  */
 exports.list = function (req, res) {
-  Project.find().sort('-created').populate('user', 'displayName').populate('bids', null, null, {sort: {'bid_price': 1}}).exec(function (err, projects) {
+  Project.find()
+    .sort('-created')
+    .populate('user', 'displayName')
+    .populate('bids', null, null, {sort: {'bid_price': 1}})
+    .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
+    .exec(function (err, projects) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

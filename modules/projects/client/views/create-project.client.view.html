@@ -24,12 +24,11 @@
               md-min-length="0"
               placeholder="Please Select Panel Model">
                 <span md-highlight-text="searchText">
-                  {{item.model}}
+                  {{item.manufacturer}}, {{item.model}}
                 </span>
             </md-autocomplete>
             <md-chip-template>
-              <span>{{$chip.model}}</span><br />
-              <span>{{$chip.manufacturer}}</span>
+              <span>{{$chip.manufacturer}}, {{$chip.model}}</span>
             </md-chip-template>
             </md-chips>
             <div ng-messages="projectForm.panel_models.$error" role="alert">
