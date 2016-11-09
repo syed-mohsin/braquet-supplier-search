@@ -18,10 +18,10 @@
 
             </div>
             <div><a class="place-bid" ng-show="authentication.user.roles[0] === 'seller'" ui-sref="bids.create({projectId: project._id})">Place a Bid</a></div>
+            <h5 class="accepted-panels">Accepted Panels: <div ng-bind="project.panel_models[0].manufacturer"></div></h5>
         </div>
-        <div>
-        <h5>Accepted Panels: <div ng-bind="project.panel_models[0].manufacturer"></div></h5>
-        </div>
+        
+
 
         </div>
     </div>

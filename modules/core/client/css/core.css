@@ -220,6 +220,9 @@ section h2 {
 .form-group div {
     padding-top: 8px;
 }
+.form-group div.md-chip-content {
+    padding-top: 0px;
+}
 .footer {
     background: black;
     color: white;
@@ -269,4 +272,7 @@ section h2 {
 }
 .control-label {
     min-width: 180px;
+}
+.accepted-panels div {
+    margin-top: 5px;
 }
