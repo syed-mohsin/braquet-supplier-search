@@ -4,14 +4,17 @@
   </div>
   <div class="list-group">
     <a ng-repeat="bid in bids" ui-sref="bids.view({bidId: bid._id})" class="list-group-item">
+    <img src="http://realgoods.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/s/p/spr-320e-wht-d-ar-a_1_1.jpg">
     <!-- ng-show="authentication.user._id == bid.user._id" -->
       <small class="list-group-item-text">
 
         <span ng-bind="bid.created | date:'mediumDate'"></span>
 
       </small>
-      <h4 class="list-group-item-heading"><span ng-bind="bid.project_title"></span></h4>
-      <h5 class="list-group-item-heading">Bid: <span ng-bind="bid.bid_price/100 | currency"></span>/W</h5>
+      <h4 class="list-group-item-heading">Bid: <span ng-bind="bid.bid_price/100 | currency"></span>/W</h4>
+      <h5 class="list-group-item-heading">FOB: <span ng-bind="bid.fob_shipping"></span></h5>
+      <h5 class="list-group-item-heading">Delivery Date: <span ng-bind="bid.delivery_date | date:'mediumDate'"></span></h5>
+      <h5 class="list-group-item-heading"><span ng-bind="bid.project_title"></span></h5>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] == 'seller' && bids.$resolved && !bids.length">

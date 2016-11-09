@@ -220,7 +220,7 @@ section h2 {
 .form-group div {
     padding-top: 8px;
 }
-.form-group div.md-chip-content {
+.form-group div.md-chip-content, .form-group div.md-chip-remove-container {
     padding-top: 0px;
 }
 .footer {
@@ -270,9 +270,21 @@ section h2 {
     font-weight: bold;
     font-size: medium;
 }
+.bid-list img {
+    width: 100px;
+    float: left;
+}
+.bid-list a {
+    height: 143px;
+}
 .control-label {
     min-width: 180px;
 }
 .accepted-panels div {
     margin-top: 5px;
+}
+.md-chip-remove svg {
+    margin-left: 6px;
+    width: 50%;
+    height: 50%;
 }
