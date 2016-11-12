@@ -243,6 +243,8 @@ section h2 {
 .project .list-group img {
     float: left;
     margin-right: 30px;
+    width: 22%;
+    max-width: 220px;
 }
 .project .detail {
     float: left;
