@@ -3,8 +3,8 @@
         <div class="project-header">
             <h2 ng-bind="project.title"></h2>
             <!-- only show this edit/delete option to buyers -->
-            <div class="pull-left edit-delete" ng-show="authentication.user._id == project.user._id">
-                <a class="first" ui-sref="projects.edit({projectId: project._id})">
+            <div class="pull-left edit-delete" ng-show="authentication.user._id === project.user._id">
+                <a class="first" ui-sref="projects.edit({projectId: project._id})" ng-show="project.bidOpen">
                     Edit
                 </a>
                 <a class="last" ng-click="remove();">
@@ -13,20 +13,22 @@
             </div>
         </div>
          <!-- only show this bid div to sellers trying to bid on a project -->
-         <a class="place-bid" ng-show="authentication.user.roles[0] === 'seller'" ui-sref="bids.create({projectId: project._id})">Place a Bid</a>
+         <a class="place-bid" ng-show="project.canBid" ui-sref="bids.create({projectId: project._id})">Place a Bid</a>
     </div>
-<!-- I WANT THE BUTTONS FIXED AHHHH -->
+
 <div class="form-horizontal data">
     <div class="form-group bid">
         <label class="control-label col-sm-2">Winning Bid: </label>
         <div class="col-sm-4">
-            <p ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'Currently No Bids!'"></p>
+            <p ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'No Bids Placed'"></p>
         </div>
     </div>
+
     <div class="form-group">
         <label class="control-label col-sm-2">Remaining Time:</label>
         <div class="col-sm-4">
-            <span class="bg-danger" countdown='' date="project.bid_deadline"></span>
+            <span class="bg-danger" countdown='' date="project.bid_deadline" ng-show="project.bidOpen"></span>
+            <b ng-show="!project.bidOpen">Bidding has closed</b>
             <div>Ends: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span></div>
         </div>
     </div>

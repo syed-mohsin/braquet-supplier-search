@@ -69,7 +69,7 @@ exports.update = function (req, res) {
 exports.storeBid = function (req, res) {
   var project = req.project;
   var bid = req.bid;
-
+  
   project.bids.push(bid._id);
 
   project.save(function (err) {
@@ -153,7 +153,10 @@ exports.list = function (req, res) {
 exports.projectBids = function (req, res) {
   var project = req.project;
 
-  Bid.find({ _id: { $in : project.bids}}).sort('bid_price').populate('user', 'displayName').exec(function (err, bids) {
+  Bid.find({ _id: { $in : project.bids}})
+    .sort('bid_price')
+    .populate('user', 'displayName')
+    .exec(function (err, bids) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -197,6 +200,8 @@ exports.projectByID = function (req, res, next, id) {
           message: 'Could not load users in bids in project'
         });
       }
+
+      // make project available in controller
       req.project = project;
       next();
     });
