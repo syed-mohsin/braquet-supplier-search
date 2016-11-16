@@ -5,7 +5,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
   function ($scope, $stateParams, $resource, $location, $interval, $filter, Authentication, Socket, Projects, StoreBid, Bids) {
     $scope.authentication = Authentication;
 
-        // Connect socket
+    // Connect socket
     if (!Socket.socket) {
       Socket.connect();
       console.log("connected to server");
@@ -27,6 +27,14 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
     $scope.create = function (isValid) {
       $scope.error = null;
 
+      // Check that bid deadline has not passed
+      if (new Date() > new Date($scope.project.bid_deadline)) {
+        $scope.error = 'Bid Deadline has passed';
+        
+        return false;
+      }
+
+      // Check for form submission errors
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'bidForm');
 
@@ -44,8 +52,17 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
 
       // Redirect after save
       bid.$save(function (response) {
+        // should only get here if valid response
+        // ---------------------------------------
+
         // Associate bid with project
-        StoreBid.update({projectId: $scope.project._id, bidId: response._id}, null);
+        // need error checking here and CRITICAL:
+        // must be an atomic operation with saving bid
+        StoreBid.update({
+          projectId: $scope.project._id, 
+          bidId: response._id}, 
+          null
+        );
 
         $location.path('bids/' + response._id);
 

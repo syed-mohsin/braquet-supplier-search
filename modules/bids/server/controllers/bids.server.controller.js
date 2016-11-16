@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Bid = mongoose.model('Bid'),
+  Project = mongoose.model('Project'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
@@ -15,13 +16,33 @@ exports.create = function (req, res) {
   var bid = new Bid(req.body);
   bid.user = req.user;
 
-  bid.save(function (err) {
+  // fetch project and 
+  // 1) verify project exists
+  // 2) verify bid deadline has not passed
+  Project.findById(bid.project, function(err, project) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(bid);
+      console.log(project);
+      // make time comparison
+      if (bid.created > project.bid_deadline) {
+        return res.status(400).send({
+          message: 'Bid Deadline has passed'
+        });
+      }
+
+      // Finally create the bid
+      bid.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(bid);
+        }
+      });
     }
   });
 };
@@ -76,7 +97,10 @@ exports.bidByID = function (req, res, next, id) {
     });
   }
 
-  Bid.findById(id).populate('user', 'displayName').exec(function (err, bid) {
+  Bid.findById(id)
+    .populate('user', 'displayName')
+    .populate('project')
+    .exec(function (err, bid) {
     if (err) {
       return next(err);
     } else if (!bid) {
