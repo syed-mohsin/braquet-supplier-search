@@ -1,9 +1,27 @@
 'use strict';
 
 // Bids controller
-angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', 'Authentication', 'Projects', 'StoreBid', 'Bids',
-  function ($scope, $stateParams, $resource, $location, $interval, $filter, Authentication, Projects, StoreBid, Bids) {
+angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', 'Authentication', 'Socket', 'Projects', 'StoreBid', 'Bids',
+  function ($scope, $stateParams, $resource, $location, $interval, $filter, Authentication, Socket, Projects, StoreBid, Bids) {
     $scope.authentication = Authentication;
+
+        // Connect socket
+    if (!Socket.socket) {
+      Socket.connect();
+      console.log("connected to server");
+    }
+
+    // Remove the event listener when the controller instance is destroyed
+    $scope.$on('$destroy', function () {
+      Socket.removeListener('chatMessage');
+    });
+
+    Socket.on('refreshBidList', function(msg) {
+      if (Authentication.user.roles[0] === 'seller' && 
+            $location.url() === '/bids') {
+        $scope.findMyBids();
+      }
+    });
 
     // Create new bid
     $scope.create = function (isValid) {
