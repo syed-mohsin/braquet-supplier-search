@@ -25,9 +25,9 @@ exports.create = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      console.log(project);
       // make time comparison
       if (bid.created > project.bid_deadline) {
+        console.log("got here");
         return res.status(400).send({
           message: 'Bid Deadline has passed'
         });
@@ -107,7 +107,12 @@ exports.bidByID = function (req, res, next, id) {
       return res.status(404).send({
         message: 'No bid with that identifier has been found'
       });
+    } else if (req.user.roles[0] === 'seller' && String(req.user._id) !== String(bid.user._id)) {
+      return res.status(404).send({
+        message: 'You are not authorized to access this page'
+      });
     }
+
     req.bid = bid;
     next();
   });

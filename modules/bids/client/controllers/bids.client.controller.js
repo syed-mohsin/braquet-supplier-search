@@ -110,11 +110,11 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
 
     // Find existing Bid and it's associated project
     $scope.findOne = function () {
-      $scope.bid = Bids.get({bidId: $stateParams.bidId}, function() {
-        // obtain Project from projectId stored in bid object
-        $scope.project = Projects.get({
-          projectId: $scope.bid.project
-        });
+      $scope.bid = Bids.get({bidId: $stateParams.bidId}, 
+        function(bid) {
+  
+      }, function(error) {
+        $location.path('/forbidden');
       });
     };
 
