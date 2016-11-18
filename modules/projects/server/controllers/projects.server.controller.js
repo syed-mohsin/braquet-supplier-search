@@ -189,6 +189,10 @@ exports.projectByID = function (req, res, next, id) {
       return res.status(404).send({
         message: 'No project with that identifier has been found'
       });
+    } else if (req.user.roles[0] === 'user' && String(req.user._id) !== String(project.user._id)) {
+      return res.status(404).send({
+        message: 'You are not authorized to access this page'
+      });
     }
 
     // populate bids with users 'deep populate'

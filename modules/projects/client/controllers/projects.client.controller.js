@@ -142,6 +142,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           currentDate: new Date(),
           yearAheadDate: new Date().setFullYear(new Date().getFullYear() + 1)
         };
+      }, function(error) {
+        $location.path('/forbidden');
       });
       // this line was used to independently retrieve the associated bids, but was replaced after
       // bids were 'deep populated' into the project
