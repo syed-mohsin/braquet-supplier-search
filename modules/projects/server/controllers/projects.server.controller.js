@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Project = mongoose.model('Project'),
   Bid = mongoose.model('Bid'),
+  schedule = require('node-schedule'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
@@ -24,9 +25,43 @@ exports.create = function (req, res) {
     } else {
       // notify project owner that bid was added
       var io = req.app.get('socketio');
+
+      // get array of user sockets
+      var sockets = req.app.get('socket-users');
       
       // send notification to project bidders on list page
-      io.emit('refreshProjectList', 'refresh');
+      io.emit('refreshProjectList', project.user._id);
+
+      // set a listener for bid deadline
+      var date = new Date(project.bid_deadline);
+      var j = schedule.scheduleJob(new Date((new Date).getTime() + 5000), function() {
+
+        // send notification to all associated with project
+        Project.findById(project._id) 
+          .exec(function (err, project) {
+          if (err) {
+            console.log("err");
+          }
+          console.log('bid has ended!');
+          // get recipients [bidders+project_owner+(eventually, connections)]
+          var recipients = project.bidders.concat([project.user]); // project.user=id
+          
+          // send to all recipients
+          recipients.forEach(function(recipient) {
+
+            if (recipient in sockets) {
+              var socket_ids = sockets[recipient];
+              console.log(socket_ids);
+              // send to each open socket open for user
+              socket_ids.forEach(function(socket_id) {
+                io.to(socket_id).emit("bidDeadlineList", project._id);
+                console.log("sent to : " + socket_id);
+              });
+            }
+          });
+
+        });
+      });
 
       res.json(project);
     }
@@ -71,6 +106,7 @@ exports.storeBid = function (req, res) {
   var bid = req.bid;
   
   project.bids.push(bid._id);
+  project.bidders.push(bid.user);
 
   project.save(function (err) {
     if (err) {
@@ -81,9 +117,6 @@ exports.storeBid = function (req, res) {
       // notify project owner that bid was added
       var io = req.app.get('socketio');
       
-      // get array of user sockets
-      var user_sockets = req.app.get('socket-users')[project.user._id];
-
       // send to all users currently viewing project
       io.emit('refreshProjectView', project._id);
 
@@ -123,7 +156,7 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
   Project.find()
-    .sort('-created')
+    .sort('bid_deadline')
     .populate('user', 'displayName')
     .populate('bids', null, null, {sort: {'bid_price': 1}})
     .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})

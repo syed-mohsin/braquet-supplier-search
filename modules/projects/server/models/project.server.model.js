@@ -46,6 +46,14 @@ var ProjectSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  bidders: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
+  invites: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
   bids: [{
     type: Schema.ObjectId, 
     ref: 'Bid'

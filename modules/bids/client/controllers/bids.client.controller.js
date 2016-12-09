@@ -64,6 +64,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
           null
         );
 
+        // redirect to view bid
         $location.path('bids/' + response._id);
 
         // Clear form fields

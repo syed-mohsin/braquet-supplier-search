@@ -14,7 +14,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     // Remove the event listener when the controller instance is destroyed
     $scope.$on('$destroy', function () {
-      Socket.removeListener('chatMessage');
+      Socket.removeListener('refreshProjectView');
+      Socket.removeListener('refreshProjectList');
     });
 
     Socket.on('refreshProjectView', function(project_id) {
@@ -23,10 +24,36 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     });
 
-    Socket.on('refreshProjectList', function(msg) {
+    Socket.on('refreshProjectList', function(user_id) {
       if (Authentication.user.roles[0] === 'seller' && 
             $location.url() === '/projects') {
         $scope.find();
+      }
+      else if (Authentication.user._id === user_id) {
+        $scope.findMyProjects();
+      }
+    });
+
+    Socket.on('bidDeadlineList', function(project_id) {
+      console.log("Bid has terminated");
+      console.log(project_id);
+      console.log("State param is: " + $stateParams.projectId);
+
+      if ($stateParams.projectId === project_id) {
+        $scope.project.canBid = false;
+        $scope.project.bidOpen = false;
+        console.log("WE ARE IN PROJECT VIEW");
+      }
+
+      else if ($location.url() === '/projects') {
+        console.log("WE ARE IN PROJECT LIST");
+        for(var i=0;i<$scope.projects.length;i++) {
+          if ($scope.projects[i]._id === project_id) {
+            $scope.projects[i].canBid = false;
+            $scope.projects[i].bidOpen = false;
+            return;
+          }
+        }
       }
     });
 
