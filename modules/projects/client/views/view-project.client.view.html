@@ -16,46 +16,50 @@
          <a class="place-bid" ng-show="project.canBid" ui-sref="bids.create({projectId: project._id})">Place a Bid</a>
     </div>
 
-<div class="form-horizontal data">
+<div style="
+    min-height: 300px;
+">
+  <div class="col-sm-4">
+    <img src="http://www.ugei.com/sites/default/files/imagecache/thumbnail/Toyota_1.jpg">
+  </div>
+<div class="form-horizontal data col-sm-6" style="
+    overflow: auto;
+">
     <div class="form-group bid">
         <label class="control-label col-sm-2">Winning Bid: </label>
         <div class="col-sm-4">
-            <p ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'No Bids Placed'"></p>
+            <p ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'No Bids Placed'" class="ng-binding">$0.55/W</p>
         </div>
     </div>
 
     <div class="form-group">
         <label class="control-label col-sm-2">Remaining Time:</label>
         <div class="col-sm-4">
-            <span class="bg-danger" countdown='' date="project.bid_deadline" ng-show="project.bidOpen"></span>
-            <b ng-show="!project.bidOpen">Bidding has closed</b>
-            <div>Ends: <span ng-bind="project.bid_deadline | date:'mediumDate'"></span></div>
+            <span class="bg-danger ng-isolate-scope ng-hide" countdown="" date="project.bid_deadline" ng-show="project.bidOpen" aria-hidden="true">-29d 5h 50m 7s</span>
+            <b ng-show="!project.bidOpen" aria-hidden="false" class="">Bidding has closed</b>
+            <div>Ends: <span ng-bind="project.bid_deadline | date:'mediumDate'" class="ng-binding">Oct 21, 2016</span></div>
         </div>
     </div>
 
     <div class="form-group">
         <label class="control-label col-sm-2">Panel Model: </label>
         <div class="col-sm-4">
-            <md-chips ng-model="project.panel_models" readonly="true">
-                <md-chip-template>
-                    <span>{{$chip.manufacturer}}, {{$chip.model}}</span>
-                </md-chip-template>
-            </md-chip>
-        </div>
+            <md-chips ng-model="project.panel_models" readonly="true" class="ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty" aria-hidden="true" tabindex="-1" aria-invalid="false" style="">      <md-chips-wrap ng-keydown="$mdChipsCtrl.chipKeydown($event)" ng-class="{ 'md-focused': $mdChipsCtrl.hasFocus(),                       'md-readonly': !$mdChipsCtrl.ngModelCtrl || $mdChipsCtrl.readonly,                      'md-removable': $mdChipsCtrl.isRemovable() }" class="md-chips md-readonly">        <!-- ngRepeat: $chip in $mdChipsCtrl.items -->        <!-- ngIf: !$mdChipsCtrl.readonly && $mdChipsCtrl.ngModelCtrl -->      </md-chips-wrap></md-chips></div>
     </div>
 
     <div class="form-group">
         <label class="control-label col-sm-2">System Size (kW): </label>
         <div class="col-sm-4">
-            <p ng-bind="project.system_capacity"></p>
+            <p ng-bind="project.system_capacity" class="ng-binding">210</p>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-2">Shipping Address:</label>
         <div class="col-sm-4">
-            <p ng-bind="project.shipping_address"></p>
+            <p ng-bind="project.shipping_address" class="ng-binding">266 10th Street, Brooklyn, NY 11215</p>
         </div>
     </div>
+</div>
 </div>
 <br />
 <div class="list-group">

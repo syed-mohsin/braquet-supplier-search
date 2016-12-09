@@ -39,6 +39,10 @@ a:hover .header-profile-image {
 .project-view .page-header {
     margin: 0 0 18px;
 }
+.project-view img {
+    width: 110%;
+    max-width: 297px;
+}
 html,
 body {
     height: 100%;
