@@ -84,6 +84,10 @@ var UserSchema = new Schema({
     default: ['user'],
     required: 'Please provide at least one role'
   },
+  contacts: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
   updated: {
     type: Date
   },

@@ -28,7 +28,14 @@ exports.signup = function (req, res) {
 
   // Add missing user fields
   user.provider = 'local';
-  user.displayName = user.firstName + ' ' + user.lastName;
+  var displayName = user.firstName + ' ' + user.lastName;
+  
+  // convert name to title case
+  user.displayName = displayName.toLowerCase()
+    .split(' ')
+    .map(i => i[0].toUpperCase() + i.substring(1))
+    .join(' ')
+  ;
 
   // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
   if (req.body.user_role === '1')
