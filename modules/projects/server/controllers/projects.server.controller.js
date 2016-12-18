@@ -34,7 +34,7 @@ exports.create = function (req, res) {
 
       // set a listener for bid deadline
       var date = new Date(project.bid_deadline);
-      var j = schedule.scheduleJob(new Date((new Date).getTime() + 5000), function() {
+      var j = schedule.scheduleJob(new Date((new Date()).getTime() + 5000), function() {
 
         // send notification to all associated with project
         Project.findById(project._id) 

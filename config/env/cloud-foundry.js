@@ -66,10 +66,10 @@ module.exports = {
   mailer: {
     from: getCred('mean-mail', 'from') || 'Braquet',
     options: {
-      service: getCred('mean-mail', 'service') || 'gmail',
+      service: getCred('mean-mail', 'service') || 'ugei',
       auth: {
-        user: getCred('mean-mail', 'username') || 'braquet.app',
-        pass: getCred('mean-mail', 'password') || 'braquet2016'
+        user: getCred('mean-mail', 'username') || 'takayuki.koizumi',
+        pass: getCred('mean-mail', 'password') || 'TakaTaka1987'
       }
     }
   },

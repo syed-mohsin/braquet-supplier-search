@@ -69,10 +69,10 @@ module.exports = {
   mailer: {
     from: process.env.MAILER_FROM || 'Braquet',
     options: {
-      service: process.env.MAILER_SERVICE_PROVIDER || 'gmail',
+      service: process.env.MAILER_SERVICE_PROVIDER || 'ugei',
       auth: {
-        user: process.env.MAILER_EMAIL_ID || 'braquet.app',
-        pass: process.env.MAILER_PASSWORD || 'braquet2016'
+        user: process.env.MAILER_EMAIL_ID || 'takayuki.koizumi',
+        pass: process.env.MAILER_PASSWORD || 'TakaTaka1987'
       }
     }
   },
