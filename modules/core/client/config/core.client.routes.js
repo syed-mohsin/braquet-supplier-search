@@ -18,7 +18,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       templateUrl: 'modules/core/client/views/home.client.view.html',
       controller: function($state, Authentication) {
         if (Authentication.user) $state.go('dashboard');
-        else $state.go('welcome');
+        // else $state.go('welcome');
       }
     })
     // eventual home page for users
