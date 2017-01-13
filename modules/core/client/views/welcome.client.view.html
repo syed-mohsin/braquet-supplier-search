@@ -1,0 +1,19 @@
+<section ng-controller="HomeController">
+    <section class="welcome banner">
+        <div class="detail container">
+            <h2>Get more bids</h2>
+            <p>Need more suppliers for your solar projects? Upload your project and start receiving bids.</p>
+            <div class="signup">
+                <p>Sign up to get notified when we launch</p>
+                <form action="https://service.capsulecrm.com/service/newlead" method="post">
+                    <input type="hidden" name="FORM_ID" value="fc8b01c7-7ad4-4a53-86c7-dfc6848cf0c3">
+                    <input type="hidden" name="COMPLETE_URL" value="http://localhost:3000/welcome/invite">
+                    <input type="hidden" name="FIRST_NAME" value="empty">
+                    <input type="hidden" name="LAST_NAME" value="empty">
+                    <input type="text" name="EMAIL" placeholder="Type your email here">
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </section>
+</section>

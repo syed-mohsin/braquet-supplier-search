@@ -20,7 +20,7 @@
         <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>
       </li>
     </ul>
-    <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
+ <!--    <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
       <li ui-sref-active="active">
         <a ui-sref="authentication.signup"><span class="glyphicon glyphicon-user"></span>Sign Up</a>
       </li>
@@ -32,7 +32,7 @@
       <li ui-sref-active="active">
         <a ui-sref="authentication.signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a>
       </li>
-    </ul>
+    </ul> -->
     <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
       <li class="dropdown" dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
