@@ -101,6 +101,37 @@ section h2 {
     background-size: cover;
     margin-bottom: 0;
 }
+
+.welcome.banner {
+    text-align: center;
+    background: url('/modules/core/client/img/asset/home_banner2.jpg');
+    height: 100vh;
+    background-size: cover;
+    margin-bottom: 0;
+}
+.welcome.banner .detail {
+    position: relative;
+    top: 10em;
+    width: 270px;
+    background: white;
+    padding: 20px 36px;
+    margin: 0 auto;
+}
+.banner h2 {
+    margin-bottom: 20px;
+}
+
+.signup {
+    font-size: 11px; 
+    margin: 20px 0 10px 0px;
+}
+
+.signup input {
+    padding: 7px 5px;
+    margin: 3px 0;
+    text-align: center;
+}
+
 .container .banner {
     border-radius: 0;
 }
