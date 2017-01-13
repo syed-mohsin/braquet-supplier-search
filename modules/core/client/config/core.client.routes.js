@@ -17,13 +17,25 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/',
       templateUrl: 'modules/core/client/views/home.client.view.html',
       controller: function($state, Authentication) {
-        if (Authentication.user) $state.go('projects.list');
+        if (Authentication.user) $state.go('dashboard');
+        else $state.go('welcome');
       }
     })
     // eventual home page for users
     .state('dashboard', {
       url: '/dashboard',
       templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
+    })
+    .state('welcome', {
+      url: '/welcome',
+      templateUrl: 'modules/core/client/views/welcome.client.view.html',
+      data: {
+        ignoreState: true
+      }
+    })
+    .state('invite', {
+      url: '/welcome/invite',
+      templateUrl: 'modules/core/client/views/invite.client.view.html'
     })
     .state('not-found', {
       url: '/not-found',
