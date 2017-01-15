@@ -19,21 +19,14 @@ angular.module('connections').config(['$stateProvider',
       })
       .state('connections.create', {
         url: '/create',
-        templateUrl: 'modules/connections/client/views/create-project.client.view.html',
+        templateUrl: 'modules/connections/client/views/create-connection.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
       })
       .state('connections.view', {
-        url: '/:projectId',
-        templateUrl: 'modules/connections/client/views/view-project.client.view.html'
-      })
-      .state('connections.edit', {
-        url: '/:projectId/edit',
-        templateUrl: 'modules/connections/client/views/edit-project.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
+        url: '/:connectionId',
+        templateUrl: 'modules/connections/client/views/view-connection.client.view.html'
       });
   }
 ]);
