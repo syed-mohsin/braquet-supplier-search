@@ -126,7 +126,7 @@ exports.storeBid = function (req, res) {
 };
 
 /**
- * Delete an project
+ * Delete a project
  */
 exports.delete = function (req, res) {
   var project = req.project;

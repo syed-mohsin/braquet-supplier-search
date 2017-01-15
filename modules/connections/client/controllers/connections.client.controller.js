@@ -2,8 +2,8 @@
 
 // Connections controller
 
-angular.module('projects').controller('ConnectionsController', ['$scope', '$stateParams', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Connections',
-  function ($scope, $stateParams, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects, Connections) {
+angular.module('projects').controller('ConnectionsController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Connections',
+  function ($scope, $state, $stateParams, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects, Connections) {
     $scope.authentication = Authentication;
   	
   	Connections.query(function (data) {
