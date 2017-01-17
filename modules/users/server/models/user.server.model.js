@@ -84,9 +84,20 @@ var UserSchema = new Schema({
     default: ['user'],
     required: 'Please provide at least one role'
   },
-  contacts: [{
+  connections: [{
+    type: Schema.ObjectId,
+    ref: 'Connection'
+  }],
+  sent_user_invites: [{
     type: Schema.ObjectId,
     ref: 'User'
+  }],
+  received_user_invites: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
+  sent_email_invites: [{
+    type: String // email addresses
   }],
   updated: {
     type: Date
@@ -100,6 +111,17 @@ var UserSchema = new Schema({
     type: String
   },
   resetPasswordExpires: {
+    type: Date
+  },
+  /* For inviting new connections */
+  inviteToken: [{
+    type: String
+  }],
+  /* For inviting to project */
+  inviteToProject: {
+    type: String
+  },
+  inviteToProjectExpires: {
     type: Date
   }
 });
