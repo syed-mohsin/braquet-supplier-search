@@ -2,7 +2,7 @@
 
 // Connections controller
 
-angular.module('projects').controller('ConnectionsController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Connections',
+angular.module('connections').controller('ConnectionsController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Connections',
   function ($scope, $state, $stateParams, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects, Connections) {
     $scope.authentication = Authentication;
   	
@@ -59,6 +59,13 @@ angular.module('projects').controller('ConnectionsController', ['$scope', '$stat
           });
         }
       }
+    };
+
+    // Find a list of ALL Connections
+    $scope.find = function () {
+      Connections.query({}, function(connections) {
+  		$scope.connections = connections;
+      });
     };
 
     $scope.findOne = function () {

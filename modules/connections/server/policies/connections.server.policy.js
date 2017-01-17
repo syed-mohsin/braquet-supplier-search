@@ -40,9 +40,9 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If an connection is being processed and the current user created it then allow any manipulation
-  if (req.connection && req.user && req.connection.user.id === req.user.id) {
-    return next();
-  }
+  // if (req.connection && req.user && req.connection.user.id === req.user.id) {
+  //   return next();
+  // }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

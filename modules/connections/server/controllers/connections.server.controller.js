@@ -36,7 +36,7 @@ exports.delete = function (req, res) {
  * List of current user's Connections
  */
 exports.list = function (req, res) {
-  Connection.find().sort('-created')
+  Connection.find()
     .populate('user')
     .exec(function (err, connections) {
     if (err) {
