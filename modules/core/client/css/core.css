@@ -48,10 +48,98 @@ body {
     height: 100%;
     /* The html and body elements cannot have any padding or margin. */
 }
+
+body {
+    color: #555459;
+}
+
+a {
+    color: #42c299;
+    font-weight: 700;
+}
+
 a:hover {
     text-decoration: none;
 }
 /* Wrapper for page content to push down footer */
+
+/* Form Style */
+
+.welcome form {
+    border-style: none;
+    border-width: 0;
+    border-color: inherit;
+    padding: inherit;
+    width: inherit;
+}
+
+form {
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgrey;
+    padding: 40px 50px 40px 50px;
+    min-width: 250px;
+    max-width: 450px;
+    margin: auto auto;
+    text-align: center;
+}
+
+form h2 {
+    margin: 30px auto;
+}
+
+form span {
+    margin: 15px 0 0 0;
+}
+
+form label {
+    font-weight: normal;
+}
+
+.form-group {
+    text-align: left;
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.signup {
+    margin: 40px auto 0 auto;
+    padding: 0px 50px 40px 50px;
+    max-width: 450px;
+    font-weight: 700;
+}
+
+.remember-password {
+    float: left;
+}
+
+.forgot-password {
+    float: right;
+}
+
+.btn-primary, .btn-default {
+    background: #42c299;
+    border-color: #42c299;
+    font-weight: 700;
+    padding: 9px 22px;
+    text-shadow: none;
+    color: white;
+}
+
+form .btn-primary, form .btn-default {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.btn-primary:hover, .btn-default:hover {
+    background: #42c299;
+    color: white;
+    border-color: #42c299;
+    border-bottom-color: cadetblue;
+    border-bottom-width: 4px;
+}
 
 section.content {
     min-height: 82%;
@@ -59,6 +147,7 @@ section.content {
     height: 100%;
     position: relative;
     top: 50px;
+    margin-bottom: 20px;
     /* Negative indent footer by it's height */
     /*  margin: 0 auto -60px;*/
 }
@@ -78,7 +167,7 @@ section.content {
     text-align: center;
 }
 section h2 {
-    font-weight: 100;
+    font-weight: 500;
 }
 .logo {
     width: 150px;
@@ -121,12 +210,14 @@ section h2 {
     margin-bottom: 20px;
 }
 
-.signup {
+.welcome .signup {
     font-size: 11px; 
     margin: 20px 0 10px 0px;
+    width: initial;
+    padding: initial;
 }
 
-.signup input {
+.welcome .signup input {
     padding: 7px 5px;
     margin: 3px 0;
     text-align: center;
