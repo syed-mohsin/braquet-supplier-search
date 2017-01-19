@@ -71,6 +71,7 @@ a:hover {
     border-color: inherit;
     padding: inherit;
     width: inherit;
+    min-width: initial;
 }
 
 form {
