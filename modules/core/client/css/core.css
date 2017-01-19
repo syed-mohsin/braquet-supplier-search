@@ -71,6 +71,7 @@ a:hover {
     border-color: inherit;
     padding: inherit;
     width: inherit;
+    min-width: initial;
 }
 
 form {
@@ -78,7 +79,7 @@ form {
     border-width: 1px;
     border-color: lightgrey;
     padding: 40px 50px 40px 50px;
-    min-width: 250px;
+    min-width: 350px;
     max-width: 450px;
     margin: auto auto;
     text-align: center;
@@ -94,6 +95,12 @@ form span {
 
 form label {
     font-weight: normal;
+}
+
+.profile-picture form {
+    width: 223px;
+    min-width: initial;
+    max-width: initial;
 }
 
 .form-group {
@@ -126,6 +133,11 @@ input[type="checkbox"] {
     padding: 9px 22px;
     text-shadow: none;
     color: white;
+}
+
+button.cancel {
+    background: #d9534f;
+    border-color: #d9534f;
 }
 
 form .btn-primary, form .btn-default {
@@ -385,9 +397,6 @@ section h2 {
 .list-detail h5 {
     padding-left: 0;
 }
-.project-title {
-    color: #4CAF50;
-}
 .place-bid {
     background: #4CAF50;
     color: white;
@@ -411,8 +420,20 @@ section h2 {
 .accepted-panels div {
     margin-top: 5px;
 }
+.md-chips {
+    font-size: 12px;
+}
 .md-chip-remove svg {
-    margin-left: 6px;
+    margin-left: 9px;
+    margin-top: 6px;
     width: 50%;
     height: 50%;
+}
+.md-chips md-chip {
+    border-radius: 6px;
+}
+
+md-chips.md-default-theme md-chip, md-chips md-chip {
+    background: #84b6eb;
+    color: white;
 }
