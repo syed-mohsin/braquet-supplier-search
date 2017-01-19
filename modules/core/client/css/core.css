@@ -71,6 +71,7 @@ a:hover {
     border-color: inherit;
     padding: inherit;
     width: inherit;
+    min-width: initial;
 }
 
 form {
@@ -78,7 +79,7 @@ form {
     border-width: 1px;
     border-color: lightgrey;
     padding: 40px 50px 40px 50px;
-    min-width: 300px;
+    min-width: 350px;
     max-width: 450px;
     margin: auto auto;
     text-align: center;
@@ -94,6 +95,12 @@ form span {
 
 form label {
     font-weight: normal;
+}
+
+.profile-picture form {
+    width: 223px;
+    min-width: initial;
+    max-width: initial;
 }
 
 .form-group {
@@ -126,6 +133,11 @@ input[type="checkbox"] {
     padding: 9px 22px;
     text-shadow: none;
     color: white;
+}
+
+button.cancel {
+    background: #d9534f;
+    border-color: #d9534f;
 }
 
 form .btn-primary, form .btn-default {
