@@ -44,7 +44,14 @@
     <div class="form-group">
         <label class="control-label col-sm-2">Panel Model: </label>
         <div class="col-sm-4">
-            <md-chips ng-model="project.panel_models" readonly="true" class="ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty" aria-hidden="true" tabindex="-1" aria-invalid="false" style="">      <md-chips-wrap ng-keydown="$mdChipsCtrl.chipKeydown($event)" ng-class="{ 'md-focused': $mdChipsCtrl.hasFocus(),                       'md-readonly': !$mdChipsCtrl.ngModelCtrl || $mdChipsCtrl.readonly,                      'md-removable': $mdChipsCtrl.isRemovable() }" class="md-chips md-readonly">        <!-- ngRepeat: $chip in $mdChipsCtrl.items -->        <!-- ngIf: !$mdChipsCtrl.readonly && $mdChipsCtrl.ngModelCtrl -->      </md-chips-wrap></md-chips></div>
+            <md-chips ng-model="project.panel_models" readonly="true" class="ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty" aria-hidden="true" tabindex="-1" aria-invalid="false" style="">      <md-chips-wrap ng-keydown="$mdChipsCtrl.chipKeydown($event)" ng-class="{ 'md-focused': $mdChipsCtrl.hasFocus(),                       'md-readonly': !$mdChipsCtrl.ngModelCtrl || $mdChipsCtrl.readonly,                      'md-removable': $mdChipsCtrl.isRemovable() }" class="md-chips md-readonly">        <!-- ngRepeat: $chip in $mdChipsCtrl.items -->        <!-- ngIf: !$mdChipsCtrl.readonly && $mdChipsCtrl.ngModelCtrl --> </md-chips-wrap>
+            <md-chip-template>
+              <span>{{$chip.manufacturer}}, {{$chip.model}}</span>
+            </md-chip-template>
+            </md-chips>
+
+
+            </div>
     </div>
 
     <div class="form-group">
