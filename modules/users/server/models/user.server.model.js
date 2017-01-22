@@ -86,7 +86,7 @@ var UserSchema = new Schema({
   },
   connections: [{
     type: Schema.ObjectId,
-    ref: 'Connection'
+    ref: 'User'
   }],
   sent_user_invites: [{
     type: Schema.ObjectId,
@@ -114,20 +114,14 @@ var UserSchema = new Schema({
     type: Date
   },
   /* For inviting new connections */
-  inviteToken: [{
+  inviteToken: {
     type: String
-  }],
-  /* For inviting to project */
-  inviteToProject: {
-    type: String
-  },
-  inviteToProjectExpires: {
-    type: Date
   }
 });
 
 /**
  * Hook a pre save method to hash the password
+ * generate Invite tokens and project tokens
  */
 UserSchema.pre('save', function (next) {
   if (this.password && this.isModified('password')) {
@@ -135,7 +129,13 @@ UserSchema.pre('save', function (next) {
     this.password = this.hashPassword(this.password);
   }
 
-  next();
+  var schemaThis = this;
+  crypto.randomBytes(20, function (err, buffer) {
+    var inviteToken = buffer.toString('hex');
+    schemaThis.inviteToken = inviteToken;
+
+    next();
+  });
 });
 
 /**

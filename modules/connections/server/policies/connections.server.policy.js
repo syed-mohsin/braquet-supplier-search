@@ -29,6 +29,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/connections/:connectionId',
       permissions: ['get', 'post']
+    }, {
+      resources: '/api/connection-auth/send-invite',
+      permissions: ['post']
     }]
   }]);
 };

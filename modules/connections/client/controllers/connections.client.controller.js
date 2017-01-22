@@ -2,14 +2,39 @@
 
 // Connections controller
 
-angular.module('connections').controller('ConnectionsController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Connections',
-  function ($scope, $state, $stateParams, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects, Connections) {
+angular.module('connections').controller('ConnectionsController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Connections',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects, Connections) {
     $scope.authentication = Authentication;
   	
   	Connections.query(function (data) {
       $scope.connections = data;
       $scope.buildPager();
     });
+
+    $scope.inviteByEmail = function(isValid) {
+      $scope.success = $scope.error = null;
+
+      console.log(isValid);
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'InviteByEmailForm');
+
+        return false;
+      }
+
+      $http.post('/api/connection-auth/send-invite', $scope.credentials).success(function (response) {
+        // Show user success message and clear form
+        $scope.credentials = null;
+        $scope.success = response.message;
+        console.log(response);
+
+      }).error(function (response) {
+        // Show user error message and clear form
+        $scope.credentials = null;
+        $scope.error = response.message;
+      });
+
+    };
 
     // Add new connection
     $scope.create = function (userId) {
