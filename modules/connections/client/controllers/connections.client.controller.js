@@ -36,6 +36,17 @@ angular.module('connections').controller('ConnectionsController', ['$scope', '$s
 
     };
 
+    // Accept User connection invite
+    $scope.acceptRequest = function(user) {
+      $http.post('/api/connection-auth/accept-invite', user)
+        .success(function(response) {
+          var conn_index = $scope.connection_requests.indexOf(user);
+          $scope.connection_requests[conn_index].isAccepted = true;
+          $scope.connection_requests.splice(conn_index, 1);
+          $scope.connections.push(user);
+      });
+    };
+
     // Add new connection
     $scope.create = function (userId) {
       $scope.error = null;
@@ -90,6 +101,10 @@ angular.module('connections').controller('ConnectionsController', ['$scope', '$s
     $scope.find = function () {
       Connections.query({}, function(connections) {
   		$scope.connections = connections;
+      });
+
+      $http.get('/api/connection-requests').success(function(requests) {
+        $scope.connection_requests = requests;
       });
     };
 

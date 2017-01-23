@@ -42,7 +42,6 @@ exports.signup = function (req, res) {
   if (req.body.user_role === '1')
     user.roles = ['seller'];
 
-  console.log(req.body.email, req.body.inviteToken);
   // check if user was invited and connect upon signup
   async.waterfall([
     function(done) {
@@ -51,7 +50,7 @@ exports.signup = function (req, res) {
         sent_email_invites: { $in: [req.body.email] }
         }, function(err, invitingUser) {
         if (invitingUser) {
-          console.log("USER EXISTSSSSS: ", invitingUser);
+          // user exists
         }
         done(err, invitingUser);
       });
@@ -80,24 +79,24 @@ exports.signup = function (req, res) {
               invitingUser.sent_email_invites.splice(index, 1);
               invitingUser.connections.push(user._id);
             }
-          }
 
-          // save invitingUser
-          invitingUser.save(function(err) {
-            if (err) {
-              return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-              });
-            } else {
-              req.login(user, function (err) {
-                if (err) {
-                  res.status(400).send(err);
-                } else {
-                  res.json(user);
-                }
-              });
-            }
-          });
+            // save invitingUser
+            invitingUser.save(function(err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                req.login(user, function (err) {
+                  if (err) {
+                    res.status(400).send(err);
+                  } else {
+                    res.json(user);
+                  }
+                });
+              }
+            });
+          }
         }
       });
     }

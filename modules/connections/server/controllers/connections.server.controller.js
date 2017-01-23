@@ -55,6 +55,21 @@ exports.list = function (req, res) {
 };
 
 /**
+ * List of user connection requests
+ */
+exports.listConnectionRequests = function (req, res) {
+  User.find({ _id : {$in : req.user.received_user_invites} }, function(err, requests) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(requests);
+  });
+};
+
+/**
  * Send an email invite to user to connect with sending
  */
 exports.inviteByEmail = function(req, res, next) {
@@ -81,6 +96,11 @@ exports.inviteByEmail = function(req, res, next) {
                 message: "You have already invited this user"
               });
             } 
+            else if (existingUser.connections.indexOf(user._id) !== -1) {
+              return res.status(400).send({
+                message: "You are already connected to " + user.displayName
+              });
+            }
             // return error if inviting oneself (forever alone)
             else if(existingUser._id.toHexString() === user._id.toHexString()) {
               return res.status(400).send({
@@ -162,6 +182,48 @@ exports.inviteByEmail = function(req, res, next) {
         return next(err);
       }
     });
+};
+
+exports.acceptUserInvite = function(req, res) {
+  User.findOne({_id : req.body._id}, function(err, invitingUser) {
+    if (invitingUser) {
+      var sent_index = invitingUser.sent_user_invites.indexOf(req.user._id);
+      var recv_index = req.user.received_user_invites.indexOf(invitingUser._id);
+
+      if (sent_index !== -1 && recv_index !== -1) {
+        // add user as connection
+        invitingUser.connections.push(req.user._id);
+        req.user.connections.push(invitingUser._id);
+
+        // empty sent_user_invites array
+        invitingUser.sent_user_invites.splice(sent_index, 1);
+        req.user.received_user_invites.splice(recv_index, 1);
+
+        // update both users
+        invitingUser.save(function(err) {
+          if (err) {
+            console.log('fuck');
+          }
+          req.user.save(function(err) {
+            if (err) {
+              console.log('fuck');
+            }
+            return res.status(200).send({
+              message: 'Connected to ' + invitingUser.displayName
+            });
+          });
+        });
+      } else {
+        return res.status(400).send({
+          message: 'Failed to connect'
+        });
+      }
+    } else {
+      return res.status(400).send({
+          message: 'User does not exist'
+        });
+    }
+  });
 };
 
 exports.signupByInviteAndConnect = function(req, res) {

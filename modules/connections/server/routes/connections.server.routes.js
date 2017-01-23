@@ -11,6 +11,14 @@ module.exports = function (app) {
   app.route('/api/connections').all(connectionsPolicy.isAllowed)
     .get(connections.list);
 
+  // get connection requests
+  app.route('/api/connection-requests').all(connectionsPolicy.isAllowed)
+    .get(connections.listConnectionRequests);
+
+  // accept received connection request
+  app.route('/api/connection-auth/accept-invite').all(connectionsPolicy.isAllowed)
+    .post(connections.acceptUserInvite);
+
   // Single connection routes
   app.route('/api/connections/:connectionId').all(connectionsPolicy.isAllowed)
     .get(connections.read)

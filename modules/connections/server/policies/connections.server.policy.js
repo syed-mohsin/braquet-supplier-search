@@ -27,6 +27,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/connections',
       permissions: ['get', 'post']
     }, {
+      resources: '/api/connection-requests',
+      permissions: ['get']
+    }, {
+      resources: '/api/connection-auth/accept-invite',
+      permissions: ['post']
+    }, {
       resources: '/api/connections/:connectionId',
       permissions: ['get', 'post']
     }, {

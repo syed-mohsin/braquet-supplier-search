@@ -21,7 +21,7 @@ angular.module('connections').config(['$stateProvider',
         url: '/create',
         templateUrl: 'modules/connections/client/views/create-connection.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user', 'seller', 'admin']
         }
       })
       .state('connections.view', {
