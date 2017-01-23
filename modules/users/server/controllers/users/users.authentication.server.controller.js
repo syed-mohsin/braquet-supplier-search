@@ -96,6 +96,14 @@ exports.signup = function (req, res) {
                 });
               }
             });
+          } else {
+            req.login(user, function (err) {
+              if (err) {
+                res.status(400).send(err);
+              } else {
+                res.json(user);
+              }
+            });
           }
         }
       });
