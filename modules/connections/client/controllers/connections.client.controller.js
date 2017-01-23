@@ -94,10 +94,10 @@ angular.module('connections').controller('ConnectionsController', ['$scope', '$s
     };
 
     $scope.findOne = function () {
-      $scope.connection = Connections.get({
+      Connections.get({
         connectionId: $stateParams.connectionId
       }, function(connection) {
-
+        $scope.connection = connection;
       }, function(error) {
         $location.path('/forbidden');
       });

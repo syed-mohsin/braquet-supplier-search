@@ -43,9 +43,7 @@ exports.delete = function (req, res) {
  * List of current user's Connections
  */
 exports.list = function (req, res) {
-  Connection.find()
-    .populate('user')
-    .exec(function (err, connections) {
+  User.find({_id : {$in : req.user.connections}}, function (err, connections) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -64,16 +62,6 @@ exports.inviteByEmail = function(req, res, next) {
   var isExistingUser = false;
 
   async.waterfall([
-    // get current user
-    // get email for invite
-    // lookup user by email
-    // generate invite token
-    // generate link for user
-    // send email to user
-    // store email, token as email/token pair
-    // store token in invite toekn section
-    // return success or error message
-
     function (done) {
       // check if user is associated with email
       User.findOne( { email: req.body.email.toLowerCase() 
@@ -178,7 +166,7 @@ exports.inviteByEmail = function(req, res, next) {
 
 exports.signupByInviteAndConnect = function(req, res) {
   console.log(req.params.inviteToken);
-  res.redirect('/authentication/signup');
+  res.redirect('/authentication/signup?i=' + req.params.inviteToken);
 };
 
 /**
@@ -191,15 +179,15 @@ exports.connectionByID = function (req, res, next, id) {
     });
   }
 
-  Connection.findById(id)
-    .populate('user')
-    .exec(function (err, connection) {
+  User.findById(id , function (err, connection) {
     if (err) {
       return next(err);
     } else if (!connection) {
       return next(new Error('Failed to load connection ' + id));
+    } else if (req.user.connections.indexOf[id] === -1 ) {
+      return next(new Error('Not connected to this user'));
     }
-
+    console.log(connection);
     req.connection = connection;
     next();
   });

@@ -10,9 +10,9 @@
     </div>
   </div>
   <div class="list-group">
-    <a ng-repeat="connection in pagedItems" ui-sref="connection.view({userId: user._id})" class="list-group-item">
-      <h4 class="list-group-item-heading" ng-bind="connection.user.username"></h4>
-      <p class="list-group-item-text" ng-bind="connection.user.email"></p>
+    <a ng-repeat="connection in pagedItems" ui-sref="connections.view({connectionId: connection._id})" class="list-group-item">
+      <h4 class="list-group-item-heading" ng-bind="connection.username"></h4>
+      <p class="list-group-item-text" ng-bind="connection.email"></p>
     </a>
   </div>
 

@@ -130,12 +130,17 @@ UserSchema.pre('save', function (next) {
   }
 
   var schemaThis = this;
-  crypto.randomBytes(20, function (err, buffer) {
-    var inviteToken = buffer.toString('hex');
-    schemaThis.inviteToken = inviteToken;
+  // only add inviteToken the first time
+  if (this.isNew) {
+    crypto.randomBytes(20, function (err, buffer) {
+      var inviteToken = buffer.toString('hex');
+      schemaThis.inviteToken = inviteToken;
 
+      next();
+    });
+  } else {
     next();
-  });
+  }
 });
 
 /**

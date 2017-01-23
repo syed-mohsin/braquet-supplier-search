@@ -26,7 +26,10 @@ angular.module('connections').config(['$stateProvider',
       })
       .state('connections.view', {
         url: '/:connectionId',
-        templateUrl: 'modules/connections/client/views/view-connection.client.view.html'
+        templateUrl: 'modules/connections/client/views/view-connection.client.view.html',
+        data: {
+          roles: ['user', 'seller', 'admin']
+        }
       });
   }
 ]);
