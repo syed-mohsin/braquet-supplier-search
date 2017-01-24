@@ -98,7 +98,7 @@ exports.inviteByEmail = function(req, res, next) {
             } 
             else if (existingUser.connections.indexOf(user._id) !== -1) {
               return res.status(400).send({
-                message: "You are already connected to " + user.displayName
+                message: "You are already connected to " + existingUser.displayName
               });
             }
             // return error if inviting oneself (forever alone)
