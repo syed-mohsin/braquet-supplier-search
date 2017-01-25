@@ -1,85 +1,112 @@
-<section class="project-view container" ng-controller="ProjectsController" ng-init="findOne()">
-    <div class="page-header">
-        <div class="project-header">
-            <h2 ng-bind="project.title"></h2>
+<section class="project-view" ng-controller="ProjectsController" ng-init="findOne()">
+    <div class="page-header col-sm-12">
+        <div class="project-header container">
+            <h3 ng-bind="project.title"></h3>
             <!-- only show this edit/delete option to buyers -->
-            <div class="pull-left edit-delete" ng-show="authentication.user._id === project.user._id">
+            <div class="pull-left menu edit-delete" ng-show="authentication.user._id === project.user._id">
                 <a class="first" ui-sref="projects.edit({projectId: project._id})" ng-show="project.bidOpen">
-                    Edit
+                    Edit Project
                 </a>
                 <a class="last" ng-click="remove();">
                     Delete
                 </a>
+
+            </div>
+            <div class="pull-left menu" ng-show="project.canBid">
+                <a class="place-bid" ui-sref="bids.create({projectId: project._id})">Place a Bid</a>
             </div>
         </div>
-         <!-- only show this bid div to sellers trying to bid on a project -->
-         <a class="place-bid" ng-show="project.canBid" ui-sref="bids.create({projectId: project._id})">Place a Bid</a>
+        <!-- only show this bid div to sellers trying to bid on a project -->
+        
     </div>
 
-<div style="
-    min-height: 300px;
-">
-  <div class="col-sm-4">
-    <img src="http://www.ugei.com/sites/default/files/imagecache/thumbnail/Toyota_1.jpg">
-  </div>
-<div class="form-horizontal data col-sm-6" style="
+    <div class="container">
+
+        <div class="form-horizontal data col-sm-12" style="
     overflow: auto;
 ">
-    <div class="form-group bid">
+            <div class="col-sm-6">
+                <div class="box">
+                    <!--         <label class="control-label col-sm-2">Remaining Time:</label>
+ -->
+                    <!--  <span class="bg-danger ng-isolate-scope ng-hide" countdown="" date="project.bid_deadline" ng-show="project.bidOpen" aria-hidden="true">-29d 5h 50m 7s</span> left -->
+                    <div ng-show="!project.bidOpen" aria-hidden="false" class="notice error">Bidding has closed.</div>
+                    <div class="notice" ng-show="project.bidOpen">
+                        Accepting bids until
+                        <span ng-bind="project.bid_deadline | date:'mediumDate'" class="ng-binding">Oct 21, 2016</span>
+                    </div>
+
+                </div>
+                <div class="box">
+                    <!--         <label class="control-label col-sm-2">Shipping Address:</label>
+ -->
+                    <div class="title">
+                        <div class="glyphicon glyphicon-map-marker"></div>
+                        Ship to
+                        <span ng-bind="project.shipping_address" class="ng-binding">266 10th Street, Brooklyn, NY 11215</span>
+                    </div>
+                </div>
+                <div class="box title-content">
+                <div class="title col-sm-12">
+                    <span class="col-sm-6">Recent bids</span>
+                    <span class="col-sm-6">Discussions</span>
+                </div>
+                    </div>
+                <div class="list-group col-sm-12">
+                    <a ng-repeat="bid in project.bids" class="list-group-item">
+
+                        <!-- ng-show="authentication.user._id == project.user._id" -->
+                        <div class="user-info">
+                        <div class="col-sm-2">
+                            <img ng-src="{{bid.user.profileImageURL}}">
+                        </div>
+                        <div class="detail">
+                            <div ng-bind="bid.user.displayName"></div>
+                            <small class="list-group-item-text">
+                            <span ng-bind="bid.created | date:'mediumDate'"></span>
+                             </small>
+                        </div>
+                        </div>
+                        <div>
+                            <h5 class="list-group-item-heading"><span><span ng-bind="bid.bid_price/100 | currency"></span>/W</span>  |  <span ng-bind="bid.delivery_date | date:'mediumDate'"></span></h5>
+<!--                             <h5 class="list-group-item-heading">Delivery Date: </h5>
+ -->                        </div>
+                    </a>
+                </div>
+            </div>
+            <!--     <div class="form-group bid">
         <label class="control-label col-sm-2">Winning Bid: </label>
         <div class="col-sm-4">
             <p ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'No Bids Placed'" class="ng-binding">$0.55/W</p>
         </div>
-    </div>
+    </div> -->
 
-    <div class="form-group">
-        <label class="control-label col-sm-2">Remaining Time:</label>
-        <div class="col-sm-4">
-            <span class="bg-danger ng-isolate-scope ng-hide" countdown="" date="project.bid_deadline" ng-show="project.bidOpen" aria-hidden="true">-29d 5h 50m 7s</span>
-            <b ng-show="!project.bidOpen" aria-hidden="false" class="">Bidding has closed</b>
-            <div>Ends: <span ng-bind="project.bid_deadline | date:'mediumDate'" class="ng-binding">Oct 21, 2016</span></div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-sm-2">Panel Model: </label>
-        <div class="col-sm-4">
-            <md-chips ng-model="project.panel_models" readonly="true" class="ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty" aria-hidden="true" tabindex="-1" aria-invalid="false" style="">      <md-chips-wrap ng-keydown="$mdChipsCtrl.chipKeydown($event)" ng-class="{ 'md-focused': $mdChipsCtrl.hasFocus(),                       'md-readonly': !$mdChipsCtrl.ngModelCtrl || $mdChipsCtrl.readonly,                      'md-removable': $mdChipsCtrl.isRemovable() }" class="md-chips md-readonly">        <!-- ngRepeat: $chip in $mdChipsCtrl.items -->        <!-- ngIf: !$mdChipsCtrl.readonly && $mdChipsCtrl.ngModelCtrl --> </md-chips-wrap>
-            <md-chip-template>
-              <span>{{$chip.manufacturer}}, {{$chip.model}}</span>
-            </md-chip-template>
-            </md-chips>
+            <div class="col-sm-3 box title-content">
+                <div class="title">Specified Products </div>
+                <div class="content">
+                    <md-chips ng-model="project.panel_models" readonly="true" class="ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty" aria-hidden="true" tabindex="-1" aria-invalid="false" style="">
+                        <md-chips-wrap ng-keydown="$mdChipsCtrl.chipKeydown($event)" ng-class="{ 'md-focused': $mdChipsCtrl.hasFocus(),                       'md-readonly': !$mdChipsCtrl.ngModelCtrl || $mdChipsCtrl.readonly,                      'md-removable': $mdChipsCtrl.isRemovable() }" class="md-chips md-readonly">
+                            <!-- ngRepeat: $chip in $mdChipsCtrl.items -->
+                            <!-- ngIf: !$mdChipsCtrl.readonly && $mdChipsCtrl.ngModelCtrl -->
+                        </md-chips-wrap>
+                        <md-chip-template>
+                            <span>{{$chip.manufacturer}}, {{$chip.model}}</span>
+                        </md-chip-template>
+                    </md-chips>
 
 
+                </div>
             </div>
-    </div>
 
-    <div class="form-group">
+            <!--     <div class="form-group">
         <label class="control-label col-sm-2">System Size (kW): </label>
         <div class="col-sm-4">
             <p ng-bind="project.system_capacity" class="ng-binding">210</p>
         </div>
+    </div> -->
     </div>
-    <div class="form-group">
-        <label class="control-label col-sm-2">Shipping Address:</label>
-        <div class="col-sm-4">
-            <p ng-bind="project.shipping_address" class="ng-binding">266 10th Street, Brooklyn, NY 11215</p>
-        </div>
     </div>
-</div>
-</div>
-<br />
-<div class="list-group">
-    <a ng-repeat="bid in project.bids" class="list-group-item">
-    <!-- ng-show="authentication.user._id == project.user._id" -->
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="bid.created | date:'mediumDate'"></span>
-        by
-        <span ng-bind="bid.user.displayName"></span>
-      </small>
-      <h5 class="list-group-item-heading">Bid Price: <span ng-bind="bid.bid_price/100 | currency"></span>/W</h5>
-      <h5 class="list-group-item-heading">Delivery Date: <span ng-bind="bid.delivery_date | date:'mediumDate'"></span></h5>
-    </a>
-</div>
+    <!-- <br />
+ -->
+
 </section>
