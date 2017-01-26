@@ -185,7 +185,7 @@ exports.inviteByEmail = function(req, res, next) {
 };
 
 exports.acceptUserInvite = function(req, res) {
-  User.findOne({_id : req.body._id}, function(err, invitingUser) {
+  User.findOne({_id : req.body._id}, '-salt -password', function(err, invitingUser) {
     if (invitingUser) {
       var sent_index = invitingUser.sent_user_invites.indexOf(req.user._id);
       var recv_index = req.user.received_user_invites.indexOf(invitingUser._id);
@@ -227,7 +227,6 @@ exports.acceptUserInvite = function(req, res) {
 };
 
 exports.signupByInviteAndConnect = function(req, res) {
-  console.log(req.params.inviteToken);
   res.redirect('/authentication/signup?i=' + req.params.inviteToken);
 };
 
@@ -249,7 +248,7 @@ exports.connectionByID = function (req, res, next, id) {
     } else if (req.user.connections.indexOf[id] === -1 ) {
       return next(new Error('Not connected to this user'));
     }
-    console.log(connection);
+
     req.connection = connection;
     next();
   });
