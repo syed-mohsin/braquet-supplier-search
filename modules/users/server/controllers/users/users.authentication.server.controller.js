@@ -7,6 +7,7 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
+  async = require('async'),
   User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin
@@ -41,23 +42,76 @@ exports.signup = function (req, res) {
   if (req.body.user_role === '1')
     user.roles = ['seller'];
 
-  // Then save the user
-  user.save(function (err) {
+  // check if user was invited and connect upon signup
+  async.waterfall([
+    function(done) {
+      User.findOne({ 
+        inviteToken: req.body.inviteToken,
+        sent_email_invites: { $in: [req.body.email] }
+        }, function(err, invitingUser) {
+        if (invitingUser) {
+          // user exists
+        }
+        done(err, invitingUser);
+      });
+    },
+    function(invitingUser, done) {
+      // add user connection if it exists
+      if (invitingUser) {
+        user.connections.push(invitingUser._id); 
+      }
+
+      // Then save the user
+      user.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          // Remove sensitive data before login
+          user.password = undefined;
+          user.salt = undefined;
+
+          // update the inviting user if exists
+          if (invitingUser) {
+            var index = invitingUser.sent_email_invites.indexOf(req.body.email);
+            if (index !== -1) {
+              invitingUser.sent_email_invites.splice(index, 1);
+              invitingUser.connections.push(user._id);
+            }
+
+            // save invitingUser
+            invitingUser.save(function(err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                req.login(user, function (err) {
+                  if (err) {
+                    res.status(400).send(err);
+                  } else {
+                    res.json(user);
+                  }
+                });
+              }
+            });
+          } else {
+            req.login(user, function (err) {
+              if (err) {
+                res.status(400).send(err);
+              } else {
+                res.json(user);
+              }
+            });
+          }
+        }
+      });
+    }
+    ], function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
-
-      req.login(user, function (err) {
-        if (err) {
-          res.status(400).send(err);
-        } else {
-          res.json(user);
-        }
       });
     }
   });

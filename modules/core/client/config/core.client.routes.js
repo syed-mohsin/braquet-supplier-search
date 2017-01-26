@@ -15,10 +15,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     $stateProvider
     .state('home', {
       url: '/',
-      templateUrl: 'modules/core/client/views/home.client.view.html',
+      templateUrl: 'modules/core/client/views/welcome.client.view.html',
       controller: function($state, Authentication) {
         if (Authentication.user) $state.go('dashboard');
-        else $state.go('welcome');
+        // else $state.go('welcome');
       }
     })
     // eventual home page for users
