@@ -143,6 +143,7 @@ button.cancel {
 form .btn-primary, form .btn-default {
     width: 100%;
     margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .btn-primary:hover, .btn-default:hover {
