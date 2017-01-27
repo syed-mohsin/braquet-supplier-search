@@ -310,11 +310,8 @@ section h2 {
 .projects {
     list-style-type: none;
 }
-.project-header {
-    min-height: 70px;
-}
 .project-header h3 {
-    float: left;
+    margin-bottom: 20px;
 }
 .project-header .btn-primary {
     background: grey;
@@ -323,26 +320,27 @@ section h2 {
 .project-header .menu {
     margin-top: 25px;
     margin-left: 20px;
-}
-.project-header .menu a {
-    padding: 6px 20px;
     border-style: solid;
     border-width: 1px;
     border-right: none;
     border-color: lightgrey;
-    color: #444;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.project-header .menu a.place-bid {
+    padding: 6px 20px;
     border-right-style: solid;
     border-right-width: 1px;
     background: initial;
-    border-radius:initial;
+    border-radius: initial;
+    text-align: center;
+    cursor: pointer;
 }
-.edit-delete a:hover, .project-header .menu a:hover {
+.project-header .menu a {
+    color: #444;
+    font-size: 12px;
+    font-weight: 500;
+}
+.project-header .menu a.place-bid {
+    background: initial;
+}
+.edit-delete a:hover, .project-header .menu:hover {
     background: rgba(1,1,1,0.1);
 }
 .edit-delete a.first {
@@ -394,15 +392,24 @@ section h2 {
 }
 .project-view .page-header {
     margin: 0 0 18px;
+    text-align: center;
 }
-.project-view img {
-    width: 50px;
+.project-view img.profile {
+    width: 25px;
+    margin-right: 5px;
+    border-radius: 50%;
     float: left;
-    margin-right: 10px;
+}
+.project-view img.company-logo {
+    width: 50px;
+    margin-bottom: 15px;
 }
 
 .box {
-    margin: 10px 5px;
+    margin: 10px 0;
+}
+.list-group .box {
+    margin-top: 0;
 }
 .box.title-content {
     background: white;
@@ -418,15 +425,16 @@ section h2 {
     border-bottom: 1px solid #E6E6E6;
     text-transform: uppercase;
     font-weight: 500;
+    text-align: center;
+}
+.box.title-content .title span {
+    width: 50%;
 }
 .box.title-content .title span {
     text-align: center;
 }
 .box.title-content .content {
     padding: 5px 10px;
-}
-.list-group-item .user-info {
-    height: 60px;
 }
 .box.title-content md-chips .md-chips {
     box-shadow: initial;
@@ -449,10 +457,15 @@ section h2 {
     float: left;
 }
 .list-group {
-    margin: 10px 5px;
+    margin: 10px 0;
+    padding-left: inherit;
+    box-shadow: none;
 }
 .list-group h4{
     font-weight: bold;
+}
+.list-group-item-heading {
+    color: inherit;
 }
 .list-group-item {
     margin-bottom: 10px;
@@ -465,10 +478,13 @@ section h2 {
     padding-left: 0;
 }
 .place-bid {
-    background: #4CAF50;
-    color: white;
-    padding: 5px;
-    border-radius: 2px;
+    background: transparent;
+    border-style: solid;
+    border-width: 1px;
+    padding: 6px 20px;
+    border-color: lightgrey;
+    cursor: pointer;
+    color: #444;
 }
 .bid label, .bid p {
     font-weight: bold;
@@ -497,7 +513,7 @@ section h2 {
     height: 50%;
 }
 .md-chips md-chip {
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 md-chips.md-default-theme md-chip, md-chips md-chip {
