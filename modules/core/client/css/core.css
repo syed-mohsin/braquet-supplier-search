@@ -147,6 +147,7 @@ button.cancel {
 form .btn-primary, form .btn-default {
     width: 100%;
     margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .btn-primary:hover, .btn-default:hover {
@@ -322,7 +323,7 @@ section h2 {
     margin-left: 20px;
     border-style: solid;
     border-width: 1px;
-    border-right: none;
+    border-right-width: 1px;
     border-color: lightgrey;
     padding: 6px 20px;
     border-right-style: solid;

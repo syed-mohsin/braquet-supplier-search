@@ -1,0 +1,35 @@
+<section class="container connections" ng-controller="ConnectionsController" ng-init="find()">
+  <div class="page-header">
+    <div class="row">
+      <div class="col-md-4">
+        <h1>Connections</h1>
+      </div>
+      <div class="col-md-4" style="margin-top: 2em">
+        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+      </div>
+    </div>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="connection in pagedItems" ui-sref="connections.view({connectionId: connection._id})" class="list-group-item">
+      <h4 class="list-group-item-heading" ng-bind="connection.username"></h4>
+      <p class="list-group-item-text" ng-bind="connection.email"></p>
+    </a>
+  </div>
+  <hr/>
+  <!-- Connection requests -->
+   <div class="list-group">
+    <div ng-repeat="connection in connection_requests" class="list-group-item">
+      <div class="detail">
+        <a class="connection-title" ui-sref="connections.view({connectionId: connection._id})">
+            <h4 class="list-group-item-heading" ng-bind="connection.username"></h4>
+        </a>
+        <p class="list-group-item-text" ng-bind="connection.email"></p>
+        <div ng-show="!connection.isPending" ng-click="acceptRequest(connection)">
+          <a class="place-bid" >Accept Request</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+</section>

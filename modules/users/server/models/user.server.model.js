@@ -84,9 +84,20 @@ var UserSchema = new Schema({
     default: ['user'],
     required: 'Please provide at least one role'
   },
-  contacts: [{
+  connections: [{
     type: Schema.ObjectId,
     ref: 'User'
+  }],
+  sent_user_invites: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
+  received_user_invites: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
+  sent_email_invites: [{
+    type: String // email addresses
   }],
   updated: {
     type: Date
@@ -101,11 +112,16 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  /* For inviting new connections */
+  inviteToken: {
+    type: String
   }
 });
 
 /**
  * Hook a pre save method to hash the password
+ * generate Invite tokens and project tokens
  */
 UserSchema.pre('save', function (next) {
   if (this.password && this.isModified('password')) {
@@ -113,7 +129,18 @@ UserSchema.pre('save', function (next) {
     this.password = this.hashPassword(this.password);
   }
 
-  next();
+  var schemaThis = this;
+  // only add inviteToken the first time
+  if (this.isNew) {
+    crypto.randomBytes(20, function (err, buffer) {
+      var inviteToken = buffer.toString('hex');
+      schemaThis.inviteToken = inviteToken;
+
+      next();
+    });
+  } else {
+    next();
+  }
 });
 
 /**
