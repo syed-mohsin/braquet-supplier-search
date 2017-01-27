@@ -491,6 +491,9 @@ section h2 {
     font-weight: bold;
     font-size: medium;
 }
+.bid .comment {
+    overflow: auto;
+}
 .bid-list img {
     width: 100px;
     float: left;
