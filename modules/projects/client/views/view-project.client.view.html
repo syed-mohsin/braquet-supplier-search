@@ -2,8 +2,13 @@
     <div class="page-header col-sm-12">
         <div class="project-header container">
             <h3 ng-bind="project.title"></h3>
-            <!-- only show this edit/delete option to buyers -->
-            <div class="pull-left menu edit-delete" ng-show="authentication.user._id === project.user._id">
+
+        </div>
+            <div class="menu" ng-show="project.canBid">
+                <a class="place-bid" ui-sref="bids.create({projectId: project._id})"><span class="glyphicon glyphicon-tag"></span><span >Place a Bid</span></a>
+            </div>
+                        <!-- only show this edit/delete option to buyers -->
+            <div class="menu" ng-show="authentication.user._id === project.user._id">
                 <a class="first" ui-sref="projects.edit({projectId: project._id})" ng-show="project.bidOpen">
                     Edit Project
                 </a>
@@ -11,11 +16,6 @@
                     Delete
                 </a>
 
-            </div>
-
-        </div>
-            <div class="container" ng-show="project.canBid">
-                <a class="place-bid" ui-sref="bids.create({projectId: project._id})"><span class="glyphicon glyphicon-tag"></span><span >Place a Bid</span></a>
             </div>
         <!-- only show this bid div to sellers trying to bid on a project -->
 
