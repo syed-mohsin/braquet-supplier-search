@@ -32,17 +32,7 @@ a:hover .header-profile-image {
 .has-error .help-inline.error-text {
     display: inline;
 }
-.page-header {
-    margin: 70px 0 20px;
-    padding-bottom: 20px;
-}
-.project-view .page-header {
-    margin: 0 0 18px;
-}
-.project-view img {
-    width: 110%;
-    max-width: 297px;
-}
+
 html,
 body {
     height: 100%;
@@ -50,7 +40,8 @@ body {
 }
 
 body {
-    color: #555459;
+    color: #444;
+    background: #f2f2f2;
 }
 
 a {
@@ -75,6 +66,7 @@ a:hover {
 }
 
 form {
+    background: white;
     border-style: solid;
     border-width: 1px;
     border-color: lightgrey;
@@ -95,6 +87,19 @@ form span {
 
 form label {
     font-weight: normal;
+}
+
+.notice {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    color: #fff;
+    font-weight: 500;
+    background: #45A47C;
+}
+
+.notice.error {
+    background: #C74B4B;
 }
 
 .profile-picture form {
@@ -127,8 +132,7 @@ input[type="checkbox"] {
 }
 
 .btn-primary, .btn-default {
-    background: #42c299;
-    border-color: #42c299;
+    background: #222;
     font-weight: 700;
     padding: 9px 22px;
     text-shadow: none;
@@ -147,10 +151,10 @@ form .btn-primary, form .btn-default {
 }
 
 .btn-primary:hover, .btn-default:hover {
-    background: #42c299;
+    background: #222;
     color: white;
-    border-color: #42c299;
-    border-bottom-color: cadetblue;
+    border-color: #222;
+    border-bottom-color: black;
     border-bottom-width: 4px;
 }
 
@@ -307,40 +311,40 @@ section h2 {
 .projects {
     list-style-type: none;
 }
-.project-header {
-    height: 70px;
-}
-.project-header h2 {
-    float: left;
+.project-header h3 {
+    margin-bottom: 20px;
 }
 .project-header .btn-primary {
     background: grey;
     border-style: none;
 }
-.edit-delete {
-    margin-top: 25px;
-    margin-left: 20px;
-}
-.edit-delete a {
-    padding: 5px 10px;
+.page-header .menu a {
+    color: #444;
+    font-size: 12px;
+    font-weight: 500;
     border-style: solid;
     border-width: 1px;
     border-right-width: 1px;
     border-color: lightgrey;
-    color: grey;
+    padding: 6px 20px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    background: initial;
+    border-radius: initial;
+    text-align: center;
     cursor: pointer;
 }
-.edit-delete a:hover {
-    background: rgba(1,1,1,0.1);
+.page-header .menu a:hover {
+    background:rgba(1,1,1,0.1);
 }
-.edit-delete a.first {
+.page-header .menu a.first {
     border-left-style: solid;
     border-left-width: 1px;
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
 }
 
-.edit-delete a.last {
+.page-header .menu a.last {
     border-right-style: solid;
     border-right-width: 1px;
     border-top-right-radius: 2px;
@@ -363,7 +367,7 @@ section h2 {
     padding-top: 0px;
 }
 .footer {
-    background: black;
+    background: #222;
     color: white;
     font-weight: 200;
     text-align: center;
@@ -375,6 +379,64 @@ section h2 {
 .footer a {
     color: white;
     margin-top: 30px;
+}
+.page-header {
+    margin: 70px 0 20px;
+    padding-bottom: initial;
+}
+.project-view .page-header {
+    margin: 0 0 18px;
+    text-align: center;
+}
+.project-view img.profile {
+    width: 25px;
+    margin-right: 5px;
+    border-radius: 50%;
+    float: left;
+}
+.project-view img.company-logo {
+    width: 50px;
+    margin-bottom: 15px;
+}
+
+.box {
+    margin: 10px 0;
+}
+.list-group .box {
+    margin-top: 0;
+}
+.box.title-content {
+    background: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgrey;
+    padding: initial;
+}
+.box.title-content .title {
+    background: white;
+    color: #555459;
+    padding: 12px 15px;
+    border-bottom: 1px solid #E6E6E6;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: center;
+}
+.box.title-content .title span {
+    width: 50%;
+}
+.box.title-content .title span {
+    text-align: center;
+}
+.box.title-content .content {
+    padding: 5px 10px;
+}
+.box.title-content md-chips .md-chips {
+    box-shadow: initial;
+}
+.box .title {
+    padding: 15px 15px;
+    background: #222;
+    color: white;
 }
 .project .list-group-item {
     height: 225px;
@@ -388,8 +450,19 @@ section h2 {
 .project .detail {
     float: left;
 }
+.list-group {
+    margin: 10px 0;
+    padding-left: inherit;
+    box-shadow: none;
+}
 .list-group h4{
     font-weight: bold;
+}
+.list-group-item-heading {
+    color: inherit;
+}
+.list-group-item {
+    margin-bottom: 10px;
 }
 .list-detail {
     margin-top: 10px;
@@ -398,15 +471,12 @@ section h2 {
 .list-detail h5 {
     padding-left: 0;
 }
-.place-bid {
-    background: #4CAF50;
-    color: white;
-    padding: 5px;
-    border-radius: 2px;
-}
 .bid label, .bid p {
     font-weight: bold;
     font-size: medium;
+}
+.bid .comment {
+    overflow: auto;
 }
 .bid-list img {
     width: 100px;
@@ -431,10 +501,10 @@ section h2 {
     height: 50%;
 }
 .md-chips md-chip {
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 md-chips.md-default-theme md-chip, md-chips md-chip {
-    background: #84b6eb;
+    background: #222;
     color: white;
 }
