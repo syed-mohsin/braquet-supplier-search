@@ -67,6 +67,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         return false;
       }
 
+      if (!$scope.panel_models.length) {
+        $scope.error = "At least one panel model is required";
+        return false;
+      }
+
       // Create new Project object
       var project = new Projects({
         title: this.title,
@@ -110,6 +115,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     // Update existing Project
     $scope.update = function (isValid) {
       $scope.error = null;
+
+      if (!$scope.project.panel_models.length) {
+        $scope.error = "At least one panel model is required";
+        return false;
+      }
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'projectForm');
@@ -172,9 +182,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }, function(error) {
         $location.path('/forbidden');
       });
-      // this line was used to independently retrieve the associated bids, but was replaced after
-      // bids were 'deep populated' into the project
-      // $scope.bids = GetBids.query({projectId: project._id}, function(bids)
     };
 
     $scope.myDta = PanelModels.query();
