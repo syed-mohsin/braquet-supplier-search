@@ -150,7 +150,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
       var modelInstance = $modal.open({
         templateUrl: '/modules/projects/client/views/add-bidders.client.view.html',
         windowClass: 'app-modal-window',
-        controller: function($scope, $modalInstance) {
+        controller: function($scope, $http, $modalInstance) {
           $scope.addedBidders = [];
           $scope.potentialBidders = $scope.project.user.connections.slice();
 
@@ -194,12 +194,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
           };
 
           $scope.acceptBidders = function() {
-            console.log("testing");
+            $http.post('/api/projects/' + $scope.project._id + '/inviteBidders', $scope.addedBidders).success(function (response) {
+              // Show user success message and clear form
+
+              $scope.success = response.message;
+
+            }).error(function (response) {
+              // Show user error message and clear form
+              $scope.error = response.message;
+            });
           };
         },
         scope: $scope
       });
-
     };
 
     // Find a list of ALL Projects
