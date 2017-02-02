@@ -143,11 +143,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
     };
 
     // popup dialog that allows project owner to invite bidders on private project
-    $scope.addBidders = function(ev) {
+    $scope.showAddBidders = function(ev) {
       console.log(ev);
       if ($scope.project.project_state !== 'private') return false;
 
-      var modelInstance = $modal.open({
+      var modalInstance = $modal.open({
         templateUrl: '/modules/projects/client/views/add-bidders.client.view.html',
         windowClass: 'app-modal-window',
         controller: function($scope, $http, $modalInstance) {
@@ -194,10 +194,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
           };
 
           $scope.acceptBidders = function() {
-            $http.post('/api/projects/' + $scope.project._id + '/inviteBidders', $scope.addedBidders).success(function (response) {
-              // Show user success message and clear form
-
-              $scope.success = response.message;
+            $http.post('/api/projects/' + $scope.project._id + '/inviteBidders', $scope.addedBidders)
+              .success(function (response) {
+              $modalInstance.close();
 
             }).error(function (response) {
               // Show user error message and clear form
@@ -207,6 +206,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
         },
         scope: $scope
       });
+
+      modalInstance.result.then(function() {
+        $scope.findOne();
+      })
     };
 
     // Find a list of ALL Projects
