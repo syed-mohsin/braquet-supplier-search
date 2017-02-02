@@ -14,6 +14,18 @@
         </div>
 
         <div class="form-group" show-errors>
+        <!-- <div class="alert alert-danger"><p>Solar Supplier roles are currently invite only</p></div> -->
+          <select name="project_state" ng-model="project_state" id="project_state" class="form-control" required>
+            <option value="">---Public or Private Project---</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option> 
+          </select>
+          <div ng-messages="projectForm.project_state.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Please indicate whether this project is public or private</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
 <!--           <label for="panel_models">Panel Models</label>
  -->          <md-chips name="panel_models" ng-model="panel_models" md-autocomplete-snap md-require-match="true" md-min-chips="1" md-max-chips="5" required>
             <md-autocomplete  

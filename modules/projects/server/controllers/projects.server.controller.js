@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Project = mongoose.model('Project'),
   Bid = mongoose.model('Bid'),
+  User = mongoose.model('User'),
   schedule = require('node-schedule'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
@@ -212,7 +213,7 @@ exports.projectByID = function (req, res, next, id) {
   }
 
   Project.findById(id)
-    .populate('user', 'displayName')
+    .populate('user')
     .populate('bids', null, null, {sort: {'bid_price': 1}})
     .populate('panel_models', null, null, {sort: {'model': 1}})
     .exec(function (err, project) {
@@ -238,9 +239,20 @@ exports.projectByID = function (req, res, next, id) {
         });
       }
 
-      // make project available in controller
-      req.project = project;
-      next();
+      // populate connections
+      User.populate(project.user, {path: 'connections'}, function(err, connections) {
+        if (err) {
+          return next(err);
+        } else if (!connections) {
+          return res.status(404).send({
+            message: 'Could not load User\'s connections'
+          });
+        }
+
+        // make project available in controller
+        req.project = project;
+        next();
+      });
     });
   });
 };

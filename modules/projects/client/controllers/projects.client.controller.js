@@ -2,8 +2,8 @@
 
 // Projects controller
 
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects',
-  function ($scope, $stateParams, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$interval', '$filter', '$modal', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects',
+  function ($scope, $state, $stateParams, $location, $timeout, $interval, $filter, $modal, Authentication, Socket, GetBids, PanelModels, Projects) {
     $scope.authentication = Authentication;
 
     // Connect socket
@@ -73,7 +73,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         system_capacity: this.system_capacity,
         bid_deadline: this.bid_date.value,
         shipping_address: this.shipping_address,
-        panel_models: this.panel_models
+        panel_models: this.panel_models,
+        project_state: this.project_state
       });
 
       // Redirect after save
@@ -124,6 +125,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
+    };
+
+    // popup dialog that allows user to place a bid
+    $scope.showBidView = function(ev) {
+      console.log(ev);
+      console.log($state.href('bids.create', {projectId: $stateParams.projectId}, {absolute: true, inherit: false}));
+      console.log(angular.element);
+      var modalOpen = $modal.open({
+        templateUrl: '/modules/bids/client/views/create-bid.client.view.html',
+        windowClass: 'app-modal-window'
+      });
+
+      modalOpen.result.then(function(result) {
+        console.log("RESULT", result);
+      });
+    };
+
+    // popup dialog that allows project owner to invite bidders on private project
+    $scope.addBidders = function(ev) {
+      console.log(ev);
+      if ($scope.project.project_state !== 'private') return false;
+
+      var modelInstance = $modal.open({
+        templateUrl: '/modules/projects/client/views/add-bidders.client.view.html',
+        windowClass: 'app-modal-window',
+        controller: function($scope, $modalInstance) {
+          console.log("hello", $scope.project.user.connections);
+        },
+        scope: $scope
+      });
+
     };
 
     // Find a list of ALL Projects
