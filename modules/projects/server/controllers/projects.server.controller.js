@@ -213,8 +213,9 @@ exports.projectByID = function (req, res, next, id) {
   }
 
   Project.findById(id)
-    .populate('user')
+    .populate('user', 'displayName connections')
     .populate('bids', null, null, {sort: {'bid_price': 1}})
+    .populate('bidders')
     .populate('panel_models', null, null, {sort: {'model': 1}})
     .exec(function (err, project) {
     if (err) {
@@ -239,8 +240,12 @@ exports.projectByID = function (req, res, next, id) {
         });
       }
 
-      // populate connections
-      User.populate(project.user, {path: 'connections'}, function(err, connections) {
+      var bidder_ids = project.bidders.filter(function(bidder) {
+        return bidder._id;
+      });
+
+      // populate connections we want to add
+      User.populate(project.user, {path: 'connections', match: { id: { $nin: bidder_ids}} ,select: "-password -salt"}, function(err, connections) {
         if (err) {
           return next(err);
         } else if (!connections) {

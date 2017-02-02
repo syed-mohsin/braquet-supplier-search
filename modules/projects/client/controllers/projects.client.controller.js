@@ -151,7 +151,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
         templateUrl: '/modules/projects/client/views/add-bidders.client.view.html',
         windowClass: 'app-modal-window',
         controller: function($scope, $modalInstance) {
-          console.log("hello", $scope.project.user.connections);
+          $scope.addedBidders = [];
+          $scope.toggle = function(connection) {
+            var connectionsIndexOf = $scope.project.user.connections.indexOf(connection);
+            var biddersIndexOf = $scope.addedBidders.indexOf(connection);
+
+            // move connection to addedBidders array
+            if (connectionsIndexOf !== -1 && biddersIndexOf === -1) {
+              $scope.addedBidders.push($scope.project.user.connections.splice(connectionsIndexOf, 1)[0]);
+            // remove connection from addedBidders and move back to connections
+            } else if (connectionsIndexOf === -1 && biddersIndexOf !== -1) {
+              $scope.project.user.connections.push($scope.addedBidders.splice(biddersIndexOf, 1)[0]);
+            }
+          };
+
         },
         scope: $scope
       });
