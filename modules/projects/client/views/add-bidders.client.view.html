@@ -11,7 +11,7 @@
   </div>
   <h2>Invite Contacts for Bidding</h2>
   <div class="list-group">
-    <a ng-repeat="connection in potentialBidders" ng-click="toggle(connection)" class="list-group-item">
+    <a ng-repeat="connection in pagedItems" ng-click="toggle(connection)" class="list-group-item">
       <h4 class="list-group-item-heading" ng-bind="connection.username"></h4>
       <p class="list-group-item-text" ng-bind="connection.email"></p>
     </a>
@@ -24,6 +24,8 @@
       <p class="list-group-item-text" ng-bind="connection.email"></p>
     </a>
   </div>
-  <div class="accept-bidders" ng-click="acceptBidders()"></div>
-  <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+  <div class="list-group">
+  	<button type="button" class="btn btn-primary" ng-click="acceptBidders()">Invite Bidders</button>
+  </div>
+<!--   <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination> -->
 </section>

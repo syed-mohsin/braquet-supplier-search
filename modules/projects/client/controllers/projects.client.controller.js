@@ -154,6 +154,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
           $scope.addedBidders = [];
           $scope.potentialBidders = $scope.project.user.connections.slice();
 
+          $scope.buildPager = function () {
+            $scope.pagedItems = [];
+            $scope.itemsPerPage = 15;
+            $scope.currentPage = 1;
+            $scope.figureOutItemsToDisplay();
+          };
+
+          $scope.figureOutItemsToDisplay = function () {
+            $scope.filteredItems = $filter('filter')($scope.potentialBidders, {
+              $: $scope.search
+            });
+            $scope.filterLength = $scope.filteredItems.length;
+            var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+            var end = begin + $scope.itemsPerPage;
+            $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+          };
+
+          $scope.pageChanged = function () {
+            $scope.figureOutItemsToDisplay();
+          };
+
+          // for pagination
+          $scope.buildPager();
+
           $scope.toggle = function(connection) {
             var potentialBiddersIndexOf = $scope.potentialBidders.indexOf(connection);
             var addedBiddersIndexOf = $scope.addedBidders.indexOf(connection);
@@ -165,8 +189,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
             } else if (potentialBiddersIndexOf === -1 && addedBiddersIndexOf !== -1) {
               $scope.potentialBidders.push($scope.addedBidders.splice(addedBiddersIndexOf, 1)[0]);
             }
+
+            $scope.figureOutItemsToDisplay();
           };
 
+          $scope.acceptBidders = function() {
+            console.log("testing");
+          };
         },
         scope: $scope
       });
