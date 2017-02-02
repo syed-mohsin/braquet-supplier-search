@@ -245,7 +245,7 @@ exports.projectByID = function (req, res, next, id) {
       });
 
       // populate connections we want to add
-      User.populate(project.user, {path: 'connections', match: { id: { $nin: bidder_ids}} ,select: "-password -salt"}, function(err, connections) {
+      User.populate(project.user, {path: 'connections', match: { id: { $nin: bidder_ids}} ,select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function(err, connections) {
         if (err) {
           return next(err);
         } else if (!connections) {

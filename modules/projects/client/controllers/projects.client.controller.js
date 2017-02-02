@@ -152,16 +152,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
         windowClass: 'app-modal-window',
         controller: function($scope, $modalInstance) {
           $scope.addedBidders = [];
+          $scope.potentialBidders = $scope.project.user.connections.slice();
+
           $scope.toggle = function(connection) {
-            var connectionsIndexOf = $scope.project.user.connections.indexOf(connection);
-            var biddersIndexOf = $scope.addedBidders.indexOf(connection);
+            var potentialBiddersIndexOf = $scope.potentialBidders.indexOf(connection);
+            var addedBiddersIndexOf = $scope.addedBidders.indexOf(connection);
 
             // move connection to addedBidders array
-            if (connectionsIndexOf !== -1 && biddersIndexOf === -1) {
-              $scope.addedBidders.push($scope.project.user.connections.splice(connectionsIndexOf, 1)[0]);
+            if (potentialBiddersIndexOf !== -1 && addedBiddersIndexOf === -1) {
+              $scope.addedBidders.push($scope.potentialBidders.splice(potentialBiddersIndexOf, 1)[0]);
             // remove connection from addedBidders and move back to connections
-            } else if (connectionsIndexOf === -1 && biddersIndexOf !== -1) {
-              $scope.project.user.connections.push($scope.addedBidders.splice(biddersIndexOf, 1)[0]);
+            } else if (potentialBiddersIndexOf === -1 && addedBiddersIndexOf !== -1) {
+              $scope.potentialBidders.push($scope.addedBidders.splice(addedBiddersIndexOf, 1)[0]);
             }
           };
 
