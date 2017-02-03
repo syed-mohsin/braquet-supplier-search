@@ -15,14 +15,15 @@
 
         <div class="form-group" show-errors>
           <label for="panel_models">Panel Models</label>
-          <md-chips name="panel_models" ng-model="project.panel_models" md-autocomplete-snap md-require-match="true" md-min-chips="1" md-max-chips="5" required>
+          <md-chips name="panel_models" ng-model="project.panel_models" md-autocomplete-snap md-no-cache="true" md-require-match="true" md-max-chips="6" required>
             <md-autocomplete  
               md-selected-item="selectedItem" 
               md-search-text="searchText" 
               md-items="item in getMatches(searchText)" 
               md-item-text="item.model" 
               md-min-length="0"
-              placeholder="Please Select Panel Model">
+              placeholder="Please Select Panel Model"
+              ng-hide="project.panel_models.length >= 5">
                 <span md-highlight-text="searchText">
                   {{item.manufacturer}}, {{item.model}}
                 </span>
@@ -32,7 +33,7 @@
             </md-chip-template>
             </md-chips>
             <div ng-messages="projectForm.panel_models.$error" role="alert">
-              <p class="help-block error-text" ng-message="required">Please select at least 1 panel model.</p>
+              <p class="help-block error-text" ng-message="md-max-chips">Please select no more than 5 panel models.</p>
             </div>
         </div>
         <!-- ADD A BOX DISPLAYING RESULTS OF PANEL MODELS HERE -->
