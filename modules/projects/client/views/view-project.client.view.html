@@ -14,7 +14,7 @@
                 <a class="last" ng-click="remove();">
                     Delete
                 </a>
-
+                <a ng-show="project.project_state === 'private'" ng-click="showAddBidders($event)">Invite Bidders</a> 
             </div>
         <!-- only show this bid div to sellers trying to bid on a project -->
 
@@ -31,9 +31,9 @@
                     <div ng-show="!project.bidOpen" aria-hidden="false" class="notice error">Sorry! Currently not accepting bids.</div>
                     <div class="notice" ng-show="project.bidOpen">
                         Accepting bids until
-                        <span ng-bind="project.bid_deadline | date:'mediumDate'" class="ng-binding">Oct 21, 2016</span>
+                        <span ng-bind="project.bid_deadline | date:'yyyy-MM-dd'" class="ng-binding">Oct 21, 2016</span>
                     </div>
-
+                    <div ng-show="project.project_state === 'private'" class="notice error">This project is private</div>
                 </div>
                 <div class="box delivery-location no-padding">
                     <div class="box-title">
@@ -97,5 +97,13 @@
                 </a>
             </div>
     </div>
+
+    <div class="list-group col-sm-12" ng-show="project.bidders.length">
+        <h3>Bidders</h3>
+        <a ng-repeat="bidder in project.bidders" class="list-group-item">
+          <h4 class="list-group-item-heading" ng-bind="bidder.username"></h4>
+          <p class="list-group-item-text" ng-bind="bidder.email"></p>
+        </a>
+      </div>
     </div>
 </section>

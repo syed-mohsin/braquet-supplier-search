@@ -529,6 +529,7 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     background: #222;
     color: white;
 }
+
 .connections .page-header {
     margin: 0;
     padding: 70px 0 20px;
@@ -579,4 +580,7 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
 .profile .menu {
     text-align: center;
     margin-top: 50px;
+
+.app-modal-window .modal-dialog {
+  width: 100%;
 }

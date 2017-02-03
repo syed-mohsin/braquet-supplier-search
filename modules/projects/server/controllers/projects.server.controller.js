@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Project = mongoose.model('Project'),
   Bid = mongoose.model('Bid'),
+  User = mongoose.model('User'),
   schedule = require('node-schedule'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
@@ -106,7 +107,6 @@ exports.storeBid = function (req, res) {
   var bid = req.bid;
   
   project.bids.push(bid._id);
-  project.bidders.push(bid.user);
 
   project.save(function (err) {
     if (err) {
@@ -155,29 +155,71 @@ exports.delete = function (req, res) {
  * List of Projects
  */
 exports.list = function (req, res) {
-  Project.find()
-    .sort('bid_deadline')
-    .populate('user', 'displayName')
-    .populate('bids', null, null, {sort: {'bid_price': 1}})
-    .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
-    .exec(function (err, projects) {
+  if (req.user.roles.indexOf('user') !== -1) {
+    Project.find({user : req.user._id})
+      .sort('bid_deadline')
+      .populate('user', 'displayName')
+      .populate('bids', null, null, {sort: {'bid_price': 1}})
+      .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
+      .exec(function (err, projects) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        // populate bids with users 'deep populate'
+        Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          }
+          // return deep populated projects
+          res.json(projects);
+        });
+      }
+    });
+  } else { // for sellers, find public projects or one's they have been invited to
+    Project.find({ $or : [{bidders: req.user._id}, {project_state: 'public'}]})
+      .sort('bid_deadline')
+      .populate('user', 'displayName')
+      .populate('bids', null, null, {sort: {'bid_price': 1}})
+      .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
+      .exec(function (err, projects) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        // populate bids with users 'deep populate'
+        Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          }
+          // return deep populated projects
+          res.json(projects);
+        });
+      }
+    });
+  }
+
+};
+
+exports.inviteBidders = function(req, res) {
+  var project = req.project;
+  project.bidders = project.bidders.concat(req.body);
+
+  project.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      // populate bids with users 'deep populate'
-      Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        }
-        // return deep populated projects
-        res.json(projects);
-      });
+      res.json(project);
     }
-  });
+  }); 
 };
 
 /**
@@ -212,8 +254,9 @@ exports.projectByID = function (req, res, next, id) {
   }
 
   Project.findById(id)
-    .populate('user', 'displayName')
+    .populate('user', 'displayName connections')
     .populate('bids', null, null, {sort: {'bid_price': 1}})
+    .populate('bidders')
     .populate('panel_models', null, null, {sort: {'model': 1}})
     .exec(function (err, project) {
     if (err) {
@@ -238,9 +281,28 @@ exports.projectByID = function (req, res, next, id) {
         });
       }
 
-      // make project available in controller
-      req.project = project;
-      next();
+      // extract ids from bidder objects
+      var bidder_ids = project.bidders.map(function(bidder) {
+        return bidder._id;
+      });
+
+      // populate connections we want to add
+      User.populate(project.user, 
+        {path: 'connections', 
+          match: { _id: { $nin: bidder_ids } },
+          select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function(err, connections) {
+        if (err) {
+          return next(err);
+        } else if (!connections) {
+          return res.status(404).send({
+            message: 'Could not load User\'s connections'
+          });
+        }
+
+        // make project available in controller
+        req.project = project;
+        next();
+      });
     });
   });
 };
