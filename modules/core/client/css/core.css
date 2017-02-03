@@ -580,3 +580,7 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     text-align: center;
     margin-top: 50px;
 }
+.app-modal-window .modal-dialog {
+  width: 100%;
+
+}
