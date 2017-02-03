@@ -30,7 +30,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
         $scope.find();
       }
       else if (Authentication.user._id === user_id) {
-        $scope.findMyProjects();
+        $scope.find();
       }
     });
 
@@ -222,24 +222,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
           project.canBid = $scope.authentication.user.roles[0] === 'seller' && currentDate < new Date(project.bid_deadline);
           project.bidOpen = (currentDate < new Date(project.bid_deadline));
         });
-      });
-    };
-
-    // Find a list of MY projects
-    $scope.findMyProjects = function () {
-      $scope.projects = Projects.query({}, function(projects) {
-        var currentDate = new Date();
-
-        // add a boolean to see if possible to bid on project
-        projects.forEach(function(project) {
-          project.canBid = $scope.authentication.user.roles[0] === 'seller' && currentDate < new Date(project.bid_deadline);
-          project.bidOpen = (currentDate < new Date(project.bid_deadline));
-        });
-
-        // delete projects that don't have the same user id as current user
-        for (var i=$scope.projects.length-1; i>=0;i--) 
-          if ($scope.projects[i].user === null || $scope.projects[i].user._id  !== Authentication.user._id)
-            $scope.projects.splice(i,1);
       });
     };
 

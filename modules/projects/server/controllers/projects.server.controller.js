@@ -156,29 +156,56 @@ exports.delete = function (req, res) {
  * List of Projects
  */
 exports.list = function (req, res) {
-  Project.find()
-    .sort('bid_deadline')
-    .populate('user', 'displayName')
-    .populate('bids', null, null, {sort: {'bid_price': 1}})
-    .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
-    .exec(function (err, projects) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // populate bids with users 'deep populate'
-      Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        }
-        // return deep populated projects
-        res.json(projects);
-      });
-    }
-  });
+  if (req.user.roles.indexOf('user') !== -1) {
+    Project.find({user : req.user._id})
+      .sort('bid_deadline')
+      .populate('user', 'displayName')
+      .populate('bids', null, null, {sort: {'bid_price': 1}})
+      .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
+      .exec(function (err, projects) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        // populate bids with users 'deep populate'
+        Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          }
+          // return deep populated projects
+          res.json(projects);
+        });
+      }
+    });
+  } else {
+    Project.find({ $or : [{bidders: req.user._id}, {project_state: 'public'}]})
+      .sort('bid_deadline')
+      .populate('user', 'displayName')
+      .populate('bids', null, null, {sort: {'bid_price': 1}})
+      .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
+      .exec(function (err, projects) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        // populate bids with users 'deep populate'
+        Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          }
+          // return deep populated projects
+          res.json(projects);
+        });
+      }
+    });
+  }
+
 };
 
 exports.inviteBidders = function(req, res) {
