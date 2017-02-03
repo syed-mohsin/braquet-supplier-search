@@ -55,7 +55,22 @@ a:hover {
 /* Wrapper for page content to push down footer */
 
 /* Form Style */
-
+.title {
+    font-size: 24px;
+    font-weight: 500;
+}
+.sub-title {
+    font-size: 16px;
+}
+.no-wrap{
+    overflow: auto;
+}
+.no-padding{
+    padding: 0 !important;
+}
+.no-margin{
+    margin: 0;
+}
 .welcome form {
     border-style: none;
     border-width: 0;
@@ -398,22 +413,21 @@ section h2 {
     width: 50px;
     margin-bottom: 15px;
 }
-
 .box {
-    margin: 10px 0;
+    padding: 20px 25px;
+    margin: 10px 10px;
+    background: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgrey;
 }
 .list-group .box {
     margin-top: 0;
 }
 .box.title-content {
-    background: white;
-    border-style: solid;
-    border-width: 1px;
-    border-color: lightgrey;
     padding: initial;
 }
-.box.title-content .title {
-    background: white;
+.box.title-content .box-title {
     color: #555459;
     padding: 12px 15px;
     border-bottom: 1px solid #E6E6E6;
@@ -421,19 +435,19 @@ section h2 {
     font-weight: 500;
     text-align: center;
 }
-.box.title-content .title span {
+.box.title-content .box-title span {
     width: 50%;
 }
-.box.title-content .title span {
+.box.title-content .box-title span {
     text-align: center;
 }
 .box.title-content .content {
-    padding: 5px 10px;
+    padding: 5px 0;
 }
 .box.title-content md-chips .md-chips {
     box-shadow: initial;
 }
-.box .title {
+.delivery-location .box-title {
     padding: 15px 15px;
     background: #222;
     color: white;
@@ -462,7 +476,9 @@ section h2 {
     color: inherit;
 }
 .list-group-item {
+    width: initial;
     margin-bottom: 10px;
+    padding: 10px 15px 20px 15px;
 }
 .list-detail {
     margin-top: 10px;
@@ -474,9 +490,6 @@ section h2 {
 .bid label, .bid p {
     font-weight: bold;
     font-size: medium;
-}
-.bid .comment {
-    overflow: auto;
 }
 .bid-list img {
     width: 100px;
@@ -503,8 +516,32 @@ section h2 {
 .md-chips md-chip {
     border-radius: 4px;
 }
-
 md-chips.md-default-theme md-chip, md-chips md-chip {
     background: #222;
     color: white;
+}
+.connections .page-header {
+    margin: 0;
+    padding: 70px 0 20px;
+    background: #222;
+}
+.profile .title-content {
+    min-width: 183px;
+}
+.profile .company-logo {
+    width: 75px;
+}
+.profile .profile-photo {
+    float: left;
+    text-align: center;
+    padding: 25px;
+}
+.profile-photo img {
+    width: 150px;
+}
+.profile .bio {
+    margin-top: 15px;
+}
+.menu-item {
+    border-bottom: 1px solid #E6E6E6;
 }
