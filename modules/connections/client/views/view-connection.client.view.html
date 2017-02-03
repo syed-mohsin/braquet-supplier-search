@@ -1,29 +1,43 @@
-<section class="container connections" ng-controller="ConnectionsController" ng-init="findOne()">
-  <div class="page-header">
-    <div class="row">
-      <div class="col-md-6">
-        <h1 ng-bind="connection.username"></h1>
-      </div>
-    </div>
-  </div>
+<section class="connections profile" ng-controller="ConnectionsController" ng-init="findOne()">
+    <div class="page-header">
 
-  <div class="row">
-    <div class="col-md-8">
-      <div class="row">
-        <div class="col-md-3"><strong>First Name</strong></div>
-        <div class="col-md-6" ng-bind="connection.firstName"></div>
-      </div>
-      <hr/>
-      <div class="row">
-        <div class="col-md-3"><strong>Last Name</strong></div>
-        <div class="col-md-6" ng-bind="connection.lastName"></div>
-      </div>
-      <hr/>
-      <div class="row">
-        <div class="col-md-3"><strong>Email</strong></div>
-        <div class="col-md-6" ng-bind="connection.email"></div>
-      </div>
-      <hr/>
     </div>
-  </div>
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="no-border box title-content col-sm-10">
+                    <div class="profile-photo">
+                        <a href="#">
+                            <img ng-src="{{connection.profileImageURL}}">
+                        </a>
+                    </div>
+                    <div class="content no-wrap">
+                        <div class="title name">
+                            <span ng-bind="connection.firstName"></span>
+                            <span ng-bind="connection.lastName"></span>
+                        </div>
+                    <img class="company-logo pull-right" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
+
+                        <div class="sub-title">
+                            <span>Account Executive</span>
+                        </div>
+                        <div class="bio">
+                            <span>I am a solar system designer and can develop Helioscope design along with single line electrical diagrams.</span>
+                        </div>
+                        <div class="user-connections">
+                            <div class="number"><strong><span ng-bind="connection.connections.length"></span></strong></div>
+                            <small>connections</small>
+                        </div>
+                        <div class="menu">
+                            <a href="#">
+                                <span class="glyphicon glyphicon-tag"></span><span>Request for a quote</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            </div>
+        </div>
+    </div>
 </section>
