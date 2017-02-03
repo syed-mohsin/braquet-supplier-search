@@ -14,7 +14,20 @@
         </div>
 
         <div class="form-group" show-errors>
+          <select name="project_state" ng-model="project_state" id="project_state" class="form-control" required>
+            <option value="">---Public or Private Project---</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option> 
+          </select>
+          <div ng-messages="projectForm.project_state.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Please indicate whether this project is public or private</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+
           <md-chips name="panel_models" ng-model="panel_models" md-autocomplete-snap md-require-match="true" md-no-cache="true" md-max-chips="6" required>
+
             <md-autocomplete  
               md-selected-item="selectedItem" 
               md-search-text="searchText" 

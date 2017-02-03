@@ -2,8 +2,8 @@
 
 // Projects controller
 
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects',
-  function ($scope, $stateParams, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$interval', '$filter', '$modal', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects',
+  function ($scope, $state, $stateParams, $location, $timeout, $interval, $filter, $modal, Authentication, Socket, GetBids, PanelModels, Projects) {
     $scope.authentication = Authentication;
 
     // Connect socket
@@ -30,7 +30,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         $scope.find();
       }
       else if (Authentication.user._id === user_id) {
-        $scope.findMyProjects();
+        $scope.find();
       }
     });
 
@@ -78,7 +78,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         system_capacity: this.system_capacity,
         bid_deadline: this.bid_date.value,
         shipping_address: this.shipping_address,
-        panel_models: this.panel_models
+        panel_models: this.panel_models,
+        project_state: this.project_state
       });
 
       // Redirect after save
@@ -136,6 +137,91 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
+    // popup dialog that allows user to place a bid
+    $scope.showBidView = function(ev) {
+      console.log(ev);
+      console.log($state.href('bids.create', {projectId: $stateParams.projectId}, {absolute: true, inherit: false}));
+      console.log(angular.element);
+      var modalOpen = $modal.open({
+        templateUrl: '/modules/bids/client/views/create-bid.client.view.html',
+        windowClass: 'app-modal-window'
+      });
+
+      modalOpen.result.then(function(result) {
+        console.log("RESULT", result);
+      });
+    };
+
+    // popup dialog that allows project owner to invite bidders on private project
+    $scope.showAddBidders = function(ev) {
+      console.log(ev);
+      if ($scope.project.project_state !== 'private') return false;
+
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/projects/client/views/add-bidders.client.view.html',
+        windowClass: 'app-modal-window',
+        controller: function($scope, $http, $modalInstance) {
+          $scope.addedBidders = [];
+          $scope.potentialBidders = $scope.project.user.connections.slice();
+
+          $scope.buildPager = function () {
+            $scope.pagedItems = [];
+            $scope.itemsPerPage = 15;
+            $scope.currentPage = 1;
+            $scope.figureOutItemsToDisplay();
+          };
+
+          $scope.figureOutItemsToDisplay = function () {
+            $scope.filteredItems = $filter('filter')($scope.potentialBidders, {
+              $: $scope.search
+            });
+            $scope.filterLength = $scope.filteredItems.length;
+            var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+            var end = begin + $scope.itemsPerPage;
+            $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+          };
+
+          $scope.pageChanged = function () {
+            $scope.figureOutItemsToDisplay();
+          };
+
+          // for pagination
+          $scope.buildPager();
+
+          $scope.toggle = function(connection) {
+            var potentialBiddersIndexOf = $scope.potentialBidders.indexOf(connection);
+            var addedBiddersIndexOf = $scope.addedBidders.indexOf(connection);
+
+            // move connection to addedBidders array
+            if (potentialBiddersIndexOf !== -1 && addedBiddersIndexOf === -1) {
+              $scope.addedBidders.push($scope.potentialBidders.splice(potentialBiddersIndexOf, 1)[0]);
+            // remove connection from addedBidders and move back to connections
+            } else if (potentialBiddersIndexOf === -1 && addedBiddersIndexOf !== -1) {
+              $scope.potentialBidders.push($scope.addedBidders.splice(addedBiddersIndexOf, 1)[0]);
+            }
+
+            $scope.figureOutItemsToDisplay();
+          };
+
+          $scope.acceptBidders = function() {
+            $http.post('/api/projects/' + $scope.project._id + '/inviteBidders', $scope.addedBidders)
+              .success(function (response) {
+              $modalInstance.close();
+
+            }).error(function (response) {
+              // Show user error message and clear form
+              $scope.error = response.message;
+            });
+          };
+        },
+        scope: $scope
+      });
+
+      modalInstance.result.then(function() {
+        $scope.findOne();
+      })
+    };
+
     // Find a list of ALL Projects
     $scope.find = function () {
       $scope.projects = Projects.query({}, function(projects) {
@@ -146,24 +232,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           project.canBid = $scope.authentication.user.roles[0] === 'seller' && currentDate < new Date(project.bid_deadline);
           project.bidOpen = (currentDate < new Date(project.bid_deadline));
         });
-      });
-    };
-
-    // Find a list of MY projects
-    $scope.findMyProjects = function () {
-      $scope.projects = Projects.query({}, function(projects) {
-        var currentDate = new Date();
-
-        // add a boolean to see if possible to bid on project
-        projects.forEach(function(project) {
-          project.canBid = $scope.authentication.user.roles[0] === 'seller' && currentDate < new Date(project.bid_deadline);
-          project.bidOpen = (currentDate < new Date(project.bid_deadline));
-        });
-
-        // delete projects that don't have the same user id as current user
-        for (var i=$scope.projects.length-1; i>=0;i--) 
-          if ($scope.projects[i].user === null || $scope.projects[i].user._id  !== Authentication.user._id)
-            $scope.projects.splice(i,1);
       });
     };
 

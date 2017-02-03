@@ -508,3 +508,7 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     background: #222;
     color: white;
 }
+
+.app-modal-window .modal-dialog {
+  width: 100%;
+}

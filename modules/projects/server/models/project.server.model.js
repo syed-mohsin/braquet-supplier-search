@@ -32,6 +32,11 @@ var ProjectSchema = new Schema({
     trim: true,
     required: 'Title cannot be blank'
   },
+  project_state: {
+    type: String,
+    default: '',
+    required: 'Must select public or private project'
+  },
   shipping_address: {
     type: String,
     default: '',
