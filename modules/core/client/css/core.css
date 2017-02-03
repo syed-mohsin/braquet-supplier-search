@@ -62,14 +62,17 @@ a:hover {
 .sub-title {
     font-size: 16px;
 }
-.no-wrap{
+.no-wrap {
     overflow: auto;
 }
-.no-padding{
+.no-padding {
     padding: 0 !important;
 }
-.no-margin{
+.no-margin {
     margin: 0;
+}
+.no-border {
+    border-style: none;
 }
 .welcome form {
     border-style: none;
@@ -333,7 +336,7 @@ section h2 {
     background: grey;
     border-style: none;
 }
-.page-header .menu a {
+.page-header .menu a, .profile .menu a {
     color: #444;
     font-size: 12px;
     font-weight: 500;
@@ -349,7 +352,7 @@ section h2 {
     text-align: center;
     cursor: pointer;
 }
-.page-header .menu a:hover {
+.page-header .menu a:hover, .profile .menu a:hover {
     background:rgba(1,1,1,0.1);
 }
 .page-header .menu a.first {
@@ -421,6 +424,12 @@ section h2 {
     border-width: 1px;
     border-color: lightgrey;
 }
+.box.no-border {
+    border-style: none;
+}
+.box.no-background {
+    background: none;
+}
 .list-group .box {
     margin-top: 0;
 }
@@ -442,7 +451,7 @@ section h2 {
     text-align: center;
 }
 .box.title-content .content {
-    padding: 5px 0;
+    padding: 5px 10px;
 }
 .box.title-content md-chips .md-chips {
     box-shadow: initial;
@@ -525,23 +534,49 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     padding: 70px 0 20px;
     background: #222;
 }
+
+@media screen and (max-width: 480px) {
+    .profile .content {
+        width: 100%;
+        padding-left: 10px;
+    }
+    .profile .content .company-logo {
+        float: none !important;
+        margin: 5px 0;
+    }
+}
+.profile {
+    max-width: 900px;
+}
 .profile .title-content {
     min-width: 183px;
+    max-width: 600px;
+    margin-top: 0;
+    padding: 15px 15px 15px 0;
 }
 .profile .company-logo {
     width: 75px;
+    margin-top: -27px; 
 }
 .profile .profile-photo {
     float: left;
     text-align: center;
-    padding: 25px;
+    padding: 10px;
+    margin-top: -50px;
+    background: white;
 }
 .profile-photo img {
     width: 150px;
 }
 .profile .bio {
     margin-top: 15px;
+    max-width: 80%;
 }
-.menu-item {
-    border-bottom: 1px solid #E6E6E6;
+.user-connections {
+    float: right;
+    text-align: right;
+}
+.profile .menu {
+    text-align: center;
+    margin-top: 50px;
 }
