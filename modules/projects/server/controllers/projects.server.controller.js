@@ -107,7 +107,6 @@ exports.storeBid = function (req, res) {
   var bid = req.bid;
   
   project.bids.push(bid._id);
-  project.bidders.push(bid.user);
 
   project.save(function (err) {
     if (err) {
@@ -180,7 +179,7 @@ exports.list = function (req, res) {
         });
       }
     });
-  } else {
+  } else { // for sellers, find public projects or one's they have been invited to
     Project.find({ $or : [{bidders: req.user._id}, {project_state: 'public'}]})
       .sort('bid_deadline')
       .populate('user', 'displayName')
