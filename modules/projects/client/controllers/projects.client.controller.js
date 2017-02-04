@@ -255,11 +255,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
     $scope.myDta = PanelModels.query();
 
     $scope.getMatches = function (text) {
-      var ret = $scope.myDta.filter(function (d) {
-        return d.model.startsWith(text);
+      var filteredItems = $filter('filter')($scope.myDta, {
+        $: text
       });
 
-      return ret;
+      return filteredItems;
     };
 
     $scope.createDate = function() {
