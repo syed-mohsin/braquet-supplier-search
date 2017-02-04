@@ -336,7 +336,10 @@ section h2 {
     background: grey;
     border-style: none;
 }
-.page-header .menu a, .profile .menu a {
+.menu {
+    margin: 10px 0 5px 0;
+}
+.menu a {
     color: #444;
     font-size: 12px;
     font-weight: 500;
