@@ -456,6 +456,12 @@ section h2 {
 .box.title-content md-chips .md-chips {
     box-shadow: initial;
 }
+.box .list-item {
+    margin: 10px 0;
+}
+.box .list-item a {
+    color: inherit;
+}
 .delivery-location .box-title {
     padding: 15px 15px;
     background: #222;
