@@ -355,6 +355,9 @@ section h2 {
     text-align: center;
     cursor: pointer;
 }
+.box.title-content .box-title .menu span {
+    width: initial;
+}
 .page-header .menu a:hover, .profile .menu a:hover {
     background:rgba(1,1,1,0.1);
 }
