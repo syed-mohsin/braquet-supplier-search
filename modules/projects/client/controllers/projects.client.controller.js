@@ -138,18 +138,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
     };
 
     // popup dialog that allows user to place a bid
-    $scope.showBidView = function(ev) {
+    $scope.showBidView = function(ev, projectId) {
       console.log(ev);
       console.log($state.href('bids.create', {projectId: $stateParams.projectId}, {absolute: true, inherit: false}));
       console.log(angular.element);
       var modalInstance = $modal.open({
         templateUrl: '/modules/bids/client/views/create-bid.client.view.html',
         controller: 'BidsController',
+        resolve: {
+          modalProjectId: function() {
+            return projectId;
+          }
+        },
         windowClass: 'app-modal-window'
       });
 
       modalInstance.result.then(function() {
-        $scope.findOne();
+        if (projectId) {
+          $scope.find();
+        } else {
+          $scope.findOne();
+        }
       });
     };
 
