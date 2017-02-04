@@ -4,7 +4,7 @@
             <h3>Requesting <span ng-bind="project.title"></span></h3>
         </div>
             <div class="menu" ng-show="project.canBid">
-                <a class="place-bid" ui-sref="bids.create({projectId: project._id})"><span class="glyphicon glyphicon-tag"></span><span >Place a Bid</span></a>
+                <a class="place-bid" ng-click="showBidView($event)"><span class="glyphicon glyphicon-tag"></span><span >Place a Bid</span></a>
             </div>
                         <!-- only show this edit/delete option to buyers -->
             <div class="menu" ng-show="authentication.user._id === project.user._id">

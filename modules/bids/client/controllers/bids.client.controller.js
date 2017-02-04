@@ -1,8 +1,8 @@
 'use strict';
 
 // Bids controller
-angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', 'Authentication', 'Socket', 'Projects', 'StoreBid', 'Bids',
-  function ($scope, $stateParams, $resource, $location, $interval, $filter, Authentication, Socket, Projects, StoreBid, Bids) {
+angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', '$modalInstance', 'Authentication', 'Socket', 'Projects', 'StoreBid', 'Bids', 'modalProjectId',
+  function ($scope, $stateParams, $resource, $location, $interval, $filter, $modalInstance, Authentication, Socket, Projects, StoreBid, Bids, modalProjectId) {
     $scope.authentication = Authentication;
 
     // Connect socket
@@ -61,11 +61,14 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         StoreBid.update({
           projectId: $scope.project._id, 
           bidId: response._id}, 
-          null
+          null,
+          function(response){
+            $modalInstance.close();
+          }
         );
 
         // redirect to view bid
-        $location.path('bids/' + response._id);
+        // $location.path('bids/' + response._id);
 
         // Clear form fields
         $scope.fob_shipping = '';
@@ -121,8 +124,9 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
 
     // Find existing Project
     $scope.findProject = function () {
+      var id = modalProjectId || $stateParams.projectId;
       $scope.project = Projects.get({
-        projectId: $stateParams.projectId
+        projectId: id
       });
     };
 

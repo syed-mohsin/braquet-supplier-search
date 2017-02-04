@@ -1,4 +1,4 @@
-<section class="bid-create container" ng-controller="BidsController" ng-init="findProject();createDate();">
+<section class="bid-create container" ng-init="findProject();createDate();">
   <div class="page-header">
     <h2>Place a Bid</h2>
   </div>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="form-group">
-          <input type="submit" class="btn btn-default" onclick="$('.modal-dialog').modal('hide')">
+          <input type="submit" class="btn btn-default">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>
