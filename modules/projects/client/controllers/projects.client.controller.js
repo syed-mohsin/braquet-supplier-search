@@ -142,13 +142,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
       console.log(ev);
       console.log($state.href('bids.create', {projectId: $stateParams.projectId}, {absolute: true, inherit: false}));
       console.log(angular.element);
-      var modalOpen = $modal.open({
+      var modalInstance = $modal.open({
         templateUrl: '/modules/bids/client/views/create-bid.client.view.html',
+        controller: 'BidsController',
         windowClass: 'app-modal-window'
       });
 
-      modalOpen.result.then(function(result) {
-        console.log("RESULT", result);
+      modalInstance.result.then(function() {
+        $scope.findOne();
       });
     };
 
@@ -219,7 +220,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
 
       modalInstance.result.then(function() {
         $scope.findOne();
-      })
+      });
     };
 
     // Find a list of ALL Projects

@@ -1,8 +1,8 @@
 'use strict';
 
 // Bids controller
-angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', 'Authentication', 'Socket', 'Projects', 'StoreBid', 'Bids',
-  function ($scope, $stateParams, $resource, $location, $interval, $filter, Authentication, Socket, Projects, StoreBid, Bids) {
+angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', '$modalInstance', 'Authentication', 'Socket', 'Projects', 'StoreBid', 'Bids',
+  function ($scope, $stateParams, $resource, $location, $interval, $filter, $modalInstance, Authentication, Socket, Projects, StoreBid, Bids) {
     $scope.authentication = Authentication;
 
     // Connect socket
@@ -65,7 +65,9 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         );
 
         // redirect to view bid
-        $location.path('bids/' + response._id);
+        // $location.path('bids/' + response._id);
+        $modalInstance.close();
+
 
         // Clear form fields
         $scope.fob_shipping = '';
