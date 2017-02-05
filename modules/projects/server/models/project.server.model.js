@@ -45,17 +45,15 @@ var ProjectSchema = new Schema({
   },
   panel_models: [{
     type: Schema.ObjectId,
-    ref: 'PanelModel'
+    ref: 'PanelModel',
+    required: 'At least one panel model is required'
     }],
   user: {
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: 'no user associated with project'
   },
   bidders: [{
-    type: Schema.ObjectId,
-    ref: 'User'
-  }],
-  invites: [{
     type: Schema.ObjectId,
     ref: 'User'
   }],

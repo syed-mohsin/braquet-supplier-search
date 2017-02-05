@@ -25,6 +25,32 @@
         </div>
 
         <div class="form-group" show-errors>
+
+          <md-chips name="panel_models" ng-model="panel_models" md-autocomplete-snap md-require-match="true" md-no-cache="true" md-max-chips="6" required>
+
+            <md-autocomplete  
+              md-selected-item="selectedItem" 
+              md-search-text="searchText" 
+              md-items="item in getMatches(searchText)" 
+              md-item-text="item.model" 
+              md-min-length="0"
+              placeholder="Please select panel model"
+              ng-hide="panel_models.length >= project.panel_models.length">
+                <span md-highlight-text="searchText">
+                  {{item.manufacturer}}, {{item.model}}
+                </span>
+            </md-autocomplete>
+            <md-chip-template>
+              <span>{{$chip.manufacturer}}, {{$chip.model}}</span>
+            </md-chip-template>
+            
+          </md-chips>
+          <div ng-messages="bidForm.panel_models.$error" role="alert">
+            <p class="help-block error-text" ng-message="md-max-chips">Please select only from available panel models.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
           <label for="bid_price">Bid Price</label>
           <input name="bid_price" type="number" min="0.00" step="0.01" ng-model="bid_price" id="bid_price" class="form-control" placeholder="$0.00/Watt" required>
           <div ng-messages="bidForm.bid_price.$error" role="alert">
