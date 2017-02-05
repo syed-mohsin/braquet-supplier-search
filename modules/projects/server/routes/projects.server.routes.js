@@ -13,10 +13,6 @@ module.exports = function (app) {
     .get(projects.list)
     .post(projects.create);
 
-  // store a bid associated with a projectId
-  app.route('/api/projects/storebid/:projectId/:bidId').all(projectsPolicy.isAllowed)
-    .put(projects.storeBid);
-
   // store invited users
   app.route('/api/projects/:projectId/inviteBidders').all(projectsPolicy.isAllowed)
     .post(projects.inviteBidders);

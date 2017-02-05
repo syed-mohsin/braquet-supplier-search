@@ -1,8 +1,8 @@
 'use strict';
 
 // Bids controller
-angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', '$modalInstance', 'Authentication', 'Socket', 'Projects', 'StoreBid', 'Bids', 'modalProjectId',
-  function ($scope, $stateParams, $resource, $location, $interval, $filter, $modalInstance, Authentication, Socket, Projects, StoreBid, Bids, modalProjectId) {
+angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', '$modalInstance', 'Authentication', 'Socket', 'Projects', 'Bids', 'modalProjectId',
+  function ($scope, $stateParams, $resource, $location, $interval, $filter, $modalInstance, Authentication, Socket, Projects, Bids, modalProjectId) {
     $scope.authentication = Authentication;
 
     // Connect socket
@@ -52,20 +52,8 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
 
       // Redirect after save
       bid.$save(function (response) {
-        // should only get here if valid response
-        // ---------------------------------------
 
-        // Associate bid with project
-        // need error checking here and CRITICAL:
-        // must be an atomic operation with saving bid
-        StoreBid.update({
-          projectId: $scope.project._id, 
-          bidId: response._id}, 
-          null,
-          function(response){
-            $modalInstance.close();
-          }
-        );
+        $modalInstance.close();
 
         // redirect to view bid
         // $location.path('bids/' + response._id);

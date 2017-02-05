@@ -63,7 +63,7 @@
                 <div class="specified-suppliers">
                     <div class="box title-content specified-products" ng-show="project.bidders.length">
                         <div class="box-title">Participating Suppliers
-                        <div class="menu">
+                        <div class="menu" ng-show="authentication.user._id === project.user._id">
                             <a ng-show="project.project_state === 'private'" ng-click="showAddBidders($event)"><span class="glyphicon glyphicon-user"></span><span>Invite Suppliers</span></a>
                         </div>
                         </div>

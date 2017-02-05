@@ -100,32 +100,6 @@ exports.update = function (req, res) {
 };
 
 /**
- * Update a project with a bid
- */
-exports.storeBid = function (req, res) {
-  var project = req.project;
-  var bid = req.bid;
-  
-  project.bids.push(bid._id);
-
-  project.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // notify project owner that bid was added
-      var io = req.app.get('socketio');
-      
-      // send to all users currently viewing project
-      io.emit('refreshProjectView', project._id);
-
-      res.json(project);
-    }
-  });
-};
-
-/**
  * Delete a project
  */
 exports.delete = function (req, res) {
@@ -272,7 +246,9 @@ exports.projectByID = function (req, res, next, id) {
     }
 
     // populate bids with users 'deep populate'
-    Bid.populate(project.bids, {path: 'user'}, function (err, bids) {
+    Bid.populate(project.bids, 
+      {path: 'user',
+        select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function (err, bids) {
       if (err) {
         return next(err);
       } else if (!bids) {
@@ -299,6 +275,15 @@ exports.projectByID = function (req, res, next, id) {
           });
         }
 
+        // remove un-owned bids if current user is a supplier/seller
+        console.log("ALL BIDS", project.bids);
+        if (req.user.roles.indexOf('seller') !== -1) {
+          project.bids = project.bids.filter(function(bid) {
+            console.log(req.user.displayName, req.user._id, bid.user._id);
+            return req.user._id.equals(bid.user._id);
+          }); 
+        }
+        console.log("ALL BIDS AFTER FILTER", project.bids);
         // make project available in controller
         req.project = project;
         next();

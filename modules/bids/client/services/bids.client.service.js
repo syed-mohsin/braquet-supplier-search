@@ -12,13 +12,3 @@ angular.module('bids').factory('Bids', ['$resource',
   	});
   }
 ]);
-
-angular.module('bids').factory('StoreBid', [
-	'$resource', function ($resource) {
-		return $resource('api/projects/storebid/:projectId/:bidId', null, {
-			update: {
-				method: 'PUT'
-			}
-		});
-	}
-]);
