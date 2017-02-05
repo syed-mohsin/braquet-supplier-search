@@ -24,23 +24,41 @@ exports.create = function (req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
+    } else if (!project) {
+      return res.status(400).send({
+        message: "Cannot post bid: not a valid project"
+      });
     } else {
       // make time comparison
       if (bid.created > project.bid_deadline) {
-        console.log("got here");
         return res.status(400).send({
           message: 'Bid Deadline has passed'
         });
       }
 
       // Finally create the bid
-      bid.save(function (err) {
+      bid.save(function (err, savedBid) {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           });
-        } else {
-          res.json(bid);
+        } else { // save new bid to project
+          project.bids.push(savedBid);
+          project.save(function(err) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              // notify project owner that bid was added
+              var io = req.app.get('socketio');
+              
+              // send to all users currently viewing project
+              io.emit('refreshProjectView', project._id);
+              
+              res.json(savedBid);
+            }
+          });
         }
       });
     }
