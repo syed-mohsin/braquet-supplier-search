@@ -51,6 +51,7 @@ a {
 
 a:hover {
     text-decoration: none;
+    cursor: pointer;
 }
 /* Wrapper for page content to push down footer */
 
@@ -336,7 +337,10 @@ section h2 {
     background: grey;
     border-style: none;
 }
-.page-header .menu a, .profile .menu a {
+.menu {
+    margin: 10px 0 5px 0;
+}
+.menu a {
     color: #444;
     font-size: 12px;
     font-weight: 500;
@@ -351,6 +355,9 @@ section h2 {
     border-radius: initial;
     text-align: center;
     cursor: pointer;
+}
+.box.title-content .box-title .menu span {
+    width: initial;
 }
 .page-header .menu a:hover, .profile .menu a:hover {
     background:rgba(1,1,1,0.1);
@@ -456,6 +463,12 @@ section h2 {
 .box.title-content md-chips .md-chips {
     box-shadow: initial;
 }
+.box .list-item {
+    margin: 10px 0;
+}
+.box .list-item a {
+    color: inherit;
+}
 .delivery-location .box-title {
     padding: 15px 15px;
     background: #222;
@@ -487,7 +500,7 @@ section h2 {
 .list-group-item {
     width: initial;
     margin-bottom: 10px;
-    padding: 10px 15px 20px 15px;
+    padding: 10px 35px 20px 15px;
 }
 .list-detail {
     margin-top: 10px;
@@ -529,6 +542,11 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     background: #222;
     color: white;
 }
+
+.md-autocomplete-suggestions-container{  
+    z-index:100000 !important; /* any number of choice > 1050*/
+}
+
 .connections.profile .page-header {
     margin: 0;
     padding: 70px 0 20px;

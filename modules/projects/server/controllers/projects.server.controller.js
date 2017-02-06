@@ -34,12 +34,11 @@ exports.create = function (req, res) {
       io.emit('refreshProjectList', project.user._id);
 
       // set a listener for bid deadline
-      var date = new Date(project.bid_deadline);
-      var j = schedule.scheduleJob(new Date((new Date()).getTime() + 5000), function() {
+      var deadline = new Date(project.bid_deadline);
+      var j = schedule.scheduleJob(deadline, function() {
 
         // send notification to all associated with project
-        Project.findById(project._id) 
-          .exec(function (err, project) {
+        Project.findById(project._id, function (err, project) {
           if (err) {
             console.log("err");
           }
@@ -94,32 +93,6 @@ exports.update = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(project);
-    }
-  });
-};
-
-/**
- * Update a project with a bid
- */
-exports.storeBid = function (req, res) {
-  var project = req.project;
-  var bid = req.bid;
-  
-  project.bids.push(bid._id);
-
-  project.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // notify project owner that bid was added
-      var io = req.app.get('socketio');
-      
-      // send to all users currently viewing project
-      io.emit('refreshProjectView', project._id);
-
       res.json(project);
     }
   });
@@ -272,7 +245,9 @@ exports.projectByID = function (req, res, next, id) {
     }
 
     // populate bids with users 'deep populate'
-    Bid.populate(project.bids, {path: 'user'}, function (err, bids) {
+    Bid.populate(project.bids, 
+      {path: 'user',
+        select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function (err, bids) {
       if (err) {
         return next(err);
       } else if (!bids) {
@@ -289,7 +264,7 @@ exports.projectByID = function (req, res, next, id) {
       // populate connections we want to add
       User.populate(project.user, 
         {path: 'connections', 
-          match: { _id: { $nin: bidder_ids } },
+          match: { _id: { $nin: bidder_ids }, roles: 'seller' },
           select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function(err, connections) {
         if (err) {
           return next(err);
@@ -299,6 +274,13 @@ exports.projectByID = function (req, res, next, id) {
           });
         }
 
+        // remove un-owned bids if current user is a supplier/seller
+        if (req.user.roles.indexOf('seller') !== -1) {
+          project.bids = project.bids.filter(function(bid) {
+            return req.user._id.equals(bid.user._id);
+          }); 
+        }
+        
         // make project available in controller
         req.project = project;
         next();

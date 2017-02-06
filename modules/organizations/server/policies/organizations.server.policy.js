@@ -9,64 +9,49 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke Projects Permissions
+ * Invoke Organizations Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/projects',
+      resources: '/api/organizations',
       permissions: '*'
     }, {
-      resources: '/api/projects/:projectId',
+      resources: '/api/organizations/:organizationId',
       permissions: '*'
     }]
   }, {
-    roles: ['user'],
+    roles: ['user', 'seller'],
     allows: [{
-      resources: '/api/projects',
+      resources: '/api/organizations',
       permissions: ['get', 'post']
     }, {
-      resources: '/api/projects/:projectId',
+      resources: '/api/organization-requests',
       permissions: ['get']
     }, {
-      resources: '/api/projects/getbids/:projectId',
-      permissions: ['get']
-    }, {
-      resources: '/api/projects/:projectId/inviteBidders',
+      resources: '/api/organization-auth/accept-invite',
       permissions: ['post']
-    }]
-  }, {
-    roles: ['seller'],
-    allows: [{
-      resources: '/api/projects',
-      permissions: ['get']
     }, {
-      resources: '/api/projects/getbids/:projectId',
-      permissions: ['get']
-    }, {
-      resources: '/api/projects/:projectId',
-      permissions: ['get']
-    }, {
-      resources: '/api/bid',
+      resources: '/api/organizations/:organizationId',
       permissions: ['get', 'post']
     }, {
-      resources: '/api/bid/:bidId',
-      permissions: ['get']
+      resources: '/api/organization-auth/send-invite',
+      permissions: ['post']
     }]
   }]);
 };
 
 /**
- * Check If Projects Policy Allows
+ * Check If Organizations Policy Allows
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
-  // If an project is being processed and the current user created it then allow any manipulation
-  if (req.project && req.user && req.project.user.id === req.user.id) {
-    return next();
-  }
+  // If an organization is being processed and the current user created it then allow any manipulation
+  // if (req.organization && req.user && req.organization.user.id === req.user.id) {
+  //   return next();
+  // }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

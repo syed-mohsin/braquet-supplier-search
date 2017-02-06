@@ -33,6 +33,11 @@ var BidSchema = new Schema({
     trim: true,
     required: 'Delivery Date cannot be blank'
   },
+  panel_models: [{
+    type: Schema.ObjectId,
+    ref: 'PanelModel',
+    required: 'Must select at least one panel model'
+  }], 
   bid_price: {
     type: Currency,
     min: 0,
@@ -40,7 +45,8 @@ var BidSchema = new Schema({
   },
   user: {
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: 'There is no user associated with this bid'
   },
   project: {
     type: Schema.ObjectId,
@@ -48,6 +54,7 @@ var BidSchema = new Schema({
   },
   project_title: {
     type: String,
+    required: 'Project requires a title'
   }
 });
 
