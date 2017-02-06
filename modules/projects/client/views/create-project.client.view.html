@@ -1,13 +1,13 @@
 <section class="container" ng-controller="ProjectsController" ng-init="createDate()">
   <div class="page-header">
-    <h2>New Project</h2>
   </div>
   <div class="col-md-12">
     <form name="projectForm" class="form-horizontal" ng-submit="create(projectForm.$valid)" novalidate>
+    <h2>Submit a RFQ</h2>
       <fieldset>
         <div class="form-group" show-errors>
 <!--           <label for="title">Title</label>
- -->          <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Project Name" required>
+ -->          <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="RFQ Name" required>
           <div ng-messages="projectForm.title.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Project name is required.</p>
           </div>
@@ -15,12 +15,12 @@
 
         <div class="form-group" show-errors>
           <select name="project_state" ng-model="project_state" id="project_state" class="form-control" required>
-            <option value="">---Public or Private Project---</option>
+            <option value="">---Public or Private RFQ---</option>
             <option value="public">Public</option>
             <option value="private">Private</option> 
           </select>
           <div ng-messages="projectForm.project_state.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Please indicate whether this project is public or private</p>
+            <p class="help-block error-text" ng-message="required">Please indicate whether this RFQ is public or private</p>
           </div>
         </div>
 

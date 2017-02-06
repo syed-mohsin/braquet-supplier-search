@@ -54,7 +54,10 @@ a:hover {
     cursor: pointer;
 }
 /* Wrapper for page content to push down footer */
-
+.row {
+    padding: initial;
+    margin: initial;
+}
 /* Form Style */
 .title {
     font-size: 24px;
@@ -90,9 +93,9 @@ form {
     border-width: 1px;
     border-color: lightgrey;
     padding: 40px 50px 40px 50px;
-    min-width: 350px;
+    min-width: 300px;
     max-width: 450px;
-    margin: auto auto;
+    margin: 20px auto;
     text-align: center;
 }
 
@@ -210,6 +213,7 @@ section h2 {
 }
 .navbar {
     margin-bottom: 0;
+    position: relative;
 }
 .navbar-brand {
     padding: 0;
