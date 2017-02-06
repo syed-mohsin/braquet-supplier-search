@@ -89,9 +89,9 @@ form {
     border-width: 1px;
     border-color: lightgrey;
     padding: 40px 50px 40px 50px;
-    min-width: 350px;
+    min-width: 300px;
     max-width: 450px;
-    margin: auto auto;
+    margin: 20px auto;
     text-align: center;
 }
 
