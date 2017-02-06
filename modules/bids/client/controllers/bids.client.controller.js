@@ -136,12 +136,10 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
     };
 
     $scope.getMatches = function (text) {
-      console.log($scope.project.panel_models);
       var filteredItems = $filter('filter')($scope.project.panel_models, {
         $: text
       });
 
-      console.log("filtered: ", filteredItems);
       return filteredItems;
     };
   }

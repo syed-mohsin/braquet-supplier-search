@@ -51,6 +51,7 @@ a {
 
 a:hover {
     text-decoration: none;
+    cursor: pointer;
 }
 /* Wrapper for page content to push down footer */
 
