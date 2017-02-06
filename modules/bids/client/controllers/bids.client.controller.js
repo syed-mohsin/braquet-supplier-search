@@ -4,6 +4,7 @@
 angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '$resource', '$location', '$interval', '$filter', '$modalInstance', 'Authentication', 'Socket', 'Projects', 'Bids', 'modalProjectId',
   function ($scope, $stateParams, $resource, $location, $interval, $filter, $modalInstance, Authentication, Socket, Projects, Bids, modalProjectId) {
     $scope.authentication = Authentication;
+    $scope.panel_models = [];
 
     // Connect socket
     if (!Socket.socket) {
@@ -34,6 +35,13 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         return false;
       }
 
+      // check panel_models length
+      if (!this.panel_models.length) {
+        $scope.error = "Please select at least one panel model";
+
+        return false;
+      }
+
       // Check for form submission errors
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'bidForm');
@@ -45,6 +53,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
       var bid = new Bids({
         fob_shipping: this.fob_shipping,
         delivery_date: this.date.value,
+        panel_models: this.panel_models,
         bid_price: this.bid_price * 100, // must be an integer when inputting to mongoose currency model
         project: $scope.project._id,
         project_title: $scope.project.title
@@ -124,6 +133,14 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
         currentDate: new Date(),
         threeYearAheadDate: new Date().setFullYear(new Date().getFullYear() + 3)
       };
+    };
+
+    $scope.getMatches = function (text) {
+      var filteredItems = $filter('filter')($scope.project.panel_models, {
+        $: text
+      });
+
+      return filteredItems;
     };
   }
 ]);

@@ -276,14 +276,12 @@ exports.projectByID = function (req, res, next, id) {
         }
 
         // remove un-owned bids if current user is a supplier/seller
-        console.log("ALL BIDS", project.bids);
         if (req.user.roles.indexOf('seller') !== -1) {
           project.bids = project.bids.filter(function(bid) {
-            console.log(req.user.displayName, req.user._id, bid.user._id);
             return req.user._id.equals(bid.user._id);
           }); 
         }
-        console.log("ALL BIDS AFTER FILTER", project.bids);
+        
         // make project available in controller
         req.project = project;
         next();

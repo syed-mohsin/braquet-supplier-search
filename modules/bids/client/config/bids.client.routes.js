@@ -17,13 +17,13 @@ angular.module('bids').config(['$stateProvider',
           roles: ['seller']
         }
       })
-      .state('bids.create', {
-        url: '/:projectId/create',
-        templateUrl: 'modules/bids/client/views/create-bid.client.view.html',
-        data: {
-          roles: ['seller']
-        }
-      })
+      // .state('bids.create', {
+      //   url: '/:projectId/create',
+      //   templateUrl: 'modules/bids/client/views/create-bid.client.view.html',
+      //   data: {
+      //     roles: ['seller']
+      //   }
+      // })
       .state('bids.view', {
         url: '/:bidId',
         templateUrl: 'modules/bids/client/views/view-bid.client.view.html',

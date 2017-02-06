@@ -51,6 +51,7 @@ a {
 
 a:hover {
     text-decoration: none;
+    cursor: pointer;
 }
 /* Wrapper for page content to push down footer */
 
@@ -541,6 +542,11 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     background: #222;
     color: white;
 }
+
+.md-autocomplete-suggestions-container{  
+    z-index:100000 !important; /* any number of choice > 1050*/
+}
+
 .connections.profile .page-header {
     margin: 0;
     padding: 70px 0 20px;
