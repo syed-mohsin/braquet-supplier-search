@@ -39,13 +39,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
       console.log(project_id);
       console.log("State param is: " + $stateParams.projectId);
 
-      if ($stateParams.projectId === project_id) {
+      if ($scope.project && $stateParams.projectId === project_id) {
         $scope.project.canBid = false;
         $scope.project.bidOpen = false;
         console.log("WE ARE IN PROJECT VIEW");
       }
 
-      else if ($location.url() === '/projects') {
+      else if ($location.url() === '/projects' && $scope.projects) {
         console.log("WE ARE IN PROJECT LIST");
         for(var i=0;i<$scope.projects.length;i++) {
           if ($scope.projects[i]._id === project_id) {

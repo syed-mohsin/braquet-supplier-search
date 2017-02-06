@@ -34,12 +34,11 @@ exports.create = function (req, res) {
       io.emit('refreshProjectList', project.user._id);
 
       // set a listener for bid deadline
-      var date = new Date(project.bid_deadline);
-      var j = schedule.scheduleJob(new Date((new Date()).getTime() + 5000), function() {
+      var deadline = new Date(project.bid_deadline);
+      var j = schedule.scheduleJob(deadline, function() {
 
         // send notification to all associated with project
-        Project.findById(project._id) 
-          .exec(function (err, project) {
+        Project.findById(project._id, function (err, project) {
           if (err) {
             console.log("err");
           }
