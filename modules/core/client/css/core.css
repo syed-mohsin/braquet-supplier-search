@@ -54,7 +54,10 @@ a:hover {
     cursor: pointer;
 }
 /* Wrapper for page content to push down footer */
-
+.row {
+    padding: initial;
+    margin: initial;
+}
 /* Form Style */
 .title {
     font-size: 24px;
@@ -210,6 +213,7 @@ section h2 {
 }
 .navbar {
     margin-bottom: 0;
+    position: relative;
 }
 .navbar-brand {
     padding: 0;
