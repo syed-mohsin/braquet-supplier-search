@@ -1,25 +1,88 @@
-<section class="container row" ng-controller="OrganizationsController">
-  <h3 class="col-md-12 text-center"></h3>
+<section class="container" ng-controller="OrganizationsController">
+  <div class="page-header">
+  </div>
   <div class="col-md-12">
-    <form name="InviteByEmailForm" ng-submit="inviteByEmail(InviteByEmailForm.$valid)" class="form-horizontal border" novalidate autocomplete="off">
-     <h3 class="col-md-12 text-center">Add a Organization</h3>
-      <p class="small text-center">Invite a organization by email.</p>
+    <form name="organizationForm" class="form-horizontal" ng-submit="create(organizationForm.$valid)" novalidate>
+      <h2>Create Company Profile</h2>
       <fieldset>
         <div class="form-group" show-errors>
-         <input type="email" id="email" name="email" class="form-control" ng-model="credentials.email" placeholder="Email" lowercase required>
-          <div ng-messages="InviteByEmailForm.email.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Email address is required.</p>
-            <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+          <input name="name" type="text" ng-model="name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="organizationForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Company name is required.</p>
           </div>
         </div>
-        <div class="text-center form-group">
-          <button type="submit" class="btn btn-primary">Submit</button>
+
+        <fieldset>
+          <div class="form-group text-center">
+            <img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
+          </div>
+          <div class="text-center form-group">
+            <span class="btn btn-default btn-file">
+                Select logo <input type="file" nv-file-select uploader="uploader">
+            </span>
+          </div>
+          <div ng-show="success" class="text-center text-success">
+            <strong>Company Logo Changed Successfully</strong>
+          </div>
+          <div ng-show="error" class="text-center text-danger">
+            <strong ng-bind="error"></strong>
+          </div>
+        </fieldset>
+
+         <fieldset>
+          <div class="form-group text-center">
+            <img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
+          </div>
+          <div class="text-center form-group">
+            <span class="btn btn-default btn-file">
+                Select Cover Image <input type="file" nv-file-select uploader="uploader">
+            </span>
+          </div>
+          <div ng-show="success" class="text-center text-success">
+            <strong>Cover Image Changed Successfully</strong>
+          </div>
+          <div ng-show="error" class="text-center text-danger">
+            <strong ng-bind="error"></strong>
+          </div>
+        </fieldset>
+
+        <div class="form-group" show-errors>
+          <input name="industry" type="text" ng-model="industry" id="industry" class="form-control" placeholder="Industry" required>
+          <div ng-messages="organizationForm.industry.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Industry is required.</p>
+          </div>
         </div>
-        <div ng-show="error" class="text-center text-danger">
+
+        <div class="form-group" show-errors>
+          <input name="product_types" type="text" ng-model="product_types" id="product_types" class="form-control" placeholder="Select Product Types" required>
+          <div ng-messages="organizationForm.product_types.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Product Types are required.</p>
+          </div>
+        </div>
+
+         <div class="form-group" show-errors>
+          <input name="website" type="text" ng-model="website" id="website" class="form-control" placeholder="Company Website" required>
+          <div ng-messages="organizationForm.website.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">website is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="headquarters" type="text" ng-model="headquarters" id="headquarters" class="form-control" placeholder="Company Headquarters" required>
+          <div ng-messages="organizationForm.headquarters.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Headquarters is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="about" type="text" ng-model="about" id="about" class="form-control" placeholder="About">
+        </div>
+
+        <div class="form-group">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>
-        </div>
-        <div ng-show="success" class="text-center text-success">
-          <strong ng-bind="success"></strong>
         </div>
       </fieldset>
     </form>
