@@ -23,7 +23,7 @@
                     <h4 class="list-group-item-heading" ng-bind="project.title"></h4>
                 </a>
                 City, State | <span ng-bind="project.system_capacity"></span> kW
-                <div class="list-detail" ng-show="!project.canBid">
+                <div class="list-detail" ng-show="authentication.user.roles[0] === 'user'">
                     <h5 class="list-group-item-heading bid">Top Bid: <span ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'No Bids Placed'"></span>
                     <br><span class="notice user-specific"><i>Your suppliers will not see<br> the top bid</i></span>
                     </h5>
