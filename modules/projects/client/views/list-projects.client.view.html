@@ -1,7 +1,7 @@
 <section class="container project list-view border" ng-controller="ProjectsController" ng-init="find()">
     <div class="page-header">
         <h3 ng-if="authentication.user.roles[0] == 'seller'">Request for Quotes you are invited to: </h3>
-        <h3 ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">Request for Quotes you submitted</h3>
+        <h3 ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">Request for Quotes you submitted: </h3>
         <div class="menu" ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">
             <!-- Shows the menu if the user is a buyer -->
             <a ui-sref="projects.create">
