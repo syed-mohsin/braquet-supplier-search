@@ -1,27 +1,37 @@
 <section class="container project list-view border" ng-controller="ProjectsController" ng-init="find()">
     <div class="page-header">
-        <h3>Request for quotes</h3>
+        <h3 ng-if="authentication.user.roles[0] == 'seller'">Request for Quotes you are invited to: </h3>
+        <h3 ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">Request for Quotes you submitted</h3>
+        <div class="menu" ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">
+            <!-- Shows the menu if the user is a buyer -->
+            <a ui-sref="projects.create">
+                <span class="glyphicon glyphicon-new-window"></span><span>New quote request</span>
+            </a>
+        </div>
     </div>
     <div class="list-group">
-        <div ng-repeat="project in projects" class="list-group-item col-sm-3">
+        <div ng-repeat="project in projects" class="list-group-item col-sm-2">
 
             <img class="company-logo" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
             <b class="notice error" ng-show="!project.bidOpen">
-                    This RFQ is closed.
-                </b>
+                This RFQ is closed.
+            </b>
 
             <div class="detail">
                 <a target="blank" class="project-title" ui-sref="projects.view({projectId: project._id})">
                     <!-- ng-show="authentication.user._id == project.user._id" -->
                     <h4 class="list-group-item-heading" ng-bind="project.title"></h4>
-
                 </a>
                 City, State | <span ng-bind="project.system_capacity"></span> kW
-                <div class="list-detail">
-                    <h5 class="list-group-item-heading bid">Top Bid: <span ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'No Bids Placed'"></span></h5>
+                <div class="list-detail" ng-show="!project.canBid">
+                    <h5 class="list-group-item-heading bid">Top Bid: <span ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'No Bids Placed'"></span>
+                    <br><span class="notice user-specific"><i>Your suppliers will not see<br> the top bid</i></span>
+                    </h5>
                 </div>
                 <div class="menu" ng-show="project.canBid">
-                    <a class="place-bid" ng-click="showBidView($event)"><span class="glyphicon glyphicon-tag"></span><span >Place a bid</span></a>
+                    <a class="place-bid" ng-click="showBidView($event)">
+                        <span class="glyphicon glyphicon-tag"></span><span >Place a bid</span>
+                    </a>
                 </div>
                 <small>Posted by <span ng-bind="project.user.displayName"></span> on <span ng-bind="project.created | date:'yyyy-MM-dd'"></span></small>
             </div>

@@ -85,6 +85,7 @@ a:hover {
 }
 .list-view {
     background: white;
+    margin-top: 35px;
     padding: 10px 15px 40px;
 }
 .welcome form {
@@ -99,7 +100,7 @@ a:hover {
 form {
     background: white;
     padding: 40px 50px 40px 50px;
-    min-width: 300px;
+    min-width: 268px;
     max-width: 450px;
     margin: 20px auto;
     text-align: center;
@@ -128,6 +129,14 @@ form label {
 
 .notice.error {
     background: #C74B4B;
+}
+.notice.user-specific, .project .notice.user-specific {
+    font-size: 11px;
+    background: initial;
+    color: initial;
+    text-transform: initial;
+    left: initial;
+    padding: initial;
 }
 
 .profile-picture form {
@@ -219,7 +228,6 @@ section h2 {
 }
 .navbar {
     margin-bottom: 0;
-    position: relative;
 }
 .navbar-brand {
     padding: 0;
@@ -357,7 +365,7 @@ section h2 {
 .project .detail {
     margin-top: 15px;
 }
-.project .project-title h4 {
+.list-view .list-group h4 {
     font-size: 1.5rem;
     font-weight: 500;
 }
@@ -390,10 +398,13 @@ section h2 {
     text-align: center;
     cursor: pointer;
 }
+.list-view .menu {
+    margin: 25px 0 15px 0;
+}
 .box.title-content .box-title .menu span {
     width: initial;
 }
-.page-header .menu a:hover, .profile .menu a:hover {
+.menu a:hover {
     background:rgba(1,1,1,0.1);
 }
 .page-header .menu a.first {
@@ -447,7 +458,7 @@ section h2 {
     margin: 0 0 18px;
     text-align: center;
 }
-.project-view img.profile {
+.list-item img.profile, .list-group img.profile {
     width: 25px;
     margin-right: 5px;
     border-radius: 50%;
@@ -459,7 +470,7 @@ img.company-logo {
 }
 .box {
     padding: 20px 25px;
-    margin: 10px 10px;
+    margin: 10px 0;
     background: white;
     border-style: solid;
     border-width: 1px;
@@ -516,11 +527,14 @@ img.company-logo {
 .list-group h4{
     font-weight: bold;
 }
+.list-group h5{
+    margin-top: 0;
+}
 .list-group-item-heading {
     color: inherit;
 }
 .list-group-item {
-    width: initial;
+/*    width: initial;*/
     margin-bottom: 10px;
     padding: 10px 35px 20px 15px;
 }
@@ -620,6 +634,13 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     text-align: center;
     margin-top: 50px;
 }
+.connections.list-view {
+    max-width: 700px;
+}
+.connections img.profile {
+    width: 55px;
+    margin-right: 15px;
+}
 .app-modal-window .modal-dialog {
-  width: 100%;
+  margin-top: 45px;
 }
