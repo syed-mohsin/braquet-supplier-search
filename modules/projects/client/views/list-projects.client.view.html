@@ -1,27 +1,29 @@
-<section class="container project" ng-controller="ProjectsController" ng-init="find()">
+<section class="container project list-view border" ng-controller="ProjectsController" ng-init="find()">
     <div class="page-header">
-        <h2>Projects</h2>
+        <h3>Request for quotes</h3>
     </div>
     <div class="list-group">
-        <div ng-repeat="project in projects" class="list-group-item">
+        <div ng-repeat="project in projects" class="list-group-item col-sm-3">
 
-            <img src="http://www.ugei.com/sites/default/files/imagecache/thumbnail/Toyota_1.jpg">
+            <img class="company-logo" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
+            <b class="notice error" ng-show="!project.bidOpen">
+                    This RFQ is closed.
+                </b>
+
             <div class="detail">
-                <a class="project-title" ui-sref="projects.view({projectId: project._id})">
+                <a target="blank" class="project-title" ui-sref="projects.view({projectId: project._id})">
                     <!-- ng-show="authentication.user._id == project.user._id" -->
                     <h4 class="list-group-item-heading" ng-bind="project.title"></h4>
 
                 </a>
                 City, State | <span ng-bind="project.system_capacity"></span> kW
                 <div class="list-detail">
-                    <h5 class="list-group-item-heading bid">Top Bid: <span ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W from ' + project.bids[0].user.displayName : 'No Bids Placed'"></span></h5>
-
+                    <h5 class="list-group-item-heading bid">Top Bid: <span ng-bind="(project.bids[0]) ? (project.bids[0].bid_price/100 | currency) + '/W' : 'No Bids Placed'"></span></h5>
                 </div>
-                <div><a class="place-bid" ng-show="project.canBid" ng-click="showBidView($event, project._id)">Place a Bid</a></div>
-                <b ng-show="!project.bidOpen">
-                    Bid Deadline has passed! 
-                </b>
-                <h5 class="accepted-panels">Accepted Panels: <div ng-bind="project.panel_models[0].manufacturer"></div></h5>
+                <div class="menu" ng-show="project.canBid">
+                    <a class="place-bid" ng-click="showBidView($event)"><span class="glyphicon glyphicon-tag"></span><span >Place a bid</span></a>
+                </div>
+                <small>Posted by <span ng-bind="project.user.displayName"></span> on <span ng-bind="project.created | date:'yyyy-MM-dd'"></span></small>
             </div>
 
         </div>
@@ -31,4 +33,3 @@
     </div>
     <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] === 'seller' && projects.$resolved && !projects.length">No projects to bid on!</div>
 </section>
-

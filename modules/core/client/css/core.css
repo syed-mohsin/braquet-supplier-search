@@ -45,7 +45,7 @@ body {
 }
 
 a {
-    color: #42c299;
+    color: #222;
     font-weight: 700;
 }
 
@@ -78,6 +78,15 @@ a:hover {
 .no-border {
     border-style: none;
 }
+.border {
+    border-style: solid;
+    border-color: lightgrey;
+    border-width: 1px;
+}
+.list-view {
+    background: white;
+    padding: 10px 15px 40px;
+}
 .welcome form {
     border-style: none;
     border-width: 0;
@@ -89,9 +98,6 @@ a:hover {
 
 form {
     background: white;
-    border-style: solid;
-    border-width: 1px;
-    border-color: lightgrey;
     padding: 40px 50px 40px 50px;
     min-width: 300px;
     max-width: 450px;
@@ -331,6 +337,30 @@ section h2 {
     width: 147px;
     margin: 3px 0;
 }
+.project .list-group {
+    padding-left: initial;
+}
+.project .list-group-item {
+    min-width: 274px;
+    margin-right: 10px;
+    padding: 20px;
+}
+.project .company-logo {
+    margin: 15px 0;
+}
+.project .notice {
+    position: relative;
+    top: 2px;
+    left: 10px;
+    padding: 5px 10px;
+}
+.project .detail {
+    margin-top: 15px;
+}
+.project .project-title h4 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
 .projects {
     list-style-type: none;
 }
@@ -423,7 +453,7 @@ section h2 {
     border-radius: 50%;
     float: left;
 }
-.project-view img.company-logo {
+img.company-logo {
     width: 50px;
     margin-bottom: 15px;
 }
@@ -477,18 +507,6 @@ section h2 {
     padding: 15px 15px;
     background: #222;
     color: white;
-}
-.project .list-group-item {
-    height: 225px;
-}
-.project .list-group img {
-    float: left;
-    margin-right: 30px;
-    width: 22%;
-    max-width: 220px;
-}
-.project .detail {
-    float: left;
 }
 .list-group {
     margin: 10px 0;
