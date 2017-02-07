@@ -114,10 +114,6 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       Organizations.query({}, function(organizations) {
   		$scope.organizations = organizations;
       });
-
-      $http.get('/api/organization-requests').success(function(requests) {
-        $scope.organization_requests = requests;
-      });
     };
 
     $scope.findOne = function () {
