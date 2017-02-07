@@ -1,43 +1,17 @@
-<section class="organizations profile" ng-controller="OrganizationsController" ng-init="findOne()">
-    <div class="page-header">
-
-    </div>
-    <div class="container">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="no-border box title-content col-sm-10">
-                    <div class="profile-photo">
-                        <a href="#">
-                            <img ng-src="{{organization.profileImageURL}}">
-                        </a>
-                    </div>
-                    <div class="content no-wrap">
-                        <div class="title name">
-                            <span ng-bind="organization.firstName"></span>
-                            <span ng-bind="organization.lastName"></span>
-                        </div>
-                    <img class="organization-logo pull-right" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
-
-                        <div class="sub-title">
-                            <span>Account Executive</span>
-                        </div>
-                        <div class="bio">
-                            <span>I am a solar system designer and can develop Helioscope design along with single line electrical diagrams.</span>
-                        </div>
-                        <div class="user-organizations">
-                            <div class="number"><strong><span ng-bind="organization.organizations.length"></span></strong></div>
-                            <small>organizations</small>
-                        </div>
-                        <div class="menu">
-                            <a href="#">
-                                <span class="glyphicon glyphicon-tag"></span><span>Request for a quote</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
+<div ng-controller="OrganizationsController" ng-init="findOne()">
+    <section class="organization-view container">
+        <div class="page-header">
+            <div class="organization-header">
+                <h2 ng-bind="organization.name"></h2>
             </div>
         </div>
-    </div>
-</section>
+
+        <div class="form-horizontal data">
+        <div class="form-group">
+            <label class="control-label col-sm-2">Industry: </label>
+            <div class="col-sm-4">
+                <p ng-bind="organization.industry"></p>
+            </div>
+        </div>
+    </section>
+</div>

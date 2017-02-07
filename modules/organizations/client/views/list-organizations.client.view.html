@@ -11,24 +11,9 @@
   </div>
   <div class="list-group">
     <a ng-repeat="organization in pagedItems" ui-sref="organizations.view({organizationId: organization._id})" class="list-group-item">
-      <h4 class="list-group-item-heading" ng-bind="organization.username"></h4>
-      <p class="list-group-item-text" ng-bind="organization.email"></p>
+      <h4 class="list-group-item-heading" ng-bind="organization.name"></h4>
+      <p class="list-group-item-text" ng-bind="organization.industry"></p>
     </a>
-  </div>
-  <hr/>
-  <!-- Organization requests -->
-   <div class="list-group">
-    <div ng-repeat="organization in organization_requests" class="list-group-item">
-      <div class="detail">
-        <a class="organization-title" ui-sref="organizations.view({organizationId: organization._id})">
-            <h4 class="list-group-item-heading" ng-bind="organization.username"></h4>
-        </a>
-        <p class="list-group-item-text" ng-bind="organization.email"></p>
-        <div ng-show="!organization.isPending" ng-click="acceptRequest(organization)">
-          <a class="place-bid" >Accept Request</a>
-        </div>
-      </div>
-    </div>
   </div>
 
   <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
