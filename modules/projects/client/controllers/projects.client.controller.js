@@ -144,7 +144,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
       console.log(angular.element);
       var modalInstance = $modal.open({
         templateUrl: '/modules/bids/client/views/create-bid.client.view.html',
-        controller: 'BidsController',
+        controller: 'CreateBidController',
         resolve: {
           modalProjectId: function() {
             return projectId;
