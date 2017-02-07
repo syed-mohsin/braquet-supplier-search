@@ -2,62 +2,75 @@
 
 // Organizations controller
 
-angular.module('organizations').controller('OrganizationsController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Organizations',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects, Organizations) {
+angular.module('organizations').controller('OrganizationsController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'FileUploader', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Organizations',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, FileUploader, Authentication, Socket, GetBids, PanelModels, Projects, Organizations) {
     $scope.authentication = Authentication;
-  	
-  	Organizations.query(function (data) {
+    $scope.user = Authentication.user;
+    $scope.imageURL = $scope.user.profileImageURL;
+
+    Organizations.query(function (data) {
       $scope.organizations = data;
       $scope.buildPager();
     });
 
-    $scope.inviteByEmail = function(isValid) {
-      $scope.success = $scope.error = null;
 
+    // Create file uploader instance
+    $scope.uploader = new FileUploader({
+      url: 'api/users/picture',
+      alias: 'newProfilePicture'
+    });
+
+        // Set file uploader image filter
+    $scope.uploader.filters.push({
+      name: 'imageFilter',
+      fn: function (item, options) {
+        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+      }
+    });
+
+    // Called after the user selected a new picture file
+    $scope.uploader.onAfterAddingFile = function (fileItem) {
+      if ($window.FileReader) {
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(fileItem._file);
+
+        fileReader.onload = function (fileReaderEvent) {
+          $timeout(function () {
+            $scope.imageURL = fileReaderEvent.target.result;
+          }, 0);
+        };
+      }
+    };
+
+    // Add new organization
+    $scope.create = function (isValid) {
+      $scope.error = null;
+
+      // Check for form submission errors
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'InviteByEmailForm');
+        $scope.$broadcast('show-errors-check-validity', 'organizationForm');
 
         return false;
       }
 
-      $http.post('/api/organization-auth/send-invite', $scope.credentials).success(function (response) {
-        // Show user success message and clear form
-        $scope.credentials = null;
-        $scope.success = response.message;
-        console.log(response);
-
-      }).error(function (response) {
-        // Show user error message and clear form
-        $scope.credentials = null;
-        $scope.error = response.message;
-      });
-
-    };
-
-    // Accept User organization invite
-    $scope.acceptRequest = function(user) {
-      $http.post('/api/organization-auth/accept-invite', user)
-        .success(function(response) {
-          var conn_index = $scope.organization_requests.indexOf(user);
-          $scope.organization_requests[conn_index].isAccepted = true;
-          $scope.organization_requests.splice(conn_index, 1);
-          $scope.organizations.push(user);
-      });
-    };
-
-    // Add new organization
-    $scope.create = function (userId) {
-      $scope.error = null;
-
       // Create new Organization object
       var organization = new Organizations({
-      	name: this.name
-
+      	name: this.name,
+        logo: this.logo,
+        cover_img: this.cover_img,
+        industry: this.industry,
+        product_types: this.product_types,
+        website: this.website,
+        headquarters: this.headquarters,
+        about: this.about
       });
 
       // Redirect after save
       organization.$save(function (response) {
-        $state.go('organizations');
+        $state.go('organizations.view', {
+          organizationId: response._id
+        });
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;

@@ -13,7 +13,22 @@ var path = require('path'),
   async = require('async'),
   crypto = require('crypto');
 
-var smtpTransport = nodemailer.createTransport(config.mailer.options);  
+/**
+ * Create a organization
+ */
+exports.create = function (req, res) {
+  var organization = new Organization(req.body);
+
+  organization.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(organization);
+    }
+  });
+};
 
 /**
  * Show the current organization
@@ -240,15 +255,13 @@ exports.organizationByID = function (req, res, next, id) {
     });
   }
 
-  User.findById(id , function (err, organization) {
+  Organization.findById(id, function (err, organization) {
     if (err) {
       return next(err);
     } else if (!organization) {
       return next(new Error('Failed to load organization ' + id));
-    } else if (req.user.organizations.indexOf[id] === -1 ) {
-      return next(new Error('Not connected to this user'));
-    }
-
+    } 
+    
     req.organization = organization;
     next();
   });
