@@ -1,17 +1,73 @@
-<div ng-controller="OrganizationsController" ng-init="findOne()">
-    <section class="organization-view container">
-        <div class="page-header">
-            <div class="organization-header">
-                <h2 ng-bind="organization.name"></h2>
-            </div>
-        </div>
+<section class="organization" ng-controller="OrganizationsController" ng-init="findOne()">
+    <div class="page-header">
 
-        <div class="form-horizontal data">
-        <div class="form-group">
-            <label class="control-label col-sm-2">Industry: </label>
-            <div class="col-sm-4">
-                <p ng-bind="organization.industry"></p>
+    </div>
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="no-border box title-content col-sm-10">
+                    <div class="profile-photo">
+                        <a href="#">
+                            <!-- <img ng-src="{{organization.logo}}"> -->
+                            <img class="company-logo pull-right" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
+                        </a>
+                    </div>
+                    <div class="content no-wrap">
+                        <div class="title name">
+                            <span ng-bind="organization.name"></span>
+                        </div>
+                        <span ng-bind="organization.industry"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="box title-content col-sm-10">
+                    <div class="content no-wrap">
+                        <div class="sub-title name">
+                            <span>About us</span>
+                        </div>
+                        <div class="bio">
+                            <span ng-bind="organization.about"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="box title-content col-sm-10 list-view">
+                    <div class="content no-wrap">
+                        <div class="sub-title name">
+                            <span>Our products</span>
+                        </div>
+                        <div class="list-group">
+                            <div class="list-group-item col-sm-2">
+                            <img class="company-logo" src="https://s3.amazonaws.com/i3.cleantech/uploads/company/company_logo/15/5215/Sunpower-Logo.jpg">
+                                <img class="company-logo" src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
+                                <div class="detail">
+                                    <a target="blank" class="project-title" href="#">
+                                        <!-- ng-show="authentication.user._id == project.user._id" -->
+                                        <h4 class="list-group-item-heading">X21-335-BLK</h4>
+                                    </a>
+                                </div>
+
+                            </div>
+                            <div class="list-group-item col-sm-2">
+                            <img class="company-logo" src="https://s3.amazonaws.com/i3.cleantech/uploads/company/company_logo/15/5215/Sunpower-Logo.jpg">
+                                <img class="company-logo" src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
+                                <div class="detail">
+                                    <a target="blank" class="project-title" href="#">
+                                        <!-- ng-show="authentication.user._id == project.user._id" -->
+                                        <h4 class="list-group-item-heading">X21-335-BLK</h4>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
-    </section>
-</div>
+</section>
+
+
+<h2></h2>
