@@ -9,8 +9,11 @@ var _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   multer = require('multer'),
+  multerS3 = require('multer-s3'),
   config = require(path.resolve('./config/config')),
-  User = mongoose.model('User');
+  User = mongoose.model('User'),
+  aws = require('aws-sdk'),
+  s3 = new aws.S3();
 
 /**
  * Update user details
@@ -56,7 +59,18 @@ exports.update = function (req, res) {
 exports.changeProfilePicture = function (req, res) {
   var user = req.user;
   var message = null;
-  var upload = multer(config.uploads.profileUpload).single('newProfilePicture');
+  var upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: 'braquetprofilephotos',
+      acl: 'public-read',
+      metadata: function(req, file, cb) {
+        console.log(file);
+        cb(null, file);
+      }
+    })
+  }).single('newProfilePicture');
+
   var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
   
   // Filtering to upload only images
@@ -65,11 +79,10 @@ exports.changeProfilePicture = function (req, res) {
   if (user) {
     upload(req, res, function (uploadError) {
       if(uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading profile picture'
-        });
+        return res.status(400).json(uploadError);
       } else {
-        user.profileImageURL = config.uploads.profileUpload.dest + req.file.filename;
+        user.profileImageURL = req.file.location;
+
 
         user.save(function (saveError) {
           if (saveError) {
@@ -88,6 +101,7 @@ exports.changeProfilePicture = function (req, res) {
         });
       }
     });
+
   } else {
     res.status(400).send({
       message: 'User is not signed in'
