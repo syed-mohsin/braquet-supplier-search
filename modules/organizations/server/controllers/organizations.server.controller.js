@@ -5,13 +5,17 @@
  */
 var path = require('path'),
   config = require(path.resolve('./config/config')),
+  multer = require('multer'),
+  multerS3 = require('multer-s3'),
   mongoose = require('mongoose'),
   Organization = mongoose.model('Organization'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   nodemailer = require('nodemailer'),
   async = require('async'),
-  crypto = require('crypto');
+  crypto = require('crypto'),
+  aws = require('aws-sdk'),
+  s3 = new aws.S3();
 
 /**
  * Create a organization
@@ -67,6 +71,57 @@ exports.list = function (req, res) {
 
     res.json(organizations);
   });
+};
+
+/**
+ * Update profile picture
+ */
+exports.changeLogo = function (req, res) {
+  var user = req.user;
+  var organization = req.organization;
+
+  var message = null;
+  var upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: 'braquetcompany',
+      acl: 'public-read',
+      metadata: function(req, file, cb) {
+        console.log(file);
+        cb(null, file);
+      }
+    })
+  }).single('newLogo');
+
+  var logoUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
+  
+  // Filtering to upload only images
+  upload.fileFilter = logoUploadFileFilter;
+
+  if (organization) {
+    upload(req, res, function (uploadError) {
+      if(uploadError) {
+        return res.status(400).json(uploadError);
+      } else {
+        organization.logoImageUrl = req.file.location;
+
+        organization.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(organization);
+          }
+        });
+      }
+    });
+
+  } else {
+    res.status(400).send({
+      message: 'Organization does not exist'
+    });
+  }
 };
 
 /**

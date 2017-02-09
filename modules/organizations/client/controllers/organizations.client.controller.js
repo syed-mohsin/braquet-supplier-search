@@ -6,41 +6,30 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
   function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, FileUploader, Authentication, Socket, GetBids, PanelModels, Projects, Organizations) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
-    $scope.imageURL = $scope.user.profileImageURL;
+
+    // Create file uploader instance
+    $scope.uploader = new FileUploader({
+      url: 'api/organizations/logo/',
+      alias: 'newLogo'
+    });
 
     Organizations.query(function (data) {
       $scope.organizations = data;
       $scope.buildPager();
     });
 
+    $scope.loadPanelModelsData = function() {
+      $scope.panel_models = [];
 
-    // Create file uploader instance
-    $scope.uploader = new FileUploader({
-      url: 'api/users/picture',
-      alias: 'newProfilePicture'
-    });
+      $scope.panelData = PanelModels.query();
 
-        // Set file uploader image filter
-    $scope.uploader.filters.push({
-      name: 'imageFilter',
-      fn: function (item, options) {
-        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-      }
-    });
+      $scope.getMatches = function (text) {
+        var filteredItems = $filter('filter')($scope.panelData, {
+          $: text
+        });
 
-    // Called after the user selected a new picture file
-    $scope.uploader.onAfterAddingFile = function (fileItem) {
-      if ($window.FileReader) {
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(fileItem._file);
-
-        fileReader.onload = function (fileReaderEvent) {
-          $timeout(function () {
-            $scope.imageURL = fileReaderEvent.target.result;
-          }, 0);
-        };
-      }
+        return filteredItems;
+      };
     };
 
     // Add new organization
@@ -57,10 +46,9 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       // Create new Organization object
       var organization = new Organizations({
       	name: this.name,
-        logo: this.logo,
-        cover_img: this.cover_img,
         industry: this.industry,
         product_types: this.product_types,
+        panel_models: this.panel_models,
         website: this.website,
         headquarters: this.headquarters,
         about: this.about
@@ -121,6 +109,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         organizationId: $stateParams.organizationId
       }, function(organization) {
         $scope.organization = organization;
+        $scope.buildUploader(organization._id);
       }, function(error) {
         $location.path('/forbidden');
       });
@@ -145,6 +134,69 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
 
     $scope.pageChanged = function () {
       $scope.figureOutItemsToDisplay();
+    };
+
+    $scope.buildUploader = function(organizationId) {
+      // change uploader url
+      $scope.uploader.url = 'api/organizations/logo/' + organizationId;
+
+          // Set file uploader image filter
+      $scope.uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item, options) {
+          var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+          return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+      });
+
+      // Called after the user selected a new picture file
+      $scope.uploader.onAfterAddingFile = function (fileItem) {
+        if ($window.FileReader) {
+          var fileReader = new FileReader();
+          fileReader.readAsDataURL(fileItem._file);
+
+          fileReader.onload = function (fileReaderEvent) {
+            $timeout(function () {
+              $scope.logoImageUrl = fileReaderEvent.target.result;
+            }, 0);
+          };
+        }
+      };
+
+      $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
+        // Show success message
+        $scope.success = true;
+
+        // Populate organization object
+        $scope.organization = response;
+
+        // Clear upload buttons
+        $scope.cancelUpload();
+      };
+
+      // Called after the user has failed to uploaded a new picture
+      $scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
+        // Clear upload buttons
+        $scope.cancelUpload();
+
+        // Show error message
+        $scope.error = response.message;
+      };
+
+      // Change user profile picture
+      $scope.uploadProfilePicture = function () {
+        // Clear messages
+        $scope.success = $scope.error = null;
+
+        // Start upload
+        $scope.uploader.uploadAll();
+      };
+
+      // Cancel the upload process
+      $scope.cancelUpload = function () {
+        $scope.uploader.clearQueue();
+        $scope.imageURL = $scope.user.profileImageURL;
+      };
     };
   }
 ]);

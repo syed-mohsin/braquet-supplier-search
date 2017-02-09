@@ -70,7 +70,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
 
     // Find existing Project
     $scope.findProject = function () {
-      var id = modalProjectId || $stateParams.projectId;
+      var id = $stateParams.projectId;
       $scope.project = Projects.get({
         projectId: id
       });

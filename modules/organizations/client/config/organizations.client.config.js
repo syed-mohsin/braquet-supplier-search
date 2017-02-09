@@ -22,7 +22,7 @@ angular.module('organizations').run(['Menus',
     Menus.addSubMenuItem('topbar', 'organizations', {
       title: 'Add Organizations',
       state: 'organizations.create',
-      roles: ['user', 'seller']
+      roles: ['admin']
     });
   }
 ]);

@@ -18,6 +18,8 @@ module.exports = function (app) {
     // .put(organizations.update)
     .delete(organizations.delete);
 
+  app.route('/api/organizations/logo/:organizationId').post(organizations.changeLogo);
+
   // Finish by binding the organization middleware
   app.param('organizationId', organizations.organizationByID);
 };
