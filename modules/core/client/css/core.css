@@ -197,6 +197,10 @@ form .btn-primary, form .btn-default {
     border-bottom-color: black;
     border-bottom-width: 4px;
 }
+.menu .btn-file input[type=file] {
+    font-size: 0;
+/*    cursor: pointer;*/
+}
 
 section.content {
     min-height: 82%;
@@ -383,7 +387,7 @@ section h2 {
 .menu {
     margin: 10px 0 5px 0;
 }
-.menu a {
+.menu a, .menu .btn-file {
     color: #444;
     font-size: 12px;
     font-weight: 500;

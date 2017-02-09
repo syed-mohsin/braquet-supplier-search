@@ -1,9 +1,29 @@
-<section class="organization container list-view" ng-controller="OrganizationsController" ng-init="findOne()">
+<section class="organization container list-view border" ng-controller="OrganizationsController" ng-init="findOne()">
     <div class="page-header">
         <div>
             <div class="profile-photo">
                 <!-- <img ng-src="{{organization.logo}}"> -->
-                <img class="company-logo" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
+                <img ng-src="{{organization.logoImageUrl}}" alt="{{user.displayName}}" class="company-logo">
+                <fieldset class="menu" ng-if="authentication.user.roles[0] == 'admin' || authentication.user.roles[1] == 'admin'">
+                    <div class="form-group text-center">
+
+                    </div>
+                    <div>
+                        <span class="btn-file">
+                             Select logo <input type="file" nv-file-select uploader="uploader">
+                        </span>
+                    </div>
+                    <div class="text-center form-group" ng-show="uploader.queue.length">
+                        <a ng-click="uploadProfilePicture();">Upload</a>
+                        <a ng-click="cancelUpload();">Cancel</a>
+                    </div>
+                    <div ng-show="success" class="text-center text-success">
+                        <strong>Company Logo Changed Successfully</strong>
+                    </div>
+                    <div ng-show="error" class="text-center text-danger">
+                        <strong ng-bind="error"></strong>
+                    </div>
+                </fieldset>
             </div>
             <div class="content no-wrap">
                 <div class="title name">
@@ -13,13 +33,13 @@
                     <span ng-bind="organization.about"></span>
                 </div>
                 <small><span ng-bind="organization.industry"></span></small>
-                <div><small><span>You are currently not connected to UGE</span> - <a ui-sref="connections.create">Add a contact</a></small></div>
+                <div><small><span>You are currently not connected to <span ng-bind="organization.name"></span></span> - <a ui-sref="connections.create">Add a contact</a></small></div>
                 <div class="menu" ng-if="authentication.user.roles.indexOf('seller') === -1">
                     <a ui-sref="projects.create">
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
                     <a ng-click="showAddUsers($event)" ng-show="authentication.user.roles.indexOf('admin') !== -1">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Add Users</span>    
+                        <span class="glyphicon glyphicon-new-window"></span><span>Add Users</span>
                     </a>
                 </div>
             </div>
@@ -27,7 +47,7 @@
 
     </div>
     <div class="row">
-        <div class="box title-content no-border list-view product">
+        <div class="box title-content no-border product">
             <div class="content no-wrap">
                 <div class="sub-title name">
                     <span>Products</span>
@@ -68,29 +88,8 @@
     </div>
     <div class="row">
 
-        <fieldset>
-          <div class="form-group text-center">
-            <img ng-src="{{organization.logoImageUrl}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
-          </div>
-          <div class="text-center form-group">
-            <span class="btn btn-default btn-file">
-                Select logo <input type="file" nv-file-select uploader="uploader">
-            </span>
-          </div>
-          <div class="text-center form-group" ng-show="uploader.queue.length">
-            <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload</button>
-            <button class="btn btn-default cancel" ng-click="cancelUpload();">Cancel</button>
-          </div>
-          <div ng-show="success" class="text-center text-success">
-            <strong>Company Logo Changed Successfully</strong>
-          </div>
-          <div ng-show="error" class="text-center text-danger">
-            <strong ng-bind="error"></strong>
-          </div>
-        </fieldset>
 
 
-</div>
+
+    </div>
 </section>
-
-
