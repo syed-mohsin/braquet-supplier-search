@@ -22,14 +22,15 @@ var OrganizationSchema = new Schema({
   	type: String,
   	required: 'Organization name is required'
   },
-  logo: {
+  logoImageUrl: {
   	type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
-  cover_img: {
-  	type: String,
-    default: 'modules/users/client/img/profile/default.png'
-  },
+  panel_models: [{
+    type: Schema.ObjectId,
+    ref: 'PanelModel',
+    required: 'Must select at least one panel model'
+  }],
   industry: {
   	type: String
   }, 
