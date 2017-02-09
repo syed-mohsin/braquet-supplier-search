@@ -124,6 +124,33 @@ exports.changeLogo = function (req, res) {
   }
 };
 
+exports.addUsers = function(req, res) {
+  var newUsers = req.body;
+  var organization = req.organization;
+
+  organization.users = organization.users.concat(newUsers);
+  organization.save(function(err) {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.json(organization);
+    }
+  });
+};
+
+exports.getPotentialUsers = function(req, res) {
+  var organization = req.organization;
+  var org_user_ids = organization.users.map(function(user) { return user._id; });
+
+  User.find({ _id: {$nin : org_user_ids} }, function(err, users) {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.json(users);
+    }
+  });
+};
+
 /**
  * Organization middleware
  */
@@ -134,7 +161,10 @@ exports.organizationByID = function (req, res, next, id) {
     });
   }
 
-  Organization.findById(id, function (err, organization) {
+  Organization.findById(id)
+    .populate('panel_models')
+    .populate('users')
+    .exec(function (err, organization) {
     if (err) {
       return next(err);
     } else if (!organization) {

@@ -2,8 +2,8 @@
 
 // Organizations controller
 
-angular.module('organizations').controller('OrganizationsController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'FileUploader', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Organizations',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, FileUploader, Authentication, Socket, GetBids, PanelModels, Projects, Organizations) {
+angular.module('organizations').controller('OrganizationsController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Organizations',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, GetBids, PanelModels, Projects, Organizations) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -197,6 +197,83 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         $scope.uploader.clearQueue();
         $scope.imageURL = $scope.user.profileImageURL;
       };
+    };
+
+    $scope.showAddUsers = function(ev) {
+      console.log(ev);
+      
+
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/organizations/client/views/add-users.client.view.html',
+        windowClass: 'app-modal-window',
+        controller: function($scope, $http, $modalInstance, Users) {
+          $scope.addedUsers = [];
+          $http.get('/api/organizations/' + $scope.organization._id + '/getPotentialUsers')
+            .success(function (response) {
+              $scope.potentialUsers = response;
+              $scope.figureOutItemsToDisplay();
+
+              // for pagination
+              $scope.buildPager();
+            }).error(function (response) {
+              // Show user error message and clear form
+              $modalInstance.close();
+          });
+
+
+          $scope.buildPager = function () {
+            $scope.pagedItems = [];
+            $scope.itemsPerPage = 5;
+            $scope.currentPage = 1;
+            $scope.figureOutItemsToDisplay();
+          };
+
+          $scope.figureOutItemsToDisplay = function () {
+            $scope.filteredItems = $filter('filter')($scope.potentialUsers, {
+              $: $scope.search
+            });
+            $scope.filterLength = $scope.filteredItems.length;
+            var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+            var end = begin + $scope.itemsPerPage;
+            $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+          };
+
+          $scope.pageChanged = function () {
+            $scope.figureOutItemsToDisplay();
+          };
+
+          $scope.toggle = function(user) {
+            var potentialUsersIndexOf = $scope.potentialUsers.indexOf(user);
+            var addedUsersIndexOf = $scope.addedUsers.indexOf(user);
+
+            // move user to addedUsers array
+            if (potentialUsersIndexOf !== -1 && addedUsersIndexOf === -1) {
+              $scope.addedUsers.push($scope.potentialUsers.splice(potentialUsersIndexOf, 1)[0]);
+            // remove user from addedUsers and move back to users
+            } else if (potentialUsersIndexOf === -1 && addedUsersIndexOf !== -1) {
+              $scope.potentialUsers.push($scope.addedUsers.splice(addedUsersIndexOf, 1)[0]);
+            }
+
+            $scope.figureOutItemsToDisplay();
+          };
+
+          $scope.acceptUsers = function() {
+            $http.post('/api/organizations/' + $scope.organization._id + '/addUsers', $scope.addedUsers)
+              .success(function (response) {
+              $modalInstance.close();
+
+            }).error(function (response) {
+              // Show user error message and clear form
+              $scope.error = response.message;
+            });
+          };
+        },
+        scope: $scope
+      });
+
+      modalInstance.result.then(function() {
+        $scope.findOne();
+      });
     };
   }
 ]);

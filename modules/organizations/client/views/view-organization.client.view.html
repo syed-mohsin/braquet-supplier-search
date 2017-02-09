@@ -14,10 +14,12 @@
                 </div>
                 <small><span ng-bind="organization.industry"></span></small>
                 <div><small><span>You are currently not connected to UGE</span> - <a ui-sref="connections.create">Add a contact</a></small></div>
-                <div class="menu" ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">
-                    <!-- Shows the menu if the user is a buyer -->
+                <div class="menu" ng-if="authentication.user.roles.indexOf('seller') === -1">
                     <a ui-sref="projects.create">
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
+                    </a>
+                    <a ng-click="showAddUsers($event)" ng-show="authentication.user.roles.indexOf('admin') !== -1">
+                        <span class="glyphicon glyphicon-new-window"></span><span>Add Users</span>    
                     </a>
                 </div>
             </div>
@@ -63,13 +65,8 @@
                 </div>
             </div>
         </div>
-
     </div>
-</section>
-
-
-<h2></h2>
-
+    <div class="row">
 
         <fieldset>
           <div class="form-group text-center">
@@ -91,5 +88,9 @@
             <strong ng-bind="error"></strong>
           </div>
         </fieldset>
-    </section>
+
+
 </div>
+</section>
+
+
