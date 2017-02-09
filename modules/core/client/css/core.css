@@ -66,6 +66,9 @@ a:hover {
 .sub-title {
     font-size: 16px;
 }
+.sub-text {
+    font-size: 11px;
+}
 .no-wrap {
     overflow: auto;
 }
@@ -405,6 +408,16 @@ section h2 {
 .menu a:hover {
     background:rgba(1,1,1,0.1);
 }
+.page-header {
+    margin: 70px 0 20px;
+}
+.page-header .content {
+    line-height: 25px;
+}
+.project-view .page-header {
+    margin: 0 0 18px;
+    text-align: center;
+}
 .page-header .menu a.first {
     border-left-style: solid;
     border-left-width: 1px;
@@ -447,14 +460,6 @@ section h2 {
 .footer a {
     color: white;
     margin-top: 30px;
-}
-.page-header {
-    margin: 70px 0 20px;
-    padding-bottom: initial;
-}
-.project-view .page-header {
-    margin: 0 0 18px;
-    text-align: center;
 }
 .list-item img.profile, .list-group img.profile {
     width: 25px;
@@ -542,6 +547,25 @@ img.company-logo {
     margin-right: 10px;
     padding: 20px;
 }
+.product .list-group-item {
+    min-width: 255px;
+    padding: initial;
+}
+.product .list-group-item img {
+    float: left;
+    width: 100px;
+    margin-right: 10px;
+}
+.product .list-group-item .detail {
+    overflow: auto;
+    margin: 10px 0;
+}
+.product .list-group-item .specifications {
+    margin-top: 10px;
+}
+.product .list-group-item .detail .manufacturer {
+    overflow: auto;
+}
 .list-detail {
     margin-top: 10px;
     margin-bottom: 17px;
@@ -621,6 +645,9 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     text-align: center;
     padding: 10px; 
     background: white;
+}
+.organization .profile-photo {
+    margin: 10px 25px;
 }
 .profile .profile-photo {
     margin-top: -50px;

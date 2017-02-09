@@ -1,72 +1,69 @@
-<section class="organization" ng-controller="OrganizationsController" ng-init="findOne()">
+<section class="organization container list-view" ng-controller="OrganizationsController" ng-init="findOne()">
     <div class="page-header">
-
-    </div>
-    <div class="container">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="no-border box title-content col-sm-10">
-                    <div class="profile-photo">
-                        <a href="#">
-                            <!-- <img ng-src="{{organization.logo}}"> -->
-                            <img class="company-logo pull-right" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
-                        </a>
-                    </div>
-                    <div class="content no-wrap">
-                        <div class="title name">
-                            <span ng-bind="organization.name"></span>
-                        </div>
-                        <span ng-bind="organization.industry"></span>
-                    </div>
-                </div>
+        <div>
+            <div class="profile-photo">
+                <!-- <img ng-src="{{organization.logo}}"> -->
+                <img class="company-logo" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
             </div>
-            <div class="row">
-                <div class="box title-content col-sm-10">
-                    <div class="content no-wrap">
-                        <div class="sub-title name">
-                            <span>About us</span>
-                        </div>
-                        <div class="bio">
-                            <span ng-bind="organization.about"></span>
-                        </div>
-                    </div>
+            <div class="content no-wrap">
+                <div class="title name">
+                    <span ng-bind="organization.name"></span>
                 </div>
-            </div>
-            <div class="row">
-                <div class="box title-content col-sm-10 list-view">
-                    <div class="content no-wrap">
-                        <div class="sub-title name">
-                            <span>Our products</span>
-                        </div>
-                        <div class="list-group">
-                            <div class="list-group-item col-sm-2">
-                            <img class="company-logo" src="https://s3.amazonaws.com/i3.cleantech/uploads/company/company_logo/15/5215/Sunpower-Logo.jpg">
-                                <img class="company-logo" src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
-                                <div class="detail">
-                                    <a target="blank" class="project-title" href="#">
-                                        <!-- ng-show="authentication.user._id == project.user._id" -->
-                                        <h4 class="list-group-item-heading">X21-335-BLK</h4>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="list-group-item col-sm-2">
-                            <img class="company-logo" src="https://s3.amazonaws.com/i3.cleantech/uploads/company/company_logo/15/5215/Sunpower-Logo.jpg">
-                                <img class="company-logo" src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
-                                <div class="detail">
-                                    <a target="blank" class="project-title" href="#">
-                                        <!-- ng-show="authentication.user._id == project.user._id" -->
-                                        <h4 class="list-group-item-heading">X21-335-BLK</h4>
-                                    </a>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
+                <div class="bio">
+                    <span ng-bind="organization.about"></span>
                 </div>
-            </div>
+                <small><span ng-bind="organization.industry"></span></small>
+                <div><small><span>You are currently not connected to UGE</span> - <a ui-sref="connections.create">Add a contact</a></small></div>
+                <div class="menu" ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">
+                    <!-- Shows the menu if the user is a buyer -->
+                    <a ui-sref="projects.create">
+                        <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
+                    </a>
+                </div>
             </div>
         </div>
+
+    </div>
+    <div class="row">
+        <div class="box title-content no-border list-view product">
+            <div class="content no-wrap">
+                <div class="sub-title name">
+                    <span>Products</span>
+                </div>
+                <div class="list-group">
+                    <div class="list-group-item col-sm-2">
+                        <img src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
+                        <div class="detail">
+                            <a target="blank" class="project-title" href="#">
+                                <!-- ng-show="authentication.user._id == project.user._id" -->
+                                <h4 class="list-group-item-heading">X21-335-BLK<br><small><span class="manufacturer">by SunPower</span></small></h4>
+                            </a>
+                            <div class="specifications sub-text">
+                                <span>Power (w): 335</span><br>
+                                <span>Module Efficiency (%): 20</span><br>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="list-group-item col-sm-2">
+                        <img src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
+                        <div class="detail">
+                            <a target="blank" class="sub-title" href="#">
+                                <!-- ng-show="authentication.user._id == project.user._id" -->
+                                <h4 class="list-group-item-heading">X21-335-BLK<br><small><span class="manufacturer">by SunPower</span></small></h4>
+                            </a>
+                            <div class="specifications sub-text">
+                                <span>Power (w): 335</span><br>
+                                <span>Module Efficiency (%): 20.1</span><br>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 
