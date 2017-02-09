@@ -3,15 +3,10 @@
         <div>
             <div class="profile-photo">
                 <!-- <img ng-src="{{organization.logo}}"> -->
-                <img ng-src="{{organization.logoImageUrl}}" alt="{{user.displayName}}" class="company-logo">
+                <img ng-src="{{organization.logoImageUrl}}" class="company-logo">
                 <fieldset class="menu" ng-if="authentication.user.roles[0] == 'admin' || authentication.user.roles[1] == 'admin'">
-                    <div class="form-group text-center">
-
-                    </div>
-                    <div>
-                        <span class="btn-file">
-                             Select logo <input type="file" nv-file-select uploader="uploader">
-                        </span>
+                    <div class="btn-file">
+                             Edit logo <input type="file" nv-file-select uploader="uploader">
                     </div>
                     <div class="text-center form-group" ng-show="uploader.queue.length">
                         <a ng-click="uploadProfilePicture();">Upload</a>
@@ -32,14 +27,19 @@
                 <div class="bio">
                     <span ng-bind="organization.about"></span>
                 </div>
-                <small><span ng-bind="organization.industry"></span></small>
+                <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.headquarters"></span></small><br>
+                <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,    
+                <small><span ng-bind="organization.product_types"></span></small>
+                 
+<!--                 <small><span ng-bind="organization.website"></span></small> -->
                 <div><small><span>You are currently not connected to <span ng-bind="organization.name"></span></span> - <a ui-sref="connections.create">Add a contact</a></small></div>
-                <div class="menu" ng-if="authentication.user.roles.indexOf('seller') === -1">
-                    <a ui-sref="projects.create">
+                <div class="menu">
+                    <a ng-if="authentication.user.roles.indexOf('seller') === -1" ui-sref="projects.create">
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
-                    <a ng-click="showAddUsers($event)" ng-show="authentication.user.roles.indexOf('admin') !== -1">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Add Users</span>
+<!--                     <span ng-show="authentication.user.roles.indexOf('seller')" class="glyphicon glyphicon-ban-circle"></span><span>Unable to request a quote as you are a seller</span> -->
+                    <a ng-if="authentication.user.roles.indexOf('admin')"  ng-click="showAddUsers($event)" ng-show="authentication.user.roles.indexOf('admin') !== -1">
+                        <span class="glyphicon glyphicon-new-window"></span><span>Add Employees</span>
                     </a>
                 </div>
             </div>
@@ -53,27 +53,28 @@
                     <span>Products</span>
                 </div>
                 <div class="list-group">
-                    <div class="list-group-item col-sm-2">
-                        <img src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
+                    <div class="list-group-item col-sm-2" ng-repeat="panel_model in organization.panel_models">
+                        <img ng-src="{{panel_model.panelPhotoUrl}}">
                         <div class="detail">
                             <a target="blank" class="project-title" href="#">
                                 <!-- ng-show="authentication.user._id == project.user._id" -->
-                                <h4 class="list-group-item-heading">X21-335-BLK<br><small><span class="manufacturer">by SunPower</span></small></h4>
+                                <h4 class="list-group-item-heading" ng-bind="panel_model.model"></h4><small class="manufacturer"><span>by <span ng-bind="panel_model.manufacturer"></span></span></small>
                             </a>
                             <div class="specifications sub-text">
-                                <span>Power (w): 335</span><br>
-                                <span>Module Efficiency (%): 20</span><br>
+                                Power (w): <span ng-bind="panel_model.stcPowerW"></span><br>
+                                Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br>
+                                Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
                             </div>
 
                         </div>
 
                     </div>
-                    <div class="list-group-item col-sm-2">
+  <!--              <div class="list-group-item col-sm-2">
                         <img src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
                         <div class="detail">
-                            <a target="blank" class="sub-title" href="#">
+                            <a target="blank" class="sub-title" href="#"> -->
                                 <!-- ng-show="authentication.user._id == project.user._id" -->
-                                <h4 class="list-group-item-heading">X21-335-BLK<br><small><span class="manufacturer">by SunPower</span></small></h4>
+<!--                                 <h4 class="list-group-item-heading">X21-335-BLK<br><small><span class="manufacturer">by SunPower</span></small></h4>
                             </a>
                             <div class="specifications sub-text">
                                 <span>Power (w): 335</span><br>
@@ -81,7 +82,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
