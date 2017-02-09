@@ -134,7 +134,9 @@ exports.organizationByID = function (req, res, next, id) {
     });
   }
 
-  Organization.findById(id, function (err, organization) {
+  Organization.findById(id)
+    .populate('panel_models')
+    .exec(function (err, organization) {
     if (err) {
       return next(err);
     } else if (!organization) {
