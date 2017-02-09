@@ -659,6 +659,11 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
 .organization .profile-photo {
     margin: 10px 25px;
 }
+.list-group img.profile.company-logo {
+    width: 130px;
+    border-radius: inherit;
+    float: inherit;
+}
 .profile .profile-photo {
     margin-top: -50px;
 }
@@ -677,7 +682,7 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     text-align: center;
     margin-top: 50px;
 }
-.connections.list-view {
+.connections.list-view, .organizations.list-view {
     max-width: 700px;
 }
 .connections img.profile {

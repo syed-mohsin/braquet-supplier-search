@@ -1,8 +1,8 @@
 <section class="container project list-view border" ng-controller="ProjectsController" ng-init="find()">
     <div class="page-header">
-        <h3 ng-if="authentication.user.roles[0] == 'seller'">Request for Quotes you are invited to: </h3>
-        <h3 ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">Request for Quotes you submitted: </h3>
-        <div class="menu" ng-if="authentication.user.roles[0] == 'user' || authentication.user.roles[1] == 'user'">
+        <h3 ng-if="authentication.user.roles.indexOf('user') === -1">Request for Quotes you are invited to: </h3>
+        <h3 ng-if="authentication.user.roles.indexOf('seller') === -1">Request for Quotes you submitted: </h3>
+        <div class="menu" ng-if="authentication.user.roles.indexOf('seller') === -1">
             <!-- Shows the menu if the user is a buyer -->
             <a ui-sref="projects.create">
                 <span class="glyphicon glyphicon-new-window"></span><span>New quote request</span>
@@ -39,7 +39,7 @@
         </div>
     </div>
     <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] !== 'seller' && projects.$resolved && !projects.length">
-        No projects yet, why don't you <a ui-sref="projects.create">create one</a>?
+        No Request for Quotes yet, why don't you <a ui-sref="projects.create">create one</a>?
     </div>
-    <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] === 'seller' && projects.$resolved && !projects.length">No projects to bid on!</div>
+    <div class="alert alert-warning text-center" ng-if="authentication.user.roles[0] === 'seller' && projects.$resolved && !projects.length">No Request for Quotes to bid on!</div>
 </section>

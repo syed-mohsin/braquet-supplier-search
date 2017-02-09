@@ -37,8 +37,8 @@
                     <a ng-if="authentication.user.roles.indexOf('seller') === -1" ui-sref="projects.create">
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
-<!--                     <span ng-show="authentication.user.roles.indexOf('seller')" class="glyphicon glyphicon-ban-circle"></span><span>Unable to request a quote as you are a seller</span> -->
-                    <a ng-if="authentication.user.roles.indexOf('admin')"  ng-click="showAddUsers($event)" ng-show="authentication.user.roles.indexOf('admin') !== -1">
+                    <span ng-if="authentication.user.roles.indexOf('user') === -1" class="glyphicon glyphicon-ban-circle"></span><span ng-if="authentication.user.roles.indexOf('user') === -1">Unable to request a quote as you are a seller</span>
+                    <a ng-if="authentication.user.roles.indexOf('admin') > -1"  ng-click="showAddUsers($event)" ng-show="authentication.user.roles.indexOf('admin') !== -1">
                         <span class="glyphicon glyphicon-new-window"></span><span>Add Employees</span>
                     </a>
                 </div>
