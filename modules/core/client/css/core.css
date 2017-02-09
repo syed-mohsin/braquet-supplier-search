@@ -197,6 +197,10 @@ form .btn-primary, form .btn-default {
     border-bottom-color: black;
     border-bottom-width: 4px;
 }
+.menu .btn-file input[type=file] {
+    font-size: 0;
+/*    cursor: pointer;*/
+}
 
 section.content {
     min-height: 82%;
@@ -383,7 +387,7 @@ section h2 {
 .menu {
     margin: 10px 0 5px 0;
 }
-.menu a {
+.menu a, .menu .btn-file {
     color: #444;
     font-size: 12px;
     font-weight: 500;
@@ -391,22 +395,23 @@ section h2 {
     border-width: 1px;
     border-right-width: 1px;
     border-color: lightgrey;
-    padding: 6px 20px;
     border-right-style: solid;
     border-right-width: 1px;
     background: initial;
     border-radius: initial;
     text-align: center;
     cursor: pointer;
+    margin: 5px 0 10px 0;
+    padding: 6px 20px;
+}
+.menu a:hover {
+    background:rgba(1,1,1,0.1);
 }
 .list-view .menu {
     margin: 25px 0 15px 0;
 }
 .box.title-content .box-title .menu span {
     width: initial;
-}
-.menu a:hover {
-    background:rgba(1,1,1,0.1);
 }
 .page-header {
     margin: 70px 0 20px;
@@ -538,6 +543,7 @@ img.company-logo {
 }
 .list-group-item-heading {
     color: inherit;
+    margin-bottom: 0;
 }
 .list-group-item {
     margin-bottom: 10px;
@@ -565,7 +571,11 @@ img.company-logo {
 }
 .product .list-group-item .detail .manufacturer {
     overflow: auto;
+    color: #444;
+    font-weight: normal;
+    font-size: 11px;
 }
+
 .list-detail {
     margin-top: 10px;
     margin-bottom: 17px;
