@@ -32,6 +32,14 @@ angular.module('users.admin.routes').config(['$stateProvider',
             });
           }]
         }
+      })
+      .state('panels', {
+        url: '/panels',
+        templateUrl: 'modules/panels/client/views/list-panels.client.view.html',
+        controller: 'PanelImageUploadListController',
+        data: {
+          roles: ['admin']
+        }
       });
   }
 ]);
