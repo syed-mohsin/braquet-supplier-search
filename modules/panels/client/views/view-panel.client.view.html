@@ -1,0 +1,32 @@
+<section class="container">
+  <div class="page-header">
+    <div class="row">
+      <div class="col-md-4">
+        <h3 ng-bind="panel.model"></h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-3"><strong>Manufacturer</strong></div>
+        <div class="col-md-6" ng-bind="panel.manufacturer"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-3"><strong>Model</strong></div>
+        <div class="col-md-6" ng-bind="panel.model"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <span class="btn btn-default btn-file" ng-click="console.log('clicked')">
+          Select panel photo <input type="file" nv-file-select uploader="uploader">
+        </span>
+        <div class="text-center form-group" ng-show="uploader.queue.length">
+          <button class="btn btn-primary" ng-click="uploadPanelPhoto(panel._id)">Upload</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -10,11 +10,12 @@
     </div>
   </div>
   <div class="list-group">
-    <a ng-repeat="panel in pagedItems" class="list-group-item">
+    <a ng-repeat="panel in pagedItems" ui-sref="panels.view({panelId: panel._id})" class="list-group-item">
       <h4 class="list-group-item-heading" ng-bind="panel.manufacturer"></h4>
+      <img ng-src="{{panel.panelPhotoUrl}}" class="img-thumbnail user-profile-picture"/>
       <p class="list-group-item-text pull-right small" ng-bind="panel.model"></p>
       <p class="list-group-item-text" ng-bind="panel.technologyType"></p>
-    </a>
+    </div>
   </div>
 
   <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>

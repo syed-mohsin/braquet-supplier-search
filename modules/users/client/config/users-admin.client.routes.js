@@ -34,12 +34,28 @@ angular.module('users.admin.routes').config(['$stateProvider',
         }
       })
       .state('panels', {
+        abstract: true,
         url: '/panels',
+        template: '<ui-view/>',
+        data: {
+          roles: ['admin']
+        }
+      })
+      .state('panels.list', {
+        url: '/panels-list',
         templateUrl: 'modules/panels/client/views/list-panels.client.view.html',
         controller: 'PanelImageUploadListController',
         data: {
           roles: ['admin']
         }
-      });
+      })
+      .state('panels.view', {
+        url: '/:panelId',
+        templateUrl: 'modules/panels/client/views/view-panel.client.view.html',
+
+        data: {
+          roles: ['admin']
+        }
+      });;
   }
 ]);

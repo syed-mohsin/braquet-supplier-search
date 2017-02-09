@@ -10,7 +10,7 @@ angular.module('users.admin').run(['Menus',
 
     Menus.addSubMenuItem('topbar', 'admin', {
       title: 'View Panel Models',
-      state: 'panels'
+      state: 'panels.list'
     });
   }
 ]);

@@ -18,7 +18,7 @@
                     <a ui-sref="projects.create">
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
-                    <a ng-click="showAddUsers($event)"" ng-show="authentication.user.roles.indexOf('admin') !== -1">
+                    <a ng-click="showAddUsers($event)"" ng-if="authentication.user.roles.indexOf('admin') !== -1">
                         <span class="glyphicon glyphicon-new-window"></span><span>Add Users</span>    
                     </a>
                 </div>
