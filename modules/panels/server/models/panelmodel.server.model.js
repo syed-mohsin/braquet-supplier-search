@@ -27,6 +27,10 @@ var PanelModelSchema = new Schema({
   },
   manufacturingLocations: {
   	type: String
+  },
+  panelPhotoUrl: {
+    type: String,
+    default: 'https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg'
   }
 });
 

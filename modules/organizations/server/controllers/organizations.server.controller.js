@@ -74,7 +74,7 @@ exports.list = function (req, res) {
 };
 
 /**
- * Update profile picture
+ * Update org logo
  */
 exports.changeLogo = function (req, res) {
   var user = req.user;
