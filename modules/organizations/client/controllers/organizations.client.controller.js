@@ -157,7 +157,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
 
           fileReader.onload = function (fileReaderEvent) {
             $timeout(function () {
-              $scope.logoImageUrl = fileReaderEvent.target.result;
+              $scope.organization.logoImageUrl = fileReaderEvent.target.result;
             }, 0);
           };
         }
