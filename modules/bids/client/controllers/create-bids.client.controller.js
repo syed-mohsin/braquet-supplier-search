@@ -58,8 +58,6 @@ angular.module('bids').controller('CreateBidController', ['$scope', '$stateParam
       });
     };
 
-
-
     // Find existing Bid and it's associated project
     $scope.findOne = function () {
       $scope.bid = Bids.get({bidId: $stateParams.bidId}, 

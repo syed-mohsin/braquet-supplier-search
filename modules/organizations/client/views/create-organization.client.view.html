@@ -1,4 +1,4 @@
-<section class="container" ng-controller="OrganizationsController">
+<section class="container" ng-controller="OrganizationsController" ng-init="loadPanelModelsData()">
   <div class="page-header">
   </div>
   <div class="col-md-12">
@@ -12,40 +12,6 @@
           </div>
         </div>
 
-        <fieldset>
-          <div class="form-group text-center">
-            <img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
-          </div>
-          <div class="text-center form-group">
-            <span class="btn btn-default btn-file">
-                Select logo <input type="file" nv-file-select uploader="uploader">
-            </span>
-          </div>
-          <div ng-show="success" class="text-center text-success">
-            <strong>Company Logo Changed Successfully</strong>
-          </div>
-          <div ng-show="error" class="text-center text-danger">
-            <strong ng-bind="error"></strong>
-          </div>
-        </fieldset>
-
-         <fieldset>
-          <div class="form-group text-center">
-            <img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
-          </div>
-          <div class="text-center form-group">
-            <span class="btn btn-default btn-file">
-                Select Cover Image <input type="file" nv-file-select uploader="uploader">
-            </span>
-          </div>
-          <div ng-show="success" class="text-center text-success">
-            <strong>Cover Image Changed Successfully</strong>
-          </div>
-          <div ng-show="error" class="text-center text-danger">
-            <strong ng-bind="error"></strong>
-          </div>
-        </fieldset>
-
         <div class="form-group" show-errors>
           <input name="industry" type="text" ng-model="industry" id="industry" class="form-control" placeholder="Industry" required>
           <div ng-messages="organizationForm.industry.$error" role="alert">
@@ -57,6 +23,32 @@
           <input name="product_types" type="text" ng-model="product_types" id="product_types" class="form-control" placeholder="Select Product Types" required>
           <div ng-messages="organizationForm.product_types.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Product Types are required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+
+          <md-chips name="panel_models" ng-model="panel_models" md-autocomplete-snap md-require-match="true" md-no-cache="true" md-max-chips="10" required>
+
+            <md-autocomplete  
+              md-selected-item="selectedItem" 
+              md-search-text="searchText" 
+              md-items="item in getMatches(searchText)" 
+              md-item-text="item.model" 
+              md-min-length="0"
+              placeholder="Please select panel model"
+              ng-hide="panel_models.length >= 10">
+                <span md-highlight-text="searchText">
+                  {{item.manufacturer}}, {{item.model}}
+                </span>
+            </md-autocomplete>
+            <md-chip-template>
+              <span>{{$chip.manufacturer}}, {{$chip.model}}</span>
+            </md-chip-template>
+            
+          </md-chips>
+          <div ng-messages="bidForm.panel_models.$error" role="alert">
+            <p class="help-block error-text" ng-message="md-max-chips">Please select only from available panel models.</p>
           </div>
         </div>
 

@@ -63,8 +63,33 @@
                 </div>
             </div>
         </div>
+
     </div>
 </section>
 
 
 <h2></h2>
+
+
+        <fieldset>
+          <div class="form-group text-center">
+            <img ng-src="{{organization.logoImageUrl}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
+          </div>
+          <div class="text-center form-group">
+            <span class="btn btn-default btn-file">
+                Select logo <input type="file" nv-file-select uploader="uploader">
+            </span>
+          </div>
+          <div class="text-center form-group" ng-show="uploader.queue.length">
+            <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload</button>
+            <button class="btn btn-default cancel" ng-click="cancelUpload();">Cancel</button>
+          </div>
+          <div ng-show="success" class="text-center text-success">
+            <strong>Company Logo Changed Successfully</strong>
+          </div>
+          <div ng-show="error" class="text-center text-danger">
+            <strong ng-bind="error"></strong>
+          </div>
+        </fieldset>
+    </section>
+</div>
