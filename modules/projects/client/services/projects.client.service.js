@@ -18,9 +18,3 @@ angular.module('projects').factory('GetBids', [
 		return $resource('api/projects/getbids/:projectId');
 	}
 ]);
-
-angular.module('projects').factory('PanelModels', [
-  '$resource', function ($resource) {
-    return $resource('api/panelmodels');
-  }
-]);

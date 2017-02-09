@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" ng-init="findOne()">
   <div class="page-header">
     <div class="row">
       <div class="col-md-4">
@@ -20,13 +20,27 @@
       </div>
       <hr/>
       <div class="row">
-        <span class="btn btn-default btn-file" ng-click="console.log('clicked')">
-          Select panel photo <input type="file" nv-file-select uploader="uploader">
-        </span>
-        <div class="text-center form-group" ng-show="uploader.queue.length">
-          <button class="btn btn-primary" ng-click="uploadPanelPhoto(panel._id)">Upload</button>
-        </div>
-      </div>
+        <fieldset>
+          <div class="form-group text-center">
+            <img ng-src="{{panel.panelPhotoUrl}}" class="img-thumbnail user-profile-picture">
+          </div>
+          <div class="text-center form-group">
+            <span class="btn btn-default btn-file">
+                Select Panel photo <input type="file" nv-file-select uploader="uploader">
+            </span>
+          </div>
+          <div class="text-center form-group" ng-show="uploader.queue.length">
+            <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload</button>
+            <button class="btn btn-default cancel" ng-click="cancelUpload();">Cancel</button>
+          </div>
+          <div ng-show="success" class="text-center text-success">
+            <strong>Panel Photo Changed Successfully</strong>
+          </div>
+          <div ng-show="error" class="text-center text-danger">
+            <strong ng-bind="error"></strong>
+          </div>
+        </fieldset>
+    </div>
     </div>
   </div>
 </section>

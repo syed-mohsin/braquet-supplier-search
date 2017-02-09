@@ -1,11 +1,20 @@
 'use strict';
 
-angular.module('panels').controller('PanelImageUploadListController', ['$scope', '$filter', '$timeout', '$window', 'FileUploader', 'PanelModels',
-  function ($scope, $filter, $timeout, $window, FileUploader, PanelModels) {
+angular.module('panels').controller('PanelController', ['$scope', '$stateParams', '$filter', '$timeout', '$window', 'FileUploader', 'PanelModels',
+  function ($scope, $stateParams, $filter, $timeout, $window, FileUploader, PanelModels) {
     PanelModels.query(function (data) {
       $scope.panel_models = data;
       $scope.buildPager();
     });
+
+    $scope.findOne = function() {
+      PanelModels.get({
+        panelId: $stateParams.panelId
+      }, function(panel) {
+        $scope.panel = panel;
+        $scope.buildUploader(panel._id);
+      });
+    };
 
     $scope.buildPager = function () {
       $scope.pagedItems = [];
@@ -55,7 +64,7 @@ angular.module('panels').controller('PanelImageUploadListController', ['$scope',
 
           fileReader.onload = function (fileReaderEvent) {
             $timeout(function () {
-              $scope.panelPhotoUrl = fileReaderEvent.target.result;
+              $scope.panel.panelPhotoUrl = fileReaderEvent.target.result;
             }, 0);
           };
         }
@@ -64,9 +73,6 @@ angular.module('panels').controller('PanelImageUploadListController', ['$scope',
       $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
         // Show success message
         $scope.success = true;
-
-        // Populate panel object
-        // $scope.panel_models = response;
 
         // Clear upload buttons
         $scope.cancelUpload();
@@ -82,13 +88,10 @@ angular.module('panels').controller('PanelImageUploadListController', ['$scope',
       };
 
       // Change user profile picture
-      $scope.uploadPanelPhoto = function (panelId) {
+      $scope.uploadProfilePicture = function (panelId) {
         // Clear messages
         $scope.success = $scope.error = null;
         console.log("inside panelPhoto upload");
-
-        $scope.buildUploader(panelId);
-
 
         // Start upload
         $scope.uploader.uploadAll();
@@ -97,7 +100,7 @@ angular.module('panels').controller('PanelImageUploadListController', ['$scope',
       // Cancel the upload process
       $scope.cancelUpload = function () {
         $scope.uploader.clearQueue();
-        $scope.imageURL = $scope.user.profileImageURL;
+        $scope.imageURL = $scope.panel.panelPhotoUrl;
       };
     };
   }

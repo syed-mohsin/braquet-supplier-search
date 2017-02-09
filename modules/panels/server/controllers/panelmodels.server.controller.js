@@ -29,6 +29,13 @@ exports.searchByName = function (req, res) {
   });
 };
 
+/**
+ * Show the current panel model
+ */
+exports.read = function (req, res) {
+  res.json(req.panelmodel);
+};
+
   /**
  * Update org logo
  */
@@ -37,14 +44,14 @@ exports.uploadPhoto = function (req, res) {
   var upload = multer({
     storage: multerS3({
       s3: s3,
-      bucket: 'braquetpanelphotos',
+      bucket: 'braquetpanelmodelphotos',
       acl: 'public-read',
       metadata: function(req, file, cb) {
         console.log(file);
         cb(null, file);
       }
     })
-  }).single('newLogo');
+  }).single('newPanelModelPhoto');
 
   var photoUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
   
@@ -53,6 +60,7 @@ exports.uploadPhoto = function (req, res) {
 
   PanelModel.findById(req.params.panelId, function(err, panel) {
     upload(req, res, function (uploadError) {
+      console.log("W#R$@#RF IN UPLOAD");
       if(uploadError) {
         return res.status(400).json(uploadError);
       } else {
@@ -67,5 +75,27 @@ exports.uploadPhoto = function (req, res) {
         });
       }
     });
+  });
+};
+
+/**
+ * PanelModel middleware
+ */
+exports.panelmodelByID = function (req, res, next, id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'PanelModel is invalid'
+    });
+  }
+
+  PanelModel.findById(id, function (err, panelmodel) {
+    if (err) {
+      return next(err);
+    } else if (!panelmodel) {
+      return next(new Error('Failed to load panelmodels ' + id));
+    } 
+
+    req.panelmodel = panelmodel;
+    next();
   });
 };
