@@ -15,10 +15,10 @@ var ProjectSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  system_capacity: {
+  quantity: {
     type: Number,
     trim: true,
-    required: 'System Capacity cannot be blank'
+    required: 'quantity cannot be blank'
   },
   bid_deadline: {
     type: Date,
@@ -37,11 +37,51 @@ var ProjectSchema = new Schema({
     default: '',
     required: 'Must select public or private project'
   },
-  shipping_address: {
+  shipping_address_1: {
     type: String,
     default: '',
     trim: true,
     required: 'Shipping address cannot be blank'
+  },
+  shipping_address_2: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  shipping_address_city: {
+    type: String,
+    default: '',
+    trim: true,
+    required: 'Shipping address cannot be blank'
+  },
+  shipping_address_city: {
+    type: String,
+    default: '',
+    trim: true,
+    required: 'City cannot be blank'
+  },
+  shipping_address_state: {
+    type: String,
+    default: '',
+    trim: true,
+    required: 'State cannot be blank'
+  },
+  shipping_address_zip_code: {
+    type: String,
+    default: '',
+    trim: true,
+    required: 'Zip Code cannot be blank'
+  },
+  shipping_address_country: {
+    type: String,
+    default: '',
+    trim: true,
+    required: 'Country cannot be blank'
+  },
+  preferred_payment_term: {
+    type: String,
+    default: '',
+    trim: true,
   },
   panel_models: [{
     type: Schema.ObjectId,
