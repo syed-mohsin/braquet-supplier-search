@@ -52,7 +52,7 @@ var ProjectSchema = new Schema({
     type: String,
     default: '',
     trim: true,
-    required: 'Shipping address cannot be blank'
+    required: 'City cannot be blank'
   },
   shipping_address_state: {
     type: String,

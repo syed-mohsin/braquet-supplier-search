@@ -83,9 +83,15 @@ exports.update = function (req, res) {
 
   project.title = req.body.title;
   project.panel_models = req.body.panel_models;
-  project.system_capacity = req.body.system_capacity;
+  project.quantity = req.body.quantity;
   project.bid_deadline = req.body.bid_deadline;
-  project.shipping_address = req.body.shipping_address;
+  project.shipping_address_1 = req.body.shipping_address_1;
+  project.shipping_address_2 = req.body.shipping_address_2;
+  project.shipping_address_city = req.body.shipping_address_city;
+  project.shipping_address_state = req.body.shipping_address_state;
+  project.shipping_address_zip_code = req.body.shipping_address_zip_code;
+  project.shipping_address_country = req.body.shipping_address_country;
+  project.preferred_payment_term = req.body.preferred_payment_term;
 
   project.save(function (err) {
     if (err) {
