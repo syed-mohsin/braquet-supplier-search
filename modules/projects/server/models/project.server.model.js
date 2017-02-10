@@ -54,12 +54,6 @@ var ProjectSchema = new Schema({
     trim: true,
     required: 'Shipping address cannot be blank'
   },
-  shipping_address_city: {
-    type: String,
-    default: '',
-    trim: true,
-    required: 'City cannot be blank'
-  },
   shipping_address_state: {
     type: String,
     default: '',
