@@ -20,9 +20,27 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2">Bid Price:</label>
+            <label class="control-label col-sm-2">Quantity: </label>
             <div class="col-sm-4">
-                <p><span ng-bind="bid.bid_price/100 | currency"></span>/W</p>
+                <p ng-bind="bid.quantity"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Subtotal (Before Shipping):</label>
+            <div class="col-sm-4">
+                <p><span ng-bind="bid.subtotal/100 | currency"></span></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Shipping Cost:</label>
+            <div class="col-sm-4">
+                <p><span ng-bind="bid.shipping_cost/100 | currency"></span></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Sales Tax:</label>
+            <div class="col-sm-4">
+                <p><span ng-bind="bid.sales_tax/100 | currency"></span></p>
             </div>
         </div>
     </section>
