@@ -33,15 +33,35 @@ var BidSchema = new Schema({
     trim: true,
     required: 'Delivery Date cannot be blank'
   },
+  quantity: {
+    type: Number,
+    trim: true,
+    required: 'quantity cannot be blank'
+  },
   panel_models: [{
     type: Schema.ObjectId,
     ref: 'PanelModel',
     required: 'Must select at least one panel model'
   }], 
-  bid_price: {
+  subtotal: {
     type: Currency,
     min: 0,
     max: 100000000
+  },
+  shipping_cost: {
+    type: Currency,
+    min: 0,
+    max: 100000000
+  },
+  sales_tax: {
+    type: Currency,
+    min: 0,
+    max: 100000000
+  },
+  payment_term: {
+    type: String,
+    default: '',
+    trim: true,
   },
   user: {
     type: Schema.ObjectId,
