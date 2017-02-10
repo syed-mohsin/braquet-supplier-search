@@ -39,9 +39,9 @@
         <!-- ADD A BOX DISPLAYING RESULTS OF PANEL MODELS HERE -->
 
         <div class="form-group" show-errors>
-          <label for="system_capacity">System Capacity</label>
-          <input name="system_capacity" type="text" ng-model="project.system_capacity" id="system_capacity" class="form-control" placeholder="project.system_capacity" required>
-          <div ng-messages="projectForm.system_capacity.$error" role="alert">
+          <label for="quantity">Quantity</label>
+          <input name="quantity" type="text" ng-model="project.quantity" id="quantity" class="form-control" placeholder="project.quantity" required>
+          <div ng-messages="projectForm.quantity.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Bid Deadline is required.</p>
           </div>
         </div>
@@ -58,10 +58,44 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label for="shipping_address">Shipping Address</label>
-          <input name="shipping_address" type="text" ng-model="project.shipping_address" id="shipping_address" class="form-control" placeholder="Shipping Address" required>
-          <div ng-messages="projectForm.shipping_address.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Shipping Address is required.</p>
+          <input name="shipping_address_1" type="text" ng-model="project.shipping_address_1" id="shipping_address_1" class="form-control" placeholder="Shipping Address Line 1" required>
+          <div ng-messages="projectForm.shipping_address_1.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Shipping Address Line 1 is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="shipping_address_2" type="text" ng-model="project.shipping_address_2" id="shipping_address_2" class="form-control" placeholder="Shipping Address Line 2">
+           <div ng-messages="projectForm.shipping_address_2.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Shipping Address Line 2 is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="shipping_address_city" type="text" ng-model="project.shipping_address_city" id="shipping_address_city" class="form-control" placeholder="City" required>
+          <div ng-messages="projectForm.shipping_address_city.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">City is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="shipping_address_state" type="text" ng-model="project.shipping_address_state" id="shipping_address_state" class="form-control" placeholder="State" required>
+          <div ng-messages="projectForm.shipping_address_state.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">State is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="shipping_address_zip_code" type="text" ng-model="project.shipping_address_zip_code" id="shipping_address_zip_code" class="form-control" placeholder="Zip Code" required>
+          <div ng-messages="projectForm.shipping_address_zip_code.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Zip Code is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="shipping_address_country" type="text" ng-model="project.shipping_address_country" id="shipping_address_country" class="form-control" placeholder="Country" required>
+          <div ng-messages="projectForm.shipping_address_country.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Country is required.</p>
           </div>
         </div>
 
