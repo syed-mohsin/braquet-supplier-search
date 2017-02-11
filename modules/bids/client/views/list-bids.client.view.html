@@ -11,7 +11,7 @@
         <span ng-bind="bid.created | date:'mediumDate'"></span>
 
       </small>
-      <h4 class="list-group-item-heading">Bid: <span ng-bind="bid.bid_price/100 | currency"></span>/W</h4>
+      <h4 class="list-group-item-heading">Bid: <span ng-bind="bid.subtotal/100 | currency"></span>/W</h4>
       <h5 class="list-group-item-heading">FOB: <span ng-bind="bid.fob_shipping"></span></h5>
       <h5 class="list-group-item-heading">Delivery Date: <span ng-bind="bid.delivery_date | date:'mediumDate'"></span></h5>
       <h5 class="list-group-item-heading"><span ng-bind="bid.project_title"></span></h5>
