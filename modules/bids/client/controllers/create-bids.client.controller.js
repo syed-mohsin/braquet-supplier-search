@@ -62,7 +62,7 @@ angular.module('bids').controller('CreateBidController', ['$scope', '$stateParam
         $scope.quantity = '';
         $scope.panel_models = null;
         $scope.shipping_cost = '';
-        $scope
+        $scope.payment_term = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
