@@ -103,6 +103,8 @@ exports.changeLogo = function (req, res) {
       if(uploadError) {
         return res.status(400).json(uploadError);
       } else {
+
+        var oldImageKey = organization.logoImageUrl.split("/").pop();
         organization.logoImageUrl = req.file.location;
 
         organization.save(function (saveError) {
@@ -111,7 +113,13 @@ exports.changeLogo = function (req, res) {
               message: errorHandler.getErrorMessage(saveError)
             });
           } else {
-            res.json(organization);
+            s3.deleteObject({ Bucket: 'braquetcompany', Key: oldImageKey }, function(err, data) {
+              if (err) {
+                return res.status(400).json(err);
+              } else {
+                res.json(organization);
+              }
+            });
           }
         });
       }
