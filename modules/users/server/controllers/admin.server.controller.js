@@ -59,7 +59,19 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-  User.find({}, '-salt -password').sort('-created').populate('user', 'displayName').exec(function (err, users) {
+  var searchQuery = {};
+  var search = req.query.filter;
+  if (search === 'verified') {
+    searchQuery.verified = true;
+  } else if (search === 'unverified') {
+    searchQuery.verified = false;
+  }
+
+  console.log(search, searchQuery);
+  User.find(searchQuery, '-salt -password')
+    .sort('-created')
+    .populate('user', 'displayName')
+    .exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

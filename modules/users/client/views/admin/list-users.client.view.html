@@ -7,6 +7,15 @@
       <div class="col-md-4" style="margin-top: 2em">
         <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
       </div>
+      <a ng-click="getFilteredUsers()">
+          <span class="glyphicon glyphicon-new-window"></span><span>Show All Users</span>
+      </a>
+      <a ng-click="getFilteredUsers('verified')">
+          <span class="glyphicon glyphicon-new-window"></span><span>Show Verified Users</span>
+      </a>
+      <a ng-click="getFilteredUsers('unverified')">
+          <span class="glyphicon glyphicon-new-window"></span><span>Show Unverified Users</span>
+      </a>
     </div>
   </div>
   <div class="list-group">

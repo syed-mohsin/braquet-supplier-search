@@ -1,11 +1,31 @@
 'use strict';
 
-angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'Admin',
-  function ($scope, $filter, Admin) {
+angular.module('users.admin').controller('UserListController', ['$scope', '$http', '$filter', 'Admin',
+  function ($scope, $http, $filter, Admin) {
     Admin.query(function (data) {
       $scope.users = data;
       $scope.buildPager();
     });
+
+    // get all users
+    $scope.getAllUsers = function() {
+      Admin.query(function (data) {
+        $scope.users = data;
+        $scope.buildPager();
+      });
+    };
+
+    $scope.getFilteredUsers = function(query) {
+      $http.get('/api/users?filter=' + query)
+        .success(function(users) {
+          console.log(users.length);
+          $scope.users = users;
+          $scope.buildPager();
+        })
+        .error(function(err) {
+          console.log('could not fetch verified users');
+        });
+    };
 
     $scope.buildPager = function () {
       $scope.pagedItems = [];

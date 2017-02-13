@@ -40,7 +40,10 @@ exports.signup = function (req, res) {
 
   // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
   if (req.body.user_role === '1')
-    user.roles = ['seller'];
+    user.roles = ['tempSeller'];
+  else {
+    user.roles = ['tempUser'];
+  }
 
   // check if user was invited and connect upon signup
   async.waterfall([
