@@ -133,7 +133,16 @@ exports.addUsers = function(req, res) {
     if (err) {
       res.status(400).json(err);
     } else {
-      res.json(organization);
+      // add organization to all users
+      var new_user_ids = newUsers.map(function(user) { return user._id; });
+      User.update( { _id: {$in: new_user_ids} }, { $set: {organization: organization._id} },
+        { multi: true}, function(err) {
+          if (err) {
+            res.status(400).json(err);
+          } else {
+            res.json(organization);
+          }
+      });
     }
   });
 };
@@ -142,7 +151,9 @@ exports.getPotentialUsers = function(req, res) {
   var organization = req.organization;
   var org_user_ids = organization.users.map(function(user) { return user._id; });
 
-  User.find({ _id: {$nin : org_user_ids} }, function(err, users) {
+  User.find({ 
+    _id: {$nin : org_user_ids}, 
+    organization: { $eq: null } }, function(err, users) {
     if (err) {
       res.status(400).json(err);
     } else {
@@ -163,7 +174,7 @@ exports.organizationByID = function (req, res, next, id) {
 
   Organization.findById(id)
     .populate('panel_models')
-    .populate('users')
+    .populate('users', 'displayName organization connections email firstName lastName')
     .exec(function (err, organization) {
     if (err) {
       return next(err);

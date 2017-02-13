@@ -84,6 +84,10 @@ var UserSchema = new Schema({
     default: ['user'],
     required: 'Please provide at least one role'
   },
+  organization: {
+    type: Schema.ObjectId,
+    ref: 'Organization'
+  },
   connections: [{
     type: Schema.ObjectId,
     ref: 'User'
