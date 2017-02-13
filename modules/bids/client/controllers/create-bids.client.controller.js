@@ -35,8 +35,12 @@ angular.module('bids').controller('CreateBidController', ['$scope', '$stateParam
       var bid = new Bids({
         fob_shipping: this.fob_shipping,
         delivery_date: this.date.value,
+        quantity: this.quantity,
         panel_models: this.panel_models,
-        bid_price: this.bid_price * 100, // must be an integer when inputting to mongoose currency model
+        subtotal: this.subtotal * 100, // must be an integer when inputting to mongoose currency model
+        shipping_cost: this.shipping_cost * 100,
+        sales_tax: this.sales_tax * 100,
+        payment_term: this.payment_term,
         project: $scope.project._id,
         project_title: $scope.project.title
       });
@@ -44,6 +48,7 @@ angular.module('bids').controller('CreateBidController', ['$scope', '$stateParam
       // Redirect after save
       bid.$save(function (response) {
 
+        // close modal
         $modalInstance.close();
 
         // redirect to view bid
@@ -52,7 +57,12 @@ angular.module('bids').controller('CreateBidController', ['$scope', '$stateParam
         // Clear form fields
         $scope.fob_shipping = '';
         $scope.delivery_date = '';
-        $scope.bid_price = '';
+        $scope.subtotal = '';
+        $scope.sales_tax = '';
+        $scope.quantity = '';
+        $scope.panel_models = null;
+        $scope.shipping_cost = '';
+        $scope.payment_term = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });

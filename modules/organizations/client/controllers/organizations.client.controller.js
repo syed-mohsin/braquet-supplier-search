@@ -260,6 +260,8 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
           $scope.acceptUsers = function() {
             $http.post('/api/organizations/' + $scope.organization._id + '/addUsers', $scope.addedUsers)
               .success(function (response) {
+              
+              $scope.organization = response;                
               $modalInstance.close();
 
             }).error(function (response) {

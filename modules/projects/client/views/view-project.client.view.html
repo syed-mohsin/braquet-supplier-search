@@ -105,7 +105,7 @@
                             <small class="list-group-item-text">
                             <img class="profile" ng-src="{{bid.user.profileImageURL}}">
                             <div class="col-sm-10 comment no-wrap">
-                            <span ng-bind="bid.user.firstName"></span> submitted a bid at <span><span ng-bind="bid.bid_price/100 | currency"></span>/W</span> (<span>Centrosolar, CP60 260BW</span>) on <span ng-bind="bid.created | date:'mediumDate'"></span>
+                            <span ng-bind="bid.user.firstName"></span> submitted a bid at <span><span ng-bind="bid.subtotal/100 | currency"></span>/W</span> (<span>Centrosolar, CP60 260BW</span>) on <span ng-bind="bid.created | date:'mediumDate'"></span>
                             </div>
                              </small>
                         </div>
