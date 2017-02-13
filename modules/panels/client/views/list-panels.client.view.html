@@ -15,7 +15,7 @@
       <img ng-src="{{panel.panelPhotoUrl}}" class="img-thumbnail user-profile-picture"/>
       <p class="list-group-item-text pull-right small" ng-bind="panel.model"></p>
       <p class="list-group-item-text" ng-bind="panel.technologyType"></p>
-    </div>
+    </a>
   </div>
 
   <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>

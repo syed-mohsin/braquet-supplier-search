@@ -15,13 +15,15 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     $stateProvider
     .state('home', {
       url: '/',
-      templateUrl: 'modules/core/client/views/welcome.client.view.html',
       controller: function($state, Authentication) {
-        if (Authentication.user) $state.go('dashboard');
-        // else $state.go('welcome');
+        if (Authentication.user) {
+          $state.go('dashboard');
+        } else {
+          $state.go('welcome');
+        }
       }
     })
-    // eventual home page for users
+    // home page for users
     .state('dashboard', {
       url: '/dashboard',
       templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
