@@ -75,11 +75,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
       // Create new Project object
       var project = new Projects({
         title: this.title,
-        system_capacity: this.system_capacity,
+        quantity: this.quantity,
         bid_deadline: this.bid_date.value,
-        shipping_address: this.shipping_address,
         panel_models: this.panel_models,
-        project_state: this.project_state
+        project_state: this.project_state,
+        shipping_address_1: this.shipping_address_1,
+        shipping_address_2: this.shipping_address_2,
+        shipping_address_city: this.shipping_address_city,
+        shipping_address_state: this.shipping_address_state,
+        shipping_address_zip_code: this.shipping_address_zip_code,
+        shipping_address_country: this.shipping_address_country,
+        preferred_payment_term: this.preferred_payment_term
       });
 
       // Redirect after save
@@ -88,9 +94,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
 
         // Clear form fields
         $scope.title = '';
-        $scope.system_capacity = '';
+        $scope.quantity = '';
         $scope.bid_deadline = '';
-        $scope.shipping_address = '';
+        $scope.shipping_address_1 = '';
+        $scope.shipping_address_2 = '';
+        $scope.shipping_address_city = '';
+        $scope.shipping_address_state = '';
+        $scope.shipping_address_zip_code = '';
+        $scope.shipping_address_country = '';
+        $scope.preferred_payment_term = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
