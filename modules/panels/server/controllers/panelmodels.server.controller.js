@@ -60,17 +60,23 @@ exports.uploadPhoto = function (req, res) {
 
   PanelModel.findById(req.params.panelId, function(err, panel) {
     upload(req, res, function (uploadError) {
-      console.log("W#R$@#RF IN UPLOAD");
       if(uploadError) {
         return res.status(400).json(uploadError);
       } else {
+        var oldImageKey = panel.panelPhotoUrl.split("/").pop();
         panel.panelPhotoUrl = req.file.location;
 
         panel.save(function (saveError) {
           if (saveError) {
             return res.status(400).json(saveError);
           } else {
-            res.json(panel);
+            s3.deleteObject({ Bucket: 'braquetpanelmodelphotos', Key: oldImageKey }, function(err, data) {
+              if (err) {
+                return res.status(400).json(err);
+              } else {
+                res.json(panel);
+              }
+            });
           }
         });
       }

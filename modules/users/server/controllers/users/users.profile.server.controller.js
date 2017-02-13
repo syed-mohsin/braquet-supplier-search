@@ -81,8 +81,8 @@ exports.changeProfilePicture = function (req, res) {
       if(uploadError) {
         return res.status(400).json(uploadError);
       } else {
+        var oldImageKey = user.profileImageURL.split("/").pop();
         user.profileImageURL = req.file.location;
-
 
         user.save(function (saveError) {
           if (saveError) {
@@ -94,7 +94,13 @@ exports.changeProfilePicture = function (req, res) {
               if (err) {
                 res.status(400).send(err);
               } else {
-                res.json(user);
+                s3.deleteObject({ Bucket: 'braquetprofilephotos', Key: oldImageKey }, function(err, data) {
+                  if (err) {
+                    return res.status(400).json(err);
+                  } else {
+                    res.json(user);
+                  }
+                });
               }
             });
           }
