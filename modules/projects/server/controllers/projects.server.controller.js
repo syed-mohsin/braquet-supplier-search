@@ -138,7 +138,7 @@ exports.list = function (req, res) {
     Project.find({user : req.user._id})
       .sort('bid_deadline')
       .populate('user', 'displayName')
-      .populate('bids', null, null, {sort: {'bid_price': 1}})
+      .populate('bids', null, null, {sort: {'subtotal': 1}})
       .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
       .exec(function (err, projects) {
       if (err) {
@@ -162,7 +162,7 @@ exports.list = function (req, res) {
     Project.find({ $or : [{bidders: req.user._id}, {project_state: 'public'}]})
       .sort('bid_deadline')
       .populate('user', 'displayName')
-      .populate('bids', null, null, {sort: {'bid_price': 1}})
+      .populate('bids', null, null, {sort: {'subtotal': 1}})
       .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
       .exec(function (err, projects) {
       if (err) {
@@ -208,7 +208,7 @@ exports.projectBids = function (req, res) {
   var project = req.project;
 
   Bid.find({ _id: { $in : project.bids}})
-    .sort('bid_price')
+    .sort('subtotal')
     .populate('user', 'displayName')
     .exec(function (err, bids) {
     if (err) {
@@ -234,7 +234,7 @@ exports.projectByID = function (req, res, next, id) {
 
   Project.findById(id)
     .populate('user', 'displayName connections')
-    .populate('bids', null, null, {sort: {'bid_price': 1}})
+    .populate('bids', null, null, {sort: {'subtotal': 1}})
     .populate('bidders')
     .populate('panel_models', null, null, {sort: {'model': 1}})
     .exec(function (err, project) {
@@ -251,9 +251,11 @@ exports.projectByID = function (req, res, next, id) {
     }
 
     // populate bids with users 'deep populate'
-    Bid.populate(project.bids, 
+    Bid.populate(project.bids, [
+      {path: 'organization'},
       {path: 'user',
-        select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function (err, bids) {
+        select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}
+      ], function (err, bids) {
       if (err) {
         return next(err);
       } else if (!bids) {
@@ -290,7 +292,7 @@ exports.projectByID = function (req, res, next, id) {
         // make project available in controller
         req.project = project;
         next();
-      });
-    });
+      }); // end User.populate
+    }); // end Bid.populate
   });
 };

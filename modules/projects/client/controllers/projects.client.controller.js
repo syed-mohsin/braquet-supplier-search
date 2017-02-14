@@ -286,10 +286,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
 
     $scope.createDate = function() {
       $scope.panel_models = [];
+      var min = new Date();
+      
+      var now = new Date();
+      now.setDate(now.getDate() + 1);
+      
+      var max = new Date();
+      max.setFullYear(max.getFullYear() + 1);
+
       $scope.bid_date = {
-        value: new Date(),
-        currentDate: new Date(),
-        yearAheadDate: new Date().setFullYear(new Date().getFullYear() + 1)
+        value: now,
+        currentDate: min,
+        yearAheadDate: max
       };
     };
   }
