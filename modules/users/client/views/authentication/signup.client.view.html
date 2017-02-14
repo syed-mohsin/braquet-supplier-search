@@ -19,8 +19,8 @@
             <option value="">---Select Organization---</option>
             <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
           </select>
-          <div ng-messages="userForm.user_role.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Please indicate whether you are requesting or supplying solar services and products.</p>
+          <div ng-messages="userForm.organization.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Please indicate Company.</p>
           </div>
         </div>
 

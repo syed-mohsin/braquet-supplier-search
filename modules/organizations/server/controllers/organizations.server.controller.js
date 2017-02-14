@@ -198,6 +198,7 @@ exports.organizationByID = function (req, res, next, id) {
   Organization.findById(id)
     .populate('panel_models')
     .populate('users', 'displayName organization connections email firstName lastName')
+    .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .exec(function (err, organization) {
     if (err) {
       return next(err);

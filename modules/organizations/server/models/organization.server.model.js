@@ -14,6 +14,10 @@ var OrganizationSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  admin: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   users: [{
   	type: Schema.ObjectId,
     ref: 'User',
