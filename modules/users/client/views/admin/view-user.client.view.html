@@ -4,22 +4,17 @@
       <div class="col-md-4">
         <h3 ng-bind="user.username"></h3>
       </div>
-<!--       <div class="col-md-4">
-        <a class="btn btn-primary" ui-sref="admin.user-edit({userId: user._id})">
-          <i class="glyphicon glyphicon-edit"></i>
-        </a>
-        <a class="btn btn-primary" ng-click="remove();" ng-if="user._id !== authentication.user._id">
-          <i class="glyphicon glyphicon-trash"></i>
-        </a>
-      </div> -->
       <div class="pull-left edit-delete">
-                <a class="first" ui-sref="admin.user-edit({userId: user._id})">
-                    Edit
-                </a>
-                <a class="last" ng-click="remove();" ng-if="user._id !== authentication.user._id">
-                    Delete
-                </a>
-            </div>
+          <a class="first" ui-sref="admin.user-edit({userId: user._id})">
+              Edit
+          </a>
+          <a class="last" ng-click="remove();" ng-if="user._id !== authentication.user._id">
+              Delete
+          </a>
+          <a class="last" ng-if="!user.verified" ng-click="verifyUser();" ng-if="user._id !== authentication.user._id">
+              Verify User
+          </a>
+      </div>
     </div>
   </div>
 

@@ -42,7 +42,13 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     })
     .state('awaiting-confirmation', {
       url: '/awaiting-confirmation',
-      template: 'Awaiting Confirmation'
+      template: 'Awaiting Confirmation',
+      controller: function($state, Authentication) {
+        var user = Authentication.user;
+        if (user.verified) {
+          $state.go('home');
+        }
+      }
     })
     .state('invite', {
       url: '/welcome/invite',

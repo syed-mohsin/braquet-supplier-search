@@ -14,6 +14,10 @@ module.exports = function (app) {
   app.route('/api/users')
     .get(adminPolicy.isAllowed, admin.list);
 
+  // verify new users
+  app.route('/api/users/:userId/verify')
+    .post(adminPolicy.isAllowed, admin.verifyUser);
+
   // Single user routes
   app.route('/api/users/:userId')
     .get(adminPolicy.isAllowed, admin.read)

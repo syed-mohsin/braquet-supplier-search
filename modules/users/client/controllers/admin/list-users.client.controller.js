@@ -18,7 +18,6 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$http
     $scope.getFilteredUsers = function(query) {
       $http.get('/api/users?filter=' + query)
         .success(function(users) {
-          console.log(users.length);
           $scope.users = users;
           $scope.buildPager();
         })
