@@ -70,7 +70,8 @@ var BidSchema = new Schema({
   },
   organization: {
     type: Schema.ObjectId,
-    required: 'Ther is no organization associated with this bid'
+    ref: 'Organization',
+    required: 'There is no organization associated with this bid'
   },
   project: {
     type: Schema.ObjectId,

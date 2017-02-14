@@ -15,6 +15,9 @@ var path = require('path'),
 exports.create = function (req, res) {
   var bid = new Bid(req.body);
   bid.user = req.user;
+  
+  // add user organization to bid
+  bid.organization = req.user.organization;
 
   // fetch project and 
   // 1) verify project exists

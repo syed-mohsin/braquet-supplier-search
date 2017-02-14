@@ -240,7 +240,9 @@ exports.connectionByID = function (req, res, next, id) {
     });
   }
 
-  User.findById(id , function (err, connection) {
+  User.findById(id)
+    .populate('organization')
+    .exec(function (err, connection) {
     if (err) {
       return next(err);
     } else if (!connection) {

@@ -251,9 +251,11 @@ exports.projectByID = function (req, res, next, id) {
     }
 
     // populate bids with users 'deep populate'
-    Bid.populate(project.bids, 
+    Bid.populate(project.bids, [
+      {path: 'organization'},
       {path: 'user',
-        select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function (err, bids) {
+        select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}
+      ], function (err, bids) {
       if (err) {
         return next(err);
       } else if (!bids) {
@@ -290,7 +292,7 @@ exports.projectByID = function (req, res, next, id) {
         // make project available in controller
         req.project = project;
         next();
-      });
-    });
+      }); // end User.populate
+    }); // end Bid.populate
   });
 };
