@@ -1,31 +1,32 @@
-<section class="container add-bidders">
+<section class="add-bidders list-view">
   <div class="page-header">
     <div class="row">
       <div class="col-md-4">
-        <h1>Add Bidders</h1>
+        <h3>Invite suppliers</h3>
       </div>
       <div class="col-md-4" style="margin-top: 2em">
         <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
       </div>
     </div>
   </div>
-  <h2>Invite Contacts for Bidding</h2>
   <div class="list-group">
     <a ng-repeat="connection in pagedItems" ng-click="toggle(connection)" class="list-group-item">
-      <h4 class="list-group-item-heading" ng-bind="connection.username"></h4>
-      <p class="list-group-item-text" ng-bind="connection.email"></p>
+       <img class="profile" ng-src="{{connection.profileImageURL}}">
+        <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
+        <h5>Associate Executive @ UGE</h5>
     </a>
   </div>
   <hr/>
-  <h2 ng-show="addedBidders.length">Selected Bidders</h2>
+  <h2 ng-show="addedBidders.length">Selected one or multiple suppliers</h2>
   <div class="list-group">
     <a ng-repeat="connection in addedBidders" ng-click="toggle(connection)" class="list-group-item">
-      <h4 class="list-group-item-heading" ng-bind="connection.username"></h4>
-      <p class="list-group-item-text" ng-bind="connection.email"></p>
+      <img class="profile" ng-src="{{connection.profileImageURL}}">
+      <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
+      <h5>Associate Executive @ UGE</h5>
     </a>
   </div>
   <div class="list-group">
-  	<button type="button" class="btn btn-primary" ng-click="acceptBidders()">Invite Bidders</button>
+  	<button type="button" class="btn btn-primary" ng-click="acceptBidders()">Invite suppliers</button>
   </div>
 <!--   <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination> -->
 </section>

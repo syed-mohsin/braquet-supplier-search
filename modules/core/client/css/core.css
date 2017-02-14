@@ -352,11 +352,12 @@ section h2 {
     width: 147px;
     margin: 3px 0;
 }
-.project .list-group {
+.block .list-group {
     padding-left: initial;
 }
-.project .list-group-item {
+.block .list-group-item {
     min-width: 274px;
+    height: 230px;
 }
 .project .company-logo {
     margin: 15px 0;
@@ -472,9 +473,10 @@ section h2 {
     border-radius: 50%;
     float: left;
 }
-img.company-logo {
+.block img.company-logo {
     width: 50px;
     margin-bottom: 15px;
+    float: initial;
 }
 .box {
     padding: 20px 25px;
@@ -565,6 +567,7 @@ img.company-logo {
 .product .list-group-item .detail {
     overflow: auto;
     margin: 10px 0;
+    margin-bottom: 85px;
 }
 .product .list-group-item .specifications {
     margin-top: 10px;
@@ -659,6 +662,18 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
 .organization .profile-photo {
     margin: 10px 25px;
 }
+img.company-logo {
+    width: 100px;
+    margin: 15px 30px 0 0;
+    border-radius: inherit;
+    float: left;
+}
+.company-profile {
+    overflow: auto;
+}
+.company-profile h5 {
+    margin-bottom: 5px;
+}
 .profile .profile-photo {
     margin-top: -50px;
 }
@@ -677,13 +692,16 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     text-align: center;
     margin-top: 50px;
 }
-.connections.list-view {
+.connections.list-view, .organizations.list-view {
     max-width: 700px;
 }
-.connections img.profile {
+.list-view .list-item img.profile, .list-view .list-group img.profile {
     width: 55px;
     margin-right: 15px;
 }
 .app-modal-window .modal-dialog {
   margin-top: 45px;
+}
+.app-modal-window .modal-content {
+  padding: 0 10px;
 }

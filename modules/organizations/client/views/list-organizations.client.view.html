@@ -1,20 +1,29 @@
-<section class="container organizations" ng-controller="OrganizationsController" ng-init="find()">
-  <div class="page-header">
-    <div class="row">
-      <div class="col-md-4">
-        <h1>Organizations</h1>
-      </div>
-      <div class="col-md-4" style="margin-top: 2em">
-        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
-      </div>
+<section class="container organizations list-view border" ng-controller="OrganizationsController" ng-init="find()">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Display if user role is buyer -->
+                <h3 ng-if="authentication.user.roles.indexOf('seller') === -1">Suppliers:</h3>
+                <!-- Display if user role is seller -->
+                <h3 ng-if="authentication.user.roles.indexOf('user') === -1">Companies in your area:</h3>
+            </div>
+            <div class="col-md-4" style="margin-top: 2em">
+                <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="list-group">
-    <a ng-repeat="organization in pagedItems" ui-sref="organizations.view({organizationId: organization._id})" class="list-group-item">
-      <h4 class="list-group-item-heading" ng-bind="organization.name"></h4>
-      <p class="list-group-item-text" ng-bind="organization.industry"></p>
-    </a>
-  </div>
+    <div class="list-group">
+        <a ng-repeat="organization in pagedItems" ui-sref="organizations.view({organizationId: organization._id})" class="list-group-item col-sm-12">
+        
+            <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
+        <div class="company-profile">
+        <h5 class="list-group-item-heading" ng-bind="organization.name"></h5>
+            <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.headquarters"></span></small><br>
+            <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
+            <small><span ng-bind="organization.product_types"></span></small>
+          </div>
+        </a>
+    </div>
 
-  <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+    <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
 </section>
