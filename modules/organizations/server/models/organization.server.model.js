@@ -18,6 +18,10 @@ var OrganizationSchema = new Schema({
   	type: Schema.ObjectId,
     ref: 'User',
   }],
+  possibleUsers: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
   name: {
   	type: String,
   	required: 'Organization name is required'
