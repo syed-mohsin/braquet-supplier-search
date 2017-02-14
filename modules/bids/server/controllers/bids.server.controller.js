@@ -118,6 +118,7 @@ exports.bidByID = function (req, res, next, id) {
   Bid.findById(id)
     .populate('user', 'displayName')
     .populate('project')
+    .populate('organization')
     .exec(function (err, bid) {
     if (err) {
       return next(err);
