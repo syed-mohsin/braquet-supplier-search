@@ -473,7 +473,7 @@ section h2 {
     border-radius: 50%;
     float: left;
 }
-.block img.company-logo {
+.block img.company-logo, .activities img.company-logo {
     width: 50px;
     margin-bottom: 15px;
     float: initial;
