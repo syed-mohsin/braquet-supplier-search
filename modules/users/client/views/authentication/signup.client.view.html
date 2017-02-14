@@ -4,12 +4,20 @@
     <form name="userForm" ng-submit="signup(userForm.$valid)" class="signin border" novalidate autocomplete="off">
       <fieldset>
         <div class="form-group" show-errors>
-        <!-- <div class="alert alert-danger"><p>Solar Supplier roles are currently invite only</p></div> -->
           <h2 for="user_role">Are you a buyer or supplier?</h2>        
           <select name="user_role" ng-model="credentials.user_role" id="user_role" class="form-control" required>
             <option value="">---Please Select---</option>
             <option value="0">Solar Developer</option>
             <option value="1">Solar Supplier</option> <!-- disabled="disabled" -->
+          </select>
+          <div ng-messages="userForm.user_role.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Please indicate whether you are requesting or supplying solar services and products.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>    
+          <select name="user_role" ng-model="credentials.organization" id="organization" class="form-control" required>
+            <option value="">---Select Organization---</option>
+            <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
           </select>
           <div ng-messages="userForm.user_role.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Please indicate whether you are requesting or supplying solar services and products.</p>

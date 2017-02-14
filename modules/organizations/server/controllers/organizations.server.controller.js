@@ -74,6 +74,21 @@ exports.list = function (req, res) {
 };
 
 /**
+ * List of only organization names
+ */
+exports.list_basic = function (req, res) {
+  Organization.find({}, "name", function(err, organizations) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(organizations);
+    }
+  });
+}
+
+/**
  * Update org logo
  */
 exports.changeLogo = function (req, res) {
