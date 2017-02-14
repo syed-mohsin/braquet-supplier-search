@@ -16,8 +16,13 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     .state('home', {
       url: '/',
       controller: function($state, Authentication) {
-        if (Authentication.user) {
-          $state.go('dashboard');
+        var user = Authentication.user;
+        if (user) {
+          if (user.roles[0] === 'tempUser' || user.roles[0] === 'tempSeller') {
+            $state.go('awaiting-confirmation');
+          } else {
+            $state.go('dashboard');            
+          }
         } else {
           $state.go('welcome');
         }
@@ -33,6 +38,16 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       templateUrl: 'modules/core/client/views/welcome.client.view.html',
       data: {
         ignoreState: true
+      }
+    })
+    .state('awaiting-confirmation', {
+      url: '/awaiting-confirmation',
+      template: 'Awaiting Confirmation',
+      controller: function($state, Authentication) {
+        var user = Authentication.user;
+        if (user.verified) {
+          $state.go('home');
+        }
       }
     })
     .state('invite', {

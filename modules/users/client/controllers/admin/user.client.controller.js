@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users.admin').controller('UserController', ['$scope', '$state', 'Authentication', 'userResolve',
-  function ($scope, $state, Authentication, userResolve) {
+angular.module('users.admin').controller('UserController', ['$scope', '$state', '$http', 'Authentication', 'userResolve',
+  function ($scope, $state, $http, Authentication, userResolve) {
     $scope.authentication = Authentication;
     $scope.user = userResolve;
 
@@ -16,6 +16,18 @@ angular.module('users.admin').controller('UserController', ['$scope', '$state', 
             $state.go('admin.users');
           });
         }
+      }
+    };
+
+    $scope.verifyUser = function() {
+      if (!$scope.user.verified) {
+        $http.post('/api/users/' + $scope.user._id + '/verify')
+          .success(function(user) {
+            $state.reload();
+          })
+          .error(function(err) {
+            console.log(err);
+          });
       }
     };
 

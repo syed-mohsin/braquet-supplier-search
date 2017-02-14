@@ -39,6 +39,30 @@ exports.update = function (req, res) {
 };
 
 /**
+ * Verify a new user
+ */
+exports.verifyUser = function (req, res) {
+  var user = req.model;
+
+  if (user.verified) {
+    res.status(400).send({
+      message: 'User is already verified'
+    });
+  } else {
+    user.verified = true;
+    user.roles = user.roles[0] === 'tempUser' ? 'user' : 'seller';
+    
+    user.save(function(err) {
+      if (err) {
+        return res.status(400).json(err);
+      } else {
+        res.json(user);
+      }
+    });
+  }
+};
+
+/**
  * Delete a user
  */
 exports.delete = function (req, res) {
@@ -59,7 +83,19 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-  User.find({}, '-salt -password').sort('-created').populate('user', 'displayName').exec(function (err, users) {
+  var searchQuery = {};
+  var search = req.query.filter;
+
+  if (search === 'verified') {
+    searchQuery.verified = true;
+  } else if (search === 'unverified') {
+    searchQuery.verified = false;
+  }
+
+  User.find(searchQuery, '-salt -password')
+    .sort('-created')
+    .populate('user', 'displayName')
+    .exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
