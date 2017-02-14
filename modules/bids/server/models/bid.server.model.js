@@ -68,6 +68,10 @@ var BidSchema = new Schema({
     ref: 'User',
     required: 'There is no user associated with this bid'
   },
+  organization: {
+    type: Schema.ObjectId,
+    required: 'Ther is no organization associated with this bid'
+  },
   project: {
     type: Schema.ObjectId,
     ref: 'Project'
