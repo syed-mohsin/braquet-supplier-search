@@ -8,7 +8,8 @@ var path = require('path'),
   mongoose = require('mongoose'),
   passport = require('passport'),
   async = require('async'),
-  User = mongoose.model('User');
+  User = mongoose.model('User'),
+  Organization = mongoose.model('Organization');
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -44,6 +45,9 @@ exports.signup = function (req, res) {
   else {
     user.roles = ['tempUser'];
   }
+
+  var organizationId = req.body.organization;
+  delete req.body.organization;
 
   // check if user was invited and connect upon signup
   async.waterfall([
@@ -94,7 +98,8 @@ exports.signup = function (req, res) {
                   if (err) {
                     res.status(400).send(err);
                   } else {
-                    res.json(user);
+                    // res.json(user);
+                    done(err, user);
                   }
                 });
               }
@@ -104,11 +109,32 @@ exports.signup = function (req, res) {
               if (err) {
                 res.status(400).send(err);
               } else {
-                res.json(user);
+                // res.json(user);
+                done(err, user);
               }
             });
           }
         }
+      });
+    },
+    function(user, done) {
+      Organization.findById(organizationId, function(err, organization) {
+        if (err) {
+          return res.status(400).json(err);
+        } else if (!organization) {
+          return res.status(400).send({
+            message: 'no organization with that ID exists'
+          });
+        }
+
+        organization.possibleUsers.push(user._id);
+        organization.save(function(err) {
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            res.json(user);
+          }
+        });
       });
     }
     ], function (err) {

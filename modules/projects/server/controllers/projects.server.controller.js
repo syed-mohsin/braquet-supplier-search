@@ -244,7 +244,7 @@ exports.projectByID = function (req, res, next, id) {
       return res.status(404).send({
         message: 'No project with that identifier has been found'
       });
-    } else if (req.user.roles[0] === 'user' && String(req.user._id) !== String(project.user._id)) {
+    } else if (req.user && req.user.roles[0] === 'user' && String(req.user._id) !== String(project.user._id)) {
       return res.status(404).send({
         message: 'You are not authorized to access this page'
       });
@@ -283,7 +283,7 @@ exports.projectByID = function (req, res, next, id) {
         }
 
         // remove un-owned bids if current user is a supplier/seller
-        if (req.user.roles.indexOf('seller') !== -1) {
+        if (req.user && req.user.roles.indexOf('seller') !== -1) {
           project.bids = project.bids.filter(function(bid) {
             return req.user._id.equals(bid.user._id);
           }); 

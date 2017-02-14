@@ -86,7 +86,7 @@ exports.list_basic = function (req, res) {
       res.json(organizations);
     }
   });
-}
+};
 
 /**
  * Update org logo
