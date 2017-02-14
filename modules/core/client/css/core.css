@@ -352,11 +352,12 @@ section h2 {
     width: 147px;
     margin: 3px 0;
 }
-.project .list-group {
+.block .list-group {
     padding-left: initial;
 }
-.project .list-group-item {
+.block .list-group-item {
     min-width: 274px;
+    height: 230px;
 }
 .project .company-logo {
     margin: 15px 0;
@@ -472,9 +473,10 @@ section h2 {
     border-radius: 50%;
     float: left;
 }
-img.company-logo {
+.block img.company-logo {
     width: 50px;
     margin-bottom: 15px;
+    float: initial;
 }
 .box {
     padding: 20px 25px;
@@ -660,10 +662,17 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
 .organization .profile-photo {
     margin: 10px 25px;
 }
-.list-group img.profile.company-logo {
-    width: 130px;
+img.company-logo {
+    width: 100px;
+    margin: 15px 30px 0 0;
     border-radius: inherit;
-    float: inherit;
+    float: left;
+}
+.company-profile {
+    overflow: auto;
+}
+.company-profile h5 {
+    margin-bottom: 5px;
 }
 .profile .profile-photo {
     margin-top: -50px;

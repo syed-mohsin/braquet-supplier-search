@@ -1,4 +1,4 @@
-<section class="container project list-view border" ng-controller="ProjectsController" ng-init="find()">
+<section class="container project list-view block border" ng-controller="ProjectsController" ng-init="find()">
     <div class="page-header">
         <h3 ng-if="authentication.user.roles.indexOf('user') === -1">Request for Quotes you are invited to: </h3>
         <h3 ng-if="authentication.user.roles.indexOf('seller') === -1">Request for Quotes you submitted: </h3>
