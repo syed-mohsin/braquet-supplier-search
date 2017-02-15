@@ -139,6 +139,7 @@ exports.list = function (req, res) {
     Project.find({user : req.user._id})
       .sort('bid_deadline')
       .populate('user', 'displayName')
+      .populate('organization')
       .populate('bids', null, null, {sort: {'subtotal': 1}})
       .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
       .exec(function (err, projects) {
