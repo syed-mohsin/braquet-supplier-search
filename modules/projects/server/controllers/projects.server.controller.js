@@ -277,6 +277,10 @@ exports.projectByID = function (req, res, next, id) {
       User.populate(project.user, 
         {path: 'connections', 
           match: { _id: { $nin: bidder_ids }, roles: 'seller' },
+          populate: {
+            path: 'organization',
+            select: 'logoImageUrl name'
+          },
           select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function(err, connections) {
         if (err) {
           return next(err);
