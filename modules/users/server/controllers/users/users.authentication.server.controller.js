@@ -17,37 +17,18 @@ var noReturnUrls = [
   '/authentication/signup'
 ];
 
-/**
- * Signup
- */
-exports.signup = function (req, res) {
-  // For security measurement we remove the roles from the req.body object
-  delete req.body.roles;
+function handleAdminSignUp(req, res, user) {
+  var organization = req.body.organizationForm;
+  delete req.body.organization;
+  delete req.body.organizationForm;
 
-  // Init Variables
-  var user = new User(req.body);
-  var message = null;
-
-  // Add missing user fields
-  user.provider = 'local';
-  var displayName = user.firstName + ' ' + user.lastName;
   
-  // convert name to title case
-  user.displayName = displayName.toLowerCase()
-    .split(' ')
-    .map(i => i[0].toUpperCase() + i.substring(1))
-    .join(' ')
-  ;
+}
 
-  // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
-  if (req.body.user_role === '1')
-    user.roles = ['tempSeller'];
-  else {
-    user.roles = ['tempUser'];
-  }
-
+function handleNormalSignUp(req, res, user) {
   var organizationId = req.body.organization;
   delete req.body.organization;
+  delete req.body.organizationForm;
 
   // check if user was invited and connect upon signup
   async.waterfall([
@@ -66,7 +47,7 @@ exports.signup = function (req, res) {
       // add user connection if it exists
       if (invitingUser) {
         user.connections.push(invitingUser._id); 
-      }
+      } 
 
       // Then save the user
       user.save(function (err) {
@@ -144,6 +125,44 @@ exports.signup = function (req, res) {
       });
     }
   });
+
+}
+
+/**
+ * Signup
+ */
+exports.signup = function (req, res) {
+  // For security measurement we remove the roles from the req.body object
+  delete req.body.roles;
+
+  // Init Variables
+  var user = new User(req.body);
+  var message = null;
+
+  // Add missing user fields
+  user.provider = 'local';
+  var displayName = user.firstName + ' ' + user.lastName;
+  
+  // convert name to title case
+  user.displayName = displayName.toLowerCase()
+    .split(' ')
+    .map(i => i[0].toUpperCase() + i.substring(1))
+    .join(' ')
+  ;
+
+  // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
+  if (req.body.user_role === '1')
+    user.roles = ['tempSeller'];
+  else {
+    user.roles = ['tempUser'];
+  }
+
+  // different user flow depending on if user wants to create new org 
+  if (req.body.organization !== 'other') { // create new org
+    handleNormalSignUp(req, res, user);
+  } else {
+    // handleAdminSignUp(req, res, user);
+  }  
 };
 
 /**
