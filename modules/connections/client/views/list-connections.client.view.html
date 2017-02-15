@@ -12,8 +12,10 @@
     <div class="list-group">
         <a ng-repeat="connection in pagedItems" ui-sref="connections.view({connectionId: connection._id})" class="list-group-item">
             <img class="profile" ng-src="{{connection.profileImageURL}}">
-            <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
-            <h5>Associate Executive @ <span ng-bind="connection.organization.name"></span></h5>
+            <div class="profile-info">
+                <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
+                <h5><span ng-bind="connection.jobTitle"></span> @ <span ng-bind="connection.organization.name"></span></h5>
+            </div>
         </a>
     </div>
     <hr/>
@@ -30,8 +32,10 @@
             <div class="detail col-sm-8">
                 <a class="connection-title" ui-sref="connections.view({connectionId: connection._id})">
                     <img class="profile" ng-src="{{connection.profileImageURL}}">
+                    <div class="profile-info">
                     <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
-                    <h5>Associate Executive @ UGE</h5>
+                    <h5><span ng-bind="connection.jobTitle"></span> @ <span ng-bind="connection.organization.name"></span></h5>
+                    </div>
                 </a>
             </div>
             <div class="menu col-sm-4" ng-show="!connection.isPending">

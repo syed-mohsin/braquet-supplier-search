@@ -1,12 +1,12 @@
 <section class="project-view" ng-controller="ProjectsController" ng-init="findOne()">
     <div class="page-header col-sm-12">
         <div class="project-header container">
-            <h3>Requesting <span ng-bind="project.title"></span></h3>
+            <h3><span ng-bind="project.quantity"></span> x Poly Solar Modules</h3>
         </div>
         <div class="menu" ng-show="project.canBid">
             <a class="place-bid" ng-click="showBidView($event)">
                 <span class="glyphicon glyphicon-tag"></span>
-                <span >Place a bid</span>
+                <span>Submit a quote</span>
             </a>
         </div>
         <!-- only show this edit/delete option to buyers -->
@@ -42,9 +42,27 @@
                 </div>
                 <div class="box delivery-location no-padding">
                     <div class="box-title">
+                        <div class="glyphicon glyphicon-file"></div>
+                        Note - 
+                        <span ng-bind="project.title" class="ng-binding"></span> 
+                    </div>
+                </div>
+                <div class="box delivery-location no-padding">
+                    <div class="box-title">
                         <div class="glyphicon glyphicon-map-marker"></div>
                         Ship to
-                        <span ng-bind="project.shipping_address" class="ng-binding">266 10th Street, Brooklyn, NY 11215</span>
+                        <span ng-bind="project.shipping_address_city" class="ng-binding"></span>, 
+                        <span ng-bind="project.shipping_address_state" class="ng-binding"></span>
+                        <span ng-bind="project.shipping_address_zip_code" class="ng-binding"></span>, 
+                        <span ng-bind="project.shipping_address_country" class="ng-binding"></span>
+                    </div>
+                </div>
+
+                <div class="box delivery-location no-padding">
+                    <div class="box-title">
+                        <div class="glyphicon glyphicon-list-alt"></div>
+                        Preferred paymen term - 
+                        <span ng-bind="project.preferred_payment_term" class="ng-binding"></span> 
                     </div>
                 </div>
                 <div class="specified-products">
@@ -95,28 +113,30 @@
                     </div>
                 </div>
 
-                <a ng-repeat="bid in project.bids" class="box list-group-item col-sm-12">
+                <div ng-repeat="bid in project.bids" class="box list-group-item col-sm-12">
 
                     <!-- ng-show="authentication.user._id == project.user._id" -->
                     <div class="bid">
                         <div>
-                            <img class="company-logo" ng-src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
+                            <img class="company-logo" ng-src="{{bid.organization.logoImageUrl}}">
                         </div>
-                        <div>
+                        <a href="#">
                             <small class="list-group-item-text">
                             <img class="profile" ng-src="{{bid.user.profileImageURL}}">
                             <div class="col-sm-10 comment no-wrap">
-                            <span ng-bind="bid.user.firstName"></span> submitted a bid at <span><span ng-bind="bid.subtotal/100 | currency"></span>/W</span> (<span>Centrosolar, CP60 260BW</span>) on <span ng-bind="bid.created | date:'mediumDate'"></span>
+                                <span ng-bind="bid.user.firstName"></span> submitted a quote at <span><span ng-bind="bid.subtotal/100 + bid.shipping_cost/100 + bid.sales_tax/100 | currency"></span></span> (<span ng-bind="bid.panel_models[0]"></span>) on <span ng-bind="bid.created | date:'mediumDate'"></span>
+                            - <span class="view-quote">View quote</span>
                             </div>
+                            
                              </small>
-                        </div>
+                        </a>
 
                     </div>
                     <div>
 
                     </div>
 
-                </a>
+                </div>
             </div>
         </div>
 

@@ -16,7 +16,7 @@
         <a ng-repeat="organization in pagedItems" ui-sref="organizations.view({organizationId: organization._id})" class="list-group-item col-sm-12">
         
             <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
-        <div class="company-profile">
+        <div class="profile-info">
         <h5 class="list-group-item-heading" ng-bind="organization.name"></h5>
             <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.headquarters"></span></small><br>
             <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
