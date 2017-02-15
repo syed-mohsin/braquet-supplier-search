@@ -2,10 +2,12 @@
     <div class="page-header col-sm-12">
         <div class="project-header container">
             <h3>Requesting <span ng-bind="project.title"></span></h3>
-            <span ng-bind="project.organization"></span>
         </div>
         <div class="menu" ng-show="project.canBid">
-            <a class="place-bid" ng-click="showBidView($event)"><span class="glyphicon glyphicon-tag"></span><span >Place a bid</span></a>
+            <a class="place-bid" ng-click="showBidView($event)">
+                <span class="glyphicon glyphicon-tag"></span>
+                <span >Place a bid</span>
+            </a>
         </div>
         <!-- only show this edit/delete option to buyers -->
         <div class="menu" ng-show="authentication.user._id === project.user._id">
@@ -42,17 +44,7 @@
                     <div class="box-title">
                         <div class="glyphicon glyphicon-map-marker"></div>
                         Ship to
-                        <span ng-bind="project.shipping_address_city" class="ng-binding"></span>, 
-                        <span ng-bind="project.shipping_address_state" class="ng-binding"></span> 
-                        <span ng-bind="project.shipping_address_zip_code" class="ng-binding"></span>, 
-                        <span ng-bind="project.shipping_address_country" class="ng-binding"></span>
-                    </div>
-                </div>
-                <div class="box delivery-location no-padding">
-                    <div class="box-title">
-                        <div class="glyphicon glyphicon-list-alt"></div>
-                        Preferred payment method is 
-                        <span ng-bind="project.preferred_payment_term" class="ng-binding"></span>
+                        <span ng-bind="project.shipping_address" class="ng-binding">266 10th Street, Brooklyn, NY 11215</span>
                     </div>
                 </div>
                 <div class="specified-products">
@@ -108,8 +100,7 @@
                     <!-- ng-show="authentication.user._id == project.user._id" -->
                     <div class="bid">
                         <div>
-                            <!-- <img class="company-logo" ng-src="http://www.ugei.com/sites/default/files/uge-5-logo.png"> -->
-                            <img class="company-logo" ng-src="{{bid.organization.logoImageUrl}}">
+                            <img class="company-logo" ng-src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
                         </div>
                         <div>
                             <small class="list-group-item-text">

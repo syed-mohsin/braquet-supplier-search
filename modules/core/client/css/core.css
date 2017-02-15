@@ -474,7 +474,7 @@ section h2 {
     float: left;
 }
 .block img.company-logo, .activities img.company-logo {
-    width: 50px;
+    width: 75px;
     margin-bottom: 15px;
     float: initial;
 }
