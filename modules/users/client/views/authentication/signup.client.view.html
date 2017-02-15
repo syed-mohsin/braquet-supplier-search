@@ -5,11 +5,11 @@
       <fieldset>
         <div class="form-group" show-errors>
         <!-- <div class="alert alert-danger"><p>Solar Supplier roles are currently invite only</p></div> -->
-          <h2 for="user_role">Are you a buyer or supplier?</h2>        
+          <h2 for="user_role">Sign up on Braquet</h2>        
           <select name="user_role" ng-model="credentials.user_role" id="user_role" class="form-control" required>
-            <option value="">---Please Select---</option>
-            <option value="0">Solar Developer</option>
-            <option value="1">Solar Supplier</option> <!-- disabled="disabled" -->
+            <option value="">---Please select a role---</option>
+            <option value="0">You specify/procure equipment for projects</option>
+            <option value="1">You sell equipment for solar projects</option> <!-- disabled="disabled" -->
           </select>
           <div ng-messages="userForm.user_role.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Please indicate whether you are requesting or supplying solar services and products.</p>

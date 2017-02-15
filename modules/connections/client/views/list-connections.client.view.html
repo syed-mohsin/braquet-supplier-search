@@ -13,7 +13,7 @@
         <a ng-repeat="connection in pagedItems" ui-sref="connections.view({connectionId: connection._id})" class="list-group-item">
             <img class="profile" ng-src="{{connection.profileImageURL}}">
             <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
-            <h5>Associate Executive @ UGE</h5>
+            <h5>Associate Executive @ <span ng-bind="connection.organization.name"></span></h5>
         </a>
     </div>
     <hr/>

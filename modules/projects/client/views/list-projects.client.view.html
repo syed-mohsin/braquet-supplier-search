@@ -12,7 +12,8 @@
     <div class="list-group">
         <div ng-repeat="project in projects" class="list-group-item col-sm-2">
 
-            <img class="company-logo" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
+            <!-- <img class="company-logo" src="http://www.ugei.com/sites/default/files/uge-5-logo.png"> -->
+            <img class="company-logo" ng-src="{{project.organization.logoImageUrl}}">
             <b class="notice error" ng-show="!project.bidOpen">
                 This RFQ is closed.
             </b>
@@ -22,7 +23,8 @@
                     <!-- ng-show="authentication.user._id == project.user._id" -->
                     <h4 class="list-group-item-heading" ng-bind="project.title"></h4>
                 </a>
-                City, State | <span ng-bind="project.system_capacity"></span> kW
+                <span ng-bind="project.shipping_address_city"></span>, 
+                <span ng-bind="project.shipping_address_state"></span> | <span ng-bind="project.quantity"></span> modules
                 <div class="list-detail" ng-show="authentication.user.roles[0] === 'user'">
                     <h5 class="list-group-item-heading bid">Top Bid: <span ng-bind="(project.bids[0]) ? (project.bids[0].subtotal/100 | currency) + '/W' : 'No Bids Placed'"></span>
                     <br><span class="notice user-specific"><i>Your suppliers will not see<br> the top bid</i></span>
@@ -30,7 +32,7 @@
                 </div>
                 <div class="menu" ng-show="project.canBid">
                     <a class="place-bid" ng-click="showBidView($event, project._id)">
-                        <span class="glyphicon glyphicon-tag"></span><span >Place a bid</span>
+                        <span class="glyphicon glyphicon-tag"></span><span>Place a bid</span>
                     </a>
                 </div>
                 <small>Posted by <span ng-bind="project.user.displayName"></span> on <span ng-bind="project.created | date:'yyyy-MM-dd'"></span></small>

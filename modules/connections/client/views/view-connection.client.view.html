@@ -16,7 +16,8 @@
                             <span ng-bind="connection.firstName"></span>
                             <span ng-bind="connection.lastName"></span>
                         </div>
-                    <img class="company-logo pull-right" src="http://www.ugei.com/sites/default/files/uge-5-logo.png">
+                    <!-- <img class="company-logo pull-right" src="http://www.ugei.com/sites/default/files/uge-5-logo.png"> -->
+                    <img class="company-logo pull-right" ng-src="{{connection.organization.logoImageUrl}}">
 
                         <div class="sub-title">
                             <span>Account Executive</span>
