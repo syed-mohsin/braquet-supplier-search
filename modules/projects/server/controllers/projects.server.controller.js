@@ -17,6 +17,7 @@ var path = require('path'),
 exports.create = function (req, res) {
   var project = new Project(req.body);
   project.user = req.user;
+  project.organization = req.user.organization;
 
   project.save(function (err) {
     if (err) {
@@ -236,6 +237,7 @@ exports.projectByID = function (req, res, next, id) {
     .populate('user', 'displayName connections')
     .populate('bids', null, null, {sort: {'subtotal': 1}})
     .populate('bidders')
+    .populate('organization')
     .populate('panel_models', null, null, {sort: {'model': 1}})
     .exec(function (err, project) {
     if (err) {

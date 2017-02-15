@@ -82,6 +82,10 @@ var ProjectSchema = new Schema({
     ref: 'PanelModel',
     required: 'At least one panel model is required'
     }],
+  organization: {
+    type: Schema.ObjectId,
+    ref: 'Organization'
+  },
   user: {
     type: Schema.ObjectId,
     ref: 'User',
