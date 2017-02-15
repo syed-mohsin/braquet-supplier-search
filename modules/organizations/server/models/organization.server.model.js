@@ -14,6 +14,9 @@ var OrganizationSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  verified: {
+    type: Boolean
+  },
   admin: {
     type: Schema.ObjectId,
     ref: 'User'

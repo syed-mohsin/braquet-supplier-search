@@ -17,18 +17,20 @@ var noReturnUrls = [
   '/authentication/signup'
 ];
 
-function handleAdminSignUp(req, res, user) {
-  var organization = req.body.organizationForm;
-  delete req.body.organization;
-  delete req.body.organizationForm;
-
-  
-}
-
 function handleNormalSignUp(req, res, user) {
   var organizationId = req.body.organization;
+  var organizationForm = req.body.organizationForm;
+  var newOrganization;
   delete req.body.organization;
   delete req.body.organizationForm;
+
+  if (organizationId === 'other' && organizationForm.organizationName && organizationForm.organizationWebsite) {
+    newOrganization = new Organization(organizationForm);
+  } else if (organizationId === 'other' && (!organizationForm.organizationName || !organizationForm.organizationWebsite)) {
+    return res.status(400).send({
+      message: "invalid organization form submission"
+    });
+  }
 
    // check if user was invited and connect upon signup
   async.waterfall([
@@ -76,30 +78,41 @@ function handleNormalSignUp(req, res, user) {
         done(err);
       }
     },
+    // log in user
     function(done) {
       req.login(user, function (err) {
         done(err, user);
       });
     },
     function(user, done) {
-      Organization.findById(organizationId, function(err, organization) {
-        if (err) {
-          return res.status(400).json(err);
-        } else if (!organization) {
-          return res.status(400).send({
-            message: 'no organization with that ID exists'
-          });
-        }
-
-        organization.possibleUsers.push(user._id);
-        organization.save(function(err) {
+      // handling new user for an existing organization
+      if (organizationId !== 'other') {
+        Organization.findById(organizationId, function(err, organization) {
           if (err) {
-            res.status(400).send(err);
-          } else {
-            res.json(user);
+            return res.status(400).json(err);
+          } else if (!organization) {
+            return res.status(400).send({
+              message: 'no organization with that ID exists'
+            });
           }
+
+          organization.possibleUsers.push(user._id);
+          organization.save(function(err) {
+            done(err, user);
+          });
         });
-      });
+      // handling new admin for new organization
+      } else {
+        newOrganization.verified = false;
+        newOrganization.admin = user;
+
+        newOrganization.save(function(err) {
+          done(err, user);
+        });
+      }
+    },
+    function(user, done) {
+      res.json(user);
     }
     ], function (err) {
     if (err) {
@@ -139,12 +152,7 @@ exports.signup = function (req, res) {
     user.roles = ['tempUser'];
   }
 
-  // different user flow depending on if user wants to create new org 
-  if (req.body.organization !== 'other') { // create new org
-    handleNormalSignUp(req, res, user);
-  } else {
-    // handleAdminSignUp(req, res, user);
-  }  
+  handleNormalSignUp(req, res, user); 
 };
 
 /**

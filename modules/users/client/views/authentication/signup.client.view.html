@@ -28,7 +28,7 @@
         <fieldset ng-if="credentials.organization === 'other'">
           <div class="form-group" show-errors>
             <input type="text" id="organizationName" name="organizationName" class="form-control" ng-model="credentials.organizationForm.organizationName" placeholder="Organization Name" ng-required="credentials.organization === 'other'">
-            <div ng-messages="userForm.organizationName.$error" role="alert">
+            <div ng-messages="userForm.organizationName.$error" role="alert" ng-required="credentials.organization === 'other'">
               <p class="help-block error-text" ng-message="required">Organization name is required.</p>
             </div>
           </div>
