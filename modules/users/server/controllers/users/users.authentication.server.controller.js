@@ -30,7 +30,7 @@ function handleNormalSignUp(req, res, user) {
   delete req.body.organization;
   delete req.body.organizationForm;
 
-  // check if user was invited and connect upon signup
+   // check if user was invited and connect upon signup
   async.waterfall([
     function(done) {
       User.findOne({ 
@@ -51,51 +51,34 @@ function handleNormalSignUp(req, res, user) {
 
       // Then save the user
       user.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          // Remove sensitive data before login
-          user.password = undefined;
-          user.salt = undefined;
+          done(err, invitingUser);
+      });
+    },
+    function(invitingUser, done) {
+      // Remove sensitive data before login
+      user.password = undefined;
+      user.salt = undefined;
+      var err = null;
 
-          // update the inviting user if exists
-          if (invitingUser) {
-            var index = invitingUser.sent_email_invites.indexOf(req.body.email);
-            if (index !== -1) {
-              invitingUser.sent_email_invites.splice(index, 1);
-              invitingUser.connections.push(user._id);
-            }
-
-            // save invitingUser
-            invitingUser.save(function(err) {
-              if (err) {
-                return res.status(400).send({
-                  message: errorHandler.getErrorMessage(err)
-                });
-              } else {
-                req.login(user, function (err) {
-                  if (err) {
-                    res.status(400).send(err);
-                  } else {
-                    // res.json(user);
-                    done(err, user);
-                  }
-                });
-              }
-            });
-          } else {
-            req.login(user, function (err) {
-              if (err) {
-                res.status(400).send(err);
-              } else {
-                // res.json(user);
-                done(err, user);
-              }
-            });
-          }
+      // update the inviting user if exists
+      if (invitingUser) {
+        var index = invitingUser.sent_email_invites.indexOf(req.body.email);
+        if (index !== -1) {
+          invitingUser.sent_email_invites.splice(index, 1);
+          invitingUser.connections.push(user._id);
         }
+
+        // save invitingUser
+        invitingUser.save(function(err) {
+          done(err);
+        });
+      } else {
+        done(err);
+      }
+    },
+    function(done) {
+      req.login(user, function (err) {
+        done(err, user);
       });
     },
     function(user, done) {
@@ -125,7 +108,6 @@ function handleNormalSignUp(req, res, user) {
       });
     }
   });
-
 }
 
 /**
