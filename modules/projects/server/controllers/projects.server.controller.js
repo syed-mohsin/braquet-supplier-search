@@ -256,6 +256,7 @@ exports.projectByID = function (req, res, next, id) {
 
     // populate bids with users 'deep populate'
     Bid.populate(project.bids, [
+      {path: 'panel_models'},
       {path: 'organization'},
       {path: 'user',
         select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}
