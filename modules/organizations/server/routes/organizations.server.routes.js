@@ -12,6 +12,10 @@ module.exports = function (app) {
     .get(organizations.list)
     .post(organizations.create);
 
+  // for signup page
+  app.route('/api/organizations-basic')
+    .get(organizations.list_basic);
+
   // Single organization routes
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)

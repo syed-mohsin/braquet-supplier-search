@@ -24,7 +24,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
             $state.go('dashboard');            
           }
         } else {
-          $state.go('welcome');
+          $state.go('catalog');
         }
       }
     })
@@ -33,8 +33,8 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/dashboard',
       templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
     })
-    .state('welcome', {
-      url: '/welcome',
+    .state('catalog', {
+      url: '/catalog',
       templateUrl: 'modules/core/client/views/welcome.client.view.html',
       data: {
         ignoreState: true
