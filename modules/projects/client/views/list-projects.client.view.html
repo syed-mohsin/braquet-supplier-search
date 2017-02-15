@@ -11,8 +11,6 @@
     </div>
     <div class="list-group">
         <div ng-repeat="project in projects" class="list-group-item col-sm-2">
-
-            <!-- <img class="company-logo" src="http://www.ugei.com/sites/default/files/uge-5-logo.png"> -->
             <img class="company-logo" ng-src="{{project.organization.logoImageUrl}}">
             <b class="notice error" ng-show="!project.bidOpen">
                 This RFQ is closed.
