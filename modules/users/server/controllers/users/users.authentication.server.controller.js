@@ -41,7 +41,9 @@ exports.signup = function (req, res) {
 
   // Init Variables
   var user = new User(req.body);
-  var message = null;
+
+  // set user organization
+  user.organization = organizationId === 'other' ? newOrganization._id : organizationId;
 
   // Add missing user fields
   user.provider = 'local';

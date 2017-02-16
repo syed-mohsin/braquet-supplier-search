@@ -38,7 +38,7 @@
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
                     <span ng-if="authentication.user.roles.indexOf('user') === -1" class="glyphicon glyphicon-ban-circle"></span><span ng-if="authentication.user.roles.indexOf('user') === -1">Unable to request a quote as you are a seller</span>
-                    <a ng-if="authentication.user.roles.indexOf('admin') !== -1"  ng-click="showAddUsers($event)">
+                    <a ng-if="organization.admin === user._id"  ng-click="showAddUsers($event)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Add Employees</span>
                     </a>
                 </div>
