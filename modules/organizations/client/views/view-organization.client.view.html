@@ -4,7 +4,7 @@
             <div class="profile-photo">
                 <!-- <img ng-src="{{organization.logo}}"> -->
                 <img ng-src="{{organization.logoImageUrl}}" class="company-logo">
-                <fieldset class="menu" ng-if="authentication.user.roles[0] == 'admin' || authentication.user.roles[1] == 'admin'">
+                <fieldset class="menu" ng-if="authentication.user.roles.indexOf('admin') !== -1">
                     <div class="btn-file">
                              Edit logo <input type="file" nv-file-select uploader="uploader">
                     </div>
@@ -38,7 +38,7 @@
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
                     <span ng-if="authentication.user.roles.indexOf('user') === -1" class="glyphicon glyphicon-ban-circle"></span><span ng-if="authentication.user.roles.indexOf('user') === -1">Unable to request a quote as you are a seller</span>
-                    <a ng-if="authentication.user.roles.indexOf('admin') > -1"  ng-click="showAddUsers($event)" ng-show="authentication.user.roles.indexOf('admin') !== -1">
+                    <a ng-if="authentication.user.roles.indexOf('admin') !== -1"  ng-click="showAddUsers($event)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Add Employees</span>
                     </a>
                 </div>

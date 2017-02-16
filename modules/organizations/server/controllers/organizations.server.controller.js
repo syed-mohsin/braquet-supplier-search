@@ -89,6 +89,29 @@ exports.list_unverified = function(req, res) {
 };
 
 /**
+ * Verify an organization
+ */
+exports.verify = function(req, res) {
+  if (!req.organization || req.organization.verified) {
+    res.status(400).send({
+      message: "Invalid organization"
+    });
+  } else {
+    var organization = req.organization;
+    organization.verified = true;
+    organization.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } 
+
+      res.json(organization);
+    });
+  }
+};
+
+/**
  * List of only organization names
  */
 exports.list_basic = function (req, res) {

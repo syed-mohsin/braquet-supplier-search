@@ -10,16 +10,17 @@
         </div>
     </div>
     <div class="list-group">
-        <a ng-repeat="organization in pagedItems" ui-sref="organizations.view({organizationId: organization._id})" class="list-group-item col-sm-12">
-        
+        <div ui-sref="organizations.view({organizationId: organization._id})" ng-repeat="organization in pagedItems" class="list-group-item col-sm-12">
+            <a ng-if="!organization.verified" ng-click="verifyOrg(organization._id)">
+                <span class="glyphicon glyphicon-new-window"></span><span>Verify Organization</span>
+            </a>
             <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
-        <div class="company-profile">
-        <h5 class="list-group-item-heading" ng-bind="organization.name"></h5>
-            <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.headquarters"></span></small><br>
-            <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
-            <small><span ng-bind="organization.product_types"></span></small>
-          </div>
-        </a>
+            <div class="company-profile">
+              <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.headquarters"></span></small><br>
+              <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
+              <small><span ng-bind="organization.product_types"></span></small>
+            </div>
+        </div>
     </div>
 
     <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>

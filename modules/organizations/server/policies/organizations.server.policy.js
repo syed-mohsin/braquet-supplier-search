@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/organizations/:organizationId',
       permissions: '*'
     }, {
+      resources: '/api/organizations/:organizationId/verify',
+      permissions: 'post'
+    }, {
       resources: '/api/organizations-unverified',
       permissions: ['get']
     }]

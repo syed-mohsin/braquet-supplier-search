@@ -20,6 +20,10 @@ module.exports = function (app) {
   app.route('/api/organizations-unverified').all(organizationsPolicy.isAllowed)
     .get(organizations.list_unverified);
 
+  // admin verify route
+  app.route('/api/organizations/:organizationId/verify').all(organizationsPolicy.isAllowed)
+    .post(organizations.verify);
+
   // Single organization routes
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)

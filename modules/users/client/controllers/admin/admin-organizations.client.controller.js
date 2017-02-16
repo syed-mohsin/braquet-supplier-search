@@ -4,11 +4,18 @@ angular.module('users.admin').controller('AdminOrganizationsController', ['$scop
   function ($scope, $http, $filter, Admin) {
 
   	$scope.find = function() {
-    $http.get('/api/organizations-unverified')
-      .success(function(organizations) {
-    	$scope.organizations = organizations;
-    	$scope.buildPager();
-      });
+    	$http.get('/api/organizations-unverified')
+	      .success(function(organizations) {
+	    	$scope.organizations = organizations;
+	    	$scope.buildPager();
+	    });
+    };
+
+    $scope.verifyOrg = function(organizationId) {
+    	$http.post('/api/organizations/' + organizationId + '/verify')
+    	  .success(function(organization) {
+    	  	$scope.organization = organization;
+    	});
     };
 
     $scope.buildPager = function () {
