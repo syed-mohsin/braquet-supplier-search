@@ -33,6 +33,14 @@ angular.module('users.admin.routes').config(['$stateProvider',
           }]
         }
       })
+      .state('admin.organizations', {
+        url: '/organizations/',
+        templateUrl: 'modules/organizations/client/views/admin-list-organizations.client.view.html',
+        controller: 'AdminOrganizationsController',
+        data: {
+          roles: ['admin']
+        }
+      })
       .state('panels', {
         abstract: true,
         url: '/panels',

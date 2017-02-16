@@ -17,7 +17,14 @@ var noReturnUrls = [
   '/authentication/signup'
 ];
 
-function handleNormalSignUp(req, res, user) {
+/**
+ * Signup
+ */
+exports.signup = function (req, res) {
+  // For security measurement we remove the roles from the req.body object
+  delete req.body.roles;
+
+  // verify and init organization details
   var organizationId = req.body.organization;
   var organizationForm = req.body.organizationForm;
   var newOrganization;
@@ -25,11 +32,33 @@ function handleNormalSignUp(req, res, user) {
   delete req.body.organizationForm;
 
   if (organizationId === 'other' && organizationForm.organizationName && organizationForm.organizationWebsite) {
-    newOrganization = new Organization(organizationForm);
+    newOrganization = new Organization({name: organizationForm.organizationName, website: organizationForm.organizationWebsite});
   } else if (organizationId === 'other' && (!organizationForm.organizationName || !organizationForm.organizationWebsite)) {
     return res.status(400).send({
       message: "invalid organization form submission"
     });
+  }
+
+  // Init Variables
+  var user = new User(req.body);
+  var message = null;
+
+  // Add missing user fields
+  user.provider = 'local';
+  var displayName = user.firstName + ' ' + user.lastName;
+  
+  // convert name to title case
+  user.displayName = displayName.toLowerCase()
+    .split(' ')
+    .map(i => i[0].toUpperCase() + i.substring(1))
+    .join(' ')
+  ;
+
+  // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
+  if (req.body.user_role === '1')
+    user.roles = ['tempSeller'];
+  else {
+    user.roles = ['tempUser'];
   }
 
    // check if user was invited and connect upon signup
@@ -121,38 +150,6 @@ function handleNormalSignUp(req, res, user) {
       });
     }
   });
-}
-
-/**
- * Signup
- */
-exports.signup = function (req, res) {
-  // For security measurement we remove the roles from the req.body object
-  delete req.body.roles;
-
-  // Init Variables
-  var user = new User(req.body);
-  var message = null;
-
-  // Add missing user fields
-  user.provider = 'local';
-  var displayName = user.firstName + ' ' + user.lastName;
-  
-  // convert name to title case
-  user.displayName = displayName.toLowerCase()
-    .split(' ')
-    .map(i => i[0].toUpperCase() + i.substring(1))
-    .join(' ')
-  ;
-
-  // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
-  if (req.body.user_role === '1')
-    user.roles = ['tempSeller'];
-  else {
-    user.roles = ['tempUser'];
-  }
-
-  handleNormalSignUp(req, res, user); 
 };
 
 /**

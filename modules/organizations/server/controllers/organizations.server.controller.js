@@ -62,7 +62,22 @@ exports.delete = function (req, res) {
  * List of current All Organizations
  */
 exports.list = function (req, res) {
-  Organization.find({}, function (err, organizations) {
+  Organization.find({verified: true}, function (err, organizations) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(organizations);
+  });
+};
+
+/**
+ * List all unverified organizations (Admin only)
+ */
+exports.list_unverified = function(req, res) {
+   Organization.find({verified: false}, function (err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

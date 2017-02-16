@@ -12,5 +12,10 @@ angular.module('users.admin').run(['Menus',
       title: 'View Panel Models',
       state: 'panels.list'
     });
+
+    Menus.addSubMenuItem('topbar', 'admin', {
+      title: 'Manage Organizations',
+      state: 'admin.organizations'
+    });
   }
 ]);

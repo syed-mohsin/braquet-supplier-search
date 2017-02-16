@@ -16,6 +16,10 @@ module.exports = function (app) {
   app.route('/api/organizations-basic')
     .get(organizations.list_basic);
 
+  // admin-only view of unverified projects
+  app.route('/api/organizations-unverified').all(organizationsPolicy.isAllowed)
+    .get(organizations.list_unverified);
+
   // Single organization routes
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)
