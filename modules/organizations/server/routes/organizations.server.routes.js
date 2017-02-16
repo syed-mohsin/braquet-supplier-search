@@ -31,8 +31,9 @@ module.exports = function (app) {
     .delete(organizations.delete);
 
   app.route('/api/organizations/logo/:organizationId').post(organizations.changeLogo);
-  app.route('/api/organizations/:organizationId/addUsers').post(organizations.addUsers);
-  app.route('/api/organizations/:organizationId/getPotentialUsers').get(organizations.getPotentialUsers);
+  app.route('/api/organizations/:organizationId/addUsers').all(organizationsPolicy.isAllowed)
+    .post(organizations.addUsers);
+
 
   // Finish by binding the organization middleware
   app.param('organizationId', organizations.organizationByID);

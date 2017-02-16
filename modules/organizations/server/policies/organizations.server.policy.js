@@ -22,10 +22,13 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/organizations/:organizationId/verify',
-      permissions: 'post'
+      permissions: ['post']
     }, {
       resources: '/api/organizations-unverified',
       permissions: ['get']
+    }, {
+      resources: '/api/organizations/:organizationId/addUsers',
+      permissions: ['post']
     }]
   }, {
     roles: ['user', 'seller'],
@@ -58,6 +61,11 @@ exports.isAllowed = function (req, res, next) {
   // if (req.organization && req.user && req.organization.user.id === req.user.id) {
   //   return next();
   // }
+
+  // allow organization admin to access adding employees to organization
+  if (req.route.path === '/api/organizations/:organizationId/addUsers' && (req.user._id.equals(req.organization.admin))) {
+    return next();
+  }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
