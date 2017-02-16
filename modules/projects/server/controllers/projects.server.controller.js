@@ -17,6 +17,7 @@ var path = require('path'),
 exports.create = function (req, res) {
   var project = new Project(req.body);
   project.user = req.user;
+  project.organization = req.user.organization;
 
   project.save(function (err) {
     if (err) {
@@ -138,6 +139,7 @@ exports.list = function (req, res) {
     Project.find({user : req.user._id})
       .sort('bid_deadline')
       .populate('user', 'displayName')
+      .populate('organization')
       .populate('bids', null, null, {sort: {'subtotal': 1}})
       .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
       .exec(function (err, projects) {
@@ -162,6 +164,7 @@ exports.list = function (req, res) {
     Project.find({ $or : [{bidders: req.user._id}, {project_state: 'public'}]})
       .sort('bid_deadline')
       .populate('user', 'displayName')
+      .populate('organization')
       .populate('bids', null, null, {sort: {'subtotal': 1}})
       .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
       .exec(function (err, projects) {
@@ -236,6 +239,7 @@ exports.projectByID = function (req, res, next, id) {
     .populate('user', 'displayName connections')
     .populate('bids', null, null, {sort: {'subtotal': 1}})
     .populate('bidders')
+    .populate('organization')
     .populate('panel_models', null, null, {sort: {'model': 1}})
     .exec(function (err, project) {
     if (err) {
@@ -252,6 +256,7 @@ exports.projectByID = function (req, res, next, id) {
 
     // populate bids with users 'deep populate'
     Bid.populate(project.bids, [
+      {path: 'panel_models'},
       {path: 'organization'},
       {path: 'user',
         select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}
@@ -273,6 +278,10 @@ exports.projectByID = function (req, res, next, id) {
       User.populate(project.user, 
         {path: 'connections', 
           match: { _id: { $nin: bidder_ids }, roles: 'seller' },
+          populate: {
+            path: 'organization',
+            select: 'logoImageUrl name'
+          },
           select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function(err, connections) {
         if (err) {
           return next(err);

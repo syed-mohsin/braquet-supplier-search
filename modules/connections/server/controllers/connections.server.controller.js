@@ -43,7 +43,9 @@ exports.delete = function (req, res) {
  * List of current user's Connections
  */
 exports.list = function (req, res) {
-  User.find({_id : {$in : req.user.connections}}, function (err, connections) {
+  User.find({_id : {$in : req.user.connections}})
+    .populate('organization')
+    .exec(function (err, connections) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -58,7 +60,9 @@ exports.list = function (req, res) {
  * List of user connection requests
  */
 exports.listConnectionRequests = function (req, res) {
-  User.find({ _id : {$in : req.user.received_user_invites} }, function(err, requests) {
+  User.find({ _id : {$in : req.user.received_user_invites} })
+    .populate('organization')
+    .exec(function(err, requests) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
