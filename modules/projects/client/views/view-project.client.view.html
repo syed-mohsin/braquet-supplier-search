@@ -117,15 +117,13 @@
 
                     <!-- ng-show="authentication.user._id == project.user._id" -->
                     <div class="bid">
-                        <div>
                             <!-- <img class="company-logo" ng-src="{{bid.organization.logoImageUrl}}"> -->
-                            <h5><span ng-bind="bid.organization.name"></span></h5>
-                        </div>
-                        <a href="#">
+                            <h6><span ng-bind="bid.organization.name"></span></h6>
+                        <a ui-sref="bids.view({bidId: bid._id})">
                             <small class="list-group-item-text">
                             <img class="profile" ng-src="{{bid.user.profileImageURL}}">
                             <div class="col-sm-10 comment no-wrap">
-                                <span ng-bind="bid.user.firstName"></span> submitted a quote at <span><span ng-bind="bid.subtotal/100 + bid.shipping_cost/100 + bid.sales_tax/100 | currency"></span></span> (<span ng-bind="bid.panel_models[0]"></span>) on <span ng-bind="bid.created | date:'mediumDate'"></span>
+                                <span ng-bind="bid.user.firstName"></span> submitted a quote at <span><span ng-bind="bid.subtotal/100 + bid.shipping_cost/100 + bid.sales_tax/100 | currency"></span></span> (<span ng-bind="bid.panel_models[0].manufacturer"></span>, <span ng-bind="bid.panel_models[0].model"></span>) on <span ng-bind="bid.created | date:'mediumDate'"></span>
                             - <span class="view-quote">View quote</span>
                             </div>
                             

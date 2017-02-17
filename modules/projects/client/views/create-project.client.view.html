@@ -7,12 +7,12 @@
             <fieldset>
                 <div class="form-group" show-errors>
                     <select name="project_state" ng-model="project_state" id="project_state" class="form-control" required>
-            <option value="">---Public or Private RFQ---</option>
+            <option value="">---Public or Private Quote Request---</option>
             <option value="public">Public - all your preferred suppliers will receive an invite</option>
             <option value="private">Private - Only invited suppliers will receive the RFQ</option> 
           </select>
                     <div ng-messages="projectForm.project_state.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">Please indicate whether this RFQ is public or private</p>
+                        <p class="help-block error-text" ng-message="required">Please indicate whether this Quote Request is public or private</p>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
                 <div class="form-group" show-errors>
                     <input name="quantity" type="text" ng-model="quantity" id="quantity" class="form-control" placeholder="Quantity" required>
                     <div ng-messages="projectForm.quantity.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">Quantity is required.</p>
+                        <p class="help-block error-text" ng-message="required">Suppliers need to know how many panels you are looking for!</p>
                     </div>
                 </div>
 
@@ -49,20 +49,20 @@
                 </div>
 
                 <div class="form-group" show-errors>
-                    <label for="bid_deadline">Bid Deadline</label>
+                    <label for="bid_deadline">Suppliers need to submit a quote by:</label>
                     <input name="bid_deadline" type="date" min="{{bid_date.currentDate | date:'yyyy-MM-dd'}}" max="{{bid_date.yearAheadDate | date:'yyyy-MM-dd'}}" ng-model="bid_date.value" id="bid_deadline" class="form-control" required>
                     <div ng-messages="projectForm.bid_deadline.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">Bid Deadline is required.</p>
-                        <p class="help-block error-text" ng-message="date">Invalid Date.</p>
-                        <p class="help-block error-text" ng-message="min">Bid deadline cannot be in the past</p>
-                        <p class="help-block error-text" ng-message="max">Bid deadline must be within one year from today.</p>
+                        <p class="help-block error-text" ng-message="required">Deadline is required. When would you like the suppliers to submit a quote by?</p>
+                        <p class="help-block error-text" ng-message="date">Sorry! Not a valid date. Please try again.</p>
+                        <p class="help-block error-text" ng-message="min">We know you wanted a quote yesterday but the deadline needs to be in the future.</p>
+                        <p class="help-block error-text" ng-message="max">Too far into the future! The deadline needs to be within one year from today.</p>
                     </div>
                 </div>
 
                 <div class="form-group" show-errors>
                     <input name="shipping_address_1" type="text" ng-model="shipping_address_1" id="shipping_address_1" class="form-control" placeholder="Shipping Address Line 1" required>
                     <div ng-messages="projectForm.shipping_address_1.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">Shipping Address Line 1 is required.</p>
+                        <p class="help-block error-text" ng-message="required">We are working on predicting your shipping address but until then, your suppliers need to ship the panels somewhere.</p>
                     </div>
                 </div>
 
@@ -76,28 +76,28 @@
                 <div class="form-group" show-errors>
                     <input name="shipping_address_city" type="text" ng-model="shipping_address_city" id="shipping_address_city" class="form-control" placeholder="City" required>
                     <div ng-messages="projectForm.shipping_address_city.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">City is required.</p>
+                        <p class="help-block error-text" ng-message="required">These panels need a home! Please put in the city.</p>
                     </div>
                 </div>
 
                 <div class="form-group" show-errors>
                     <input name="shipping_address_state" type="text" ng-model="shipping_address_state" id="shipping_address_state" class="form-control" placeholder="State" required>
                     <div ng-messages="projectForm.shipping_address_state.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">State is required.</p>
+                        <p class="help-block error-text" ng-message="required">There are a lot of states in this country. Please select a state.</p>
                     </div>
                 </div>
 
                 <div class="form-group" show-errors>
                     <input name="shipping_address_zip_code" type="text" ng-model="shipping_address_zip_code" id="shipping_address_zip_code" class="form-control" placeholder="Zip Code" required>
                     <div ng-messages="projectForm.shipping_address_zip_code.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">Zip Code is required.</p>
+                        <p class="help-block error-text" ng-message="required">We don't know who invented zip codes but apparently they are important. Please put one in. We really need it.</p>
                     </div>
                 </div>
 
                 <div class="form-group" show-errors>
                     <input name="shipping_address_country" type="text" ng-model="shipping_address_country" id="shipping_address_country" class="form-control" placeholder="Country" required>
                     <div ng-messages="projectForm.shipping_address_country.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">Country is required.</p>
+                        <p class="help-block error-text" ng-message="required">Countries are like carrots. We need them. Please try again by selecting a country.</p>
                     </div>
                 </div>
                 <div class="form-group" show-errors>

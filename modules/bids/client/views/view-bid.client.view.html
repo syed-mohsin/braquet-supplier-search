@@ -1,47 +1,54 @@
 <div ng-controller="BidsController" ng-init="findOne()">
-    <section class="bid-view container">
+    <section class="bid-view border container">
         <div class="page-header">
-            <div class="bid-header">
-                <h2 ng-bind="bid.project_title"></h2>
+            <div class="bid-header"> 
+                <img ng-src="{{bid.organization.logoImageUrl}}">  
             </div>
         </div>
+        <div class="table-responsive">          
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Amount</th>
 
-        <div class="form-horizontal data">
-        <div class="form-group">
-            <label class="control-label col-sm-2">FOB Shipping: </label>
-            <div class="col-sm-4">
-                <p ng-bind="bid.fob_shipping"></p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2">Delivery Date:</label>
-            <div class="col-sm-4">
-                <p ng-bind="bid.delivery_date | date:'mediumDate'"></p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2">Quantity: </label>
-            <div class="col-sm-4">
-                <p ng-bind="bid.quantity"></p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2">Subtotal (Before Shipping):</label>
-            <div class="col-sm-4">
-                <p><span ng-bind="bid.subtotal/100 | currency"></span></p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2">Shipping Cost:</label>
-            <div class="col-sm-4">
-                <p><span ng-bind="bid.shipping_cost/100 | currency"></span></p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2">Sales Tax:</label>
-            <div class="col-sm-4">
-                <p><span ng-bind="bid.sales_tax/100 | currency"></span></p>
-            </div>
-        </div>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="line-item">
+        <td>1</td>
+        <td>Polycyrstalline Solar Modules<p ng-bind="bid.panel_models[0].model"></p></td>
+        <td><p ng-bind="bid.quantity"></p></td>
+        <td><p ng-bind="bid.subtotal/100 | currency"></p></td>
+      </tr>
+      <tr class="line-item total">
+        <td></td>
+        <td></td>
+        <td>Subtotal</td>
+        <td><p ng-bind="bid.subtotal/100 | currency"></p></td>
+      </tr>
+      <tr class="">
+        <td></td>
+        <td></td>
+        <td>Shipping Cost</td>
+        <td><p ng-bind="bid.shipping_cost/100 | currency"></p></td>
+      </tr>
+      <tr class="">
+        <td></td>
+        <td></td>
+        <td>Sales Tax</td>
+        <td><p ng-bind="bid.sales_tax/100 | currency"></p></td>
+      </tr>
+      <tr class="total">
+        <td></td>
+        <td></td>
+        <td><span class="sub-title">Total</span></td>
+        <td><p class="sub-title" ng-bind="bid.subtotal/100 + bid.shipping_cost/100 + bid.sales_tax/100 | currency"></p></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
     </section>
 </div>

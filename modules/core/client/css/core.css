@@ -86,7 +86,7 @@ a:hover {
     border-color: lightgrey;
     border-width: 1px;
 }
-.list-view {
+.list-view, .bid-view {
     background: white;
     margin-top: 35px;
     padding: 10px 15px 40px;
@@ -410,7 +410,7 @@ section h2 {
     background:rgba(1,1,1,0.1);
 }
 .list-view .menu {
-    margin: 25px 0 15px 0;
+    margin: 20px 0 15px 0;
 }
 .box.title-content .box-title .menu span {
     width: initial;
@@ -474,9 +474,12 @@ section h2 {
     border-radius: 50%;
     float: left;
 }
+.logo-background {
+    min-height: 35px;
+}
 .block img.company-logo, .activities img.company-logo {
     width: 75px;
-    margin-bottom: 15px;
+    margin: inherit;
     float: initial;
 }
 .box {
@@ -603,6 +606,14 @@ a .view-quote:hover {
 }
 .bid-list a {
     height: 143px;
+}
+.bid-view .table > tbody > tr > td {
+    border-top: 0;
+    line-height: 0;
+}
+.bid-view .table > tbody > tr.line-item > td {
+    border-top: 1px solid #ddd;
+    line-height: 1.42857143;
 }
 .control-label {
     min-width: 180px;
