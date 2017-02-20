@@ -3,6 +3,10 @@
         <div class="row">
             <div class="col-md-4">
                 <h3>Connections</h3>
+                <div class="menu">
+                
+                <a ui-sref="connections.create"><span class="glyphicon glyphicon-plus"></span>Add a connection</a>
+                </div>
             </div>
             <div class="col-md-4" style="margin-top: 2em">
                 <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
@@ -12,16 +16,19 @@
     <div class="list-group">
         <a ng-repeat="connection in pagedItems" ui-sref="connections.view({connectionId: connection._id})" class="list-group-item">
             <img class="profile" ng-src="{{connection.profileImageURL}}">
-            <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
-            <h5>Associate Executive @ UGE</h5>
+            <div class="profile-info">
+                <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
+                <h5><span ng-bind="connection.jobTitle"></span> @ <span ng-bind="connection.organization.name"></span></h5>
+            </div>
         </a>
     </div>
     <hr/>
     <!-- Connection requests -->
+    <div ng-if="connection_requests.length != 0">
     <div class="page-header">
         <div class="row">
             <div class="col-md-6">
-                <h3>Connection Requests</h3>
+                <h3>New connection requests</h3>
             </div>
         </div>
     </div>
@@ -30,8 +37,10 @@
             <div class="detail col-sm-8">
                 <a class="connection-title" ui-sref="connections.view({connectionId: connection._id})">
                     <img class="profile" ng-src="{{connection.profileImageURL}}">
+                    <div class="profile-info">
                     <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
-                    <h5>Associate Executive @ UGE</h5>
+                    <h5><span ng-bind="connection.jobTitle"></span> @ <span ng-bind="connection.organization.name"></span></h5>
+                    </div>
                 </a>
             </div>
             <div class="menu col-sm-4" ng-show="!connection.isPending">
@@ -40,6 +49,7 @@
                 </a>
             </div>
         </div>
+    </div>
     </div>
 
     <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>

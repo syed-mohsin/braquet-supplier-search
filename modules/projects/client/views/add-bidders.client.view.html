@@ -1,8 +1,8 @@
 <section class="add-bidders list-view">
   <div class="page-header">
     <div class="row">
-      <div class="col-md-4">
-        <h3>Invite suppliers</h3>
+      <div class="col-md-6">
+        <h3>Select suppliers</h3>
       </div>
       <div class="col-md-4" style="margin-top: 2em">
         <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
@@ -13,20 +13,20 @@
     <a ng-repeat="connection in pagedItems" ng-click="toggle(connection)" class="list-group-item">
        <img class="profile" ng-src="{{connection.profileImageURL}}">
         <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
-        <h5>Associate Executive @ UGE</h5>
+        <h5>Associate Executive @ <span ng-bind="connection.organization.name"></span></h5>
     </a>
   </div>
   <hr/>
-  <h2 ng-show="addedBidders.length">Selected one or multiple suppliers</h2>
+  <h4 ng-show="addedBidders.length">Who you will be inviting:</h4>
   <div class="list-group">
     <a ng-repeat="connection in addedBidders" ng-click="toggle(connection)" class="list-group-item">
       <img class="profile" ng-src="{{connection.profileImageURL}}">
       <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
-      <h5>Associate Executive @ UGE</h5>
+      <h5>Associate Executive @ <span ng-bind="connection.organization.name"></span></h5>
     </a>
   </div>
   <div class="list-group">
-  	<button type="button" class="btn btn-primary" ng-click="acceptBidders()">Invite suppliers</button>
+  	<button type="button" class="btn btn-primary" ng-click="acceptBidders()">Invite</button>
   </div>
 <!--   <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination> -->
 </section>
