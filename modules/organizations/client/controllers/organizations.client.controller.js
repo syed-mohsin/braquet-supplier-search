@@ -208,18 +208,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         windowClass: 'app-modal-window',
         controller: function($scope, $http, $modalInstance, Users) {
           $scope.addedUsers = [];
-          $http.get('/api/organizations/' + $scope.organization._id + '/getPotentialUsers')
-            .success(function (response) {
-              $scope.potentialUsers = response;
-              $scope.figureOutItemsToDisplay();
-
-              // for pagination
-              $scope.buildPager();
-            }).error(function (response) {
-              // Show user error message and clear form
-              $modalInstance.close();
-          });
-
+          $scope.potentialUsers = $scope.organization.possibleUsers;
 
           $scope.buildPager = function () {
             $scope.pagedItems = [];
@@ -237,6 +226,9 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
             var end = begin + $scope.itemsPerPage;
             $scope.pagedItems = $scope.filteredItems.slice(begin, end);
           };
+
+          // build page after defining necessary functions
+          $scope.buildPager();
 
           $scope.pageChanged = function () {
             $scope.figureOutItemsToDisplay();

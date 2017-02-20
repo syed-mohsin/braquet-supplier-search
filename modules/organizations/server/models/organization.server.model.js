@@ -14,6 +14,13 @@ var OrganizationSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  verified: {
+    type: Boolean
+  },
+  admin: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   users: [{
   	type: Schema.ObjectId,
     ref: 'User',
@@ -33,7 +40,6 @@ var OrganizationSchema = new Schema({
   panel_models: [{
     type: Schema.ObjectId,
     ref: 'PanelModel',
-    required: 'Must select at least one panel model'
   }],
   industry: {
   	type: String
@@ -42,7 +48,8 @@ var OrganizationSchema = new Schema({
   	type: String
   }],
   website: {
-  	type: String
+  	type: String,
+    required: 'Company Website is required'
   },
   headquarters: {
   	type: String

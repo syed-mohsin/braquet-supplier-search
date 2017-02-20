@@ -62,7 +62,7 @@ exports.delete = function (req, res) {
  * List of current All Organizations
  */
 exports.list = function (req, res) {
-  Organization.find({}, function (err, organizations) {
+  Organization.find({verified: true}, function (err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -71,6 +71,44 @@ exports.list = function (req, res) {
 
     res.json(organizations);
   });
+};
+
+/**
+ * List all unverified organizations (Admin only)
+ */
+exports.list_unverified = function(req, res) {
+   Organization.find({verified: false}, function (err, organizations) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(organizations);
+  });
+};
+
+/**
+ * Verify an organization
+ */
+exports.verify = function(req, res) {
+  if (!req.organization || req.organization.verified) {
+    res.status(400).send({
+      message: "Invalid organization"
+    });
+  } else {
+    var organization = req.organization;
+    organization.verified = true;
+    organization.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } 
+
+      res.json(organization);
+    });
+  }
 };
 
 /**
@@ -198,6 +236,7 @@ exports.organizationByID = function (req, res, next, id) {
   Organization.findById(id)
     .populate('panel_models')
     .populate('users', 'displayName organization connections email firstName lastName')
+    .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .exec(function (err, organization) {
     if (err) {
       return next(err);

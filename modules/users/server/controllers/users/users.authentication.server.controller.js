@@ -24,9 +24,26 @@ exports.signup = function (req, res) {
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
 
+  // verify and init organization details
+  var organizationId = req.body.organization;
+  var organizationForm = req.body.organizationForm;
+  var newOrganization;
+  delete req.body.organization;
+  delete req.body.organizationForm;
+
+  if (organizationId === 'other' && organizationForm.organizationName && organizationForm.organizationWebsite) {
+    newOrganization = new Organization({name: organizationForm.organizationName, website: organizationForm.organizationWebsite});
+  } else if (organizationId === 'other' && (!organizationForm.organizationName || !organizationForm.organizationWebsite)) {
+    return res.status(400).send({
+      message: "invalid organization form submission"
+    });
+  }
+
   // Init Variables
   var user = new User(req.body);
-  var message = null;
+
+  // set user organization
+  user.organization = organizationId === 'other' ? newOrganization._id : organizationId;
 
   // Add missing user fields
   user.provider = 'local';
@@ -46,10 +63,7 @@ exports.signup = function (req, res) {
     user.roles = ['tempUser'];
   }
 
-  var organizationId = req.body.organization;
-  delete req.body.organization;
-
-  // check if user was invited and connect upon signup
+   // check if user was invited and connect upon signup
   async.waterfall([
     function(done) {
       User.findOne({ 
@@ -66,76 +80,70 @@ exports.signup = function (req, res) {
       // add user connection if it exists
       if (invitingUser) {
         user.connections.push(invitingUser._id); 
-      }
+      } 
 
       // Then save the user
       user.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          // Remove sensitive data before login
-          user.password = undefined;
-          user.salt = undefined;
+          done(err, invitingUser);
+      });
+    },
+    function(invitingUser, done) {
+      // Remove sensitive data before login
+      user.password = undefined;
+      user.salt = undefined;
+      var err = null;
 
-          // update the inviting user if exists
-          if (invitingUser) {
-            var index = invitingUser.sent_email_invites.indexOf(req.body.email);
-            if (index !== -1) {
-              invitingUser.sent_email_invites.splice(index, 1);
-              invitingUser.connections.push(user._id);
-            }
-
-            // save invitingUser
-            invitingUser.save(function(err) {
-              if (err) {
-                return res.status(400).send({
-                  message: errorHandler.getErrorMessage(err)
-                });
-              } else {
-                req.login(user, function (err) {
-                  if (err) {
-                    res.status(400).send(err);
-                  } else {
-                    // res.json(user);
-                    done(err, user);
-                  }
-                });
-              }
-            });
-          } else {
-            req.login(user, function (err) {
-              if (err) {
-                res.status(400).send(err);
-              } else {
-                // res.json(user);
-                done(err, user);
-              }
-            });
-          }
+      // update the inviting user if exists
+      if (invitingUser) {
+        var index = invitingUser.sent_email_invites.indexOf(req.body.email);
+        if (index !== -1) {
+          invitingUser.sent_email_invites.splice(index, 1);
+          invitingUser.connections.push(user._id);
         }
+
+        // save invitingUser
+        invitingUser.save(function(err) {
+          done(err);
+        });
+      } else {
+        done(err);
+      }
+    },
+    // log in user
+    function(done) {
+      req.login(user, function (err) {
+        done(err, user);
       });
     },
     function(user, done) {
-      Organization.findById(organizationId, function(err, organization) {
-        if (err) {
-          return res.status(400).json(err);
-        } else if (!organization) {
-          return res.status(400).send({
-            message: 'no organization with that ID exists'
-          });
-        }
-
-        organization.possibleUsers.push(user._id);
-        organization.save(function(err) {
+      // handling new user for an existing organization
+      if (organizationId !== 'other') {
+        Organization.findById(organizationId, function(err, organization) {
           if (err) {
-            res.status(400).send(err);
-          } else {
-            res.json(user);
+            return res.status(400).json(err);
+          } else if (!organization) {
+            return res.status(400).send({
+              message: 'no organization with that ID exists'
+            });
           }
+
+          organization.possibleUsers.push(user._id);
+          organization.save(function(err) {
+            done(err, user);
+          });
         });
-      });
+      // handling new admin for new organization
+      } else {
+        newOrganization.verified = false;
+        newOrganization.admin = user;
+
+        newOrganization.save(function(err) {
+          done(err, user);
+        });
+      }
+    },
+    function(user, done) {
+      res.json(user);
     }
     ], function (err) {
     if (err) {

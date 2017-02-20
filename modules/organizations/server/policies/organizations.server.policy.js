@@ -20,6 +20,15 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/organizations/:organizationId',
       permissions: '*'
+    }, {
+      resources: '/api/organizations/:organizationId/verify',
+      permissions: ['post']
+    }, {
+      resources: '/api/organizations-unverified',
+      permissions: ['get']
+    }, {
+      resources: '/api/organizations/:organizationId/addUsers',
+      permissions: ['post']
     }]
   }, {
     roles: ['user', 'seller'],
@@ -53,11 +62,20 @@ exports.isAllowed = function (req, res, next) {
   //   return next();
   // }
 
+  // allow organization admin to access adding employees to organization
+  if (req.route.path === '/api/organizations/:organizationId/addUsers' && (req.user._id.equals(req.organization.admin))) {
+    return next();
+  }
+
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
     if (err) {
       // An authorization error occurred.
       return res.status(500).send('Unexpected authorization error');
+    } else if (req.organization && !req.organization.verified && req.user.roles.indexOf('admin') === -1) {
+      return res.status(403).json({
+        message: "User is not authorized"
+      });
     } else {
       if (isAllowed) {
         // Access granted! Invoke next middleware

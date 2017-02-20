@@ -16,6 +16,14 @@ module.exports = function (app) {
   app.route('/api/organizations-basic')
     .get(organizations.list_basic);
 
+  // admin-only view of unverified projects
+  app.route('/api/organizations-unverified').all(organizationsPolicy.isAllowed)
+    .get(organizations.list_unverified);
+
+  // admin verify route
+  app.route('/api/organizations/:organizationId/verify').all(organizationsPolicy.isAllowed)
+    .post(organizations.verify);
+
   // Single organization routes
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)
@@ -23,8 +31,9 @@ module.exports = function (app) {
     .delete(organizations.delete);
 
   app.route('/api/organizations/logo/:organizationId').post(organizations.changeLogo);
-  app.route('/api/organizations/:organizationId/addUsers').post(organizations.addUsers);
-  app.route('/api/organizations/:organizationId/getPotentialUsers').get(organizations.getPotentialUsers);
+  app.route('/api/organizations/:organizationId/addUsers').all(organizationsPolicy.isAllowed)
+    .post(organizations.addUsers);
+
 
   // Finish by binding the organization middleware
   app.param('organizationId', organizations.organizationByID);
