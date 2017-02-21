@@ -30,7 +30,7 @@ exports.create = function (req, res) {
 
       // get array of user sockets
       var sockets = req.app.get('socket-users');
-      
+
       // send notification to project bidders on list page
       io.emit('refreshProjectList', project.user._id);
 
@@ -41,12 +41,12 @@ exports.create = function (req, res) {
         // send notification to all associated with project
         Project.findById(project._id, function (err, project) {
           if (err) {
-            console.log("err");
+            res.status(400).json(err);
           }
           console.log('bid has ended!');
           // get recipients [bidders+project_owner+(eventually, connections)]
           var recipients = project.bidders.concat([project.user]); // project.user=id
-          
+
           // send to all recipients
           recipients.forEach(function(recipient) {
 
@@ -55,8 +55,8 @@ exports.create = function (req, res) {
               console.log(socket_ids);
               // send to each open socket open for user
               socket_ids.forEach(function(socket_id) {
-                io.to(socket_id).emit("bidDeadlineList", project._id);
-                console.log("sent to : " + socket_id);
+                io.to(socket_id).emit('bidDeadlineList', project._id);
+                console.log('sent to : ' + socket_id);
               });
             }
           });
@@ -119,7 +119,7 @@ exports.delete = function (req, res) {
     } else {
       // notify project owner that bid was added
       var io = req.app.get('socketio');
-      
+
       // send notification to project bidders on list page
       io.emit('refreshProjectList', 'refresh');
 
@@ -136,55 +136,55 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
   if (req.user.roles.indexOf('user') !== -1) {
-    Project.find({user : req.user._id})
+    Project.find({ user : req.user._id })
       .sort('bid_deadline')
       .populate('user', 'displayName')
       .populate('organization')
-      .populate('bids', null, null, {sort: {'subtotal': 1}})
-      .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
+      .populate('bids', null, null, { sort: { 'subtotal': 1 } })
+      .populate('panel_models', null, null, { sort: { 'manufacturer' : 1 } })
       .exec(function (err, projects) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        // populate bids with users 'deep populate'
-        Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
-          }
-          // return deep populated projects
-          res.json(projects);
-        });
-      }
-    });
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          // populate bids with users 'deep populate'
+          Bid.populate(projects, { path: 'bids.user', model: 'User' }, function (err, bids) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            }
+            // return deep populated projects
+            res.json(projects);
+          });
+        }
+      });
   } else { // for sellers, find public projects or one's they have been invited to
-    Project.find({ $or : [{bidders: req.user._id}, {project_state: 'public'}]})
+    Project.find({ $or : [{ bidders: req.user._id }, { project_state: 'public' }] })
       .sort('bid_deadline')
       .populate('user', 'displayName')
       .populate('organization')
-      .populate('bids', null, null, {sort: {'subtotal': 1}})
-      .populate('panel_models', null, null, {sort: {'manufacturer' : 1}})
+      .populate('bids', null, null, { sort: { 'subtotal': 1 } })
+      .populate('panel_models', null, null, { sort: { 'manufacturer' : 1 } })
       .exec(function (err, projects) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        // populate bids with users 'deep populate'
-        Bid.populate(projects, {path: 'bids.user', model: 'User'}, function (err, bids) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
-          }
-          // return deep populated projects
-          res.json(projects);
-        });
-      }
-    });
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          // populate bids with users 'deep populate'
+          Bid.populate(projects, { path: 'bids.user', model: 'User' }, function (err, bids) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            }
+            // return deep populated projects
+            res.json(projects);
+          });
+        }
+      });
   }
 
 };
@@ -201,7 +201,7 @@ exports.inviteBidders = function(req, res) {
     } else {
       res.json(project);
     }
-  }); 
+  });
 };
 
 /**
@@ -210,18 +210,18 @@ exports.inviteBidders = function(req, res) {
 exports.projectBids = function (req, res) {
   var project = req.project;
 
-  Bid.find({ _id: { $in : project.bids}})
+  Bid.find({ _id: { $in : project.bids } })
     .sort('subtotal')
     .populate('user', 'displayName')
     .exec(function (err, bids) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(bids);
-    }
-  });
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(bids);
+      }
+    });
 };
 
 /**
@@ -237,71 +237,72 @@ exports.projectByID = function (req, res, next, id) {
 
   Project.findById(id)
     .populate('user', 'displayName connections')
-    .populate('bids', null, null, {sort: {'subtotal': 1}})
+    .populate('bids', null, null, { sort: { 'subtotal': 1 } })
     .populate('bidders')
     .populate('organization')
-    .populate('panel_models', null, null, {sort: {'model': 1}})
+    .populate('panel_models', null, null, { sort: { 'model': 1 } })
     .exec(function (err, project) {
-    if (err) {
-      return next(err);
-    } else if (!project) {
-      return res.status(404).send({
-        message: 'No project with that identifier has been found'
-      });
-    } else if (req.user && req.user.roles[0] === 'user' && String(req.user._id) !== String(project.user._id)) {
-      return res.status(404).send({
-        message: 'You are not authorized to access this page'
-      });
-    }
-
-    // populate bids with users 'deep populate'
-    Bid.populate(project.bids, [
-      {path: 'panel_models'},
-      {path: 'organization'},
-      {path: 'user',
-        select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}
-      ], function (err, bids) {
       if (err) {
         return next(err);
-      } else if (!bids) {
+      } else if (!project) {
         return res.status(404).send({
-          message: 'Could not load users in bids in project'
+          message: 'No project with that identifier has been found'
+        });
+      } else if (req.user && req.user.roles[0] === 'user' && String(req.user._id) !== String(project.user._id)) {
+        return res.status(404).send({
+          message: 'You are not authorized to access this page'
         });
       }
 
-      // extract ids from bidder objects
-      var bidder_ids = project.bidders.map(function(bidder) {
-        return bidder._id;
-      });
-
-      // populate connections we want to add
-      User.populate(project.user, 
-        {path: 'connections', 
-          match: { _id: { $nin: bidder_ids }, roles: 'seller' },
-          populate: {
-            path: 'organization',
-            select: 'logoImageUrl name'
-          },
-          select: "-password -salt -roles -connections -received_user_invites -sent_user_invites"}, function(err, connections) {
+      // populate bids with users 'deep populate'
+      Bid.populate(project.bids, [
+        { path: 'panel_models' },
+        { path: 'organization' },
+        { path: 'user',
+          select: '-password -salt -roles -connections -received_user_invites -sent_user_invites' }
+      ], function (err, bids) {
         if (err) {
           return next(err);
-        } else if (!connections) {
+        } else if (!bids) {
           return res.status(404).send({
-            message: 'Could not load User\'s connections'
+            message: 'Could not load users in bids in project'
           });
         }
 
-        // remove un-owned bids if current user is a supplier/seller
-        if (req.user && req.user.roles.indexOf('seller') !== -1) {
-          project.bids = project.bids.filter(function(bid) {
-            return req.user._id.equals(bid.user._id);
-          }); 
-        }
-        
-        // make project available in controller
-        req.project = project;
-        next();
-      }); // end User.populate
-    }); // end Bid.populate
-  });
+        // extract ids from bidder objects
+        var bidder_ids = project.bidders.map(function(bidder) {
+          return bidder._id;
+        });
+
+        // populate connections we want to add
+        User.populate(project.user,
+          { path: 'connections',
+            match: { _id: { $nin: bidder_ids }, roles: 'seller' },
+            populate: {
+              path: 'organization',
+              select: 'logoImageUrl name'
+            },
+            select: '-password -salt -roles -connections -received_user_invites -sent_user_invites' },
+            function(err, connections) {
+              if (err) {
+                return next(err);
+              } else if (!connections) {
+                return res.status(404).send({
+                  message: 'Could not load User\'s connections'
+                });
+              }
+
+              // remove un-owned bids if current user is a supplier/seller
+              if (req.user && req.user.roles.indexOf('seller') !== -1) {
+                project.bids = project.bids.filter(function(bid) {
+                  return req.user._id.equals(bid.user._id);
+                });
+              }
+
+              // make project available in controller
+              req.project = project;
+              next();
+            }); // end User.populate
+      }); // end Bid.populate
+    });
 };

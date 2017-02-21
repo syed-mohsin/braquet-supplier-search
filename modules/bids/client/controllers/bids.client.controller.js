@@ -10,7 +10,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
     // Connect socket
     if (!Socket.socket) {
       Socket.connect();
-      console.log("connected to server");
+      console.log('connected to server');
     }
 
     // Remove the event listener when the controller instance is destroyed
@@ -19,7 +19,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
     });
 
     Socket.on('refreshBidList', function(msg) {
-      if (Authentication.user.roles[0] === 'seller' && 
+      if (Authentication.user.roles[0] === 'seller' &&
             $location.url() === '/bids') {
         $scope.findMyBids();
       }
@@ -50,7 +50,7 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
     // Find a list of MY Bids
     $scope.findMyBids = function () {
       $scope.bids = Bids.query({}, function(bids) {
-        
+
         // delete bids that don't have the same user id as current user
         for (var i=$scope.bids.length-1; i>=0;i--)
           if ($scope.bids[i].user._id !== Authentication.user._id)
@@ -60,12 +60,12 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
 
     // Find existing Bid and it's associated project
     $scope.findOne = function () {
-      $scope.bid = Bids.get({bidId: $stateParams.bidId}, 
+      $scope.bid = Bids.get({ bidId: $stateParams.bidId },
         function(bid) {
-  
-      }, function(error) {
-        $location.path('/forbidden');
-      });
+
+        }, function(error) {
+          $location.path('/forbidden');
+        });
     };
 
     // Find existing Project

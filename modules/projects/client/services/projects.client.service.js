@@ -14,7 +14,7 @@ angular.module('projects').factory('Projects', ['$resource',
 ]);
 
 angular.module('projects').factory('GetBids', [
-	'$resource', function ($resource) {
-		return $resource('api/projects/getbids/:projectId');
-	}
+  '$resource', function ($resource) {
+    return $resource('api/projects/getbids/:projectId');
+  }
 ]);

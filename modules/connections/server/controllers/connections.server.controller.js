@@ -13,7 +13,7 @@ var path = require('path'),
   async = require('async'),
   crypto = require('crypto');
 
-var smtpTransport = nodemailer.createTransport(config.mailer.options);  
+var smtpTransport = nodemailer.createTransport(config.mailer.options);
 
 /**
  * Show the current connection
@@ -43,34 +43,34 @@ exports.delete = function (req, res) {
  * List of current user's Connections
  */
 exports.list = function (req, res) {
-  User.find({_id : {$in : req.user.connections}})
+  User.find({ _id : { $in : req.user.connections } })
     .populate('organization')
     .exec(function (err, connections) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
 
-    res.json(connections);
-  });
+      res.json(connections);
+    });
 };
 
 /**
  * List of user connection requests
  */
 exports.listConnectionRequests = function (req, res) {
-  User.find({ _id : {$in : req.user.received_user_invites} })
+  User.find({ _id : { $in : req.user.received_user_invites } })
     .populate('organization')
     .exec(function(err, requests) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
 
-    res.json(requests);
-  });
+      res.json(requests);
+    });
 };
 
 /**
@@ -83,7 +83,7 @@ exports.inviteByEmail = function(req, res, next) {
   async.waterfall([
     function (done) {
       // check if user is associated with email
-      User.findOne( { email: req.body.email.toLowerCase() 
+      User.findOne({ email: req.body.email.toLowerCase()
       }, '-salt -password', function(err, existingUser) {
         if (err) {
           return res.status(400).send({
@@ -93,22 +93,22 @@ exports.inviteByEmail = function(req, res, next) {
         else {
           if (existingUser) {
             isExistingUser = true;
-            
+
             // return error if previous invite sent
             if (existingUser.received_user_invites.indexOf(user._id) !== -1) {
               return res.status(400).send({
-                message: "You have already invited this user"
+                message: 'You have already invited this user'
               });
-            } 
+            }
             else if (existingUser.connections.indexOf(user._id) !== -1) {
               return res.status(400).send({
-                message: "You are already connected to " + existingUser.displayName
+                message: 'You are already connected to ' + existingUser.displayName
               });
             }
             // return error if inviting oneself (forever alone)
             else if(existingUser._id.toHexString() === user._id.toHexString()) {
               return res.status(400).send({
-                message: "You cannot invite yourself"
+                message: 'You cannot invite yourself'
               });
             }
             // invite user in-app
@@ -132,7 +132,7 @@ exports.inviteByEmail = function(req, res, next) {
                   }
                   else {
                     return res.status(200).send({
-                      message: "Invite sent sucessfully"
+                      message: 'Invite sent sucessfully'
                     });
                   }
                 });
@@ -151,8 +151,8 @@ exports.inviteByEmail = function(req, res, next) {
     function (inviteToken, done) {
       if (user.sent_email_invites.indexOf(req.body.email) !== -1) {
         return res.status(400).send({
-            message: "You have already invited this user"
-          });
+          message: 'You have already invited this user'
+        });
       }
 
       user.sent_email_invites.push(req.body.email);
@@ -181,15 +181,15 @@ exports.inviteByEmail = function(req, res, next) {
       res.json(emailHTML);
     }
 
-    ], function (err) {
-      if (err) {
-        return next(err);
-      }
-    });
+  ], function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
 };
 
 exports.acceptUserInvite = function(req, res) {
-  User.findOne({_id : req.body._id}, '-salt -password', function(err, invitingUser) {
+  User.findOne({ _id : req.body._id }, '-salt -password', function(err, invitingUser) {
     if (invitingUser) {
       var sent_index = invitingUser.sent_user_invites.indexOf(req.user._id);
       var recv_index = req.user.received_user_invites.indexOf(invitingUser._id);
@@ -224,8 +224,8 @@ exports.acceptUserInvite = function(req, res) {
       }
     } else {
       return res.status(400).send({
-          message: 'User does not exist'
-        });
+        message: 'User does not exist'
+      });
     }
   });
 };
@@ -247,15 +247,15 @@ exports.connectionByID = function (req, res, next, id) {
   User.findById(id)
     .populate('organization')
     .exec(function (err, connection) {
-    if (err) {
-      return next(err);
-    } else if (!connection) {
-      return next(new Error('Failed to load connection ' + id));
-    } else if (req.user.connections.indexOf[id] === -1 ) {
-      return next(new Error('Not connected to this user'));
-    }
+      if (err) {
+        return next(err);
+      } else if (!connection) {
+        return next(new Error('Failed to load connection ' + id));
+      } else if (req.user.connections.indexOf[id] === -1) {
+        return next(new Error('Not connected to this user'));
+      }
 
-    req.connection = connection;
-    next();
-  });
+      req.connection = connection;
+      next();
+    });
 };

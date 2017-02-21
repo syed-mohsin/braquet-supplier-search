@@ -32,10 +32,10 @@ exports.signup = function (req, res) {
   delete req.body.organizationForm;
 
   if (organizationId === 'other' && organizationForm.organizationName && organizationForm.organizationWebsite) {
-    newOrganization = new Organization({name: organizationForm.organizationName, website: organizationForm.organizationWebsite});
+    newOrganization = new Organization({ name: organizationForm.organizationName, website: organizationForm.organizationWebsite });
   } else if (organizationId === 'other' && (!organizationForm.organizationName || !organizationForm.organizationWebsite)) {
     return res.status(400).send({
-      message: "invalid organization form submission"
+      message: 'invalid organization form submission'
     });
   }
 
@@ -48,11 +48,11 @@ exports.signup = function (req, res) {
   // Add missing user fields
   user.provider = 'local';
   var displayName = user.firstName + ' ' + user.lastName;
-  
+
   // convert name to title case
   user.displayName = displayName.toLowerCase()
     .split(' ')
-    .map(i => i[0].toUpperCase() + i.substring(1))
+    .map(function(name) { return name[0].toUpperCase() + name.substring(1); })
     .join(' ')
   ;
 
@@ -66,10 +66,10 @@ exports.signup = function (req, res) {
    // check if user was invited and connect upon signup
   async.waterfall([
     function(done) {
-      User.findOne({ 
+      User.findOne({
         inviteToken: req.body.inviteToken,
         sent_email_invites: { $in: [req.body.email] }
-        }, function(err, invitingUser) {
+      }, function(err, invitingUser) {
         if (invitingUser) {
           // user exists
         }
@@ -79,12 +79,12 @@ exports.signup = function (req, res) {
     function(invitingUser, done) {
       // add user connection if it exists
       if (invitingUser) {
-        user.connections.push(invitingUser._id); 
-      } 
+        user.connections.push(invitingUser._id);
+      }
 
       // Then save the user
       user.save(function (err) {
-          done(err, invitingUser);
+        done(err, invitingUser);
       });
     },
     function(invitingUser, done) {
@@ -145,7 +145,7 @@ exports.signup = function (req, res) {
     function(user, done) {
       res.json(user);
     }
-    ], function (err) {
+  ], function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

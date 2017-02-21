@@ -5,8 +5,8 @@
 angular.module('connections').controller('ConnectionsController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', 'Authentication', 'Socket', 'GetBids', 'PanelModels', 'Projects', 'Connections',
   function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, Authentication, Socket, GetBids, PanelModels, Projects, Connections) {
     $scope.authentication = Authentication;
-  	
-  	Connections.query(function (data) {
+
+    Connections.query(function (data) {
       $scope.connections = data;
       $scope.buildPager();
     });
@@ -44,7 +44,7 @@ angular.module('connections').controller('ConnectionsController', ['$scope', '$s
           $scope.connection_requests[conn_index].isAccepted = true;
           $scope.connection_requests.splice(conn_index, 1);
           $scope.connections.push(user);
-      });
+        });
     };
 
     // Add new connection
@@ -53,7 +53,7 @@ angular.module('connections').controller('ConnectionsController', ['$scope', '$s
 
       // Create new Connection object
       var connection = new Connections({
-      	user: userId
+        user: userId
       });
 
       // Redirect after save
@@ -100,7 +100,7 @@ angular.module('connections').controller('ConnectionsController', ['$scope', '$s
     // Find a list of ALL Connections
     $scope.find = function () {
       Connections.query({}, function(connections) {
-  		$scope.connections = connections;
+        $scope.connections = connections;
       });
 
       $http.get('/api/connection-requests').success(function(requests) {

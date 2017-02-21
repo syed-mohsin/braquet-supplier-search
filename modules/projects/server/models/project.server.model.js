@@ -81,7 +81,7 @@ var ProjectSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'PanelModel',
     required: 'At least one panel model is required'
-    }],
+  }],
   organization: {
     type: Schema.ObjectId,
     ref: 'Organization'
@@ -96,7 +96,7 @@ var ProjectSchema = new Schema({
     ref: 'User'
   }],
   bids: [{
-    type: Schema.ObjectId, 
+    type: Schema.ObjectId,
     ref: 'Bid'
   }]
 });
@@ -105,7 +105,7 @@ ProjectSchema.pre('remove', function (next) {
   var project = this;
 
   // delete all bids that contain project_id
-  Bid.remove({project: this._id}, next);
+  Bid.remove({ project: this._id }, next);
 });
 
 mongoose.model('Project', ProjectSchema);

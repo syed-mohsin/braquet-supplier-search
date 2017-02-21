@@ -7,7 +7,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
     $http.get('/api/organizations-basic')
       .success(function(data) {
-      $scope.organizations = data;
+        $scope.organizations = data;
       })
       .error(function(err) {
         console.log(err);

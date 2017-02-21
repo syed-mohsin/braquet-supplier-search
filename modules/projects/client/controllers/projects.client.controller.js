@@ -9,7 +9,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
     // Connect socket
     if (!Socket.socket) {
       Socket.connect();
-      console.log("connected to server");
+      console.log('connected to server');
     }
 
     // Remove the event listener when the controller instance is destroyed
@@ -19,13 +19,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
     });
 
     Socket.on('refreshProjectView', function(project_id) {
-     if ($stateParams.projectId === project_id) {
+      if ($stateParams.projectId === project_id) {
         $scope.findOne();
       }
     });
 
     Socket.on('refreshProjectList', function(user_id) {
-      if (Authentication.user.roles[0] === 'seller' && 
+      if (Authentication.user.roles[0] === 'seller' &&
             $location.url() === '/projects') {
         $scope.find();
       }
@@ -35,18 +35,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
     });
 
     Socket.on('bidDeadlineList', function(project_id) {
-      console.log("Bid has terminated");
+      console.log('Bid has terminated');
       console.log(project_id);
-      console.log("State param is: " + $stateParams.projectId);
+      console.log('State param is: ' + $stateParams.projectId);
 
       if ($scope.project && $stateParams.projectId === project_id) {
         $scope.project.canBid = false;
         $scope.project.bidOpen = false;
-        console.log("WE ARE IN PROJECT VIEW");
+        console.log('WE ARE IN PROJECT VIEW');
       }
 
       else if ($location.url() === '/projects' && $scope.projects) {
-        console.log("WE ARE IN PROJECT LIST");
+        console.log('WE ARE IN PROJECT LIST');
         for(var i=0;i<$scope.projects.length;i++) {
           if ($scope.projects[i]._id === project_id) {
             $scope.projects[i].canBid = false;
@@ -68,7 +68,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
       }
 
       if (!$scope.panel_models.length) {
-        $scope.error = "At least one panel model is required";
+        $scope.error = 'At least one panel model is required';
         return false;
       }
 
@@ -130,7 +130,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
       $scope.error = null;
 
       if (!$scope.project.panel_models.length) {
-        $scope.error = "At least one panel model is required";
+        $scope.error = 'At least one panel model is required';
         return false;
       }
 
@@ -152,7 +152,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
     // popup dialog that allows user to place a bid
     $scope.showBidView = function(ev, projectId) {
       console.log(ev);
-      console.log($state.href('bids.create', {projectId: $stateParams.projectId}, {absolute: true, inherit: false}));
+      console.log($state.href('bids.create', { projectId: $stateParams.projectId }, { absolute: true, inherit: false }));
       console.log(angular.element);
       var modalInstance = $modal.open({
         templateUrl: '/modules/bids/client/views/create-bid.client.view.html',
@@ -228,12 +228,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
           $scope.acceptBidders = function() {
             $http.post('/api/projects/' + $scope.project._id + '/inviteBidders', $scope.addedBidders)
               .success(function (response) {
-              $modalInstance.close();
+                $modalInstance.close();
 
-            }).error(function (response) {
-              // Show user error message and clear form
-              $scope.error = response.message;
-            });
+              }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+              });
           };
         },
         scope: $scope
@@ -287,10 +287,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
     $scope.createDate = function() {
       $scope.panel_models = [];
       var min = new Date();
-      
+
       var now = new Date();
       now.setDate(now.getDate() + 1);
-      
+
       var max = new Date();
       max.setFullYear(max.getFullYear() + 1);
 

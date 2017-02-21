@@ -22,7 +22,7 @@ var OrganizationSchema = new Schema({
     ref: 'User'
   },
   users: [{
-  	type: Schema.ObjectId,
+    type: Schema.ObjectId,
     ref: 'User',
   }],
   possibleUsers: [{
@@ -30,11 +30,11 @@ var OrganizationSchema = new Schema({
     ref: 'User'
   }],
   name: {
-  	type: String,
-  	required: 'Organization name is required'
+    type: String,
+    required: 'Organization name is required'
   },
   logoImageUrl: {
-  	type: String,
+    type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
   panel_models: [{
@@ -42,20 +42,20 @@ var OrganizationSchema = new Schema({
     ref: 'PanelModel',
   }],
   industry: {
-  	type: String
-  }, 
+    type: String
+  },
   product_types: [{
-  	type: String
+    type: String
   }],
   website: {
-  	type: String,
+    type: String,
     required: 'Company Website is required'
   },
   headquarters: {
-  	type: String
+    type: String
   },
   about: {
-  	type: String
+    type: String
   }
 });
 

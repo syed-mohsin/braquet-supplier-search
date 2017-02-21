@@ -14,19 +14,19 @@ var PanelModelSchema = new Schema({
     type: String
   },
   model: {
-  	type: String
+    type: String
   },
   technologyType: {
-  	type: String
+    type: String
   },
   stcModuleEfficiency: {
-  	type: String
+    type: String
   },
   stcPowerW: {
-  	type: Number
+    type: Number
   },
   manufacturingLocations: {
-  	type: String
+    type: String
   },
   panelPhotoUrl: {
     type: String,

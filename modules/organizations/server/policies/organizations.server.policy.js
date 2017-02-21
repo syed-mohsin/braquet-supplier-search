@@ -74,7 +74,7 @@ exports.isAllowed = function (req, res, next) {
       return res.status(500).send('Unexpected authorization error');
     } else if (req.organization && !req.organization.verified && req.user.roles.indexOf('admin') === -1) {
       return res.status(403).json({
-        message: "User is not authorized"
+        message: 'User is not authorized'
       });
     } else {
       if (isAllowed) {

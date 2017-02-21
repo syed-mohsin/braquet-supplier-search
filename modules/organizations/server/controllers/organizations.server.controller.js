@@ -62,7 +62,7 @@ exports.delete = function (req, res) {
  * List of current All Organizations
  */
 exports.list = function (req, res) {
-  Organization.find({verified: true}, function (err, organizations) {
+  Organization.find({ verified: true }, function (err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -77,7 +77,7 @@ exports.list = function (req, res) {
  * List all unverified organizations (Admin only)
  */
 exports.list_unverified = function(req, res) {
-   Organization.find({verified: false}, function (err, organizations) {
+  Organization.find({ verified: false }, function (err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -94,7 +94,7 @@ exports.list_unverified = function(req, res) {
 exports.verify = function(req, res) {
   if (!req.organization || req.organization.verified) {
     res.status(400).send({
-      message: "Invalid organization"
+      message: 'Invalid organization'
     });
   } else {
     var organization = req.organization;
@@ -104,7 +104,7 @@ exports.verify = function(req, res) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } 
+      }
 
       res.json(organization);
     });
@@ -115,7 +115,7 @@ exports.verify = function(req, res) {
  * List of only organization names
  */
 exports.list_basic = function (req, res) {
-  Organization.find({}, "name", function(err, organizations) {
+  Organization.find({}, 'name', function(err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -147,7 +147,7 @@ exports.changeLogo = function (req, res) {
   }).single('newLogo');
 
   var logoUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-  
+
   // Filtering to upload only images
   upload.fileFilter = logoUploadFileFilter;
 
@@ -157,7 +157,7 @@ exports.changeLogo = function (req, res) {
         return res.status(400).json(uploadError);
       } else {
 
-        var oldImageKey = organization.logoImageUrl.split("/").pop();
+        var oldImageKey = organization.logoImageUrl.split('/').pop();
         organization.logoImageUrl = req.file.location;
 
         organization.save(function (saveError) {
@@ -196,14 +196,15 @@ exports.addUsers = function(req, res) {
     } else {
       // add organization to all users
       var new_user_ids = newUsers.map(function(user) { return user._id; });
-      User.update( { _id: {$in: new_user_ids} }, { $set: {organization: organization._id} },
-        { multi: true}, function(err) {
+      User.update({ _id: { $in: new_user_ids } }, { $set: { organization: organization._id } },
+        { multi: true },
+        function(err) {
           if (err) {
             res.status(400).json(err);
           } else {
             res.json(organization);
           }
-      });
+        });
     }
   });
 };
@@ -212,8 +213,8 @@ exports.getPotentialUsers = function(req, res) {
   var organization = req.organization;
   var org_user_ids = organization.users.map(function(user) { return user._id; });
 
-  User.find({ 
-    _id: {$nin : org_user_ids}, 
+  User.find({
+    _id: { $nin : org_user_ids },
     organization: { $eq: null } }, function(err, users) {
     if (err) {
       res.status(400).json(err);
@@ -238,13 +239,13 @@ exports.organizationByID = function (req, res, next, id) {
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .exec(function (err, organization) {
-    if (err) {
-      return next(err);
-    } else if (!organization) {
-      return next(new Error('Failed to load organization ' + id));
-    } 
+      if (err) {
+        return next(err);
+      } else if (!organization) {
+        return next(new Error('Failed to load organization ' + id));
+      }
 
-    req.organization = organization;
-    next();
-  });
+      req.organization = organization;
+      next();
+    });
 };

@@ -91,7 +91,7 @@ angular.module('panels').controller('PanelController', ['$scope', '$stateParams'
       $scope.uploadProfilePicture = function (panelId) {
         // Clear messages
         $scope.success = $scope.error = null;
-        console.log("inside panelPhoto upload");
+        console.log('inside panelPhoto upload');
 
         // Start upload
         $scope.uploader.uploadAll();

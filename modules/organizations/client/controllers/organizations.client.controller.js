@@ -45,7 +45,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
 
       // Create new Organization object
       var organization = new Organizations({
-      	name: this.name,
+        name: this.name,
         industry: this.industry,
         product_types: this.product_types,
         panel_models: this.panel_models,
@@ -100,7 +100,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
     // Find a list of ALL Organizations
     $scope.find = function () {
       Organizations.query({}, function(organizations) {
-  		$scope.organizations = organizations;
+        $scope.organizations = organizations;
       });
     };
 
@@ -201,7 +201,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
 
     $scope.showAddUsers = function(ev) {
       console.log(ev);
-      
+
 
       var modalInstance = $modal.open({
         templateUrl: '/modules/organizations/client/views/add-users.client.view.html',
@@ -252,14 +252,14 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
           $scope.acceptUsers = function() {
             $http.post('/api/organizations/' + $scope.organization._id + '/addUsers', $scope.addedUsers)
               .success(function (response) {
-              
-              $scope.organization = response;                
-              $modalInstance.close();
 
-            }).error(function (response) {
-              // Show user error message and clear form
-              $scope.error = response.message;
-            });
+                $scope.organization = response;
+                $modalInstance.close();
+
+              }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+              });
           };
         },
         scope: $scope

@@ -23,9 +23,9 @@ exports.searchByName = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-        // return json array of panelmodels
-        res.json(panelmodels);
-      }
+      // return json array of panelmodels
+      res.json(panelmodels);
+    }
   });
 };
 
@@ -54,7 +54,7 @@ exports.uploadPhoto = function (req, res) {
   }).single('newPanelModelPhoto');
 
   var photoUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-  
+
   // Filtering to upload only images
   upload.fileFilter = photoUploadFileFilter;
 
@@ -63,7 +63,7 @@ exports.uploadPhoto = function (req, res) {
       if(uploadError) {
         return res.status(400).json(uploadError);
       } else {
-        var oldImageKey = panel.panelPhotoUrl.split("/").pop();
+        var oldImageKey = panel.panelPhotoUrl.split('/').pop();
         panel.panelPhotoUrl = req.file.location;
 
         panel.save(function (saveError) {
@@ -99,7 +99,7 @@ exports.panelmodelByID = function (req, res, next, id) {
       return next(err);
     } else if (!panelmodel) {
       return next(new Error('Failed to load panelmodels ' + id));
-    } 
+    }
 
     req.panelmodel = panelmodel;
     next();

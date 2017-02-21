@@ -15,11 +15,11 @@ var path = require('path'),
 exports.create = function (req, res) {
   var bid = new Bid(req.body);
   bid.user = req.user;
-  
+
   // add user organization to bid
   bid.organization = req.user.organization;
 
-  // fetch project and 
+  // fetch project and
   // 1) verify project exists
   // 2) verify bid deadline has not passed
   Project.findById(bid.project, function(err, project) {
@@ -29,7 +29,7 @@ exports.create = function (req, res) {
       });
     } else if (!project) {
       return res.status(400).send({
-        message: "Cannot post bid: not a valid project"
+        message: 'Cannot post bid: not a valid project'
       });
     } else {
       // make time comparison
@@ -55,10 +55,10 @@ exports.create = function (req, res) {
             } else {
               // notify project owner that bid was added
               var io = req.app.get('socketio');
-              
+
               // send to all users currently viewing project
               io.emit('refreshProjectView', project._id);
-              
+
               res.json(savedBid);
             }
           });
@@ -123,19 +123,19 @@ exports.bidByID = function (req, res, next, id) {
     .populate('project')
     .populate('organization')
     .exec(function (err, bid) {
-    if (err) {
-      return next(err);
-    } else if (!bid) {
-      return res.status(404).send({
-        message: 'No bid with that identifier has been found'
-      });
-    } else if (req.user.roles[0] === 'seller' && String(req.user._id) !== String(bid.user._id)) {
-      return res.status(404).send({
-        message: 'You are not authorized to access this page'
-      });
-    }
+      if (err) {
+        return next(err);
+      } else if (!bid) {
+        return res.status(404).send({
+          message: 'No bid with that identifier has been found'
+        });
+      } else if (req.user.roles[0] === 'seller' && String(req.user._id) !== String(bid.user._id)) {
+        return res.status(404).send({
+          message: 'You are not authorized to access this page'
+        });
+      }
 
-    req.bid = bid;
-    next();
-  });
+      req.bid = bid;
+      next();
+    });
 };

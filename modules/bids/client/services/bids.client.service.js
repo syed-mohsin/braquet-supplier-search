@@ -9,6 +9,6 @@ angular.module('bids').factory('Bids', ['$resource',
       update: {
         method: 'PUT'
       }
-  	});
+    });
   }
 ]);

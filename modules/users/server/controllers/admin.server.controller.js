@@ -51,7 +51,7 @@ exports.verifyUser = function (req, res) {
   } else {
     user.verified = true;
     user.roles = user.roles[0] === 'tempUser' ? 'user' : 'seller';
-    
+
     user.save(function(err) {
       if (err) {
         return res.status(400).json(err);
@@ -96,14 +96,14 @@ exports.list = function (req, res) {
     .sort('-created')
     .populate('user', 'displayName')
     .exec(function (err, users) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
 
-    res.json(users);
-  });
+      res.json(users);
+    });
 };
 
 /**

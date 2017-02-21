@@ -13,13 +13,13 @@ angular.module('bids').controller('CreateBidController', ['$scope', '$stateParam
       // Check that bid deadline has not passed
       if (new Date() > new Date($scope.project.bid_deadline)) {
         $scope.error = 'Bid Deadline has passed';
-        
+
         return false;
       }
 
       // check panel_models length
       if (!this.panel_models.length) {
-        $scope.error = "Please select at least one panel model";
+        $scope.error = 'Please select at least one panel model';
 
         return false;
       }
@@ -70,12 +70,12 @@ angular.module('bids').controller('CreateBidController', ['$scope', '$stateParam
 
     // Find existing Bid and it's associated project
     $scope.findOne = function () {
-      $scope.bid = Bids.get({bidId: $stateParams.bidId}, 
+      $scope.bid = Bids.get({ bidId: $stateParams.bidId },
         function(bid) {
-  
-      }, function(error) {
-        $location.path('/forbidden');
-      });
+
+        }, function(error) {
+          $location.path('/forbidden');
+        });
     };
 
     // Find existing Project

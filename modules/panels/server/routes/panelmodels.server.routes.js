@@ -12,7 +12,7 @@ module.exports = function (app) {
   app.route('/api/panelmodels').all(panelmodelsPolicy.isAllowed)
     .get(panelmodels.searchByName);
 
-   app.route('/api/panelmodels/:panelId').all(panelmodelsPolicy.isAllowed)
+  app.route('/api/panelmodels/:panelId').all(panelmodelsPolicy.isAllowed)
    	.get(panelmodels.read);
 
   app.route('/api/panels/photo/:panelId').all(panelmodelsPolicy.isAllowed)
