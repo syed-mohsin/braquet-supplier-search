@@ -127,6 +127,22 @@ exports.list_basic = function (req, res) {
 };
 
 /**
+ * List of fully populated organizations for catalog
+ * Available to all
+ */
+exports.get_catalog = function (req, res) {
+  Organization.find({ verified: true })
+    .populate('panel_models')
+    .exec(function(err, organizations) {
+      if (err) {
+        res.status(400).json(err);
+      } else {
+        res.json(organizations);
+      }
+    });
+};
+
+/**
  * Update org logo
  */
 exports.changeLogo = function (req, res) {
