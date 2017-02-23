@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var config = require('../config'),
+  productionAssets = require('../assets/production'),
   express = require('express'),
   morgan = require('morgan'),
   logger = require('./logger'),
@@ -32,7 +33,11 @@ module.exports.initLocalVariables = function (app) {
   app.locals.keywords = config.app.keywords;
   app.locals.googleAnalyticsTrackingID = config.app.googleAnalyticsTrackingID;
   app.locals.facebookAppId = config.facebook.clientID;
-  app.locals.jsFiles = config.files.client.js;
+  if (process.env.NODE_ENV === 'production') {
+    app.locals.jsFiles = productionAssets.client.js;
+  } else {
+    app.locals.jsFiles = config.files.client.js;
+  }
   app.locals.cssFiles = config.files.client.css;
   app.locals.livereload = config.livereload;
   app.locals.logo = config.logo;

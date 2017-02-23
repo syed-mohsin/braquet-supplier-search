@@ -6,6 +6,7 @@ module.exports = {
       css: [
         'public/lib/bootstrap/dist/css/bootstrap.min.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
+        'public/lib/angular-material/angular-material.css'
       ],
       js: [
         'public/lib/angular/angular.min.js',
@@ -20,6 +21,9 @@ module.exports = {
       ]
     },
     css: 'public/dist/application.min.css',
-    js: 'public/dist/application.min.js'
+    js: [
+      'dist/vendor.min.js',
+      'dist/application.min.js'
+    ]
   }
 };
