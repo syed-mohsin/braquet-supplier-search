@@ -53,8 +53,7 @@
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
   <!--Application JavaScript Files-->
-  <script type="text/javascript" src="dist/vendor.min.js"></script>
-  <script type="text/javascript" src="dist/application.min.js"></script>
+  {% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>{% endfor %}
 
   {% if livereload %}
   <!--Livereload script rendered -->
