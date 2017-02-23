@@ -24,7 +24,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
             $state.go('dashboard');
           }
         } else {
-          $state.go('catalog');
+          $state.go('welcome');
         }
       }
     })
@@ -33,16 +33,16 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/dashboard',
       templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
     })
-    // .state('welcome', {
-    //   url: '/welcome',
-    //   templateUrl: 'modules/core/client/views/welcome.client.view.html',
-    //   data: {
-    //     ignoreState: true
-    //   }
-    // })
     .state('catalog', {
       url: '/catalog',
       templateUrl: 'modules/core/client/views/catalog.client.view.html'
+    })
+    .state('welcome', {
+      url: '/welcome',
+      templateUrl: 'modules/core/client/views/welcome.client.view.html',
+      data: {
+        ignoreState: true
+      }
     })
     .state('awaiting-confirmation', {
       url: '/awaiting-confirmation',
