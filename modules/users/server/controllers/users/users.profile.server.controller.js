@@ -72,7 +72,7 @@ exports.changeProfilePicture = function (req, res) {
   }).single('newProfilePicture');
 
   var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-  
+
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;
 
@@ -81,7 +81,7 @@ exports.changeProfilePicture = function (req, res) {
       if(uploadError) {
         return res.status(400).json(uploadError);
       } else {
-        var oldImageKey = user.profileImageURL.split("/").pop();
+        var oldImageKey = user.profileImageURL.split('/').pop();
         user.profileImageURL = req.file.location;
 
         user.save(function (saveError) {
