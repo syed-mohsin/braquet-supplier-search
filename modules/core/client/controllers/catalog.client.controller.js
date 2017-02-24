@@ -18,7 +18,6 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       });
 
     $scope.updateFilter = function() {
-      console.log('hello');
       var temp = $scope.orgs;
       $scope.orgs = [];
 
