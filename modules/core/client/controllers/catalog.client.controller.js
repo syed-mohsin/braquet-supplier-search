@@ -31,7 +31,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
       // find all checked manufacturers
       $scope.checkedManufacturers = [];
-      for (var key in $scope.orgCheckboxes) {
+      for (key in $scope.orgCheckboxes) {
         if ($scope.orgCheckboxes[key]) {
           $scope.checkedManufacturers.push(key);
         }
