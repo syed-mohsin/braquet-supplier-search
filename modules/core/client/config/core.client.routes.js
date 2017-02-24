@@ -24,7 +24,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
             $state.go('dashboard');
           }
         } else {
-          $state.go('welcome');
+          $state.go('search');
         }
       }
     })
@@ -32,6 +32,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     .state('dashboard', {
       url: '/dashboard',
       templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
+    })
+    .state('search', {
+      url: '/search',
+      templateUrl: 'modules/core/client/views/search.client.view.html'
     })
     .state('catalog', {
       url: '/catalog',
