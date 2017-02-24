@@ -85,6 +85,19 @@ exports.uploadPhoto = function (req, res) {
 };
 
 /**
+ * Get Panel manufacturers
+ */
+exports.getManufacturers = function(req, res) {
+  PanelModel.distinct('manufacturer', function(err, manufacturers) {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.json(manufacturers);
+    }
+  });
+};
+
+/**
  * PanelModel middleware
  */
 exports.panelmodelByID = function (req, res, next, id) {

@@ -21,10 +21,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
           if (user.roles[0] === 'tempUser' || user.roles[0] === 'tempSeller') {
             $state.go('awaiting-confirmation');
           } else {
-            $state.go('dashboard');            
+            $state.go('dashboard');
           }
         } else {
-          $state.go('catalog');
+          $state.go('welcome');
         }
       }
     })
@@ -35,6 +35,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     })
     .state('catalog', {
       url: '/catalog',
+      templateUrl: 'modules/core/client/views/catalog.client.view.html'
+    })
+    .state('welcome', {
+      url: '/welcome',
       templateUrl: 'modules/core/client/views/welcome.client.view.html',
       data: {
         ignoreState: true

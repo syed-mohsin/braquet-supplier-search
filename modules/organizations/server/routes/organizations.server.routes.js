@@ -12,6 +12,10 @@ module.exports = function (app) {
     .get(organizations.list)
     .post(organizations.create);
 
+  // for catalog
+  app.route('/api/organizations-catalog')
+    .get(organizations.get_catalog);
+
   // for signup page
   app.route('/api/organizations-basic')
     .get(organizations.list_basic);
