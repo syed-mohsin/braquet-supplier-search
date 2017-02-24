@@ -18,6 +18,9 @@ module.exports = function (app) {
   app.route('/api/panels/photo/:panelId').all(panelmodelsPolicy.isAllowed)
   	.post(panelmodels.uploadPhoto);
 
+  app.route('/api/panelmodels-manufacturers')
+    .get(panelmodels.getManufacturers);
+
   // Finish by binding the panelmodel middleware
   app.param('panelId', panelmodels.panelmodelByID);
 };

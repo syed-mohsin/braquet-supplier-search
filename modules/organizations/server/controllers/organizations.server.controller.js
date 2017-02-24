@@ -22,6 +22,7 @@ var path = require('path'),
  */
 exports.create = function (req, res) {
   var organization = new Organization(req.body);
+  organization.verified = true;
 
   organization.save(function (err) {
     if (err) {
