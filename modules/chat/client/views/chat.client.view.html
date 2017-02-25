@@ -1,8 +1,14 @@
 <!-- The chat view -->
 <section class="container" ng-controller="ChatController">
   <div class="page-header">
-    <h1>Chat Example</h1>
+    <h1>Chat</h1>
   </div>
+  <div class="list-group">
+    <button type="submit" class="btn btn-primary" ng-click="showAddChats($event)">New Chat</button>
+  </div>
+  <ul class="list-group">
+    <li ng-repeat="chat in chats"><a ng-click="selectChat(chat)">{{chat.recipient.displayName}}</a></li>
+  </ul>
   <!-- The message form -->
   <form class="col-xs-12 col-md-offset-4 col-md-4" ng-submit="sendMessage();">
     <fieldset class="row">
@@ -16,11 +22,11 @@
   </form>
   <ul class="list-unstyled">
     <!-- List all messages -->
-    <li class="col-xs-12 col-md-offset-4 col-md-4 chat-message" ng-repeat="message in messages">
+    <li class="col-xs-12 col-md-offset-4 col-md-4 chat-message" ng-repeat="message in chat.messages">
       <small class="pull-right text-muted" ng-bind="message.created | date:'mediumTime'"></small>
       <img ng-src="{{message.profileImageURL}}" alt="{{message.username}}" class="pull-left chat-profile-image" />
       <div class="pull-left chat-message-details">
-        <strong ng-bind="message.username"></strong>
+        <strong ng-bind="message.displayName"></strong>
         <br>
         <span ng-bind="message.text"></span>
       </div>

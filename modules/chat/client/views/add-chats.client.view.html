@@ -1,0 +1,32 @@
+<section class="add-bidders list-view">
+  <div class="page-header">
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Direct Messages</h3>
+      </div>
+      <div class="col-md-4" style="margin-top: 2em">
+        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+      </div>
+    </div>
+  </div>
+  <div class="list-group" ng-if="selectedChatter" ng-click="unselectChatter()">
+    <h3>Selected</h3>
+    <a class="list-group-item">
+       <img class="profile" ng-src="{{selectedChatter.profileImageURL}}">
+        <h4 class="list-group-item-heading" ng-bind="selectedChatter.displayName"></h4>
+        <h5>Associate Executive @ <span ng-bind="selectedChatter.organization.name"></span></h5>
+    </a>
+  </div>
+  <div class="list-group" ng-if="!selectedChatter">
+    <h3>Start a Conversation</h3>
+    <a ng-repeat="connection in pagedItems" ng-click="selectChatter(connection)" class="list-group-item">
+       <img class="profile" ng-src="{{connection.profileImageURL}}">
+        <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
+        <h5>Associate Executive @ <span ng-bind="connection.organization.name"></span></h5>
+    </a>
+  </div>
+  <div class="list-group">
+  	<button type="button" class="btn btn-primary" ng-click="createChat()">Invite</button>
+  </div>
+  <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+</section>

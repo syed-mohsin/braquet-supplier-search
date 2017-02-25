@@ -21,7 +21,13 @@ exports.read = function (req, res) {
  * Create new chat
  */
 exports.create = function (req, res) {
-  var chat = new Chat(req.body);
+  var recipient = req.body;
+
+  var chat = new Chat({
+    user: req.user,
+    recipient: recipient,
+    messages: []
+  });
 
   chat.save(function (err) {
     if (err) {
@@ -29,7 +35,16 @@ exports.create = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(chat);
+      req.user.chats.push(chat);
+      req.user.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(chat);
+        }
+      });
     }
   });
 };
@@ -55,8 +70,8 @@ exports.delete = function (req, res) {
  * List of current user's Chats
  */
 exports.list = function (req, res) {
-  User.find({ _id : { $in : req.user.chats } })
-    .populate('chat')
+  Chat.find({ _id : { $in : req.user.chats } })
+    .populate('recipient')
     .exec(function (err, chats) {
       if (err) {
         return res.status(400).send({

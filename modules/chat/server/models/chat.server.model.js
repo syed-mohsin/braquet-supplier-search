@@ -14,6 +14,10 @@ var ChatSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   recipient: {
     type: Schema.ObjectId,
     ref: 'User'
@@ -22,6 +26,10 @@ var ChatSchema = new Schema({
     created: {
       type: Date,
       default: Date.now
+    },
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User'
     },
     messageType: {
       type: String,
