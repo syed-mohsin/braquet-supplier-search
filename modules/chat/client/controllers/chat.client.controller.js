@@ -14,6 +14,15 @@ angular.module('chat').controller('ChatController', ['$scope', '$http', '$locati
     $http.get('/api/chats')
       .success(function(chats) {
         $scope.chats = chats;
+        $scope.chats.map(function(chat) {
+          chat.recipient = chat.members.filter(function(member) {
+            if (member._id !== Authentication.user._id) {
+              return member;
+            }
+          })[0];
+
+          return chat;
+        });
       });
 
     // If user is not signed in then redirect back home
@@ -26,26 +35,36 @@ angular.module('chat').controller('ChatController', ['$scope', '$http', '$locati
       Socket.connect();
     }
 
+    // Event listener for a new chat event
+    Socket.on('newChat', function(chat) {
+      $scope.chats.push(chat);
+    });
+
     // Add an event listener to the 'chatMessage' event
     Socket.on('chatMessage', function (data) {
       var chatId = data.chatId;
       var message = data.message;
-      $scope.messages.push(message);
+      $scope.chats.forEach(function(chat, i) {
+        if (chat._id === chatId) {
+          $scope.chats[i].messages.push(message);
+        }
+      });
     });
 
     // Create a controller method for sending messages
     $scope.sendMessage = function () {
       if (!$scope.chat) {
-        // return false;
+        return false;
       }
 
       // Create a new message object
       var message = {
-        text: this.messageText,
+        content: this.messageText,
       };
 
       var data = {
-        chatId: $scope.chat,
+        chatId: $scope.chat._id,
+        members: $scope.chat.members,
         message: message
       };
 
@@ -64,7 +83,12 @@ angular.module('chat').controller('ChatController', ['$scope', '$http', '$locati
     // select chat
     $scope.selectChat = function(chat) {
       $scope.chat = chat;
-    }
+      $scope.chat.members.forEach(function(member) {
+        if (member._id !== Authentication.user._id) {
+          $scope.chat.recipient = member;
+        }
+      });
+    };
 
     // popup dialog that allows users to begin more chats with connections
     $scope.showAddChats = function(ev) {
@@ -118,11 +142,13 @@ angular.module('chat').controller('ChatController', ['$scope', '$http', '$locati
           $scope.unselectChatter = function() {
             $scope.selectedChatter = undefined;
             $scope.figureOutItemsToDisplay();
-          }
+          };
 
           $scope.createChat = function() {
             var chatCheck = $scope.chats.filter(function(chat) {
-              return chat.recipient._id === $scope.selectedChatter._id;
+              return chat.members.some(function(user) {
+                return user._id === $scope.selectedChatter._id;
+              });
             });
 
             // chat already exists
@@ -130,13 +156,10 @@ angular.module('chat').controller('ChatController', ['$scope', '$http', '$locati
               $modalInstance.close(chatCheck[0]);
               return;
             }
-            console.log("chatCheck", chatCheck); return;
 
             // chat doesn't exist yet, create it
             $http.post('/api/chats/' , $scope.selectedChatter)
               .success(function (response) {
-                response.recipient = $scope.selectedChatter;
-                $scope.chats.push(response);
                 $modalInstance.close(response);
 
               }).error(function (response) {
@@ -151,6 +174,5 @@ angular.module('chat').controller('ChatController', ['$scope', '$http', '$locati
         $scope.chat = chat;
       });
     };
-
   }
 ]);

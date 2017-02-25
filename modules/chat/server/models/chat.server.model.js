@@ -14,14 +14,10 @@ var ChatSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  user: {
+  members: [{
     type: Schema.ObjectId,
     ref: 'User'
-  },
-  recipient: {
-    type: Schema.ObjectId,
-    ref: 'User'
-  },
+  }],
   messages: [{
     created: {
       type: Date,

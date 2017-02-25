@@ -24,8 +24,7 @@ exports.create = function (req, res) {
   var recipient = req.body;
 
   var chat = new Chat({
-    user: req.user,
-    recipient: recipient,
+    members: [req.user, recipient],
     messages: []
   });
 
@@ -42,7 +41,29 @@ exports.create = function (req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          res.json(chat);
+          User.findByIdAndUpdate(recipient._id, { $push: { chats: chat } },
+            function(err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                // add users object to chat
+                chat.members = [req.user, recipient];
+
+                // notify recipient of new chat
+                var io = req.app.get('socketio');
+                var sockets = req.app.get('socket-users');
+                var mySockets = sockets[req.user._id];
+                var recipientSockets = sockets[recipient._id];
+                var allSockets = mySockets.concat(recipientSockets);
+                allSockets.forEach(function(socketId) {
+                  io.to(socketId).emit('newChat', chat);
+                });
+
+                res.json(chat);
+              }
+            });
         }
       });
     }
@@ -71,7 +92,7 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
   Chat.find({ _id : { $in : req.user.chats } })
-    .populate('recipient')
+    .populate('members')
     .exec(function (err, chats) {
       if (err) {
         return res.status(400).send({
@@ -93,15 +114,13 @@ exports.chatByID = function (req, res, next, id) {
     });
   }
 
-  User.findById(id)
-    .populate('chat')
+  Chat.findById(id)
+    .populate('members')
     .exec(function (err, chat) {
       if (err) {
         return next(err);
       } else if (!chat) {
         return next(new Error('Failed to load chat ' + id));
-      } else if (req.user.chats.indexOf[id] === -1) {
-        return next(new Error('Not connected to this user'));
       }
 
       req.chat = chat;
