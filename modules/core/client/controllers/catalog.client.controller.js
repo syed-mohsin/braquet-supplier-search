@@ -53,7 +53,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
             var wattage = panel.stcPowerW;
             var manufacturer = panel.manufacturer;
             checked.forEach(function(check) {
-              if (check === 'Under 100 Watts') finalCheck = finalCheck || wattage <= 100;
+              if (check === '  0 - 100 Watts') finalCheck = finalCheck || wattage <= 100;
               else if (check === '101 - 200 Watts') finalCheck = finalCheck || (wattage > 100 && wattage <= 200);
               else if (check === '201 - 300 Watts') finalCheck = finalCheck || (wattage > 200 && wattage <= 300);
               else if (check === '301 - 400 Watts') finalCheck = finalCheck || (wattage > 300 && wattage <= 400);
@@ -86,7 +86,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     $scope.buildWattCheckboxes = function() {
       $scope.ranges = [
-        'Under 100 Watts',
+        '  0 - 100 Watts',
         '101 - 200 Watts',
         '201 - 300 Watts',
         '301 - 400 Watts',

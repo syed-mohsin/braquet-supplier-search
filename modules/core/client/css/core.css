@@ -243,6 +243,15 @@ section h2 {
     background: black;
     border-radius: 0;
 }
+.side-navbar .catalog-label {
+    font-weight: 700;
+}
+.side-navbar li {
+    display: block;
+}
+.side-navbar span {
+    font-weight: 400;
+}
 .glyphicon {
     margin-right: 7px;
 }

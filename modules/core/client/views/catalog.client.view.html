@@ -1,28 +1,31 @@
-<section class="container" ng-controller="CatalogController">
+<section class="" ng-controller="CatalogController">
   <section>
     <div class="page-header">
         <div class="row">
-            <div class="col-md-4" style="margin-top: 2em">
-                <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+            <div class="col-md-12" style="margin-top: 2em">
+                <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
             </div>
         </div>
+    </di99v>
+  <div class="col-sm-4 side-navbar">
+    <div class="list-group">
+    <span class="catalog-label"><small>Module Wattage ></small></span>
+      <li ng-repeat="range in ranges">
+      <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
+        <span><small>{{range}}</small></span>
+      </li>
     </div>
 
-    <div class="list-group">
-      <label ng-repeat="range in ranges">
-        {{range}}:
-        <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
-      </label>
-    </div>
-
-    <div class="list-group">
-      <label ng-repeat="man in manufacturers">
-        {{man}}:
+      <div class="list-group">
+      <span class="catalog-label"><small>Brand ></small></span>
+        <li ng-repeat="man in manufacturers">
         <input type="checkbox" ng-model="orgCheckboxes[man]" ng-change="updateFilter()">
-      </label>
+          <span><small>{{man}}</small></span>
+        </li>
+      </div>
     </div>
 
-    <div class="list-group">
+    <div class="list-group col-sm-8">
         <a ng-repeat="organization in pagedItems" class="list-group-item col-sm-12">
 
             <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
