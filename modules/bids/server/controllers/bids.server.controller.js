@@ -79,15 +79,19 @@ exports.read = function (req, res) {
  * List of bids
  */
 exports.list = function (req, res) {
-  Bid.find().sort('-created').populate('user', 'displayName').exec(function (err, bids) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(bids);
-    }
-  });
+  Bid.find().sort('-created')
+    .populate('user', 'displayName')
+    .populate('organization')
+    .populate('panel_models')
+    .exec(function (err, bids) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(bids);
+      }
+    });
 };
 
 /**
@@ -121,6 +125,7 @@ exports.bidByID = function (req, res, next, id) {
   Bid.findById(id)
     .populate('user', 'displayName')
     .populate('project')
+    .populate('panel_models')
     .populate('organization')
     .exec(function (err, bid) {
       if (err) {

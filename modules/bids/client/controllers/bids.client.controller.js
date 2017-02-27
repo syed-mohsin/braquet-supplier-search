@@ -5,7 +5,6 @@ angular.module('bids').controller('BidsController', ['$scope', '$stateParams', '
   function ($scope, $stateParams, $resource, $location, $interval, $filter, Authentication, Socket, Projects, Bids) {
     $scope.authentication = Authentication;
     $scope.bids = Bids.query();
-    $scope.panel_models = [];
 
     // Connect socket
     if (!Socket.socket) {
