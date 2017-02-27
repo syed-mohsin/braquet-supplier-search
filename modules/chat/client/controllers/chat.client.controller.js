@@ -37,6 +37,12 @@ angular.module('chat').controller('ChatController', ['$scope', '$http', '$locati
 
     // Event listener for a new chat event
     Socket.on('newChat', function(chat) {
+      chat.members.forEach(function(member) {
+        if (member._id !== Authentication.user._id) {
+          chat.recipient = member;
+        }
+      });
+
       $scope.chats.push(chat);
     });
 
@@ -160,6 +166,7 @@ angular.module('chat').controller('ChatController', ['$scope', '$http', '$locati
             // chat doesn't exist yet, create it
             $http.post('/api/chats/' , $scope.selectedChatter)
               .success(function (response) {
+                response.recipient = $scope.selectedChatter;
                 $modalInstance.close(response);
 
               }).error(function (response) {
