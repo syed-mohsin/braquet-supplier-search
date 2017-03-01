@@ -242,6 +242,25 @@ exports.getPotentialUsers = function(req, res) {
 };
 
 /**
+ * Set organization Admin
+ */
+exports.setOrganizationAdmin = function(req, res) {
+  var admin = req.body;
+  var organization = req.organization;
+
+  if (!organization.admin && admin.organization.equals(organization._id)) {
+    organization.admin = admin;
+    organization.save(function(err) {
+      if (err) {
+        res.status(400).json(err);
+      } else {
+        res.json(organization);
+      }
+    });
+  }
+};
+
+/**
  * Organization middleware
  */
 exports.organizationByID = function (req, res, next, id) {

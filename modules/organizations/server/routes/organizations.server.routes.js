@@ -28,6 +28,10 @@ module.exports = function (app) {
   app.route('/api/organizations/:organizationId/verify').all(organizationsPolicy.isAllowed)
     .post(organizations.verify);
 
+  // admin set admin for organizationId
+  app.route('/api/organizations-set-admin').all(organizationsPolicy.isAllowed)
+    .post(organizations.setOrganizationAdmin);
+
   // Single organization routes
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)

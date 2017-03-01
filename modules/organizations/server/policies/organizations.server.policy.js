@@ -29,6 +29,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/organizations/:organizationId/addUsers',
       permissions: ['post']
+    }, {
+      resources: '/api/organizations-set-admin',
+      permissions: ['get']
     }]
   }, {
     roles: ['user', 'seller'],
