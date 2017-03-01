@@ -5,7 +5,7 @@
       <fieldset>
         <div class="form-group" show-errors>
 
-          <h2 for="user_role">Sign up on Braquet</h2>        
+          <h2 for="user_role">Sign up on Braquet</h2>
 
           <select name="user_role" ng-model="credentials.user_role" id="user_role" class="form-control" required>
             <option value="">---Please select a role---</option>
@@ -16,26 +16,15 @@
             <p class="help-block error-text" ng-message="required">Please indicate whether you are requesting or supplying solar services and products.</p>
           </div>
         </div>
-        <div class="form-group" show-errors>    
+        <div class="form-group" show-errors>
           <select name="organization" ng-model="credentials.organization" id="organization" class="form-control" required>
             <option value="">---Select Organization---</option>
             <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
             <option value="other">Other</option>
           </select>
-<<<<<<< HEAD
-          <div ng-messages="userForm.organization.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Please indicate Company.</p>
-=======
+
           <div ng-messages="userForm.user_role.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Please indicate your organization or create another.</p>
-          </div>
-        </div>
-
-        <div class="form-group" show-errors>
-          <input type="text" id="jobTitle" name="jobTitle" class="form-control" ng-model="credentials.jobTitle" placeholder="Job Title">
-          <div ng-messages="userForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Job Title is required.</p>
->>>>>>> origin
           </div>
         </div>
 
@@ -53,6 +42,13 @@
             </div>
           </div>
         </fieldset>
+
+        <div class="form-group" show-errors>
+          <input type="text" id="jobTitle" name="jobTitle" class="form-control" ng-model="credentials.jobTitle" placeholder="Job Title">
+          <div ng-messages="userForm.firstName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Job Title is required.</p>
+          </div>
+        </div>
 
         <div class="form-group" show-errors>
 <!--           <label for="firstName">First Name</label>

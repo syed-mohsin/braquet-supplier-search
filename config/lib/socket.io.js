@@ -107,7 +107,7 @@ module.exports = function (app, db) {
     users[socket.request.user._id].push(socket.id);
 
     config.files.server.sockets.forEach(function (socketConfiguration) {
-      require(path.resolve(socketConfiguration))(io, socket);
+      require(path.resolve(socketConfiguration))(io, socket, users);
     });
   });
 
