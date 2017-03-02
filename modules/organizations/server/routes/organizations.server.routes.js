@@ -35,10 +35,12 @@ module.exports = function (app) {
   // Single organization routes
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)
-    // .put(organizations.update)
+    .put(organizations.update)
     .delete(organizations.delete);
 
-  app.route('/api/organizations/logo/:organizationId').post(organizations.changeLogo);
+  app.route('/api/organizations/logo/:organizationId').all(organizationsPolicy.isAllowed)
+    .post(organizations.changeLogo);
+
   app.route('/api/organizations/:organizationId/addUsers').all(organizationsPolicy.isAllowed)
     .post(organizations.addUsers);
 

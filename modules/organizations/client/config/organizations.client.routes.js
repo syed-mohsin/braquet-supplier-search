@@ -30,6 +30,13 @@ angular.module('organizations').config(['$stateProvider',
         data: {
           roles: ['user', 'seller', 'admin']
         }
+      })
+      .state('organizations.edit', {
+        url: '/:organizationId/edit',
+        templateUrl: 'modules/organizations/client/views/edit-organization.client.view.html',
+        data: {
+          roles: ['user', 'seller', 'admin']
+        }
       });
   }
 ]);

@@ -1,0 +1,82 @@
+<section class="container" ng-controller="OrganizationsController" ng-init="loadPanelModelsData(); findOne()">
+  <div class="page-header">
+  </div>
+  <div class="col-md-12">
+    <form name="organizationForm" class="form-horizontal" ng-submit="update(organizationForm.$valid)" novalidate>
+      <h2>Edit Company Profile</h2>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <input name="name" type="text" ng-model="organization.name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="organizationForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Company name is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="industry" type="text" ng-model="organization.industry" id="industry" class="form-control" placeholder="Industry" required>
+          <div ng-messages="organizationForm.industry.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Industry is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="product_types" type="text" ng-model="organization.product_types" id="product_types" class="form-control" placeholder="Select Product Types" required>
+          <div ng-messages="organizationForm.product_types.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Product Types are required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+
+          <md-chips name="panel_models" ng-model="organization.panel_models" md-autocomplete-snap md-require-match="true" md-no-cache="true" md-max-chips="10" required>
+
+            <md-autocomplete
+              md-selected-item="selectedItem"
+              md-search-text="searchText"
+              md-items="item in getMatches(searchText)"
+              md-item-text="item.model"
+              md-min-length="0"
+              placeholder="Please select panel model"
+              ng-hide="panel_models.length >= 10">
+                <span md-highlight-text="searchText">
+                  {{item.manufacturer}}, {{item.model}}
+                </span>
+            </md-autocomplete>
+            <md-chip-template>
+              <span>{{$chip.manufacturer}}, {{$chip.model}}</span>
+            </md-chip-template>
+
+          </md-chips>
+          <div ng-messages="bidForm.panel_models.$error" role="alert">
+            <p class="help-block error-text" ng-message="md-max-chips">Please select only from available panel models.</p>
+          </div>
+        </div>
+
+         <div class="form-group" show-errors>
+          <input name="website" type="text" ng-model="organization.website" id="website" class="form-control" placeholder="Company Website" required>
+          <div ng-messages="organizationForm.website.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">website is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="headquarters" type="text" ng-model="organization.headquarters" id="headquarters" class="form-control" placeholder="Headquarters Address" required>
+          <div ng-messages="organizationForm.headquarters.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Headquarters is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="about" type="text" ng-model="organization.about" id="about" class="form-control" placeholder="About">
+        </div>
+
+        <div class="form-group">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

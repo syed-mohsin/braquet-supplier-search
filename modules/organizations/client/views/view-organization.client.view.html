@@ -28,12 +28,15 @@
                     <span ng-bind="organization.about"></span>
                 </div>
                 <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.headquarters"></span></small><br>
-                <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,    
+                <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                 <small><span ng-bind="organization.product_types"></span></small>
-                 
+
 <!--                 <small><span ng-bind="organization.website"></span></small> -->
                 <div><small><span>You are currently not connected to <span ng-bind="organization.name"></span></span> - <a ui-sref="connections.create">Add a contact</a></small></div>
                 <div class="menu">
+                    <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
+                        <span class="glyphicon glyphicon-new-window"></span><span>Edit Organization</span>
+                    </a>
                     <a ng-if="authentication.user.roles.indexOf('seller') === -1" ui-sref="projects.create">
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
