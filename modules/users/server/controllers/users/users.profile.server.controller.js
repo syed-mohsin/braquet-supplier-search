@@ -27,7 +27,9 @@ exports.update = function (req, res) {
 
   if (user) {
     // Merge existing user
-    user = _.extend(user, req.body);
+    user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
+    user.jobTitle = req.body.jobTitle;
     user.updated = Date.now();
     user.displayName = user.firstName + ' ' + user.lastName;
 
