@@ -31,7 +31,13 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If an project is being processed and the current user created it then allow any manipulation
-  if (req.project && req.user && req.project.user.id === req.user.id) {
+  if (req.bid && req.user && req.bid.user._id.equals(req.user.id)) {
+    return next();
+  }
+
+  // allow project owners to see placed bids on project
+  console.log('permission', req.bid.project.user.equals(req.user._id));
+  if (req.bid && req.user && req.bid.project && req.bid.project.user.equals(req.user._id)) {
     return next();
   }
 

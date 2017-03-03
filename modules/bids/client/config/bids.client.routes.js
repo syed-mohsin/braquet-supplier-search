@@ -28,7 +28,7 @@ angular.module('bids').config(['$stateProvider',
         url: '/:bidId',
         templateUrl: 'modules/bids/client/views/view-bid.client.view.html',
         data: {
-          roles: ['seller']
+          roles: ['user', 'seller']
         }
       });
   }
