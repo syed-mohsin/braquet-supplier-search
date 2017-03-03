@@ -23,6 +23,7 @@ var noReturnUrls = [
 exports.signup = function (req, res) {
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
+  delete req.body.username;
 
   // verify and init organization details
   var organizationId = req.body.organization;
@@ -63,7 +64,8 @@ exports.signup = function (req, res) {
     user.roles = ['tempUser'];
   }
 
-   // check if user was invited and connect upon signup
+  // check if user was invited and connect upon signup
+  var err = '';
   async.waterfall([
     function(done) {
       User.findOne({
@@ -81,8 +83,18 @@ exports.signup = function (req, res) {
       if (invitingUser) {
         user.connections.push(invitingUser._id);
       }
-
-      // Then save the user
+      done(err, invitingUser);
+    },
+    function(invitingUser, done) {
+      // generate possible username
+      var possibleUsername = user.firstName + user.lastName;
+      User.findUniqueUsername(possibleUsername, '', function(username) {
+        done(err, invitingUser, username);
+      });
+    },
+    function(invitingUser, username, done) {
+      // Then save the user with
+      user.username = username;
       user.save(function (err) {
         done(err, invitingUser);
       });
