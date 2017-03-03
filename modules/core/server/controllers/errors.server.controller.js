@@ -14,6 +14,11 @@ var getUniqueErrorMessage = function (err) {
     output = 'Unique field already exists';
   }
 
+  // check for signup page duplicate email message
+  if (output.indexOf('email') !== -1 && output.indexOf('duplicate') !== -1) {
+    output = 'Email already exists';
+  }
+
   return output;
 };
 
