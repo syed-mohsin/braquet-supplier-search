@@ -29,6 +29,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/organizations/:organizationId/addUsers',
       permissions: ['post']
+    }, {
+      resources: '/api/organizations-set-admin',
+      permissions: ['get']
+    }, {
+      resources: '/api/organizations/logo/:organizationId',
+      permissions: ['post']
     }]
   }, {
     roles: ['user', 'seller'],
@@ -43,7 +49,10 @@ exports.invokeRolesPolicies = function () {
       permissions: ['post']
     }, {
       resources: '/api/organizations/:organizationId',
-      permissions: ['get', 'post']
+      permissions: ['get', 'put', 'post']
+    }, {
+      resources: '/api/organizations/logo/:organizationId',
+      permissions: ['post']
     }, {
       resources: '/api/organization-auth/send-invite',
       permissions: ['post']
@@ -64,6 +73,11 @@ exports.isAllowed = function (req, res, next) {
 
   // allow organization admin to access adding employees to organization
   if (req.route.path === '/api/organizations/:organizationId/addUsers' && (req.user._id.equals(req.organization.admin))) {
+    return next();
+  }
+
+  // allow organization admin to access emp
+  if (req.route.path === '/api/organizations/:organizationId/edit' && (req.user._id.equals(req.organization.admin))) {
     return next();
   }
 

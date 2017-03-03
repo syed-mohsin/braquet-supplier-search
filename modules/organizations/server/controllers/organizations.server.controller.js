@@ -43,6 +43,32 @@ exports.read = function (req, res) {
 };
 
 /**
+ * Update a organization
+ */
+exports.update = function (req, res) {
+  var organization = req.organization;
+
+  organization.title = req.body.title;
+  organization.name = req.body.name;
+  organization.panel_models = req.body.panel_models;
+  organization.industry = req.body.industry;
+  organization.product_types = req.body.product_types;
+  organization.website = req.body.website;
+  organization.headquarters = req.body.headquarters;
+  organization.about = req.body.about;
+
+  organization.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(organization);
+    }
+  });
+};
+
+/**
  * Delete a organization
  */
 exports.delete = function (req, res) {
@@ -242,6 +268,25 @@ exports.getPotentialUsers = function(req, res) {
 };
 
 /**
+ * Set organization Admin
+ */
+exports.setOrganizationAdmin = function(req, res) {
+  var admin = req.body;
+  var organization = req.organization;
+
+  if (!organization.admin && admin.organization.equals(organization._id)) {
+    organization.admin = admin;
+    organization.save(function(err) {
+      if (err) {
+        res.status(400).json(err);
+      } else {
+        res.json(organization);
+      }
+    });
+  }
+};
+
+/**
  * Organization middleware
  */
 exports.organizationByID = function (req, res, next, id) {
@@ -255,6 +300,7 @@ exports.organizationByID = function (req, res, next, id) {
     .populate('panel_models')
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
+    .populate('admin', 'displayName')
     .exec(function (err, organization) {
       if (err) {
         return next(err);
