@@ -4,6 +4,7 @@
 angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Reviews',
   function ($scope, $stateParams, $location, Authentication, Reviews) {
     $scope.authentication = Authentication;
+    $scope.rate = 3;
 
     // Create new Review
     $scope.create = function (isValid) {
