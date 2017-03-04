@@ -12,18 +12,24 @@ var path = require('path'),
  * Create a review
  */
 exports.create = function (req, res) {
-  var review = new Review(req.body);
-  review.user = req.user;
+  if (req.organization && req.user) {
+    var review = new Review(req.body);
+    review.user = req.user;
 
-  review.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(review);
-    }
-  });
+    review.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(review);
+      }
+    });
+  } else {
+    res.status(400).json({
+      message: 'Invalid user or organization'
+    });
+  }
 };
 
 /**

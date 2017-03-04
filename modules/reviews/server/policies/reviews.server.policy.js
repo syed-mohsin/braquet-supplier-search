@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews',
       permissions: '*'
     }, {
+      resources: '/api/reviews/:organizationId',
+      permissions: ['post']
+    }, {
       resources: '/api/reviews/:reviewId',
       permissions: '*'
     }]
@@ -25,7 +28,10 @@ exports.invokeRolesPolicies = function () {
     roles: ['user', 'seller'],
     allows: [{
       resources: '/api/reviews',
-      permissions: ['get', 'post']
+      permissions: ['get']
+    }, {
+      resources: '/api/reviews/:organizationId',
+      permissions: ['post']
     }, {
       resources: '/api/reviews/:reviewId',
       permissions: ['get']
@@ -48,7 +54,7 @@ exports.invokeRolesPolicies = function () {
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
-  // If an review is being processed and the current user created it then allow any manipulation
+  // If a review is being processed and the current user created it then allow any manipulation
   if (req.review && req.user && req.review.user.id === req.user.id) {
     return next();
   }
