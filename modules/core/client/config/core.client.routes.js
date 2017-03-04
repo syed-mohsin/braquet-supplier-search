@@ -56,9 +56,6 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         if (user.verified && user.emailVerified) {
           $state.go('home');
         }
-      },
-      data: {
-        roles: ['tempUser', 'admin', 'tempSeller']
       }
     })
     .state('invite', {
