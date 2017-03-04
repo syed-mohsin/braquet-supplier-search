@@ -13,8 +13,7 @@ module.exports = function (app) {
   app.route('/api/auth/forgot').post(users.forgot);
   app.route('/api/auth/reset/:token').get(users.validateResetToken);
   app.route('/api/auth/reset/:token').post(users.reset);
-  app.route('/api/auth/email/verify/:token').get(users.validateVerifyEmailToken);
-  app.route('/api/auth/email/verify/:token').post(users.verifyEmail);
+  app.route('/api/auth/email/verify/:token').get(users.validateEmail);
 
   // Setting up the users authentication api
   app.route('/api/auth/signup').post(users.signup);

@@ -4,12 +4,16 @@
  * Module dependencies.
  */
 var path = require('path'),
+  config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
+  nodemailer = require('nodemailer'),
   async = require('async'),
   User = mongoose.model('User'),
   Organization = mongoose.model('Organization');
+
+var smtpTransport = nodemailer.createTransport(config.mailer.options);
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -115,17 +119,11 @@ exports.signup = function (req, res) {
 
         // save invitingUser
         invitingUser.save(function(err) {
-          done(err);
+          done(err, user);
         });
       } else {
-        done(err);
-      }
-    },
-    // log in user
-    function(done) {
-      req.login(user, function (err) {
         done(err, user);
-      });
+      }
     },
     function(user, done) {
       // handling new user for an existing organization
@@ -154,8 +152,49 @@ exports.signup = function (req, res) {
         });
       }
     },
-    function(user, done) {
-      res.json(user);
+    function (user, done) {
+      var httpTransport = 'http://';
+      if (config.secure && config.secure.ssl === true) {
+        httpTransport = 'https://';
+      }
+
+      res.render('modules/users/server/templates/confirm-email', {
+        name: user.displayName,
+        appName: config.app.title,
+        url: httpTransport + req.headers.host + '/api/auth/email/verify/' + user.inviteToken
+      }, function (err, emailHTML) {
+        done(err, emailHTML, user);
+      });
+    },
+    // If valid email, send reset email using service
+    function (emailHTML, user, done) {
+      var mailOptions = {
+        to: user.email,
+        from: config.mailer.from,
+        subject: 'Braquet - Please Confirm Your Email',
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (!err) {
+          // log in user
+          req.login(user, function (err) {
+            if (err) {
+              return res.status(400).send({
+                message: 'Unable to login user'
+              });
+            } else {
+              res.json(user);
+              console.log('finished');
+              done(err);
+            }
+          });
+        } else {
+          return res.status(400).send({
+            message: 'Failure sending email'
+          });
+        }
+      });
     }
   ], function (err) {
     if (err) {
