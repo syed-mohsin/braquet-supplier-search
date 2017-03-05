@@ -49,12 +49,17 @@ exports.update = function (req, res) {
   var organization = req.organization;
 
   organization.title = req.body.title;
-  organization.name = req.body.name;
+  organization.companyName = req.body.companyName;
   organization.panel_models = req.body.panel_models;
   organization.industry = req.body.industry;
-  organization.product_types = req.body.product_types;
-  organization.website = req.body.website;
-  organization.headquarters = req.body.headquarters;
+  organization.producTypes = req.body.productTypes;
+  organization.url = req.body.url;
+  organization.address1 = req.body.address1;
+  organization.address2 = req.body.address2;
+  organization.city = req.body.city;
+  organization.state = req.body.state;
+  organization.zipcode = req.body.zipcode;
+  organization.country = req.body.country;
   organization.about = req.body.about;
 
   organization.save(function (err) {
