@@ -1,40 +1,49 @@
-<section class="container" ng-controller="CatalogController">
-  <section>
-    <div class="page-header">
-        <div class="row">
-            <div class="col-md-4" style="margin-top: 2em">
-                <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+<section class="list-view" ng-controller="CatalogController">
+    <section>
+        <div class="page-header">
+            <div class="row">
+                <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
+                <div class="col-md-9 search">
+                    <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers in your area" ng-change="figureOutItemsToDisplay()" />
+                </div>
             </div>
         </div>
-    </div>
+        <div class="menu">
+            <button class="visible-xs btn-primary" data-toggle="collapse" data-target="side-navbar">Product Type <span class="glyphicon glyphicon-menu-down"></span></button>
+            <button class="visible-xs btn-primary last" ng-click="toggleFilter()" data-toggle="collapse" data-target="side-navbar">See Filters</button>
+        </div>
+        <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
+            <label>Filters</label>
+            <div class="list-group">
+                <span class="catalog-label"><small>Module Wattage ></small></span>
+                <li ng-repeat="range in ranges">
+                    <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
+                    <span><small>{{range}}</small></span>
+                </li>
+            </div>
 
-    <div class="list-group">
-      <label ng-repeat="range in ranges">
-        {{range}}:
-        <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
-      </label>
-    </div>
+            <div class="list-group">
+                <span class="catalog-label"><small>Brand ></small></span>
+                <li ng-repeat="man in manufacturers">
+                    <input type="checkbox" ng-model="orgCheckboxes[man]" ng-change="updateFilter()">
+                    <span><small>{{man}}</small></span>
+                </li>
+            </div>
+        </div>
 
-    <div class="list-group">
-      <label ng-repeat="man in manufacturers">
-        {{man}}:
-        <input type="checkbox" ng-model="orgCheckboxes[man]" ng-change="updateFilter()">
-      </label>
-    </div>
-
-    <div class="list-group">
-        <a ng-repeat="organization in pagedItems" class="list-group-item col-sm-12">
-
-            <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
-        <div class="profile-info">
-        <h5 class="list-group-item-heading" ng-bind="organization.name"></h5>
-            <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.headquarters"></span></small><br>
-            <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
-            <small><span ng-bind="organization.product_types"></span></small>
-          </div>
-        </a>
-    </div>
-
-    <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
-  </section>
+        <div class="horizontal list-group col-sm-7">
+            <a ng-repeat="organization in pagedItems" class="list-group-item col-sm-12">
+                <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
+                <div class="profile-info">
+                    <h5 class="list-group-item-heading" ng-bind="organization.name"></h5>
+                    <div class="detail">
+                        <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.headquarters"></span></small><br>
+                        <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
+                        <small><span ng-bind="organization.product_types"></span></small>
+                    </div>
+                </div>
+            </a>
+            <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+        </div>
+    </section>
 </section>

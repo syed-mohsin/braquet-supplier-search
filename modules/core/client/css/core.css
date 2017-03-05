@@ -41,7 +41,7 @@ body {
 
 body {
     color: #444;
-    background: #f2f2f2;
+    background: white;
 }
 
 a {
@@ -171,14 +171,29 @@ input[type="checkbox"] {
     float: right;
 }
 
+
 .btn-primary, .btn-default {
-    background: #222;
     font-weight: 700;
     padding: 9px 22px;
+    margin-bottom: 10px;
     text-shadow: none;
     color: white;
+    background: #222;
+    border:none;
+}
+.menu .btn-primary {
+    float: left;
+    margin-right: 10px;
 }
 
+.menu .btn-primary .glyphicon {
+    position: relative;
+    right: -5px;
+}
+
+.menu .btn-primary.last {
+    float: none;
+}
 button.cancel {
     background: #d9534f;
     border-color: #d9534f;
@@ -243,13 +258,30 @@ section h2 {
     background: black;
     border-radius: 0;
 }
+.side-navbar .catalog-label {
+    font-weight: 700;
+}
+.side-navbar li {
+    display: block;
+}
+.side-navbar span {
+    font-weight: 400;
+}
 .glyphicon {
     margin-right: 7px;
+}
+.search {
+    margin: 0 0 10px 0;
+    padding-left: inherit;
 }
 .banner {
     background: url('/modules/core/client/img/asset/home_banner.jpg');
     background-size: cover;
     margin-bottom: 0;
+}
+.banner-shade {
+    height: 100vh;
+    background-color: rgba(0,0,0,0.2);
 }
 
 .welcome.banner {
@@ -262,13 +294,19 @@ section h2 {
 .welcome.banner .detail {
     position: relative;
     top: 10em;
-    width: 270px;
-    background: white;
     padding: 20px 36px;
     margin: 0 auto;
 }
 .banner h2 {
     margin-bottom: 20px;
+}
+
+.braquet-dropdown {
+    height: 45px;
+}
+
+.welcome .braquet-dropdown {
+    width: 165px;
 }
 
 .welcome .signup {
@@ -295,9 +333,9 @@ section h2 {
 .banner h1 {
     text-align: center;
     line-height: 55px;
-    font-weight: 100;
-    color: black;
-    font-size: 41px;
+    font-weight: 400;
+    color: white;
+    font-size: 35px;
     position: relative;
     top: -39px;
 }
@@ -409,6 +447,17 @@ section h2 {
 .menu a:hover {
     background:rgba(1,1,1,0.1);
 }
+.side-title {
+    position: relative;
+    top: -18px;
+}
+.side-title, .side-navbar {
+    width: 250px;
+}
+.side-navbar {
+    border-right: 1px solid #eee;
+    margin-right: 10px;
+}
 .list-view .menu {
     margin: 20px 0 15px 0;
 }
@@ -416,7 +465,7 @@ section h2 {
     width: initial;
 }
 .page-header {
-    margin: 70px 0 20px;
+    margin: 50px 0 20px;
 }
 .page-header .content {
     line-height: 25px;
@@ -541,6 +590,9 @@ section h2 {
     padding-left: inherit;
     box-shadow: none;
 }
+.horizontal.list-group {
+    margin: 0 0;
+}
 .list-group h4{
     font-weight: bold;
 }
@@ -549,6 +601,10 @@ section h2 {
 }
 .list-group-item a {
     color: #555;
+}
+.horizontal .list-group-item {
+    border: 0px;
+    border-top: 1px solid #eee;
 }
 a .view-quote:hover {
     color: #222;
@@ -688,6 +744,10 @@ img.company-logo {
 }
 .profile-info {
     overflow: auto;
+}
+.profile-info .detail {
+    font-weight: 400;
+    margin-top: 10px;
 }
 .company-profile h5 {
     margin-bottom: 5px;
