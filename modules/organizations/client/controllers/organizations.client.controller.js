@@ -199,9 +199,28 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       };
     };
 
+    // popup dialog that allows user to create a review
+    $scope.showReviewView = function(ev, organizationId) {
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/reviews/client/views/create-review.client.view.html',
+        controller: 'CreateReviewsController',
+        resolve: {
+          modalOrganizationId: function() {
+            return organizationId;
+          }
+        },
+        windowClass: 'app-modal-window'
+      });
+
+      modalInstance.result.then(function() {
+        if (organizationId) {
+          $scope.findOne();
+        }
+      });
+    };
+
     $scope.showAddUsers = function(ev) {
       console.log(ev);
-
 
       var modalInstance = $modal.open({
         templateUrl: '/modules/organizations/client/views/add-users.client.view.html',

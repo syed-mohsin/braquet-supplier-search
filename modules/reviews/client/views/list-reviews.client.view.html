@@ -11,6 +11,7 @@
         <span ng-bind="review.user.displayName"></span>
       </small>
       <h4 class="list-group-item-heading" ng-bind="review.title"></h4>
+      <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
       <p class="list-group-item-text" ng-bind="review.content"></p>
     </a>
   </div>

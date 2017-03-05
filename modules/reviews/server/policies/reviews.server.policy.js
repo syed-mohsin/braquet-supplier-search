@@ -18,7 +18,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews',
       permissions: '*'
     }, {
-      resources: '/api/reviews/:organizationId',
+      resources: '/api/reviews/create/:organizationId',
       permissions: ['post']
     }, {
       resources: '/api/reviews/:reviewId',
@@ -30,7 +30,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews',
       permissions: ['get']
     }, {
-      resources: '/api/reviews/:organizationId',
+      resources: '/api/reviews/create/:organizationId',
       permissions: ['post']
     }, {
       resources: '/api/reviews/:reviewId',

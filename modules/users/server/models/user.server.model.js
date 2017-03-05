@@ -96,6 +96,10 @@ var UserSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Organization'
   },
+  reviews: [{
+    type: Schema.ObjectId,
+    ref: 'Review'
+  }],
   connections: [{
     type: Schema.ObjectId,
     ref: 'User'

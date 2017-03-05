@@ -10,7 +10,10 @@ var reviewsPolicy = require('../policies/reviews.server.policy'),
 module.exports = function (app) {
   // Reviews collection routes
   app.route('/api/reviews').all(reviewsPolicy.isAllowed)
-    .get(reviews.list)
+    .get(reviews.list);
+
+  // Create a new Review
+  app.route('/api/reviews/create/:organizationId').all(reviewsPolicy.isAllowed)
     .post(reviews.create);
 
   // Single review routes
