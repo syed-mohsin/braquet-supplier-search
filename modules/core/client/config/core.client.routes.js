@@ -50,10 +50,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     })
     .state('awaiting-confirmation', {
       url: '/awaiting-confirmation',
-      template: 'Awaiting Confirmation',
+      templateUrl: 'modules/core/client/views/awaiting-confirmation.client.view.html',
       controller: function($state, Authentication) {
         var user = Authentication.user;
-        if (user.verified) {
+        if (user.verified && user.emailVerified) {
           $state.go('home');
         }
       }

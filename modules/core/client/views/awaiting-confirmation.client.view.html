@@ -1,0 +1,9 @@
+<section ng-controller="HomeController">
+    <section class="welcome banner">
+        <div class="detail container">
+            <p style="color:red">Awaiting Admin Confirmation</p>
+            <p ng-if="!authentication.user.emailVerified" style="color:red">Awaiting Email Confirmation</p>
+            <p ng-if="authentication.user.emailVerified" style="color:green">Email Confirmed</p>
+        </div>
+    </section>
+</section>

@@ -118,7 +118,12 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  /* For admin verification */
   verified: {
+    type: Boolean,
+    default: false
+  },
+  emailVerified: {
     type: Boolean,
     default: false
   },
