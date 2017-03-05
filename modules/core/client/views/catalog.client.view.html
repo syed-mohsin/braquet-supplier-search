@@ -10,9 +10,9 @@
         </div>
         <div class="menu">
             <button class="visible-xs btn-primary" data-toggle="collapse" data-target="side-navbar">Product Type <span class="glyphicon glyphicon-menu-down"></span></button>
-            <button class="visible-xs btn-primary last" data-toggle="collapse" data-target="side-navbar">See Filters</button>
+            <button class="visible-xs btn-primary last" ng-click="toggleFilter()" data-toggle="collapse" data-target="side-navbar">See Filters</button>
         </div>
-        <div class="col-sm-3 side-navbar hidden-xs" id="side-navbar">
+        <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
             <label>Filters</label>
             <div class="list-group">
                 <span class="catalog-label"><small>Module Wattage ></small></span>

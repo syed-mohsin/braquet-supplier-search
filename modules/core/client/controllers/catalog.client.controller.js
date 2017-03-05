@@ -6,6 +6,9 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.authentication = Authentication;
     $scope.search = '';
 
+    // used to toggle filter on xs screen size
+    $scope.hiddenFilterClass = 'hidden-xs';
+
     // initialize panel models
     $http.get('/api/organizations-catalog')
       .success(function(orgs) {
@@ -82,6 +85,10 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
           });
         });
       }
+    };
+
+    $scope.toggleFilter = function() {
+      $scope.hiddenFilterClass = $scope.hiddenFilterClass ? '' : 'hidden-xs';
     };
 
     $scope.buildWattCheckboxes = function() {
