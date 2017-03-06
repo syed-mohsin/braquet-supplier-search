@@ -9,7 +9,7 @@
                     <select name="project_state" ng-model="project_state" id="project_state" class="form-control" required>
             <option value="">---Public or Private Quote Request---</option>
             <option value="public">Public - all your preferred suppliers will receive an invite</option>
-            <option value="private">Private - Only invited suppliers will receive the RFQ</option> 
+            <option value="private">Private - Only invited suppliers will receive the RFQ</option>
           </select>
                     <div ng-messages="projectForm.project_state.$error" role="alert">
                         <p class="help-block error-text" ng-message="required">Please indicate whether this Quote Request is public or private</p>
@@ -101,11 +101,8 @@
                     </div>
                 </div>
                 <div class="form-group" show-errors>
-                    <!--           <label for="title">Title</label> -->
-                    <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Note on this RFQ" required>
-                    <div ng-messages="projectForm.title.$error" role="alert">
-                        <p class="help-block error-text" ng-message="required">RFQ name is required.</p>
-                    </div>
+                    <!--           <label for="note">Title</label> -->
+                    <input name="note" type="text" ng-model="note" id="note" class="form-control" placeholder="Note on this RFQ">
                 </div>
 
                 <div class="form-group">

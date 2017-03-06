@@ -82,7 +82,7 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var project = req.project;
 
-  project.title = req.body.title;
+  project.note = req.body.note;
   project.panel_models = req.body.panel_models;
   project.quantity = req.body.quantity;
   project.bid_deadline = req.body.bid_deadline;
