@@ -31,7 +31,7 @@
                 <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                 <small><span ng-bind="organization.productTypes"></span></small>
 
-<!--                 <small><span ng-bind="organization.website"></span></small> -->
+<!--                 <small><span ng-bind="organization.url"></span></small> -->
                 <div><small><span>You are currently not connected to <span ng-bind="organization.companyName"></span></span> - <a ui-sref="connections.create">Add a contact</a></small></div>
                 <div class="menu">
                     <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
