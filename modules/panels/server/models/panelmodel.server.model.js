@@ -25,7 +25,16 @@ var PanelModelSchema = new Schema({
   stcPowerW: {
     type: Number
   },
-  manufacturingLocations: {
+  frameColor: {
+    type: String
+  },
+  numberOfCells: {
+    type: Number
+  },
+  manufacturingLocations: [{
+    type: String
+  }],
+  specSheetLink: {
     type: String
   },
   panelPhotoUrl: {
