@@ -37,6 +37,10 @@ var OrganizationSchema = new Schema({
     type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
+  reviews: [{
+    type: Schema.ObjectId,
+    ref: 'Review'
+  }],
   panel_models: [{
     type: Schema.ObjectId,
     ref: 'PanelModel',
