@@ -31,7 +31,6 @@
                 <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                 <small><span ng-bind="organization.productTypes"></span></small>
 
-                <!--                 <small><span ng-bind="organization.url"></span></small> -->
                 <div><small><span>You are currently not connected to <span ng-bind="organization.companyName"></span></span> - <a ui-sref="connections.create">Add a contact</a></small></div>
                 <div class="menu">
                     <a ng-click="showReviewView($event, organization._id)">
@@ -56,7 +55,7 @@
         <div class="box title-content no-border reviews">
             <div class="content no-wrap">
                 <div class="sub-title name">
-                    <span ng-bind="organization.reviews.length"></span> <span>Buyer Reviews</span>
+                    <span ng-bind="organization.reviews.length"></span> <span> Reviews</span>
                 </div>
                 <div class="list-group">
                     <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
@@ -75,7 +74,7 @@
                                 <div class="sub-title">"<span class="list-group-item-heading" ng-bind="review.title"></span>"</div>
                                 <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
                                 <div class="review-user"><small>By
-                                <span ng-bind="review.user"></span> on 
+                                <span ng-bind="review.user.firstName"></span> on 
                                 <span ng-bind="review.created | date:'mediumDate'"></span></small>
                                 </div>
                                 <div class="review-content"><span class="list-group-item-text" ng-bind="review.content"></span></div>
