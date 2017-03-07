@@ -135,7 +135,7 @@ exports.bidByID = function (req, res, next, id) {
           message: 'No bid with that identifier has been found'
         });
       } else if (req.user.roles[0] === 'seller' && String(req.user._id) !== String(bid.user._id)) {
-        return res.status(404).send({
+        return res.status(403).send({
           message: 'You are not authorized to access this page'
         });
       }

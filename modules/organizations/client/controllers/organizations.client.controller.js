@@ -45,12 +45,17 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
 
       // Create new Organization object
       var organization = new Organizations({
-        name: this.name,
+        companyName: this.companyName,
         industry: this.industry,
-        product_types: this.product_types,
+        productTypes: this.product_types,
         panel_models: this.panel_models,
-        website: this.website,
-        headquarters: this.headquarters,
+        url: this.url,
+        address1: this.address1,
+        address2: this.address2,
+        city: this.city,
+        state: this.state,
+        zipcode: this.zipcode,
+        country: this.country,
         about: this.about
       });
 
@@ -199,9 +204,28 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       };
     };
 
+    // popup dialog that allows user to create a review
+    $scope.showReviewView = function(ev, organizationId) {
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/reviews/client/views/create-review.client.view.html',
+        controller: 'CreateReviewsController',
+        resolve: {
+          modalOrganizationId: function() {
+            return organizationId;
+          }
+        },
+        windowClass: 'app-modal-window'
+      });
+
+      modalInstance.result.then(function() {
+        if (organizationId) {
+          $scope.findOne();
+        }
+      });
+    };
+
     $scope.showAddUsers = function(ev) {
       console.log(ev);
-
 
       var modalInstance = $modal.open({
         templateUrl: '/modules/organizations/client/views/add-users.client.view.html',

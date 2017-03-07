@@ -74,7 +74,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
 
       // Create new Project object
       var project = new Projects({
-        title: this.title,
+        note: this.note,
         quantity: this.quantity,
         bid_deadline: this.bid_date.value,
         panel_models: this.panel_models,
@@ -93,7 +93,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$state',
         $location.path('projects/' + response._id);
 
         // Clear form fields
-        $scope.title = '';
+        $scope.note = '';
         $scope.quantity = '';
         $scope.bid_deadline = '';
         $scope.shipping_address_1 = '';

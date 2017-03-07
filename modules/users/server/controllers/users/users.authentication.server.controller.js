@@ -37,7 +37,7 @@ exports.signup = function (req, res) {
   delete req.body.organizationForm;
 
   if (organizationId === 'other' && organizationForm.organizationName && organizationForm.organizationWebsite) {
-    newOrganization = new Organization({ name: organizationForm.organizationName, website: organizationForm.organizationWebsite });
+    newOrganization = new Organization({ companyName: organizationForm.organizationName, url: organizationForm.organizationWebsite });
   } else if (organizationId === 'other' && (!organizationForm.organizationName || !organizationForm.organizationWebsite)) {
     return res.status(400).send({
       message: 'invalid organization form submission'

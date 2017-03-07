@@ -49,12 +49,17 @@ exports.update = function (req, res) {
   var organization = req.organization;
 
   organization.title = req.body.title;
-  organization.name = req.body.name;
+  organization.companyName = req.body.companyName;
   organization.panel_models = req.body.panel_models;
   organization.industry = req.body.industry;
-  organization.product_types = req.body.product_types;
-  organization.website = req.body.website;
-  organization.headquarters = req.body.headquarters;
+  organization.producTypes = req.body.productTypes;
+  organization.url = req.body.url;
+  organization.address1 = req.body.address1;
+  organization.address2 = req.body.address2;
+  organization.city = req.body.city;
+  organization.state = req.body.state;
+  organization.zipcode = req.body.zipcode;
+  organization.country = req.body.country;
   organization.about = req.body.about;
 
   organization.save(function (err) {
@@ -142,7 +147,7 @@ exports.verify = function(req, res) {
  * List of only organization names
  */
 exports.list_basic = function (req, res) {
-  Organization.find({}, 'name', function(err, organizations) {
+  Organization.find({}, 'companyName', function(err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -302,6 +307,7 @@ exports.organizationByID = function (req, res, next, id) {
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .populate('admin', 'displayName')
+    .populate('reviews')
     .exec(function (err, organization) {
       if (err) {
         return next(err);

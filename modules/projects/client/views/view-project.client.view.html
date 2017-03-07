@@ -44,16 +44,16 @@
                     <div class="box-title">
                         <div class="glyphicon glyphicon-file"></div>
                         Note - 
-                        <span ng-bind="project.title" class="ng-binding"></span> 
+                        <span ng-bind="project.note" class="ng-binding"></span>
                     </div>
                 </div>
                 <div class="box delivery-location no-padding">
                     <div class="box-title">
                         <div class="glyphicon glyphicon-map-marker"></div>
                         Ship to
-                        <span ng-bind="project.shipping_address_city" class="ng-binding"></span>, 
+                        <span ng-bind="project.shipping_address_city" class="ng-binding"></span>,
                         <span ng-bind="project.shipping_address_state" class="ng-binding"></span>
-                        <span ng-bind="project.shipping_address_zip_code" class="ng-binding"></span>, 
+                        <span ng-bind="project.shipping_address_zip_code" class="ng-binding"></span>,
                         <span ng-bind="project.shipping_address_country" class="ng-binding"></span>
                     </div>
                 </div>
@@ -61,8 +61,8 @@
                 <div class="box delivery-location no-padding">
                     <div class="box-title">
                         <div class="glyphicon glyphicon-list-alt"></div>
-                        Preferred paymen term - 
-                        <span ng-bind="project.preferred_payment_term" class="ng-binding"></span> 
+                        Preferred paymen term -
+                        <span ng-bind="project.preferred_payment_term" class="ng-binding"></span>
                     </div>
                 </div>
                 <div class="specified-products">
@@ -118,7 +118,7 @@
                     <!-- ng-show="authentication.user._id == project.user._id" -->
                     <div class="bid">
                             <!-- <img class="company-logo" ng-src="{{bid.organization.logoImageUrl}}"> -->
-                            <h6><span ng-bind="bid.organization.name"></span></h6>
+                            <h6><span ng-bind="bid.organization.companyName"></span></h6>
                         <a ui-sref="bids.view({bidId: bid._id})">
                             <small class="list-group-item-text">
                             <img class="profile" ng-src="{{bid.user.profileImageURL}}">
@@ -126,7 +126,7 @@
                                 <span ng-bind="bid.user.firstName"></span> submitted a quote at <span><span ng-bind="bid.subtotal/100 + bid.shipping_cost/100 + bid.sales_tax/100 | currency"></span></span> (<span ng-bind="bid.panel_models[0].manufacturer"></span>, <span ng-bind="bid.panel_models[0].model"></span>) on <span ng-bind="bid.created | date:'mediumDate'"></span>
                             - <span class="view-quote">View quote</span>
                             </div>
-                            
+
                              </small>
                         </a>
 

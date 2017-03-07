@@ -42,7 +42,7 @@ angular.module('bids').controller('CreateBidController', ['$scope', '$stateParam
         sales_tax: this.sales_tax * 100,
         payment_term: this.payment_term,
         project: $scope.project._id,
-        project_title: $scope.project.title
+        project_title: $scope.project.note
       });
 
       // Redirect after save

@@ -29,7 +29,7 @@ var OrganizationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   }],
-  name: {
+  companyName: {
     type: String,
     required: 'Organization name is required'
   },
@@ -37,6 +37,10 @@ var OrganizationSchema = new Schema({
     type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
+  reviews: [{
+    type: Schema.ObjectId,
+    ref: 'Review'
+  }],
   panel_models: [{
     type: Schema.ObjectId,
     ref: 'PanelModel',
@@ -44,14 +48,29 @@ var OrganizationSchema = new Schema({
   industry: {
     type: String
   },
-  product_types: [{
+  productTypes: {
     type: String
-  }],
-  website: {
+  },
+  url: {
     type: String,
     required: 'Company Website is required'
   },
-  headquarters: {
+  address1: {
+    type: String
+  },
+  address2: {
+    type: String
+  },
+  city: {
+    type: String
+  },
+  state: {
+    type: String
+  },
+  zipcode: {
+    type: String
+  },
+  country: {
     type: String
   },
   about: {
