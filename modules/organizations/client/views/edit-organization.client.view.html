@@ -6,8 +6,8 @@
       <h2>Edit Company Profile</h2>
       <fieldset>
         <div class="form-group" show-errors>
-          <input name="name" type="text" ng-model="organization.name" id="name" class="form-control" placeholder="Name" required>
-          <div ng-messages="organizationForm.title.$error" role="alert">
+          <input name="companyName" type="text" ng-model="organization.companyName" id="name" class="form-control" placeholder="Company Name" required>
+          <div ng-messages="organizationForm.companyName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Company name is required.</p>
           </div>
         </div>
@@ -20,8 +20,8 @@
         </div>
 
         <div class="form-group" show-errors>
-          <input name="product_types" type="text" ng-model="organization.product_types" id="product_types" class="form-control" placeholder="Select Product Types" required>
-          <div ng-messages="organizationForm.product_types.$error" role="alert">
+          <input name="productTypes" type="text" ng-model="organization.productTypes" id="productTypes" class="form-control" placeholder="Select Product Types" required>
+          <div ng-messages="organizationForm.productTypes.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Product Types are required.</p>
           </div>
         </div>
@@ -47,22 +47,54 @@
             </md-chip-template>
 
           </md-chips>
-          <div ng-messages="bidForm.panel_models.$error" role="alert">
+          <div ng-messages="organizationForm.panel_models.$error" role="alert">
             <p class="help-block error-text" ng-message="md-max-chips">Please select only from available panel models.</p>
           </div>
         </div>
 
          <div class="form-group" show-errors>
-          <input name="website" type="text" ng-model="organization.website" id="website" class="form-control" placeholder="Company Website" required>
-          <div ng-messages="organizationForm.website.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">website is required.</p>
+          <input name="url" type="text" ng-model="organization.url" id="url" class="form-control" placeholder="Company Website" required>
+          <div ng-messages="organizationForm.url.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Company Website is required.</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <input name="headquarters" type="text" ng-model="organization.headquarters" id="headquarters" class="form-control" placeholder="Headquarters Address" required>
-          <div ng-messages="organizationForm.headquarters.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Headquarters is required.</p>
+          <input name="address1" type="text" ng-model="organization.address1" id="address1" class="form-control" placeholder="Address Line 1" required>
+          <div ng-messages="organizationForm.address1.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Address Line 1 is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="address2" type="text" ng-model="organization.address2" id="address2" class="form-control" placeholder="Address Line 2">
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="city" type="text" ng-model="organization.city" id="city" class="form-control" placeholder="City" required>
+          <div ng-messages="organizationForm.city.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">City is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="state" type="text" ng-model="organization.state" id="state" class="form-control" placeholder="State" required>
+          <div ng-messages="organizationForm.state.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">State is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="zipcode" type="text" ng-model="organization.zipcode" id="zipcode" class="form-control" placeholder="Zipcode" required>
+          <div ng-messages="organizationForm.zipcode.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Zipcode is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="country" type="text" ng-model="organization.country" id="country" class="form-control" placeholder="Country" required>
+          <div ng-messages="organizationForm.country.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Country is required.</p>
           </div>
         </div>
 

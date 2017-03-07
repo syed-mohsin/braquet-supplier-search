@@ -19,7 +19,7 @@
         <div class="form-group" show-errors>
           <select name="organization" ng-model="credentials.organization" id="organization" class="form-control" required>
             <option value="">---Select Organization---</option>
-            <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
+            <option ng-repeat="org in organizations" value="{{org._id}}">{{org.companyName}}</option>
             <option value="other">Other</option>
           </select>
 

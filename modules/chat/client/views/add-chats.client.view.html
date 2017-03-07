@@ -14,7 +14,7 @@
     <a class="list-group-item">
        <img class="profile" ng-src="{{selectedChatter.profileImageURL}}">
         <h4 class="list-group-item-heading" ng-bind="selectedChatter.displayName"></h4>
-        <h5>Associate Executive @ <span ng-bind="selectedChatter.organization.name"></span></h5>
+        <h5>Associate Executive @ <span ng-bind="selectedChatter.organization.companyName"></span></h5>
     </a>
   </div>
   <div class="list-group" ng-if="!selectedChatter">
@@ -22,7 +22,7 @@
     <a ng-repeat="connection in pagedItems" ng-click="selectChatter(connection)" class="list-group-item">
        <img class="profile" ng-src="{{connection.profileImageURL}}">
         <h4 class="list-group-item-heading" ng-bind="connection.displayName"></h4>
-        <h5>Associate Executive @ <span ng-bind="connection.organization.name"></span></h5>
+        <h5>Associate Executive @ <span ng-bind="connection.organization.companyName"></span></h5>
     </a>
   </div>
   <div class="list-group">
