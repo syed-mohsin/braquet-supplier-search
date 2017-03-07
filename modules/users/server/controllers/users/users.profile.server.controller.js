@@ -61,10 +61,12 @@ exports.update = function (req, res) {
 exports.changeProfilePicture = function (req, res) {
   var user = req.user;
   var message = null;
+  var bucket = process.env.NODE_ENV === 'production' ? 'braquetprofilephotosproduction' : 'braquetprofilephotosdev';
+
   var upload = multer({
     storage: multerS3({
       s3: s3,
-      bucket: 'braquetprofilephotos',
+      bucket: bucket,
       acl: 'public-read',
       metadata: function(req, file, cb) {
         console.log(file);
@@ -96,7 +98,7 @@ exports.changeProfilePicture = function (req, res) {
               if (err) {
                 res.status(400).send(err);
               } else {
-                s3.deleteObject({ Bucket: 'braquetprofilephotos', Key: oldImageKey }, function(err, data) {
+                s3.deleteObject({ Bucket: bucket, Key: oldImageKey }, function(err, data) {
                   if (err) {
                     return res.status(400).json(err);
                   } else {
