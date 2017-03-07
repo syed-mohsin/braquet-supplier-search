@@ -26,11 +26,10 @@ var ProjectSchema = new Schema({
     trim: true,
     required: 'Bid Deadline cannot be blank'
   },
-  title: {
+  note: {
     type: String,
     default: '',
-    trim: true,
-    required: 'Title cannot be blank'
+    trim: true
   },
   project_state: {
     type: String,
