@@ -180,12 +180,13 @@ exports.get_catalog = function (req, res) {
 exports.changeLogo = function (req, res) {
   var user = req.user;
   var organization = req.organization;
+  var bucket = process.env.NODE_ENV === 'production' ? 'braquetcompanylogosproduction' : 'braquetcompanylogosdev';
 
   var message = null;
   var upload = multer({
     storage: multerS3({
       s3: s3,
-      bucket: 'braquetcompany',
+      bucket: bucket,
       acl: 'public-read',
       metadata: function(req, file, cb) {
         console.log(file);
@@ -214,7 +215,7 @@ exports.changeLogo = function (req, res) {
               message: errorHandler.getErrorMessage(saveError)
             });
           } else {
-            s3.deleteObject({ Bucket: 'braquetcompany', Key: oldImageKey }, function(err, data) {
+            s3.deleteObject({ Bucket: bucket, Key: oldImageKey }, function(err, data) {
               if (err) {
                 return res.status(400).json(err);
               } else {
