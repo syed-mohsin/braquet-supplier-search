@@ -180,7 +180,7 @@ exports.get_catalog = function (req, res) {
 exports.changeLogo = function (req, res) {
   var user = req.user;
   var organization = req.organization;
-  var bucket = process.env.NODE_ENV === 'production' ? 'braquetcompanyproduction' : 'braquetcompanydev';
+  var bucket = process.env.NODE_ENV === 'production' ? 'braquetcompanylogosproduction' : 'braquetcompanylogosdev';
 
   var message = null;
   var upload = multer({
