@@ -1,9 +1,9 @@
-<section class="organization container list-view border" ng-controller="OrganizationsController" ng-init="findOne()">
+<section class="organization container list-view border profile" ng-controller="OrganizationsController" ng-init="findOne()">
     <div class="page-header">
         <div>
             <div class="profile-photo">
                 <!-- <img ng-src="{{organization.logo}}"> -->
-                <img ng-src="{{organization.logoImageUrl}}" class="company-logo">
+                <img ng-src="{{organization.logoImageUrl}}">
                 <fieldset class="menu" ng-if="authentication.user.roles.indexOf('admin') !== -1">
                     <div class="btn-file">
                              Edit logo <input type="file" nv-file-select uploader="uploader">
@@ -20,9 +20,14 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="content no-wrap">
+            <div class="content no-wrap title-content">
                 <div class="title name">
                     <span ng-bind="organization.companyName"></span>
+                </div>
+                 <div class="menu edit">
+                       <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
+                        <span class="glyphicon glyphicon-new-window"></span><span>Edit organization</span>
+                    </a>
                 </div>
                 <div class="bio">
                     <span ng-bind="organization.about"></span>
@@ -35,17 +40,14 @@
                 <div><small><span>You are currently not connected to <span ng-bind="organization.companyName"></span></span> - <a ui-sref="connections.create">Add a contact</a></small></div>
                 <div class="menu">
                     <a ng-click="showReviewView($event, organization._id)">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Write a Review</span>
-                    </a>
-                    <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Edit Organization</span>
+                        <span class="glyphicon glyphicon-new-window"></span><span>Write a review</span>
                     </a>
                     <a ng-if="authentication.user.roles.indexOf('seller') === -1" ui-sref="projects.create">
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
                     <span ng-if="authentication.user.roles.indexOf('user') === -1" class="glyphicon glyphicon-ban-circle"></span><span ng-if="authentication.user.roles.indexOf('user') === -1">Unable to request a quote as you are a seller</span>
                     <a ng-if="organization.admin === user._id"  ng-click="showAddUsers($event)">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Add Employees</span>
+                        <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
                     </a>
                 </div>
             </div>
