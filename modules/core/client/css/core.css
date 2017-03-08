@@ -130,6 +130,10 @@ form label {
     background: #45A47C;
 }
 
+.notice .title {
+    font-weight: 400;
+}
+
 .notice.error {
     background: #C74B4B;
 }
@@ -283,7 +287,6 @@ section h2 {
     height: 100vh;
     background-color: rgba(0,0,0,0.2);
 }
-
 .welcome.banner {
     text-align: center;
     background: url('/modules/core/client/img/asset/home_banner2.jpg');
