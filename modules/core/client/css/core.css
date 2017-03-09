@@ -752,6 +752,30 @@ img.company-logo {
     border-radius: inherit;
     float: left;
 }
+.reviews .sub-title {
+    margin-bottom: 3px;
+}
+.review-user, .review-content {
+    font-weight: normal;
+}
+.reviews img.profile {
+    border-radius: initial;
+}
+.reviews .glyphicon-star-empty, .reviews .glyphicon-star {
+    padding: 2px 2px 2px 3px;
+    margin-right: 2px;
+    border-radius: 2px;
+    color: white;
+}
+.reviews .glyphicon-star {
+    background: #7cb228;
+}
+.reviews .glyphicon-star-empty {
+    background: lightgrey;
+}
+.review-content {
+    margin-top: 10px;
+}
 .profile-info {
     overflow: auto;
 }
