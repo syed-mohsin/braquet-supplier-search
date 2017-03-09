@@ -14,6 +14,10 @@
           <rating name="rating" id="rating" ng-model="rating" read-only="false" on-hover="hoveringOver(value)" aria-labelledby="default-rating"></rating>
         </div>
         <div class="form-group">
+          <input type="checkbox" ng-model="anonymous">
+          <span><small>Anonymous?</small></span>
+        </div>
+        <div class="form-group">
           <label for="content">Content</label>
           <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
         </div>
