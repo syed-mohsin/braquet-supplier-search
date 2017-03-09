@@ -451,7 +451,7 @@ section h2 {
     background:rgba(1,1,1,0.1);
 }
 .list-view .menu.edit {
-    margin: 0 0;
+    margin: 10px 0;
 }
 .side-title {
     position: relative;
@@ -738,10 +738,6 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     text-align: center;
     padding: 10px; 
     background: white;
-}
-.organization .title {
-    float: left;
-    margin-right: 10px;
 }
 .organization .profile-photo {
     margin: 10px 25px;
