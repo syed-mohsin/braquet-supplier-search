@@ -9,6 +9,7 @@ var path = require('path'),
   multerS3 = require('multer-s3'),
   mongoose = require('mongoose'),
   Organization = mongoose.model('Organization'),
+  Review = mongoose.model('Review'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   nodemailer = require('nodemailer'),
@@ -315,7 +316,18 @@ exports.organizationByID = function (req, res, next, id) {
         return next(new Error('Failed to load organization ' + id));
       }
 
-      req.organization = organization;
+      Review.populate(organization.reviews, [
+        { path: 'organization' },
+        { path: 'user' }
+      ], function(err, reviews) {
+        if (err) {
+          return next(err);
+        } else {
+          req.organization = organization;
+
+        }
+      });
+
       next();
     });
 };
