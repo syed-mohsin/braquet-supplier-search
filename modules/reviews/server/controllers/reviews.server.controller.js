@@ -41,7 +41,7 @@ exports.create = function (req, res) {
 
       review = oldReview;
       review.rating = req.body.rating;
-      review.content = review.content + '<br><br>***UPDATE ' + (new Date()).toDateString() + '***<br><br>' + req.body.content;
+      review.content = review.content + '\n\n***UPDATE ' + (new Date()).toDateString() + '***\n\n' + req.body.content;
 
       review.save(function(err) {
         if (err) {
@@ -73,7 +73,6 @@ exports.create = function (req, res) {
                     message: 'failed to save message to organization'
                   });
                 } else {
-
                   res.json(review);
                 }
               });

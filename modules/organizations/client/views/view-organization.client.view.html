@@ -63,10 +63,6 @@
                             <a ui-sref="reviews.edit({reviewId: review._id})">
                                 <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
                             </a>
-                            <a ng-click="remove();">
-                                <span class="glyphicon glyphicon-trash"></span><span>Delete Review</span>
-                            </a>
-
                         </div>
                         <img ng-src="{{organization.logoImageUrl}}" class="profile">
                         <div class="detail no-wrap">
@@ -74,7 +70,7 @@
                                 <div class="sub-title">"<span class="list-group-item-heading" ng-bind="review.title"></span>"</div>
                                 <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
                                 <div class="review-user"><small>By
-                                <span ng-bind="review.user.firstName"></span> on 
+                                <span ng-bind="review.user.firstName"></span> on
                                 <span ng-bind="review.created | date:'mediumDate'"></span></small>
                                 </div>
                                 <div class="review-content"><span class="list-group-item-text" ng-bind="review.content"></span></div>

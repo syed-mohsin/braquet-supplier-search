@@ -13,6 +13,9 @@
           </div>
         </div>
         <div class="form-group">
+          <rating name="rating" id="rating" ng-model="review.rating" read-only="false" on-hover="hoveringOver(value)" aria-labelledby="default-rating"></rating>
+        </div>
+        <div class="form-group">
           <label for="content">Content</label>
           <textarea name="content" ng-model="review.content" id="content" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
         </div>
