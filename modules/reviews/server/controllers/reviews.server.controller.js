@@ -13,75 +13,76 @@ var path = require('path'),
  * Create a review
  */
 exports.create = function (req, res) {
-  if (req.organization && req.user) {
-    var review = new Review(req.body);
-    review.user = req.user;
-    review.organization = req.organization;
-
-    // see if review already exists
-    Review.findOne({
-      user: req.user._id,
-      organization: req.organization._id
-    }, function(err, oldReview) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else if (oldReview) { // handle updating old review
-        if (!req.body.content) { // make sure new message exists
-          return res.status(400).send({
-            message: 'Review description is required'
-          });
-        }
-
-        review = oldReview;
-        review.rating = req.body.rating;
-        review.content = review.content + '<br><br>***UPDATE ' + (new Date()).toDateString() + '***<br><br>' + req.body.content;
-
-        review.save(function(err) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
-          } else {
-            res.json(review);
-          }
-        });
-      } else { // handle creating new review
-        review.save(function (err) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
-          } else {
-            req.user.reviews.push(review);
-            req.user.save(function(err) {
-              if (err) {
-                res.status(400).json({
-                  message: 'failed to save message to user'
-                });
-              } else {
-                req.organization.reviews.push(review);
-                req.organization.save(function(err) {
-                  if (err) {
-                    res.status(400).json({
-                      message: 'failed to save message to organization'
-                    });
-                  } else {
-                    res.json(review);
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  } else {
-    res.status(400).json({
+  if (!req.organization || !req.user) {
+    return res.status(400).json({
       message: 'Invalid user or organization'
     });
   }
+
+  var review = new Review(req.body);
+  review.user = req.user._id;
+  review.organization = req.organization._id;
+
+  // see if review already exists
+  Review.findOne({
+    user: req.user._id,
+    organization: req.organization._id
+  }, function(err, oldReview) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if (oldReview) { // handle updating old review
+      if (!req.body.content) { // make sure new message exists
+        return res.status(400).send({
+          message: 'Review description is required'
+        });
+      }
+
+      review = oldReview;
+      review.rating = req.body.rating;
+      review.content = review.content + '<br><br>***UPDATE ' + (new Date()).toDateString() + '***<br><br>' + req.body.content;
+
+      review.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(review);
+        }
+      });
+    } else { // handle creating new review
+      review.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          req.user.reviews.push(review);
+          req.user.save(function(err) {
+            if (err) {
+              res.status(400).json({
+                message: 'failed to save message to user'
+              });
+            } else {
+              req.organization.reviews.push(review);
+              req.organization.save(function(err) {
+                if (err) {
+                  res.status(400).json({
+                    message: 'failed to save message to organization'
+                  });
+                } else {
+
+                  res.json(review);
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
 };
 
 /**
@@ -157,12 +158,10 @@ exports.reviewByID = function (req, res, next, id) {
     });
   }
 
-  console.log('before finding review');
   Review.findById(id)
   .populate('user', 'displayName')
   .populate('organization')
   .exec(function (err, review) {
-    console.log('did i find a review', review);
     if (err) {
       return next(err);
     } else if (!review) {
