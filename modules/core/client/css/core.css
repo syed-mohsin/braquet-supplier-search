@@ -450,6 +450,9 @@ section h2 {
 .menu a:hover {
     background:rgba(1,1,1,0.1);
 }
+.list-view .menu.edit {
+    margin: 0 0;
+}
 .side-title {
     position: relative;
     top: -18px;
@@ -736,6 +739,10 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     padding: 10px; 
     background: white;
 }
+.organization .title {
+    float: left;
+    margin-right: 10px;
+}
 .organization .profile-photo {
     margin: 10px 25px;
 }
@@ -779,9 +786,6 @@ img.company-logo {
 .company-profile h5 {
     margin-bottom: 5px;
 }
-.profile .profile-photo {
-    margin-top: -50px;
-}
 .profile-photo img {
     width: 150px;
 }
@@ -792,10 +796,6 @@ img.company-logo {
 .user-connections {
     float: right;
     text-align: right;
-}
-.profile .menu {
-    text-align: center;
-    margin-top: 50px;
 }
 .connections.list-view, .organizations.list-view {
     max-width: 700px;
