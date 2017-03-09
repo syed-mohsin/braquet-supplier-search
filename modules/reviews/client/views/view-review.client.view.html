@@ -1,15 +1,26 @@
-<section ng-controller="ReviewsController" ng-init="findOne()">
+<section ng-controller="ReviewsController" ng-init="findOne()" class="container list-view border">
   <div class="page-header">
-    <h1 ng-bind="review.title"></h1>
+  <div class="title">
+    <span ng-bind="review.title"></span>
   </div>
-  <div class="pull-right" ng-show="authentication.user._id == review.user._id">
+    <div class="menu" ng-show="authentication.user._id == review.user._id">
+        <a ui-sref="reviews.edit({reviewId: review._id})">
+            <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
+        </a>
+        <a ng-click="remove();">
+            <span class="glyphicon glyphicon-trash"></span><span>Delete Review</span>
+        </a>
+       
+    </div>
+  </div>
+<!--   <div class="pull-right" ng-show="authentication.user._id == review.user._id">
     <a class="btn btn-primary" ui-sref="reviews.edit({reviewId: review._id})">
       <i class="glyphicon glyphicon-edit"></i>
     </a>
     <a class="btn btn-primary" ng-click="remove();">
       <i class="glyphicon glyphicon-trash"></i>
     </a>
-  </div>
+  </div> -->
   <small>
     <em class="text-muted">
       Posted on

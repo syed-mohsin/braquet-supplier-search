@@ -6,7 +6,7 @@
                 <img ng-src="{{organization.logoImageUrl}}" class="company-logo">
                 <fieldset class="menu" ng-if="authentication.user.roles.indexOf('admin') !== -1">
                     <div class="btn-file">
-                             Edit logo <input type="file" nv-file-select uploader="uploader">
+                        Edit logo <input type="file" nv-file-select uploader="uploader">
                     </div>
                     <div class="text-center form-group" ng-show="uploader.queue.length">
                         <a ng-click="uploadProfilePicture();">Upload</a>
@@ -27,15 +27,14 @@
                 <div class="bio">
                     <span ng-bind="organization.about"></span>
                 </div>
-                <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span></small><br>
+                <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
                 <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                 <small><span ng-bind="organization.productTypes"></span></small>
 
-<!--                 <small><span ng-bind="organization.url"></span></small> -->
                 <div><small><span>You are currently not connected to <span ng-bind="organization.companyName"></span></span> - <a ui-sref="connections.create">Add a contact</a></small></div>
                 <div class="menu">
                     <a ng-click="showReviewView($event, organization._id)">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Write a Review</span>
+                        <span class="glyphicon glyphicon-star"></span><span>Write a Review</span>
                     </a>
                     <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
                         <span class="glyphicon glyphicon-new-window"></span><span>Edit Organization</span>
@@ -43,14 +42,44 @@
                     <a ng-if="authentication.user.roles.indexOf('seller') === -1" ui-sref="projects.create">
                         <span class="glyphicon glyphicon-new-window"></span><span>Request a quote</span>
                     </a>
-                    <span ng-if="authentication.user.roles.indexOf('user') === -1" class="glyphicon glyphicon-ban-circle"></span><span ng-if="authentication.user.roles.indexOf('user') === -1">Unable to request a quote as you are a seller</span>
-                    <a ng-if="organization.admin === user._id"  ng-click="showAddUsers($event)">
+                    <!-- <span ng-if="authentication.user.roles.indexOf('user') === -1" class="glyphicon glyphicon-ban-circle"></span><span ng-if="authentication.user.roles.indexOf('user') === -1">Unable to request a quote as you are a seller</span> -->
+                    <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Add Employees</span>
                     </a>
                 </div>
             </div>
         </div>
 
+    </div>
+    <div class="row">
+        <div class="box title-content no-border reviews">
+            <div class="content no-wrap">
+                <div class="sub-title name">
+                    <span ng-bind="organization.reviews.length"></span> <span> Reviews</span>
+                </div>
+                <div class="list-group">
+                    <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
+                        <div class="menu pull-right" ng-show="authentication.user._id == review.user._id">
+                            <a ui-sref="reviews.edit({reviewId: review._id})">
+                                <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
+                            </a>
+                        </div>
+                        <img ng-src="{{organization.logoImageUrl}}" class="profile">
+                        <div class="detail no-wrap">
+                            <a target="blank" class="project-title" ui-sref="reviews.view({reviewId: review._id})">
+                                <div class="sub-title">"<span class="list-group-item-heading" ng-bind="review.title"></span>"</div>
+                                <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                                <div class="review-user"><small>By
+                                <span ng-bind="review.user.firstName"></span> on
+                                <span ng-bind="review.created | date:'mediumDate'"></span></small>
+                                </div>
+                                <div class="review-content"><span class="list-group-item-text" ng-bind="review.content"></span></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="box title-content no-border product">
@@ -67,28 +96,12 @@
                                 <h4 class="list-group-item-heading" ng-bind="panel_model.model"></h4><small class="manufacturer"><span>by <span ng-bind="panel_model.manufacturer"></span></span></small>
                             </a>
                             <div class="specifications sub-text">
-                                Power (w): <span ng-bind="panel_model.stcPowerW"></span><br>
-                                Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br>
-                                Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
+                                Power (w): <span ng-bind="panel_model.stcPowerW"></span><br> Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br> Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
                             </div>
 
                         </div>
 
                     </div>
-  <!--              <div class="list-group-item col-sm-2">
-                        <img src="https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg">
-                        <div class="detail">
-                            <a target="blank" class="sub-title" href="#"> -->
-                                <!-- ng-show="authentication.user._id == project.user._id" -->
-<!--                                 <h4 class="list-group-item-heading">X21-335-BLK<br><small><span class="manufacturer">by SunPower</span></small></h4>
-                            </a>
-                            <div class="specifications sub-text">
-                                <span>Power (w): 335</span><br>
-                                <span>Module Efficiency (%): 20.1</span><br>
-                            </div>
-                        </div>
-
-                    </div> -->
                 </div>
             </div>
         </div>
