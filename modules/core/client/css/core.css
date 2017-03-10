@@ -772,6 +772,11 @@ img.company-logo {
 .review-content {
     margin-top: 10px;
 }
+@media (max-width: 767px) {
+    .reviews .detail {
+        width: 100%;
+    }
+}
 .profile-info {
     overflow: auto;
 }
