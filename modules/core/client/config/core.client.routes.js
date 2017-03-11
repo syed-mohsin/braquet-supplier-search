@@ -20,19 +20,20 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         if (user) {
           if (user.roles[0] === 'tempUser' || user.roles[0] === 'tempSeller') {
             $state.go('awaiting-confirmation');
-          } else {
-            $state.go('dashboard');
-          }
+          } else if (user.roles.indexOf('seller') !== -1) {
+            $state.go('organizations.view', { organizationId: user.organization });
+          } else if (user.roles.indexOf('user') !== -1) {
+            $state.go('catalog');
+          } 
         } else {
           $state.go('search');
         }
       }
     })
     // home page for users
-    .state('dashboard', {
-      url: '/dashboard',
-      templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
-    })
+    // .state('dashboard', {
+    //   url: '/dashboard'
+    // })
     .state('search', {
       url: '/search',
       templateUrl: 'modules/core/client/views/search.client.view.html'
@@ -41,13 +42,13 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/catalog',
       templateUrl: 'modules/core/client/views/catalog.client.view.html'
     })
-    .state('welcome', {
-      url: '/welcome',
-      templateUrl: 'modules/core/client/views/welcome.client.view.html',
-      data: {
-        ignoreState: true
-      }
-    })
+    // .state('welcome', {
+    //   url: '/welcome',
+    //   templateUrl: 'modules/core/client/views/welcome.client.view.html',
+    //   data: {
+    //     ignoreState: true
+    //   }
+    // })
     .state('awaiting-confirmation', {
       url: '/awaiting-confirmation',
       templateUrl: 'modules/core/client/views/awaiting-confirmation.client.view.html',
@@ -58,10 +59,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         }
       }
     })
-    .state('invite', {
-      url: '/welcome/invite',
-      templateUrl: 'modules/core/client/views/invite.client.view.html'
-    })
+    // .state('invite', {
+    //   url: '/welcome/invite',
+    //   templateUrl: 'modules/core/client/views/invite.client.view.html'
+    // })
     .state('not-found', {
       url: '/not-found',
       templateUrl: 'modules/core/client/views/404.client.view.html',

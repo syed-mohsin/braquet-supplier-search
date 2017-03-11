@@ -7,7 +7,7 @@
                 <fieldset class="menu" ng-if="authentication.user.roles.indexOf('admin') !== -1">
                     <div class="btn-file">
                         <span class="glyphicon glyphicon-camera"></span><span>Edit logo</span><input type="file" nv-file-select uploader="uploader">
-                        
+
                     </div>
                     <div class="text-center form-group" ng-show="uploader.queue.length">
                         <a ng-click="uploadProfilePicture();">Upload</a>
@@ -65,14 +65,14 @@
                 </div>
                 <div class="list-group">
                     <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
-                        <div class="menu pull-right" ng-show="authentication.user._id == review.user._id">
+                        <!-- <div class="menu pull-right" ng-show="authentication.user._id == review.user._id">
                             <a ui-sref="reviews.edit({reviewId: review._id})">
                                 <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
                             </a>
-                        </div>
+                        </div> -->
                         <img ng-src="{{organization.logoImageUrl}}" class="profile">
                         <div class="detail no-wrap">
-                            <a target="blank" class="project-title" ui-sref="reviews.view({reviewId: review._id})">
+                            <a class="project-title" ui-sref="reviews.view({reviewId: review._id})">
                                 <div class="sub-title">"<span class="list-group-item-heading" ng-bind="review.title"></span>"</div>
                                 <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
                                 <div class="review-user"><small>By
