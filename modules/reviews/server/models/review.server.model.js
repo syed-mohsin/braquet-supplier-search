@@ -29,6 +29,10 @@ var ReviewSchema = new Schema({
     trim: true,
     required: 'Content cannot be blank'
   },
+  anonymous: {
+    type: Boolean,
+    default: false
+  },
   organization: {
     type: Schema.ObjectId,
     ref: 'Organization'

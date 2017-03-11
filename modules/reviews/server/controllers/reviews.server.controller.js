@@ -99,6 +99,7 @@ exports.update = function (req, res) {
 
   review.title = req.body.title;
   review.content = req.body.content;
+  review.anonymous = req.body.anonymous;
 
   review.save(function (err) {
     if (err) {

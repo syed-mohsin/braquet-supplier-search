@@ -19,7 +19,8 @@ angular.module('reviews').controller('CreateReviewsController', ['$scope', '$sta
       var review = new Reviews({
         title: this.title,
         rating: this.rating,
-        content: this.content
+        content: this.content,
+        anonymous: this.anonymous
       });
 
       // Redirect after save
