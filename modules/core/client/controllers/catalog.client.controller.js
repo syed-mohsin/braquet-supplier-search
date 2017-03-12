@@ -53,6 +53,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
       $scope.query.man = man;
       $scope.query.pow = pow;
+      $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
 
@@ -71,8 +72,9 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       ];
 
       $scope.wattCheckboxes = {};
+      var queryCheckedBoxes = $stateParams.pow ? $stateParams.pow.split('|') : [];
       $scope.ranges.forEach(function(range) {
-        $scope.wattCheckboxes[range] = false;
+        $scope.wattCheckboxes[range] = queryCheckedBoxes.indexOf(range) !== -1 ? true : false;
       });
     };
 
@@ -81,7 +83,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         .success(function(data) {
           $scope.manufacturers = data;
           $scope.orgCheckboxes = {};
-          var queryCheckedBoxes = $state.params.man.split('|');
+          var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
           data.forEach(function(manufacturer) {
             $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
           });
