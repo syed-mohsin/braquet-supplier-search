@@ -53,7 +53,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $scope.orgs = $scope.orgsAll.filter(function(org) {
           return org.panel_models.some(function(panel) {
             var finalCheck = false;
-            var wattage = panel.stcPowerW;
+            var wattage = panel.stcPower;
             var manufacturer = panel.manufacturer;
             checked.forEach(function(check) {
               if (check === '  0 - 100 Watts') finalCheck = finalCheck || wattage <= 100;
