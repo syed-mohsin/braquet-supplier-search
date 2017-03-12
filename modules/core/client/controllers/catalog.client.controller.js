@@ -1,24 +1,38 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', 'Authentication', 'PanelModels',
-  function ($scope, $filter, $http, Authentication, PanelModels) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', 'Authentication', 'PanelModels',
+  function ($scope, $filter, $http, $state, $stateParams, Authentication, PanelModels) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
-    $scope.search = '';
+    $scope.search = $stateParams.q;
+
+    $scope.query = {};
+    $scope.query.q = $stateParams.q;
+    $scope.query.man = $stateParams.man;
+    $scope.query.pow = $stateParams.pow;
+    $scope.query.page = $stateParams.page;
 
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
     // initialize panel models
-    $http.get('/api/organizations-catalog')
-      .success(function(orgs) {
-        $scope.orgsAll = orgs;
-        $scope.orgs = orgs;
-        $scope.buildPager();
+    $http({
+      url: '/api/organizations-catalog',
+      params: {
+        q: $stateParams.q,
+        man: $stateParams.man,
+        pow: $stateParams.pow,
+        page: $stateParams.page
+      }
+    })
+    .success(function(resp) {
+      $scope.orgsAll = resp.orgs;
+      $scope.orgs = resp.orgs;
+      $scope.buildPager(resp.count);
 
-        $scope.buildWattCheckboxes();
-        $scope.buildOrgCheckboxes();
-      });
+      $scope.buildWattCheckboxes();
+      $scope.buildOrgCheckboxes();
+    });
 
     $scope.updateFilter = function() {
       var temp = $scope.orgs;
@@ -117,11 +131,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         });
     };
 
-    $scope.buildPager = function () {
+    $scope.buildPager = function (count) {
       $scope.pagedItems = [];
       $scope.itemsPerPage = 15;
-      $scope.currentPage = 1;
-      $scope.figureOutItemsToDisplay();
+      $scope.totalCount = count;
+      $scope.currentPage = $stateParams.page;
     };
 
     $scope.figureOutItemsToDisplay = function () {
@@ -135,7 +149,13 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     };
 
     $scope.pageChanged = function () {
-      $scope.figureOutItemsToDisplay();
+      $scope.query.page = $scope.currentPage;
+      $state.go('catalog', $scope.query);
+    };
+
+    $scope.searchSubmit = function() {
+      $scope.query.q = $scope.search;
+      $state.go('catalog', $scope.query);
     };
   }
 ]);

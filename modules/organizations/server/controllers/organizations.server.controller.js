@@ -164,15 +164,30 @@ exports.list_basic = function (req, res) {
  * Available to all
  */
 exports.get_catalog = function (req, res) {
-  Organization.find({ verified: true })
-    .populate('panel_models')
-    .exec(function(err, organizations) {
-      if (err) {
-        res.status(400).json(err);
-      } else {
-        res.json(organizations);
-      }
-    });
+  var result = [];
+  var queryParams = {};
+
+  // build query object
+  queryParams.verified = true;
+  if (req.query.q) queryParams.companyName = new RegExp(req.query.q, 'i');
+  if (req.query.man) queryParams.panel_manufacturers = { '$in' : req.query.man.split('|') };
+  if (req.query.pow) queryParams.panel_stcPowers = { '$in' : req.query.pow.split('|') };
+
+
+  var query = Organization.find(queryParams);
+  var countQuery = Organization.find(queryParams);
+
+  query.skip((req.query.page - 1 || 0) * 15)
+  .limit(15)
+  .exec()
+  .then(function(orgs) {
+    result = orgs;
+
+    return countQuery.count();
+  })
+  .then(function(count) {
+    res.json({ orgs: result, count: count });
+  });
 };
 
 /**
