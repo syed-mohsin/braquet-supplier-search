@@ -40,7 +40,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       // find all checked boxes for wattage
       for (var key in $scope.wattCheckboxes) {
         if ($scope.wattCheckboxes[key]) {
-          pow += key + '|';
+          pow += $scope.rangesReverse[key] + '|';
         }
       }
 
@@ -64,19 +64,27 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     };
 
     $scope.buildWattCheckboxes = function() {
-      $scope.ranges = [
-        '  0 - 100 Watts',
-        '101 - 200 Watts',
-        '201 - 300 Watts',
-        '301 - 400 Watts',
-        '401 - 500 Watts'
-      ];
+      $scope.ranges = {
+        '100': '0 - 100 Watts',
+        '200': '101 - 200 Watts',
+        '300': '201 - 300 Watts',
+        '400': '301 - 400 Watts',
+        '500': '401 - 500 Watts'
+      };
+
+      $scope.rangesReverse = {
+        '0 - 100 Watts': '100',
+        '101 - 200 Watts': '200',
+        '201 - 300 Watts': '300',
+        '301 - 400 Watts': '400',
+        '401 - 500 Watts': '500'
+      };
 
       $scope.wattCheckboxes = {};
       var queryCheckedBoxes = $stateParams.pow ? $stateParams.pow.split('|') : [];
-      $scope.ranges.forEach(function(range) {
-        $scope.wattCheckboxes[range] = queryCheckedBoxes.indexOf(range) !== -1 ? true : false;
-      });
+      for (var range in $scope.ranges) {
+        $scope.wattCheckboxes[$scope.ranges[range]] = queryCheckedBoxes.indexOf(range) !== -1 ? true : false;
+      }
     };
 
     $scope.buildOrgCheckboxes = function() {
