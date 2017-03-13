@@ -47,7 +47,7 @@
     "lodash": "^3.10.0",
     "method-override": "^2.3.3",
     "mocha": "~1.20.0",
-    "mongoose": "~4.2.3",
+    "mongoose": "^4.8.7",
     "mongoose-currency": "^0.2.0",
     "morgan": "^1.6.1",
     "multer": "~1.0.5",
