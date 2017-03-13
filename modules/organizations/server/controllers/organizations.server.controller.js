@@ -164,15 +164,54 @@ exports.list_basic = function (req, res) {
  * Available to all
  */
 exports.get_catalog = function (req, res) {
-  Organization.find({ verified: true })
-    .populate('panel_models')
-    .exec(function(err, organizations) {
-      if (err) {
-        res.status(400).json(err);
-      } else {
-        res.json(organizations);
-      }
+  var result = [];
+  var queryParams = {}; // query object
+  queryParams.verified = true;
+
+  // build query for search using regular expression
+  if (req.query.q) queryParams.companyName = new RegExp(req.query.q, 'i');
+
+  // build query for manufacturers
+  if (req.query.man) {
+    var manCondition = req.query.man.split('|').filter(function(m) { return m.length !== 0; });
+    queryParams.panel_manufacturers = { '$in' :  manCondition };
+  }
+
+  // build query for wattage filter
+  if (req.query.pow) {
+    // or statement to check all wattage ranges passed in
+    var powerArr = req.query.pow.split('|').filter(function(p) { return p.length !== 0 && !isNaN(p); });
+    queryParams.$or = powerArr.map(function(pow) {
+      return {
+        'panel_stcPowers':
+        {
+          '$elemMatch':
+          {
+            '$gt': parseInt(pow)-100,
+            '$lte': parseInt(pow)
+          }
+        }
+      };
     });
+  }
+
+  var query = Organization.find(queryParams);
+  var countQuery = Organization.find(queryParams);
+
+  query.skip((req.query.page - 1 || 0) * 15)
+  .limit(15)
+  .exec()
+  .then(function(orgs) {
+    result = orgs;
+
+    return countQuery.count().exec();
+  })
+  .then(function(count) {
+    res.json({ orgs: result, count: count });
+  })
+  .catch(function(err) {
+    res.json(err);
+  });
 };
 
 /**

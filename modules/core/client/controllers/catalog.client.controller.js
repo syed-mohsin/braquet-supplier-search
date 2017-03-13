@@ -1,109 +1,89 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', 'Authentication', 'PanelModels',
-  function ($scope, $filter, $http, Authentication, PanelModels) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', 'Authentication', 'PanelModels',
+  function ($scope, $filter, $http, $state, $stateParams, Authentication, PanelModels) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
-    $scope.search = '';
+    $scope.search = $stateParams.q;
+
+    $scope.query = {};
+    $scope.query.q = $stateParams.q;
+    $scope.query.man = $stateParams.man;
+    $scope.query.pow = $stateParams.pow;
+    $scope.query.page = $stateParams.page;
 
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
     // initialize panel models
-    $http.get('/api/organizations-catalog')
-      .success(function(orgs) {
-        $scope.orgsAll = orgs;
-        $scope.orgs = orgs;
-        $scope.buildPager();
+    $http({
+      url: '/api/organizations-catalog',
+      params: {
+        q: $stateParams.q,
+        man: $stateParams.man,
+        pow: $stateParams.pow,
+        page: $stateParams.page
+      }
+    })
+    .success(function(resp) {
+      $scope.orgs = resp.orgs;
+      $scope.buildPager(resp.count);
 
-        $scope.buildWattCheckboxes();
-        $scope.buildOrgCheckboxes();
-      });
+      $scope.buildWattCheckboxes();
+      $scope.buildOrgCheckboxes();
+    });
 
     $scope.updateFilter = function() {
-      var temp = $scope.orgs;
-      $scope.orgs = [];
+      var man = '';
+      var pow = '';
 
       // find all checked boxes for wattage
-      var checked = [];
       for (var key in $scope.wattCheckboxes) {
         if ($scope.wattCheckboxes[key]) {
-          checked.push(key);
+          pow += $scope.rangesReverse[key] + '|';
         }
       }
 
       // find all checked manufacturers
-      $scope.checkedManufacturers = [];
       for (key in $scope.orgCheckboxes) {
         if ($scope.orgCheckboxes[key]) {
-          $scope.checkedManufacturers.push(key);
+          man += key + '|';
         }
       }
 
-      $scope.calculateItemsToDisplay(checked);
-      $scope.figureOutItemsToDisplay();
+      $scope.query.man = man;
+      $scope.query.pow = pow;
+      $scope.query.page = 1;
+      $state.go('catalog', $scope.query);
     };
 
-    $scope.calculateItemsToDisplay = function(checked) {
-      $scope.orgs = [];
-      if (!checked.length) {
-        $scope.orgs = $scope.orgsAll;
-      } else {
-        // filter wattage range first
-        $scope.orgs = $scope.orgsAll.filter(function(org) {
-          return org.panel_models.some(function(panel) {
-            var finalCheck = false;
-            var wattage = panel.stcPowerW;
-            var manufacturer = panel.manufacturer;
-            checked.forEach(function(check) {
-              if (check === '  0 - 100 Watts') finalCheck = finalCheck || wattage <= 100;
-              else if (check === '101 - 200 Watts') finalCheck = finalCheck || (wattage > 100 && wattage <= 200);
-              else if (check === '201 - 300 Watts') finalCheck = finalCheck || (wattage > 200 && wattage <= 300);
-              else if (check === '301 - 400 Watts') finalCheck = finalCheck || (wattage > 300 && wattage <= 400);
-              else if (check === '401 - 500 Watts') finalCheck = finalCheck || (wattage > 400 && wattage <= 500);
-            });
-
-            return finalCheck;
-          });
-        });
-      }
-
-      if (!$scope.checkedManufacturers.length) {
-        return;
-      }
-      else {
-        // filter by manufacturers
-        $scope.orgs = $scope.orgs.filter(function(org) {
-          return org.panel_models.some(function(panel) {
-            var finalCheck = false;
-            var manufacturer = panel.manufacturer;
-            $scope.checkedManufacturers.forEach(function(check) {
-              finalCheck = finalCheck || (manufacturer === check);
-            });
-
-            return finalCheck;
-          });
-        });
-      }
-    };
 
     $scope.toggleFilter = function() {
       $scope.hiddenFilterClass = $scope.hiddenFilterClass ? '' : 'hidden-xs';
     };
 
     $scope.buildWattCheckboxes = function() {
-      $scope.ranges = [
-        '  0 - 100 Watts',
-        '101 - 200 Watts',
-        '201 - 300 Watts',
-        '301 - 400 Watts',
-        '401 - 500 Watts'
-      ];
+      $scope.ranges = {
+        '100': '0 - 100 Watts',
+        '200': '101 - 200 Watts',
+        '300': '201 - 300 Watts',
+        '400': '301 - 400 Watts',
+        '500': '401 - 500 Watts'
+      };
+
+      $scope.rangesReverse = {
+        '0 - 100 Watts': '100',
+        '101 - 200 Watts': '200',
+        '201 - 300 Watts': '300',
+        '301 - 400 Watts': '400',
+        '401 - 500 Watts': '500'
+      };
 
       $scope.wattCheckboxes = {};
-      $scope.ranges.forEach(function(range) {
-        $scope.wattCheckboxes[range] = false;
-      });
+      var queryCheckedBoxes = $stateParams.pow ? $stateParams.pow.split('|') : [];
+      for (var range in $scope.ranges) {
+        $scope.wattCheckboxes[$scope.ranges[range]] = queryCheckedBoxes.indexOf(range) !== -1 ? true : false;
+      }
     };
 
     $scope.buildOrgCheckboxes = function() {
@@ -111,31 +91,27 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         .success(function(data) {
           $scope.manufacturers = data;
           $scope.orgCheckboxes = {};
+          var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
           data.forEach(function(manufacturer) {
-            $scope.orgCheckboxes[manufacturer] = false;
+            $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
           });
         });
     };
 
-    $scope.buildPager = function () {
-      $scope.pagedItems = [];
+    $scope.buildPager = function (count) {
       $scope.itemsPerPage = 15;
-      $scope.currentPage = 1;
-      $scope.figureOutItemsToDisplay();
-    };
-
-    $scope.figureOutItemsToDisplay = function () {
-      $scope.filteredItems = $filter('filter')($scope.orgs, {
-        $: $scope.search
-      });
-      $scope.filterLength = $scope.filteredItems.length;
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
-      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+      $scope.totalCount = count;
+      $scope.currentPage = $stateParams.page;
     };
 
     $scope.pageChanged = function () {
-      $scope.figureOutItemsToDisplay();
+      $scope.query.page = $scope.currentPage;
+      $state.go('catalog', $scope.query);
+    };
+
+    $scope.searchSubmit = function() {
+      $scope.query.q = $scope.search;
+      $state.go('catalog', $scope.query);
     };
   }
 ]);
