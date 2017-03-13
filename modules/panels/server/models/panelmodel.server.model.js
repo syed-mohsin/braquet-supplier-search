@@ -22,7 +22,7 @@ var PanelModelSchema = new Schema({
   stcModuleEfficiency: {
     type: String
   },
-  stcPowerW: {
+  stcPower: {
     type: Number
   },
   frameColor: {

@@ -46,7 +46,13 @@ var OrganizationSchema = new Schema({
   },
   panel_models: [{
     type: Schema.ObjectId,
-    ref: 'PanelModel',
+    ref: 'PanelModel'
+  }],
+  panel_manufacturers: [{
+    type: String
+  }],
+  panel_stcPowers: [{
+    type: Number
   }],
   industry: {
     type: String
