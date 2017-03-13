@@ -53,6 +53,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
       $scope.query.man = man;
       $scope.query.pow = pow;
+      $scope.query.q = '';
       $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
