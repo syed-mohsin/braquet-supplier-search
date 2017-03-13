@@ -416,6 +416,10 @@ section h2 {
     font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
 }
 .projects {
     list-style-type: none;
