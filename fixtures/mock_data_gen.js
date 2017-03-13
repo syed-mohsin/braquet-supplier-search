@@ -39,75 +39,64 @@ var productTypes = ['Infrastructure', 'Materials', 'Consultancy Services', 'Rese
 
 var finalOrgNames = {};
 
-var createOrganization = function(profile){
+var createOrganization = function() {
+
+	var Organization = mongoose.model('Organization');
+
+	var profile = {};
+	profile['verified'] = true;
+	profile['users'] = [];
+	profile['possibleUsers'] = [];
+	profile['companyName'] = companyNames[Math.floor(Math.random()*companyNames.length)] + Math.floor(Math.random()*100).toString();
+	profile['reviews'] = [];
+	profile['avg_review'] = Math.floor(Math.random()*100);
+	profile['panel_models'] = [];
+	profile['industry'] = industryNames[Math.floor(Math.random()*industryNames.length)];
+	profile['productTypes'] = productTypes[Math.floor(Math.random()*productTypes.length)];
+	profile['url'] = 'www.' + profile['companyName'] + '.com';
+	profile['address1'] = '329 12th Street';
+	profile['address2'] = '329 12th Street';
+	profile['city'] = 'San Francisco';
+	profile['state'] = 'California';
+	profile['zipcode'] = '94117';
+	profile['country'] = 'USA';
+	profile['about'] = 'We love solar';
 
 	if(!finalOrgNames[profile.companyName]) {
 		var organization = new Organization(profile);
-
-		return new Promise(resolve,reject) {
-			organization.save(function(err, savedProfile) {
-			    if (err) {
-			    	console.log('error making org: ', err);
-			    	reject(err);
-			    } else {
-			    	console.log('successfully created org: ', savedProfile);
-			    	finalOrgNames[savedProfile.companyName] = true;
-			    	resolve(savedProfile);
-			    }	
-			})
-			
-  		});
-	}else {
-		console.log('Organization name already exists!');
+		return organization;
+	} else{
+		return createOrganization();
 	}
 };
 
 var generateMockOrgData = function(){
-	var prePromises = [];
+	// var prePromises = [];
+
+	var mongooseOrgs = [];
 
 	for(var i=0; i<100; i++) {
+		var orgCreation = createOrganization();
 
-		var profile = {};
-
-		profile['verified'] = true;
-		profile['users'] = [];
-		profile['possibleUsers'] = [];
-		profile['companyName'] = companyNames[Math.floor(Math.random()*companyNames.length)] + Math.floor(Math.random()*100).toString();
-		profile['reviews'] = [];
-		profile['avg_review'] = Math.floor(Math.random()*100);
-		profile['panel_models'] = [];
-		profile['industry'] = industryNames[Math.floor(Math.random()*industryNames.length)];
-		profile['productTypes'] = productTypes[Math.floor(Math.random()*productTypes.length)];
-		profile['url'] = 'www.' + profile['companyName'] + '.com';
-		profile['address1'] = '329 12th Street';
-		profile['address2'] = '329 12th Street';
-		profile['city'] = 'San Francisco';
-		profile['state'] = 'California';
-		profile['zipcode'] = '94117';
-		profile['country'] = 'USA';
-		profile['about'] = 'We love solar';
-
-		var createdOrg = new Promise((resolve, reject) => {
-			createOrganization(profile);
-	    });
-
-		prePromises.push(createdOrg);
+		if(orgCreation) {
+			mongooseOrgs.push(orgCreation);
+		}
 	}
 
-	var promise = Promise.all(prePromises);
-
-	promise.then(function(returnedArr) {
-		console.log('HIT HERE!!');
-	})
-	.catch(function(err) {
-		console.log('Organization Creation: ', err);
+	var promises = mongooseOrgs.map(function(org) {
+		return org.save();
 	});
 
+	Promise.all(promises)
+	.then(function(savedOrgs) {
+		console.log("SAVED ", savedOrgs.length, "ORGS");
+	})
+	.catch(function(err) {
+		console.log(err);
+	});
 };
 
 generateMockOrgData();
-
-
 
 
 /*
