@@ -4,7 +4,10 @@
             <div class="row">
                 <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
                 <div class="col-md-9 search">
-                    <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers in your area" ng-change="figureOutItemsToDisplay()" />
+                  <form ng-submit="searchSubmit()">
+                    <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers in your area" />
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
                 </div>
             </div>
         </div>
@@ -32,7 +35,8 @@
         </div>
 
         <div class="horizontal list-group col-sm-7">
-            <a ng-repeat="organization in pagedItems" class="list-group-item col-sm-12">
+            <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+            <a ng-repeat="organization in orgs" class="list-group-item col-sm-12">
                 <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
                 <div class="profile-info">
                     <h5 class="list-group-item-heading" ng-bind="organization.companyName"></h5>
@@ -43,7 +47,7 @@
                     </div>
                 </div>
             </a>
-            <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+            <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
         </div>
     </section>
 </section>
