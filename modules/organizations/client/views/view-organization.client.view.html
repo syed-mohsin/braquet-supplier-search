@@ -90,7 +90,7 @@
                     <div class="list-group-item col-sm-2" ng-repeat="panel_model in organization.panel_models">
                         <img ng-src="{{panel_model.panelPhotoUrl}}">
                         <div class="detail">
-                            <a target="blank" class="project-title" href="#">
+                            <a class="project-title">
                                 <!-- ng-show="authentication.user._id == project.user._id" -->
                                 <h4 class="list-group-item-heading" ng-bind="panel_model.model"></h4><small class="manufacturer"><span>by <span ng-bind="panel_model.manufacturer"></span></span></small>
                             </a>
