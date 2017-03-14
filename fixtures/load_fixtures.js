@@ -1,23 +1,36 @@
 'use strict';
 
 /*
-	* ToDos:
+	* Currently:
 		* No two orgs can have the same name
-		* Make sure panels that have same manufacturer do not have same model names 
+		* Panels that have the same manufacturer do not have the same model names 
 		* Each org should have a random number of panels
-		* Drop the collection before anything new to DB
-		* Eventually add script files for each type of mock data generation
+*/
+/*
+	Associations Currently:
+		* load order -> panels made before orgs
+		* panels need to be associated with orgs
+		* pick a random assortment of panels from the db and associate them with orgs
+
 */
 
+// register relevant models
+require('../modules/panels/server/models/panelmodel.server.model');
+require('../modules/users/server/models/user.server.model');
+require('../modules/reviews/server/models/review.server.model');
+require('../modules/organizations/server/models/organization.server.model');
+
 /*
-	*Load new organization data.
+	*Grab the load new org-data promise.
 */
 var loadNewOrgData = require('./organization_fixtures');
-loadNewOrgData();
-
 
 /*
-	*Load new panel data.
+	*Load new panel data first, then load org data to reinforce associations between panels and orgs
 */
-var loadNewPanelData = require('./panel_fixtures');
-loadNewPanelData();
+var loadNewPanelDataPromise = require('./panel_fixtures');
+loadNewPanelDataPromise.then(function() {
+	loadNewOrgData();
+}).catch(function(err) {
+	console.log(err);
+});

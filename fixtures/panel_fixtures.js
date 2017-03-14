@@ -9,11 +9,6 @@ mongoose.connect(dbUrl, function(err) {
   }
 });
 
-// register relevant models
-require('../modules/panels/server/models/panelmodel.server.model');
-require('../modules/users/server/models/user.server.model');
-require('../modules/reviews/server/models/review.server.model');
-
 var manufacturNames = ['Altech', 'Bigtech', 'Jamtech', 'ForceTech', 'Siegeltech', 'FreshTech', 'Niebeltech', 'Ziedletech', 'Yorktech', 'Didliotech'];
 var models = ['model1', 'model2', 'model3', 'model4', 'model5'];
 var technologyTypes = ['SolarCell1', 'SolarCell2', 'SolarCell3', 'SolarCell4', 'SolarCell5'];
@@ -83,19 +78,16 @@ var generateMockPanelData = function(numPanels){
 	});
 };
 
-module.exports = generateMockPanelData;
-
-var loadNewPanelData = function() {
-	// Drop any old organization data in DB
+var loadNewPanelDataPromise = new Promise(function(resolve, reject) {
 	Panel.remove({}, function(err) { 
 		console.log('Panel Collection Removed') 
 	})
 	.then(function() {
-		generateMockPanelData(100);
+		resolve(generateMockPanelData(1000));
 	})
 	.catch(function(err) {
-		console.log(err);
+		reject(err);
 	});
-};
+});
 
-module.exports = loadNewPanelData;
+module.exports = loadNewPanelDataPromise;
