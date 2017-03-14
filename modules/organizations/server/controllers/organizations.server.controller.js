@@ -44,6 +44,42 @@ exports.read = function (req, res) {
 };
 
 /**
+ * Public read view of organization
+ */
+exports.readPublic = function(req, res) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.organizationId)) {
+    return res.status(400).send({
+      message: 'Organization is invalid'
+    });
+  }
+
+  Organization.findById(req.params.organizationId)
+    .populate('panel_models')
+    .populate('reviews')
+    .exec(function (err, organization) {
+      if (err) {
+        return res.status(400).json(err);
+      } else if (!organization) {
+        return res.status(400).json(new Error('Failed to load organization ' + req.params.organizationId));
+      }
+
+      Review.populate(organization.reviews, [
+        { path: 'organization' },
+        { path: 'user' }
+      ], function(err, reviews) {
+        if (err) {
+          return res.status(400).json(err);
+        } else {
+          req.organization = organization;
+
+        }
+      });
+
+      res.json(organization);
+    });
+};
+
+/**
  * Update a organization
  */
 exports.update = function (req, res) {
