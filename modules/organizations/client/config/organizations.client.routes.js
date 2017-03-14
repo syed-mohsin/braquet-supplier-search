@@ -24,11 +24,29 @@ angular.module('organizations').config(['$stateProvider',
           roles: ['admin']
         }
       })
+      .state('organizations.view-public', {
+        url: '/:organizationId/public',
+        templateUrl: 'modules/organizations/client/views/view-public-organization.client.view.html',
+        controller: 'PublicViewOrganizationController',
+        resolve: {
+          publicOrgService: function($stateParams, $http) {
+            return $http.get('/api/organizations/' + $stateParams.organizationId + '/public');
+          }
+        }
+      })
       .state('organizations.view', {
         url: '/:organizationId',
         templateUrl: 'modules/organizations/client/views/view-organization.client.view.html',
+        controller:'ViewOrganizationController',
         data: {
           roles: ['user', 'seller', 'admin']
+        },
+        resolve: {
+          orgService: function($stateParams, Organizations) {
+            return Organizations.get({
+              organizationId: $stateParams.organizationId
+            });
+          }
         }
       })
       .state('organizations.edit', {
