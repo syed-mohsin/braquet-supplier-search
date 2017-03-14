@@ -204,21 +204,17 @@ form label {
     left: initial;
     padding: initial;
 }
-
 .profile-picture form {
     width: 223px;
     min-width: initial;
     max-width: initial;
 }
-
 .form-group {
     text-align: left;
 }
-
 input[type="checkbox"] {
     margin-right: 10px;
 }
-
 .signup {
     margin: 40px auto 0 auto;
     padding: 0px 50px 40px 50px;
