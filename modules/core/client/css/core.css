@@ -151,11 +151,14 @@ form label {
     min-width: initial;
     max-width: initial;
 }
-
 .form-group {
     text-align: left;
+    margin-top: 10px;
+    margin-bottom: 0;
 }
-
+.form-group div {
+    padding-top: 8px;
+}
 input[type="checkbox"] {
     margin-right: 10px;
 }
@@ -170,11 +173,9 @@ input[type="checkbox"] {
 .remember-password {
     float: left;
 }
-
 .forgot-password {
     float: right;
 }
-
 
 .btn-primary, .btn-default {
     font-weight: 700;
@@ -201,6 +202,9 @@ input[type="checkbox"] {
 button.cancel {
     background: #d9534f;
     border-color: #d9534f;
+}
+.submit {
+    margin-top: 10px;
 }
 
 form .btn-primary, form .btn-default {
@@ -503,12 +507,6 @@ section h2 {
 }
 .projects .posted-date {
     margin-bottom: 20px;
-}
-.form-group {
-    margin-bottom: 0;
-}
-.form-group div {
-    padding-top: 8px;
 }
 .form-group div.md-chip-content, .form-group div.md-chip-remove-container {
     padding-top: 0px;
