@@ -56,7 +56,6 @@
     "grunt-mocha-istanbul": "^2.4.0",
     "grunt-mocha-test": "~0.12.7",
     "grunt-ng-annotate": "^1.0.1",
-    "grunt-node-inspector": "~0.3.0",
     "grunt-nodemon": "~0.4.0",
     "grunt-protractor-coverage": "~0.2.15",
     "grunt-protractor-runner": "^2.1.0",
@@ -90,6 +89,7 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.4",
+    "grunt-node-inspector": "~0.3.0",
     "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.7.0",
     "gulp-autoprefixer": "^2.3.1",
