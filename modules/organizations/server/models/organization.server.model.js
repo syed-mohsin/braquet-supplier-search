@@ -87,11 +87,11 @@ var OrganizationSchema = new Schema({
   }
 });
 
-OrganizationSchema.pre('save', function(next) {
+OrganizationSchema.post('save', function(next) {
   var self = this;
   this.avg_review = this.reviews.reduce(function(a,b) {
     return a + b.rating;
-  }, 0) / this.reviews.length;
+  }, 0.0) / this.reviews.length;
 
   next();
 });
