@@ -5,7 +5,7 @@ angular.module('organizations').run(['Menus',
   function (Menus) {
     // Add the projects dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'Organizations',
+      title: 'Company Directory',
       state: 'organizations',
       type: 'dropdown',
       roles: ['user', 'seller']
@@ -13,7 +13,7 @@ angular.module('organizations').run(['Menus',
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'organizations', {
-      title: 'Show Organizations',
+      title: 'Company Directory',
       state: 'organizations.list',
       roles: ['user', 'seller']
     });
