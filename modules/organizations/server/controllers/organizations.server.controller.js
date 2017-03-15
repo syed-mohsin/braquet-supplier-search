@@ -235,6 +235,7 @@ exports.get_catalog = function (req, res) {
   var countQuery = Organization.find(queryParams);
 
   query.skip((req.query.page - 1 || 0) * 15)
+  .populate('reviews')
   .limit(15)
   .exec()
   .then(function(orgs) {
@@ -243,6 +244,16 @@ exports.get_catalog = function (req, res) {
     return countQuery.count().exec();
   })
   .then(function(count) {
+    // calculate avg reviews for all orgs in this query
+    result = result.map(function(org) {
+      org.avg_review = org.reviews.reduce(function(a,b) {
+        return a + b.rating;
+      }, 0) / org.reviews.length;
+
+      org.reviews = []; // clear reviews for catalog view
+      return org;
+    });
+
     res.json({ orgs: result, count: count });
   })
   .catch(function(err) {
