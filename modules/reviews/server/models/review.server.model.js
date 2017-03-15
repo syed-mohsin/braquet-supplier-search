@@ -29,6 +29,17 @@ var ReviewSchema = new Schema({
     trim: true,
     required: 'Content cannot be blank'
   },
+  category: {
+    type: String,
+    enum: [
+      'Currently doing business with company',
+      'Have done business with company',
+      'Discussed business with company',
+      'General',
+      'Other'
+    ],
+    required: 'Please select a category'
+  },
   anonymous: {
     type: Boolean,
     default: false
