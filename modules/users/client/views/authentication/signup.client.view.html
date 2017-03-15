@@ -10,7 +10,8 @@
           <select name="user_role" ng-model="credentials.user_role" id="user_role" class="form-control" required>
             <option value="">---Please select a role---</option>
             <option value="0">You specify/buy equipment for projects</option>
-            <option value="1">You sell equipment for solar projects</option> <!-- disabled="disabled" -->
+            <option value="1">You sell equipment for solar projects</option>
+            <option value="2">Other</option> 
           </select>
           <div ng-messages="userForm.user_role.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Please indicate whether you are requesting or supplying solar services and products.</p>
