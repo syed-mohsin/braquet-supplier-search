@@ -6,17 +6,23 @@
 </head>
 
 <body>
+<div style="text-align:center; width: 900px;">
+<div style="text-align:center;">
+<img style="width:150px;" src="https://www.braquet.io/modules/core/client/img/brand/logo.png">
+</div>
   <p>Hello,</p>
   <br />
   <p>
     {{name}} has invited you to connect on {{appName}}.
   </p>
-  <p>Please visit this url to create your account.</p>
-  <p>{{url}}</p>
-  <strong>If you didn't make this request, you can ignore this email.</strong>
-  <br />
-  <br />
-  <p>The {{appName}} Support Team</p>
+  <a style="text-decoration:none;" href="{{url}}">
+    <div style="color:white; width: 200px; margin: 30px auto; font-weight: 700; padding: 9px 22px; text-shadow:none; background:#222; border:none; border-radius: 4px; text-align:center;">
+  <p>Create your account</p>
+  </div>
+  </a>
+  <p>If you didn't make this request, you can ignore this email.</p>
+</div>
 </body>
 
 </html>
+
