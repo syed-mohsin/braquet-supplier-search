@@ -33,6 +33,10 @@ var ReviewSchema = new Schema({
     type: Boolean,
     default: false
   },
+  verified: {
+    type: Boolean,
+    default: true
+  },
   organization: {
     type: Schema.ObjectId,
     ref: 'Organization'
