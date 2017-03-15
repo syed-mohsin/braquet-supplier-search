@@ -30,6 +30,8 @@ var populatePanelModel = function(profile) {
 	for(var i=0; i<randomNumberPanels; i++) {
 		var randomIndex = Math.floor(Math.random() * (currentPanels.length - 1));
 		profile.panel_models.push(currentPanels[randomIndex]._id);
+		profile.panel_manufacturers.push(currentPanels[randomIndex].manufacturer);
+		profile.panel_stcPowers.push(currentPanels[randomIndex].stcPower);
 	}
 
 	return profile;
@@ -54,6 +56,9 @@ var createOrganization = function() {
 	profile['zipcode'] = '94117';
 	profile['country'] = 'USA';
 	profile['about'] = 'We love solar';
+	profile['panel_manufacturers'] = [];
+	profile['panel_stcPowers'] = [];
+
 
 	if(!finalOrgNames[profile.companyName]) {
 		var updatedProfile = populatePanelModel(profile);
