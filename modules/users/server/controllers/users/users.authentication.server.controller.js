@@ -186,12 +186,38 @@ exports.signup = function (req, res) {
             } else {
               res.json(user);
               console.log('finished');
-              done(err);
+              done(err, user);
             }
           });
         } else {
           return res.status(400).send({
             message: 'Failure sending email'
+          });
+        }
+      });
+    },
+    // send an email to Braquet admin when user signs up
+    function(user, done) {
+      res.render('modules/users/server/templates/notifyBraquetAdmin-userSignup-email', {
+        name: user.displayName
+      }, function (err, emailHTML) {
+        done(err, emailHTML, user);
+      });
+    },
+    function(emailHTML, done) {
+      var mailList = 'syedm.90@gmail.com, takayuki.koizumi@gmail.com, dbnajafi@gmail.com';
+
+      var mailOptions = {
+        to: mailList,
+        from: config.mailer.from,
+        subject: 'Braquet - Notification of User Signup',
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: 'Failure sending notification email'
           });
         }
       });

@@ -38,11 +38,6 @@ exports.validateEmail = function (req, res) {
 
             async.waterfall([
               function(done) {
-                var httpTransport = 'http://';
-                if (config.secure && config.secure.ssl === true) {
-                  httpTransport = 'https://';
-                }
-
                 res.render('modules/users/server/templates/notify-email', {
                   name: user.displayName,
                   email: user.email
