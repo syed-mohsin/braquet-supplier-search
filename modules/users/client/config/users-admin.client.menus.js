@@ -17,5 +17,11 @@ angular.module('users.admin').run(['Menus',
       title: 'Manage Organizations',
       state: 'admin.organizations'
     });
+
+    Menus.addSubMenuItem('topbar', 'admin', {
+      title: 'Add Organization',
+      state: 'organizations.create',
+      roles: ['admin']
+    });
   }
 ]);
