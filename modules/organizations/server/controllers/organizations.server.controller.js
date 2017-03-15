@@ -65,17 +65,18 @@ exports.readPublic = function(req, res) {
 
       Review.populate(organization.reviews, [
         { path: 'organization' },
-        { path: 'user' }
+        { path: 'user', populate: { path: 'organization', select: 'companyName logoImageUrl' } }
       ], function(err, reviews) {
         if (err) {
           return res.status(400).json(err);
         } else {
-          req.organization = organization;
-
+          // calculate avg review
+          organization.avg_review = organization.reviews.reduce(function(a,b) {
+            return a + b.rating;
+          }, 0) / organization.reviews.length;
+          res.json(organization);
         }
       });
-
-      res.json(organization);
     });
 };
 
@@ -412,12 +413,9 @@ exports.organizationByID = function (req, res, next, id) {
           organization.avg_review = organization.reviews.reduce(function(a,b) {
             return a + b.rating;
           }, 0) / organization.reviews.length;
-          console.log(organization.reviews.length, organization.avg_review);
           req.organization = organization;
-
+          return next();
         }
       });
-
-      next();
     });
 };
