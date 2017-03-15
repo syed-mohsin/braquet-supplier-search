@@ -73,7 +73,7 @@
                                 <div class="sub-title">"<span class="list-group-item-heading" ng-bind="review.title"></span>"</div>
                                 <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
                                 <div class="review-user"><small>By
-                                <span ng-bind="review.user.firstName"></span> on
+                                <span ng-bind="review.user.displayName"></span> on
                                 <span ng-bind="review.created | date:'mediumDate'"></span></small>
                                 </div>
                                 <div class="review-content"><span class="list-group-item-text" ng-bind="review.content"></span></div>

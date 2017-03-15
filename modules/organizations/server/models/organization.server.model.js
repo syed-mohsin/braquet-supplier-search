@@ -42,7 +42,8 @@ var OrganizationSchema = new Schema({
     ref: 'Review'
   }],
   avg_review: {
-    type: Number
+    type: Number,
+    default: 0
   },
   panel_models: [{
     type: Schema.ObjectId,

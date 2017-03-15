@@ -73,7 +73,7 @@ exports.readPublic = function(req, res) {
           // calculate avg review
           organization.avg_review = organization.reviews.reduce(function(a,b) {
             return a + b.rating;
-          }, 0) / organization.reviews.length;
+          }, 0) / organization.reviews.length || 0;
           res.json(organization);
         }
       });
@@ -249,7 +249,7 @@ exports.get_catalog = function (req, res) {
     result = result.map(function(org) {
       org.avg_review = org.reviews.reduce(function(a,b) {
         return a + b.rating;
-      }, 0) / org.reviews.length;
+      }, 0) / org.reviews.length || 0;
 
       org.reviews = []; // clear reviews for catalog view
       return org;
@@ -410,9 +410,21 @@ exports.organizationByID = function (req, res, next, id) {
         if (err) {
           return next(err);
         } else {
+          // remove displayName on anonymous reviews
+          organization.reviews.map(function(review) {
+            if (review.anonymous) {
+              review.user.displayName = 'anonymous';
+              review.user.firstName = 'anonymous';
+              review.user.lastName = 'anonymous';
+            }
+
+            return review;
+          });
+
+          // calculate average review
           organization.avg_review = organization.reviews.reduce(function(a,b) {
             return a + b.rating;
-          }, 0) / organization.reviews.length;
+          }, 0) / organization.reviews.length || 0;
           req.organization = organization;
           return next();
         }
