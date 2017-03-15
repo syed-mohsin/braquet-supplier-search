@@ -1,18 +1,10 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var dbUrl = 'mongodb://localhost/mean-dev';
-
-mongoose.connect(dbUrl, function(err) {
-  if (!err) {
-    console.log('connected to', dbUrl);
-  }
-});
-
 var manufacturNames = ['Altech', 'Bigtech', 'Jamtech', 'ForceTech', 'Siegeltech', 'FreshTech', 'Niebeltech', 'Ziedletech', 'Yorktech', 'Didliotech'];
 var models = ['model1', 'model2', 'model3', 'model4', 'model5'];
 var technologyTypes = ['SolarCell1', 'SolarCell2', 'SolarCell3', 'SolarCell4', 'SolarCell5'];
 
+var mongoose = require('mongoose');
 var Panel = mongoose.model('PanelModel');
 
 // Object with key: Manfucturer Name and value: array of models from that manufacturer

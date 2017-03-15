@@ -1,14 +1,6 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var dbUrl = 'mongodb://localhost/mean-dev';
-
-mongoose.connect(dbUrl, function(err) {
-  if (!err) {
-    console.log('connected to', dbUrl);
-  }
-});
-
 var Organization = mongoose.model('Organization');
 var Panel = mongoose.model('PanelModel');
 var companyNames = ['Adobe', 'Accenture', 'Aflac', 'Ahlstrom', 'Alltel', 'Blizzard', 'Brooks', 'Bultaco', 'BSNL', 'Brine', 'CAE', 'CDAC', 'Capcom', 'Canon', 'Chello', 'Debian', 'Dixons', 'DuPont', 'Dynergy', 'Dell', 'Ebay', 'ESPN', 'Exxon', 'Evernote', 'Emporis', 'Fazer', 'Fluke', 'Firestone', 'Fiat', 'FAS', 'Garmin', 'Geico', 'Goodyear', 'Gucci', 'Groupn', 'Haribo', 'Harman', 'Hitachi', 'Honeywell', 'Hospira', 'IBM', 'Intel', 'Infosys', 'InBev', 'Ikea', 'Jordan', 'Jasper', 'Jaxon', 'JBL', 'Johnson'];

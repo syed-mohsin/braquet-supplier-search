@@ -20,6 +20,15 @@ require('../modules/users/server/models/user.server.model');
 require('../modules/reviews/server/models/review.server.model');
 require('../modules/organizations/server/models/organization.server.model');
 
+var mongoose = require('mongoose');
+var dbUrl = 'mongodb://localhost/mean-dev';
+
+mongoose.connect(dbUrl, function(err) {
+  if (!err) {
+    console.log('connected to', dbUrl);
+  }
+});
+
 /*
 	*Grab the load new org-data promise.
 */
