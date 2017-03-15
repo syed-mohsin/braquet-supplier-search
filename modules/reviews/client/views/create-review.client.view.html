@@ -1,27 +1,28 @@
 <section>
   <div class="col-md-12">
     <form name="reviewForm" class="form-horizontal" ng-submit="create(reviewForm.$valid)" novalidate>
-      <h2>Create a review</h2>
+      <h2>Create a company review</h2>
       <fieldset>
+      <div class="form-group">
+          <label for="title">Overall rating</label><br>
+          <rating name="rating" id="rating" ng-model="rating" read-only="false" on-hover="hoveringOver(value)" aria-labelledby="default-rating"></rating>
+      </div>
         <div class="form-group" show-errors>
-          <label for="title">Title</label>
+          <label for="title">Review title</label>
           <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>
           <div ng-messages="reviewForm.title.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Review title is required.</p>
           </div>
         </div>
         <div class="form-group">
-          <rating name="rating" id="rating" ng-model="rating" read-only="false" on-hover="hoveringOver(value)" aria-labelledby="default-rating"></rating>
+          <label for="content">Your review</label>
+          <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10"></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-group anonymous">
           <input type="checkbox" ng-model="anonymous">
-          <span><small>Anonymous?</small></span>
-        </div>
-        <div class="form-group">
-          <label for="content">Content</label>
-          <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
-        </div>
-        <div class="form-group">
+          <span><small>Check if you would like this review to be anonymous</small></span>
+      </div>
+        <div class="form-group submit">
           <input type="submit" class="btn btn-default">
         </div>
         <div ng-show="error" class="text-danger">
