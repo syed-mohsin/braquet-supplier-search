@@ -35,6 +35,47 @@ exports.validateEmail = function (req, res) {
           if (err) {
             return res.redirect('/forbidden');
           } else {
+
+            async.waterfall([
+              function(done) {
+                var httpTransport = 'http://';
+                if (config.secure && config.secure.ssl === true) {
+                  httpTransport = 'https://';
+                }
+
+                res.render('modules/users/server/templates/notify-email', {
+                  name: user.displayName,
+                  email: user.email
+                }, function(err, emailHTML) {
+                  done(err, emailHTML);
+                });
+              },
+              // send notify email to Braquet admin using service
+              function(emailHTML, done) {
+                var mailList = 'syedm.90@gmail.com, takayuki.koizumi@gmail.com, dbnajafi@gmail.com';
+
+                var mailOptions = {
+                  to: mailList,
+                  from: config.mailer.from,
+                  subject: 'Braquet - Notification of User Confirmation',
+                  html: emailHTML
+                };
+
+                smtpTransport.sendMail(mailOptions, function (err) {
+                  if (err) {
+                    return res.status(400).send({
+                      message: 'Failure sending notification email'
+                    });
+                  }
+                });
+              }
+            ], function(err) {
+              if(err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              }
+            });
             res.redirect('/');
           }
         });
