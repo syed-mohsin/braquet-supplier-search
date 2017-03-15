@@ -24,6 +24,10 @@
             <div class="content no-wrap title-content">
                 <div class="title name">
                     <span ng-bind="organization.companyName"></span>
+
+                </div>
+                <div class="reviews">
+                 <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
                 </div>
                 <div class="menu edit">
                    <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
