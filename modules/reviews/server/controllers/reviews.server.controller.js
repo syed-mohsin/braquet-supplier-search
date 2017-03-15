@@ -63,14 +63,14 @@ exports.create = function (req, res) {
           req.user.save(function(err) {
             if (err) {
               res.status(400).json({
-                message: 'failed to save message to user'
+                message: 'failed to save review to user'
               });
             } else {
               req.organization.reviews.push(review._id);
               req.organization.save(function(err) {
                 if (err) {
                   res.status(400).json({
-                    message: 'failed to save message to organization'
+                    message: 'failed to save review to organization'
                   });
                 } else {
                   res.json(review);
