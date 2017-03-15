@@ -63,9 +63,9 @@ exports.signup = function (req, res) {
 
   // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
   if (req.body.user_role === '1')
-    user.roles = ['tempSeller'];
+    user.roles = ['seller'];
   else {
-    user.roles = ['tempUser'];
+    user.roles = ['user'];
   }
 
   // check if user was invited and connect upon signup
@@ -199,7 +199,8 @@ exports.signup = function (req, res) {
     // send an email to Braquet admin when user signs up
     function(user, done) {
       res.render('modules/users/server/templates/notifyBraquetAdmin-userSignup-email', {
-        name: user.displayName
+        name: user.displayName,
+        email: user.email
       }, function (err, emailHTML) {
         done(err, emailHTML, user);
       });

@@ -23,6 +23,11 @@ exports.create = function (req, res) {
   review.user = req.user._id;
   review.organization = req.organization._id;
 
+  // review is unverified if user is unverified
+  if (req.user.emailVerified === false) {
+    review.verified = false;
+  }
+
   // see if review already exists
   Review.findOne({
     user: req.user._id,
@@ -63,14 +68,14 @@ exports.create = function (req, res) {
           req.user.save(function(err) {
             if (err) {
               res.status(400).json({
-                message: 'failed to save message to user'
+                message: 'failed to save review to user'
               });
             } else {
               req.organization.reviews.push(review._id);
               req.organization.save(function(err) {
                 if (err) {
                   res.status(400).json({
-                    message: 'failed to save message to organization'
+                    message: 'failed to save review to organization'
                   });
                 } else {
                   res.json(review);

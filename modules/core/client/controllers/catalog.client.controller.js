@@ -111,6 +111,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     $scope.searchSubmit = function() {
       $scope.query.q = $scope.search;
+      $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
   }
