@@ -393,11 +393,15 @@ exports.organizationByID = function (req, res, next, id) {
 
       Review.populate(organization.reviews, [
         { path: 'organization' },
-        { path: 'user' }
+        { path: 'user', populate: { path: 'organization', select: 'companyName logoImageUrl' } }
       ], function(err, reviews) {
         if (err) {
           return next(err);
         } else {
+          organization.avg_review = organization.reviews.reduce(function(a,b) {
+            return a + b.rating;
+          }, 0) / organization.reviews.length;
+          console.log(organization.reviews.length, organization.avg_review);
           req.organization = organization;
 
         }

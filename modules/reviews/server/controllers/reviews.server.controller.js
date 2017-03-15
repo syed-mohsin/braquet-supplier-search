@@ -66,7 +66,7 @@ exports.create = function (req, res) {
                 message: 'failed to save message to user'
               });
             } else {
-              req.organization.reviews.push(review);
+              req.organization.reviews.push(review._id);
               req.organization.save(function(err) {
                 if (err) {
                   res.status(400).json({
