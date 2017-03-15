@@ -41,9 +41,6 @@ var OrganizationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Review'
   }],
-  avg_review: {
-    type: Number
-  },
   panel_models: [{
     type: Schema.ObjectId,
     ref: 'PanelModel'
@@ -85,15 +82,6 @@ var OrganizationSchema = new Schema({
   about: {
     type: String
   }
-});
-
-OrganizationSchema.pre('save', function(next) {
-  var self = this;
-  this.avg_review = this.reviews.reduce(function(a,b) {
-    return a + b.rating;
-  }, 0) / this.reviews.length;
-
-  next();
 });
 
 mongoose.model('Organization', OrganizationSchema);
