@@ -23,6 +23,11 @@ exports.create = function (req, res) {
   review.user = req.user._id;
   review.organization = req.organization._id;
 
+  // review is unverified if user is unverified
+  if (req.user.emailVerified === false) {
+    review.verified = false;
+  }
+
   // see if review already exists
   Review.findOne({
     user: req.user._id,

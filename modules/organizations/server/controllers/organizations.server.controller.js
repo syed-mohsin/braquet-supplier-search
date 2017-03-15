@@ -70,6 +70,22 @@ exports.readPublic = function(req, res) {
         if (err) {
           return res.status(400).json(err);
         } else {
+          // remove unverified reviews
+          organization.reviews = organization.reviews.filter(function(review) {
+            return review.verified === true;
+          });
+
+          // remove displayName on anonymous reviews
+          organization.reviews.map(function(review) {
+            if (review.anonymous) {
+              review.user.displayName = 'anonymous';
+              review.user.firstName = 'anonymous';
+              review.user.lastName = 'anonymous';
+            }
+
+            return review;
+          });
+
           // calculate avg review
           organization.avg_review = organization.reviews.reduce(function(a,b) {
             return a + b.rating;
@@ -245,8 +261,16 @@ exports.get_catalog = function (req, res) {
     return countQuery.count().exec();
   })
   .then(function(count) {
+    // remove unverified reviews
+
     // calculate avg reviews for all orgs in this query
     result = result.map(function(org) {
+      // remove unverified org reviews
+      org.reviews = org.reviews.filter(function(review) {
+        return review.verified === true;
+      });
+
+      // calculate org average review
       org.avg_review = org.reviews.reduce(function(a,b) {
         return a + b.rating;
       }, 0) / org.reviews.length || 0;
@@ -410,6 +434,11 @@ exports.organizationByID = function (req, res, next, id) {
         if (err) {
           return next(err);
         } else {
+          // remove unverified reviews
+          organization.reviews = organization.reviews.filter(function(review) {
+            return review.verified === true;
+          });
+
           // remove displayName on anonymous reviews
           organization.reviews.map(function(review) {
             if (review.anonymous) {

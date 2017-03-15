@@ -37,6 +37,9 @@
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>
         </div>
+         <div ng-show="!authentication.user.emailVerified" class="form-group" style="color:red">
+          <strong>Your review will not be displayed publically until you have verified your email address.</strong>
+        </div>
       </fieldset>
     </form>
   </div>
