@@ -14,6 +14,15 @@
             <p class="help-block error-text" ng-message="required">Review title is required.</p>
           </div>
         </div>
+        <div class="form-group" show-errors>
+          <select name="category" ng-model="category" id="category" class="form-control" required>
+            <option value="">---Please Select Review Category---</option>
+            <option value="Currently doing business with company">Currently doing business with company</option>
+            <option value="Discussed business with company">Discussed business with company</option>
+            <option value="General">General</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
         <div class="form-group">
           <label for="content">Your review</label>
           <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10"></textarea>

@@ -18,6 +18,7 @@ angular.module('reviews').controller('CreateReviewsController', ['$scope', '$sta
       // Create new Review object
       var review = new Reviews({
         title: this.title,
+        category: this.category,
         rating: this.rating,
         content: this.content,
         anonymous: this.anonymous
