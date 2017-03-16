@@ -80,8 +80,7 @@ exports.validateEmail = function (req, res) {
     },
     // send notify email to Braquet admin using service
     function(emailHTML, user, done) {
-      // var mailList = 'syedm.90@gmail.com, takayuki.koizumi@gmail.com, dbnajafi@gmail.com';
-      var mailList = 'dbnajafi@gmail.com';
+      var mailList = 'syedm.90@gmail.com, takayuki.koizumi@gmail.com, dbnajafi@gmail.com';
 
       var mailOptions = {
         to: mailList,
