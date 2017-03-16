@@ -1,7 +1,10 @@
 <section>
   <div class="col-md-12">
     <form name="reviewForm" class="form-horizontal" ng-submit="create(reviewForm.$valid)" novalidate>
-      <h2>Create a company review</h2>
+      <h2>Create an anonymous review</h2>
+      <div class="form-group">
+          <strong>Your review will not display your user information including name, email or the organization you are assocaited with.</strong>
+        </div>
       <fieldset>
       <div class="form-group">
           <label for="title">Overall rating</label><br>
@@ -27,9 +30,9 @@
           <label for="content">Your review</label>
           <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10"></textarea>
         </div>
-        <div class="form-group anonymous">
+        <div class="form-group anonymous" style="display:none;">
           <input type="checkbox" ng-model="anonymous">
-          <span><small>Check if you would like this review to be anonymous</small></span>
+          <span><small>Check off this box if you would like to make the review public. Your name and company name will be displayed.</small></span>
       </div>
         <div class="form-group submit">
           <input type="submit" class="btn btn-default">
@@ -38,7 +41,7 @@
           <strong ng-bind="error"></strong>
         </div>
          <div ng-show="!authentication.user.emailVerified" class="form-group" style="color:red">
-          <strong>Your review will not be displayed publically until you have verified your email address.</strong>
+          <strong>Your review will not be displayed publicly until you have verified your email address.</strong>
         </div>
       </fieldset>
     </form>
