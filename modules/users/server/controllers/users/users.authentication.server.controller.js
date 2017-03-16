@@ -217,9 +217,8 @@ exports.signup = function (req, res) {
 
       smtpTransport.sendMail(mailOptions, function (err) {
         if (err) {
-          return res.status(400).send({
-            message: 'Failure sending notification email'
-          });
+          // TODO log error on admin notification of user signup later
+          return;
         }
       });
     }
