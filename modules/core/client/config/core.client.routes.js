@@ -24,7 +24,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
             $state.go('organizations.view', { organizationId: user.organization });
           } else if (user.roles.indexOf('user') !== -1) {
             $state.go('catalog');
-          } 
+          }
         } else {
           $state.go('search');
         }
@@ -39,7 +39,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       templateUrl: 'modules/core/client/views/search.client.view.html'
     })
     .state('catalog', {
-      url: '/catalog?q&man&pow&page',
+      url: '/catalog?q&man&pow&crys?color?cells?page',
       templateUrl: 'modules/core/client/views/catalog.client.view.html'
     })
     // .state('welcome', {

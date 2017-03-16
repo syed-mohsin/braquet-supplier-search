@@ -232,6 +232,24 @@ exports.get_catalog = function (req, res) {
     queryParams.panel_manufacturers = { '$in' :  manCondition };
   }
 
+  // build query for crystaline types
+  if (req.query.crys) {
+    var crysCondition = req.query.crys.split('|').filter(function(c) { return c.length !== 0; });
+    queryParams.panel_crystalline_types = { '$in' :  crysCondition };
+  }
+
+  // build query for frame colors
+  if (req.query.color) {
+    var colorCondition = req.query.color.split('|').filter(function(c) { return c.length !== 0; });
+    queryParams.panel_frame_colors = { '$in' :  colorCondition };
+  }
+
+  // build query for number of cells
+  if (req.query.cells) {
+    var cellsCondition = req.query.cells.split('|').filter(function(m) { return m.length !== 0; });
+    queryParams.panel_number_of_cells = { '$in' :  cellsCondition };
+  }
+
   // build query for wattage filter
   if (req.query.pow) {
     // or statement to check all wattage ranges passed in
@@ -263,8 +281,6 @@ exports.get_catalog = function (req, res) {
     return countQuery.count().exec();
   })
   .then(function(count) {
-    // remove unverified reviews
-
     // calculate avg reviews for all orgs in this query
     result = result.map(function(org) {
       // remove unverified org reviews
