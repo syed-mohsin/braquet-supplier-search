@@ -32,9 +32,6 @@ exports.validateEmail = function (req, res) {
       });
     },
     function(user, done){
-      console.log('*******111111**********');
-      console.log(user);
-      console.log('*******1.5**********');
       // verify user has confirmed email
       user.emailVerified = true;
 
@@ -46,17 +43,17 @@ exports.validateEmail = function (req, res) {
         { 
           $set: { verified: true }
         }, 
+        {
+          multi: true
+        },
         function(err, reviews) {
           if (err) {
-            console.log('*******ERROR**********');
             return res.redirect('/forbidden');
           }
-          console.log('*******1.6666**********');
           done(err, user);
         });
     },
     function(user, done) {
-      console.log('*******2222222**********');
       user.save(function(err) {
         if(err) {
           return res.redirect('/forbidden');
@@ -67,7 +64,6 @@ exports.validateEmail = function (req, res) {
       });
     },
     function(user, done) {
-      console.log('*******3333333**********');
       // successfully verified email
       req.login(user, function (err) {
         if(err) {
@@ -84,10 +80,7 @@ exports.validateEmail = function (req, res) {
     },
     // send notify email to Braquet admin using service
     function(emailHTML, user, done) {
-      console.log('*******444444**********');
-
       // var mailList = 'syedm.90@gmail.com, takayuki.koizumi@gmail.com, dbnajafi@gmail.com';
-
       var mailList = 'dbnajafi@gmail.com';
 
       var mailOptions = {
@@ -108,7 +101,6 @@ exports.validateEmail = function (req, res) {
     }],
     function(err) {
       if(err) {
-        console.log('*******HOLY SHIT**********');
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
