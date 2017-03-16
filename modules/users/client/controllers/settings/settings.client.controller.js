@@ -7,7 +7,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', 'Au
     // get user organization
     $http.get('api/organizations/' + $scope.user.organization)
       .success(function(org) {
-        $scope.user.organization = org;
+        $scope.userOrganization = org;
       });
   }
 ]);

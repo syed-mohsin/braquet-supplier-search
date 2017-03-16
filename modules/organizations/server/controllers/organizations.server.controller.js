@@ -281,6 +281,8 @@ exports.get_catalog = function (req, res) {
     return countQuery.count().exec();
   })
   .then(function(count) {
+    // remove unverified reviews
+
     // calculate avg reviews for all orgs in this query
     result = result.map(function(org) {
       // remove unverified org reviews
