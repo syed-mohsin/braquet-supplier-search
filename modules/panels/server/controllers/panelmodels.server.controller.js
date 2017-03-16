@@ -85,15 +85,30 @@ exports.uploadPhoto = function (req, res) {
 };
 
 /**
- * Get Panel manufacturers
+ * Get Panel Filters
  */
-exports.getManufacturers = function(req, res) {
-  PanelModel.distinct('manufacturer', function(err, manufacturers) {
-    if (err) {
-      res.status(400).json(err);
-    } else {
-      res.json(manufacturers);
-    }
+exports.getFilters = function(req, res) {
+  var filters = {};
+  // Get panel Manufacturers
+  PanelModel.distinct('manufacturer').exec()
+  .then(function(manufacturers) {
+    filters.manufacturers = manufacturers;
+    return PanelModel.distinct('crystallineType').exec();
+  })
+  .then(function(crystallineTypes) {
+    filters.crystallineTypes = crystallineTypes;
+    return PanelModel.distinct('frameColor').exec();
+  })
+  .then(function(frameColors) {
+    filters.frameColors = frameColors;
+    return PanelModel.distinct('numberOfCells').exec();
+  })
+  .then(function(numberOfCells) {
+    filters.numberOfCells = numberOfCells;
+    res.json(filters);
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
   });
 };
 

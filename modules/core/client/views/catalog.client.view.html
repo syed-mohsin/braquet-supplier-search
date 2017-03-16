@@ -17,6 +17,30 @@
         <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
             <label>Filters</label>
             <div class="list-group">
+                <span class="catalog-label"><small>Crystalline Type ></small></span>
+                <li ng-repeat="crys in crystallineTypes">
+                    <input type="checkbox" ng-model="crysCheckboxes[crys]" ng-change="updateFilter()">
+                    <span><small>{{crys}}</small></span>
+                </li>
+            </div>
+
+            <div class="list-group">
+                <span class="catalog-label"><small>Frame Color ></small></span>
+                <li ng-repeat="color in frameColors">
+                    <input type="checkbox" ng-model="fColorCheckboxes[color]" ng-change="updateFilter()">
+                    <span><small>{{color}}</small></span>
+                </li>
+            </div>
+
+            <div class="list-group">
+                <span class="catalog-label"><small>Number of Cells ></small></span>
+                <li ng-repeat="cells in numberOfCells">
+                    <input type="checkbox" ng-model="numCellsCheckboxes[cells]" ng-change="updateFilter()">
+                    <span><small>{{cells}}</small></span>
+                </li>
+            </div>
+
+            <div class="list-group">
                 <span class="catalog-label"><small>Module Wattage ></small></span>
                 <li ng-repeat="range in ranges">
                     <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
