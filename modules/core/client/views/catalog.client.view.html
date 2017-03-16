@@ -58,7 +58,9 @@
         </div>
 
         <div class="horizontal list-group col-sm-7">
-            <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+            <div>
+              <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+            </div>
             <a ng-repeat="organization in orgs" class="list-group-item col-sm-12" ui-sref="organizations.view-public({organizationId: organization._id})">
                 <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
                 <div class="profile-info">
@@ -70,7 +72,9 @@
                     </div>
                 </div>
             </a>
-            <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+            <div>
+              <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+          </div>
         </div>
     </section>
 </section>
