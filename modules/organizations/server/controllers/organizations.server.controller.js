@@ -461,7 +461,7 @@ exports.organizationByID = function (req, res, next, id) {
 
           // remove displayName on anonymous reviews
           organization.reviews.map(function(review) {
-            if (review.anonymous) {
+            if (review.anonymous && review.user) {
               review.user.displayName = 'anonymous';
               review.user.firstName = 'anonymous';
               review.user.lastName = 'anonymous';
