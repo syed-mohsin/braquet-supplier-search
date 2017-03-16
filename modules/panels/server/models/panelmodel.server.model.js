@@ -6,9 +6,6 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-// Update to ES6 Promises
-mongoose.Promise = global.Promise;
-
 /**
  * Panel Model Schema
  */

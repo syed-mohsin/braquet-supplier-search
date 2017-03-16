@@ -14,14 +14,18 @@
 
 */
 
+var mongoose = require('mongoose');
+var dbUrl = 'mongodb://localhost/mean-dev';
+
+// Update to ES6 Promises
+mongoose.Promise = global.Promise;
+
 // register relevant models
 require('../modules/panels/server/models/panelmodel.server.model');
 require('../modules/users/server/models/user.server.model');
 require('../modules/reviews/server/models/review.server.model');
 require('../modules/organizations/server/models/organization.server.model');
 
-var mongoose = require('mongoose');
-var dbUrl = 'mongodb://localhost/mean-dev';
 
 mongoose.connect(dbUrl, function(err) {
   if (!err) {
