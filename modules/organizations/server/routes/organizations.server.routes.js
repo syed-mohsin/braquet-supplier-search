@@ -32,7 +32,11 @@ module.exports = function (app) {
   app.route('/api/organizations-set-admin').all(organizationsPolicy.isAllowed)
     .post(organizations.setOrganizationAdmin);
 
-  // Single organization routes
+  // view single organization is allowed for public access
+  app.route('/api/organizations/:organizationId/public')
+    .get(organizations.readPublic);
+
+  // Single organization routes (all require user-authentication)
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)
     .put(organizations.update)

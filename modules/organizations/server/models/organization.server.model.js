@@ -46,7 +46,8 @@ var OrganizationSchema = new Schema({
     ref: 'Review'
   }],
   avg_review: {
-    type: Number
+    type: Number,
+    default: 0
   },
   panel_models: [{
     type: Schema.ObjectId,
@@ -54,6 +55,15 @@ var OrganizationSchema = new Schema({
   }],
   panel_manufacturers: [{
     type: String
+  }],
+  panel_crystalline_types: [{
+    type: String
+  }],
+  panel_frame_colors: [{
+    type: String
+  }],
+  panel_number_of_cells: [{
+    type: Number
   }],
   panel_stcPowers: [{
     type: Number
@@ -89,15 +99,6 @@ var OrganizationSchema = new Schema({
   about: {
     type: String
   }
-});
-
-OrganizationSchema.pre('save', function(next) {
-  var self = this;
-  this.avg_review = this.reviews.reduce(function(a,b) {
-    return a + b.rating;
-  }, 0) / this.reviews.length;
-
-  next();
 });
 
 mongoose.model('Organization', OrganizationSchema);

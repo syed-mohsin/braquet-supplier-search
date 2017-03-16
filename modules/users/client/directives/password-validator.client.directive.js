@@ -27,7 +27,7 @@ angular.module('users')
             scope.requirementsColor = requirementsMeter[requirementsIdx].color;
             scope.requirementsProgress = requirementsMeter[requirementsIdx].progress;
 
-            if (result.errors.length) {
+            if (result.errors.length > 2) {
               scope.popoverMsg = PasswordValidator.getPopoverMsg();
               scope.passwordErrors = result.errors;
               status = false;

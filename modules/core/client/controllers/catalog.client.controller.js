@@ -10,6 +10,9 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.query.q = $stateParams.q;
     $scope.query.man = $stateParams.man;
     $scope.query.pow = $stateParams.pow;
+    $scope.query.crys = $stateParams.crys;
+    $scope.query.color = $stateParams.color;
+    $scope.query.cells = $stateParams.cells;
     $scope.query.page = $stateParams.page;
 
     // used to toggle filter on xs screen size
@@ -22,6 +25,9 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         q: $stateParams.q,
         man: $stateParams.man,
         pow: $stateParams.pow,
+        crys: $stateParams.crys,
+        color: $stateParams.color,
+        cells: $stateParams.cells,
         page: $stateParams.page
       }
     })
@@ -30,12 +36,15 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.buildPager(resp.count);
 
       $scope.buildWattCheckboxes();
-      $scope.buildOrgCheckboxes();
+      $scope.buildFilterCheckboxes();
     });
 
     $scope.updateFilter = function() {
       var man = '';
       var pow = '';
+      var crys = '';
+      var color = '';
+      var cells = '';
 
       // find all checked boxes for wattage
       for (var key in $scope.wattCheckboxes) {
@@ -51,8 +60,32 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         }
       }
 
+      // find all checked crystalline types
+      for (key in $scope.crysCheckboxes) {
+        if ($scope.crysCheckboxes[key]) {
+          crys += key + '|';
+        }
+      }
+
+      // find all checked frame colors
+      for (key in $scope.fColorCheckboxes) {
+        if ($scope.fColorCheckboxes[key]) {
+          color += key + '|';
+        }
+      }
+
+      // find all checked number of cells
+      for (key in $scope.numCellsCheckboxes) {
+        if ($scope.numCellsCheckboxes[key]) {
+          cells += key + '|';
+        }
+      }
+
       $scope.query.man = man;
       $scope.query.pow = pow;
+      $scope.query.crys = crys;
+      $scope.query.color = color;
+      $scope.query.cells = cells;
       $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
@@ -86,14 +119,39 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       }
     };
 
-    $scope.buildOrgCheckboxes = function() {
-      $http.get('/api/panelmodels-manufacturers')
-        .success(function(data) {
-          $scope.manufacturers = data;
+    $scope.buildFilterCheckboxes = function() {
+      $http.get('/api/panelmodels-filters')
+        .success(function(filters) {
+          $scope.manufacturers = filters.manufacturers;
+          $scope.crystallineTypes = filters.crystallineTypes;
+          $scope.frameColors = filters.frameColors;
+          $scope.numberOfCells = filters.numberOfCells;
+
           $scope.orgCheckboxes = {};
           var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
-          data.forEach(function(manufacturer) {
+          $scope.manufacturers.forEach(function(manufacturer) {
             $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
+          });
+
+          $scope.crysCheckboxes = {};
+          queryCheckedBoxes = $stateParams.crys ? $stateParams.crys.split('|') : [];
+          $scope.crystallineTypes.forEach(function(crystallineType) {
+            $scope.crysCheckboxes[crystallineType] = queryCheckedBoxes.indexOf(crystallineType) !== -1 ? true : false;
+          });
+
+          $scope.fColorCheckboxes = {};
+          queryCheckedBoxes = $stateParams.color ? $stateParams.color.split('|') : [];
+          $scope.frameColors.forEach(function(frameColor) {
+            $scope.fColorCheckboxes[frameColor] = queryCheckedBoxes.indexOf(frameColor) !== -1 ? true : false;
+          });
+
+          $scope.numCellsCheckboxes = {};
+          queryCheckedBoxes = $stateParams.cells ? $stateParams.cells.split('|').filter(function(c) { return c.length && !isNaN(c); }) : [];
+          $scope.numberOfCells.sort(function(a,b) { return a-b; });
+          $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1);
+          $scope.numberOfCells.forEach(function(numCells) {
+            if (!numCells) return;
+            $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
           });
         });
     };
@@ -111,6 +169,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     $scope.searchSubmit = function() {
       $scope.query.q = $scope.search;
+      $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
   }

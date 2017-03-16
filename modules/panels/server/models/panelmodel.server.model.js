@@ -25,6 +25,9 @@ var PanelModelSchema = new Schema({
   stcModuleEfficiency: {
     type: String
   },
+  crystallineType: {
+    type: String
+  },
   stcPower: {
     type: Number
   },

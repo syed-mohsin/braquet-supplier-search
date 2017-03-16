@@ -44,6 +44,59 @@ exports.read = function (req, res) {
 };
 
 /**
+ * Public read view of organization
+ */
+exports.readPublic = function(req, res) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.organizationId)) {
+    return res.status(400).send({
+      message: 'Organization is invalid'
+    });
+  }
+
+  Organization.findById(req.params.organizationId)
+    .populate('panel_models')
+    .populate('reviews')
+    .exec(function (err, organization) {
+      if (err) {
+        return res.status(400).json(err);
+      } else if (!organization) {
+        return res.status(400).json(new Error('Failed to load organization ' + req.params.organizationId));
+      }
+
+      Review.populate(organization.reviews, [
+        { path: 'organization' },
+        { path: 'user', populate: { path: 'organization', select: 'companyName logoImageUrl' } }
+      ], function(err, reviews) {
+        if (err) {
+          return res.status(400).json(err);
+        } else {
+          // remove unverified reviews
+          organization.reviews = organization.reviews.filter(function(review) {
+            return review.verified === true;
+          });
+
+          // remove displayName on anonymous reviews
+          organization.reviews.map(function(review) {
+            if (review.anonymous) {
+              review.user.displayName = 'anonymous';
+              review.user.firstName = 'anonymous';
+              review.user.lastName = 'anonymous';
+            }
+
+            return review;
+          });
+
+          // calculate avg review
+          organization.avg_review = organization.reviews.reduce(function(a,b) {
+            return a + b.rating;
+          }, 0) / organization.reviews.length || 0;
+          res.json(organization);
+        }
+      });
+    });
+};
+
+/**
  * Update a organization
  */
 exports.update = function (req, res) {
@@ -148,7 +201,9 @@ exports.verify = function(req, res) {
  * List of only organization names
  */
 exports.list_basic = function (req, res) {
-  Organization.find({}, 'companyName', function(err, organizations) {
+  Organization.find({}, 'companyName')
+  .sort('companyName')
+  .exec(function(err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -177,6 +232,24 @@ exports.get_catalog = function (req, res) {
     queryParams.panel_manufacturers = { '$in' :  manCondition };
   }
 
+  // build query for crystaline types
+  if (req.query.crys) {
+    var crysCondition = req.query.crys.split('|').filter(function(c) { return c.length !== 0; });
+    queryParams.panel_crystalline_types = { '$in' :  crysCondition };
+  }
+
+  // build query for frame colors
+  if (req.query.color) {
+    var colorCondition = req.query.color.split('|').filter(function(c) { return c.length !== 0; });
+    queryParams.panel_frame_colors = { '$in' :  colorCondition };
+  }
+
+  // build query for number of cells
+  if (req.query.cells) {
+    var cellsCondition = req.query.cells.split('|').filter(function(m) { return m.length !== 0; });
+    queryParams.panel_number_of_cells = { '$in' :  cellsCondition };
+  }
+
   // build query for wattage filter
   if (req.query.pow) {
     // or statement to check all wattage ranges passed in
@@ -199,6 +272,7 @@ exports.get_catalog = function (req, res) {
   var countQuery = Organization.find(queryParams);
 
   query.skip((req.query.page - 1 || 0) * 15)
+  .populate('reviews')
   .limit(15)
   .exec()
   .then(function(orgs) {
@@ -207,6 +281,22 @@ exports.get_catalog = function (req, res) {
     return countQuery.count().exec();
   })
   .then(function(count) {
+    // calculate avg reviews for all orgs in this query
+    result = result.map(function(org) {
+      // remove unverified org reviews
+      org.reviews = org.reviews.filter(function(review) {
+        return review.verified === true;
+      });
+
+      // calculate org average review
+      org.avg_review = org.reviews.reduce(function(a,b) {
+        return a + b.rating;
+      }, 0) / org.reviews.length || 0;
+
+      org.reviews = []; // clear reviews for catalog view
+      return org;
+    });
+
     res.json({ orgs: result, count: count });
   })
   .catch(function(err) {
@@ -357,16 +447,34 @@ exports.organizationByID = function (req, res, next, id) {
 
       Review.populate(organization.reviews, [
         { path: 'organization' },
-        { path: 'user' }
+        { path: 'user', populate: { path: 'organization', select: 'companyName logoImageUrl' } }
       ], function(err, reviews) {
         if (err) {
           return next(err);
         } else {
-          req.organization = organization;
+          // remove unverified reviews
+          organization.reviews = organization.reviews.filter(function(review) {
+            return review.verified === true;
+          });
 
+          // remove displayName on anonymous reviews
+          organization.reviews.map(function(review) {
+            if (review.anonymous) {
+              review.user.displayName = 'anonymous';
+              review.user.firstName = 'anonymous';
+              review.user.lastName = 'anonymous';
+            }
+
+            return review;
+          });
+
+          // calculate average review
+          organization.avg_review = organization.reviews.reduce(function(a,b) {
+            return a + b.rating;
+          }, 0) / organization.reviews.length || 0;
+          req.organization = organization;
+          return next();
         }
       });
-
-      next();
     });
 };

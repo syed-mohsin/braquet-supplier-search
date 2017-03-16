@@ -1,31 +1,47 @@
 <section>
   <div class="col-md-12">
     <form name="reviewForm" class="form-horizontal" ng-submit="create(reviewForm.$valid)" novalidate>
-      <h2>Create a review</h2>
+      <h2>Create an anonymous review</h2>
+      <div class="form-group">
+          <strong>Your review will not display your user information including name, email or the organization you are assocaited with.</strong>
+        </div>
       <fieldset>
+      <div class="form-group">
+          <label for="title">Overall rating</label><br>
+          <rating name="rating" id="rating" ng-model="rating" read-only="false" on-hover="hoveringOver(value)" aria-labelledby="default-rating"></rating>
+      </div>
         <div class="form-group" show-errors>
-          <label for="title">Title</label>
+          <label for="title">Review title</label>
           <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>
           <div ng-messages="reviewForm.title.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Review title is required.</p>
           </div>
         </div>
-        <div class="form-group">
-          <rating name="rating" id="rating" ng-model="rating" read-only="false" on-hover="hoveringOver(value)" aria-labelledby="default-rating"></rating>
+        <div class="form-group" show-errors>
+          <select name="category" ng-model="category" id="category" class="form-control" required>
+            <option value="">---Please describe your relationship with the company---</option>
+            <option value="Currently doing business with company">Currently doing business with the company</option>
+            <option value="General">Previously conducted business with the company</option>
+            <option value="Discussed business with company">Discussed business with the company</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
         <div class="form-group">
+          <label for="content">Your review</label>
+          <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10"></textarea>
+        </div>
+        <div class="form-group anonymous" style="display:none;">
           <input type="checkbox" ng-model="anonymous">
-          <span><small>Anonymous?</small></span>
-        </div>
-        <div class="form-group">
-          <label for="content">Content</label>
-          <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
-        </div>
-        <div class="form-group">
+          <span><small>Check off this box if you would like to make the review public. Your name and company name will be displayed.</small></span>
+      </div>
+        <div class="form-group submit">
           <input type="submit" class="btn btn-default">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>
+        </div>
+         <div ng-show="!authentication.user.emailVerified" class="form-group" style="color:red">
+          <strong>Your review will not be displayed publicly until you have verified your email address.</strong>
         </div>
       </fieldset>
     </form>

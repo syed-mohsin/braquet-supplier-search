@@ -121,6 +121,65 @@ form label {
     font-weight: normal;
 }
 
+.extend .page-header {
+    position: fixed;
+    top: -19px;
+    width: 100%;
+    background: white;
+    z-index: 200;
+    left: 0px;
+    padding: 10px;
+}
+.extend .chat-profile-image {
+    margin-right: 10px;
+}
+.extend .chat-message {
+    border-top: 0px solid #e7e7e7;
+}
+.chat-message-details {
+    overflow: auto;
+}
+.extend form {
+    min-width: initial;
+    max-width: initial;
+    padding: inherit;
+}
+.extend .chat-section {
+    position: relative;
+    /*height: 700px;*/
+    overflow: hidden;
+    width: 100%;
+    background: white;
+}
+.extend .chat-content {
+    position: absolute;
+    overflow: auto;
+    bottom: 0;
+    /*max-height: 700px;*/
+}
+.extend button {
+    float: left;
+    background: transparent;
+    border: 1px solid lightgrey;
+    border-right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.extend form .input-group input {
+    width: 86%;
+}
+.extend .glyphicon {
+    margin-right: initial;
+    margin-top: initial;
+}
+.extend .input-group {
+    width: 100%;
+}
+.extend .submit {
+    display: none;
+}
 .notice {
     width: 100%;
     text-align: center;
@@ -145,21 +204,22 @@ form label {
     left: initial;
     padding: initial;
 }
-
 .profile-picture form {
     width: 223px;
     min-width: initial;
     max-width: initial;
 }
-
 .form-group {
     text-align: left;
+    margin-top: 10px;
+    margin-bottom: 0;
 }
-
+.form-group div {
+    padding-top: 8px;
+}
 input[type="checkbox"] {
     margin-right: 10px;
 }
-
 .signup {
     margin: 40px auto 0 auto;
     padding: 0px 50px 40px 50px;
@@ -170,11 +230,9 @@ input[type="checkbox"] {
 .remember-password {
     float: left;
 }
-
 .forgot-password {
     float: right;
 }
-
 
 .btn-primary, .btn-default {
     font-weight: 700;
@@ -201,6 +259,9 @@ input[type="checkbox"] {
 button.cancel {
     background: #d9534f;
     border-color: #d9534f;
+}
+.submit {
+    margin-top: 10px;
 }
 
 form .btn-primary, form .btn-default {
@@ -503,12 +564,6 @@ section h2 {
 }
 .projects .posted-date {
     margin-bottom: 20px;
-}
-.form-group {
-    margin-bottom: 0;
-}
-.form-group div {
-    padding-top: 8px;
 }
 .form-group div.md-chip-content, .form-group div.md-chip-remove-container {
     padding-top: 0px;

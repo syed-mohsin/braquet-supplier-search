@@ -18,8 +18,8 @@ module.exports = function (app) {
   app.route('/api/panels/photo/:panelId').all(panelmodelsPolicy.isAllowed)
   	.post(panelmodels.uploadPhoto);
 
-  app.route('/api/panelmodels-manufacturers')
-    .get(panelmodels.getManufacturers);
+  app.route('/api/panelmodels-filters')
+    .get(panelmodels.getFilters);
 
   // Finish by binding the panelmodel middleware
   app.param('panelId', panelmodels.panelmodelByID);

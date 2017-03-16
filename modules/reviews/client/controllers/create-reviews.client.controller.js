@@ -4,6 +4,7 @@
 angular.module('reviews').controller('CreateReviewsController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Reviews', 'modalOrganizationId',
   function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Reviews, modalOrganizationId) {
     $scope.authentication = Authentication;
+    $scope.anonymous = true; // all created reviews should be anonymous by default
 
     // Create new Review
     $scope.create = function (isValid) {
@@ -18,6 +19,7 @@ angular.module('reviews').controller('CreateReviewsController', ['$scope', '$sta
       // Create new Review object
       var review = new Reviews({
         title: this.title,
+        category: this.category,
         rating: this.rating,
         content: this.content,
         anonymous: this.anonymous

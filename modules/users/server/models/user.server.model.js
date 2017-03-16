@@ -174,7 +174,7 @@ UserSchema.pre('save', function (next) {
 UserSchema.pre('validate', function (next) {
   if (this.provider === 'local' && this.password && this.isModified('password')) {
     var result = owasp.test(this.password);
-    if (result.errors.length) {
+    if (result.errors.length > 2) {
       var error = result.errors.join(' ');
       this.invalidate('password', error);
     }
@@ -250,7 +250,7 @@ UserSchema.statics.generateRandomPassphrase = function () {
     }
 
     // Send the rejection back if the passphrase fails to pass the strength test
-    if (owasp.test(password).errors.length) {
+    if (owasp.test(password).errors.length > 2) {
       reject(new Error('An unexpected problem occured while generating the random passphrase'));
     } else {
       // resolve with the validated passphrase

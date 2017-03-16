@@ -50,8 +50,6 @@ exports.verifyUser = function (req, res) {
     });
   } else {
     user.verified = true;
-    user.roles = user.roles[0] === 'tempUser' ? 'user' : 'seller';
-
     user.save(function(err) {
       if (err) {
         return res.status(400).json(err);
