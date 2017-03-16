@@ -19,39 +19,88 @@ var smtpTransport = nodemailer.createTransport(config.mailer.options);
  * Validate token for email confirmation
  */
 exports.validateEmail = function (req, res) {
-  User.findOne({
-    inviteToken: req.params.token,
-  }, function (err, user) {
-    if (!user) {
-      return res.redirect('/forbidden');
-    }
 
-    // verify user has confirmed email
-    user.emailVerified = true;
+  async.waterfall([
+    function(done){
+      User.findOne({ inviteToken: req.params.token }, function(err, user){
+        if (!user) {
+          return res.redirect('/forbidden');
+        }
+        
+        done(err, user);
+      });
+    },
+    function(user, done){
+      // verify user has confirmed email
+      user.emailVerified = true;
 
-    // set all user's reviews to verified
-    Review.update({
-      user: user._id,
-      verified: false
-    }, { $set: { verified: true } }, function(err, reviews) {
-      if (err) return res.redirect('/forbidden');
-
-      // finally save and log in user
+      Review.update(
+        {
+          user: user._id,
+          verified: false
+        },
+        {
+          $set: { verified: true }
+        },
+        {
+          multi: true
+        },
+        function(err, reviews) {
+          if (err) {
+            return res.redirect('/forbidden');
+          }
+          done(err, user);
+        });
+    },
+    function(user, done) {
       user.save(function(err) {
-        if (err) {
+        if(err) {
           return res.redirect('/forbidden');
         } else {
           // successfully verified email
-          req.login(user, function (err) {
-            if (err) {
-              return res.redirect('/forbidden');
-            } else {
-              res.redirect('/');
-            }
+          done(err, user);
+        }
+      });
+    },
+    function(user, done) {
+      // successfully verified email
+      req.login(user, function (err) {
+        if(err) {
+          return res.redirect('/forbidden');
+        } else {
+          res.render('modules/users/server/templates/notify-email', {
+            name: user.displayName,
+            email: user.email
+          }, function(err, emailHTML) {
+            done(err, emailHTML, user);
           });
         }
       });
+    },
+    // send notify email to Braquet admin using service
+    function(emailHTML, user, done) {
+      var mailList = 'syedm.90@gmail.com, takayuki.koizumi@gmail.com, dbnajafi@gmail.com';
 
-    });
-  });
+      var mailOptions = {
+        to: mailList,
+        from: config.mailer.from,
+        subject: 'Braquet - Notification of User Confirmation',
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: 'Failure sending notification email'
+          });
+        }
+        return res.redirect('/');
+      });
+    }],
+    function(err) {
+      if(err) {
+        res.redirect('/forbidden');
+      }
+    }
+  );
 };

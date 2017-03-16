@@ -43,11 +43,11 @@
 
                 <div class="menu">
                     <a ng-if="organization._id !== authentication.user.organization" ng-click="showReviewView($event, organization._id)">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Write a Review</span>
+                        <span class="glyphicon glyphicon-new-window"></span><span>Write an anonymous review</span>
                     </a>
 
                     <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Add Employees</span>
+                        <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
                     </a>
                 </div>
             </div>

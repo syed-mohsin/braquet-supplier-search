@@ -201,7 +201,9 @@ exports.verify = function(req, res) {
  * List of only organization names
  */
 exports.list_basic = function (req, res) {
-  Organization.find({}, 'companyName', function(err, organizations) {
+  Organization.find({}, 'companyName')
+  .sort('companyName')
+  .exec(function(err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -228,6 +230,24 @@ exports.get_catalog = function (req, res) {
   if (req.query.man) {
     var manCondition = req.query.man.split('|').filter(function(m) { return m.length !== 0; });
     queryParams.panel_manufacturers = { '$in' :  manCondition };
+  }
+
+  // build query for crystaline types
+  if (req.query.crys) {
+    var crysCondition = req.query.crys.split('|').filter(function(c) { return c.length !== 0; });
+    queryParams.panel_crystalline_types = { '$in' :  crysCondition };
+  }
+
+  // build query for frame colors
+  if (req.query.color) {
+    var colorCondition = req.query.color.split('|').filter(function(c) { return c.length !== 0; });
+    queryParams.panel_frame_colors = { '$in' :  colorCondition };
+  }
+
+  // build query for number of cells
+  if (req.query.cells) {
+    var cellsCondition = req.query.cells.split('|').filter(function(m) { return m.length !== 0; });
+    queryParams.panel_number_of_cells = { '$in' :  cellsCondition };
   }
 
   // build query for wattage filter
