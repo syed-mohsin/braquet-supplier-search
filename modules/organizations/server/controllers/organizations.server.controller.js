@@ -77,7 +77,7 @@ exports.readPublic = function(req, res) {
 
           // remove displayName on anonymous reviews
           organization.reviews.map(function(review) {
-            if (review.anonymous) {
+            if (review.anonymous && review.user) {
               review.user.displayName = 'anonymous';
               review.user.firstName = 'anonymous';
               review.user.lastName = 'anonymous';
@@ -148,7 +148,9 @@ exports.delete = function (req, res) {
  * List of current All Organizations
  */
 exports.list = function (req, res) {
-  Organization.find({ verified: true }, function (err, organizations) {
+  Organization.find({ verified: true })
+  .sort('companyName')
+  .exec(function (err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
