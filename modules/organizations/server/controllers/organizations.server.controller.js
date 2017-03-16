@@ -201,7 +201,9 @@ exports.verify = function(req, res) {
  * List of only organization names
  */
 exports.list_basic = function (req, res) {
-  Organization.find({}, 'companyName', function(err, organizations) {
+  Organization.find({}, 'companyName')
+  .sort('companyName')
+  .exec(function(err, organizations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
