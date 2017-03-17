@@ -19,14 +19,14 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         var user = Authentication.user;
         if (user) {
           if (user.roles[0] === 'tempUser' || user.roles[0] === 'tempSeller') {
-            $state.go('awaiting-confirmation');
+            $state.go('awaiting-confirmation', {}, { location: false });
           } else if (user.roles.indexOf('seller') !== -1) {
-            $state.go('organizations.view', { organizationId: user.organization });
+            $state.go('organizations.view', { organizationId: user.organization }, { location: false });
           } else if (user.roles.indexOf('user') !== -1) {
-            $state.go('catalog');
+            $state.go('catalog', {}, { location: false });
           }
         } else {
-          $state.go('search');
+          $state.go('search', {}, { location: false });
         }
       }
     })
@@ -49,16 +49,16 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     //     ignoreState: true
     //   }
     // })
-    .state('awaiting-confirmation', {
-      url: '/awaiting-confirmation',
-      templateUrl: 'modules/core/client/views/awaiting-confirmation.client.view.html',
-      controller: function($state, Authentication) {
-        var user = Authentication.user;
-        if (user.verified && user.emailVerified) {
-          $state.go('home');
-        }
-      }
-    })
+    // .state('awaiting-confirmation', {
+    //   url: '/awaiting-confirmation',
+    //   templateUrl: 'modules/core/client/views/awaiting-confirmation.client.view.html',
+    //   controller: function($state, Authentication) {
+    //     var user = Authentication.user;
+    //     if (user.verified && user.emailVerified) {
+    //       $state.go('home');
+    //     }
+    //   }
+    // })
     .state('privacy-policy', {
       url: '/privacy-policy',
       templateUrl: 'modules/core/client/views/privacy-policy.client.view.html'

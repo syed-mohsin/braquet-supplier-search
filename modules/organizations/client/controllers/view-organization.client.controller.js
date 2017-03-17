@@ -5,13 +5,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
-    orgService.$promise.then(function(org) {
-      $scope.organization = org;
-      $scope.buildUploader(org._id);
-    }).catch(function(err) {
-      $location.path('/forbidden');
-    });
-
     $scope.findOne = function () {
       Organizations.get({
         organizationId: $stateParams.organizationId
@@ -181,4 +174,8 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         $scope.findOne();
       });
     };
+
+    // initialize resolved organization;
+    $scope.organization = orgService;
+    $scope.buildUploader($scope.organization._id);
   }]);
