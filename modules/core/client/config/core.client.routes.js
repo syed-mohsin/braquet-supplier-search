@@ -59,6 +59,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         }
       }
     })
+    .state('privacy-policy', {
+      url: '/privacy-policy',
+      templateUrl: 'modules/core/client/views/privacy-policy.client.view.html'
+    })
     // .state('invite', {
     //   url: '/welcome/invite',
     //   templateUrl: 'modules/core/client/views/invite.client.view.html'
