@@ -9,6 +9,9 @@
                 <div class="title name">
                     <span ng-bind="organization.companyName"></span>
                 </div>
+                <div class="reviews">
+                 <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                </div>
                 <div class="bio">
                     <span ng-bind="organization.about"></span>
                 </div>
