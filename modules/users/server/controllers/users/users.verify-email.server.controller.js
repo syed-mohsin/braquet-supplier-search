@@ -26,8 +26,7 @@ exports.validateEmail = function (req, res) {
         if (!user) {
           return res.redirect('/forbidden');
         }
-        console.log(user);
-
+        
         done(err, user);
       });
     },
@@ -40,9 +39,9 @@ exports.validateEmail = function (req, res) {
           user: user._id,
           verified: false
         },
-        { 
+        {
           $set: { verified: true }
-        }, 
+        },
         {
           multi: true
         },
@@ -100,9 +99,7 @@ exports.validateEmail = function (req, res) {
     }],
     function(err) {
       if(err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        res.redirect('/forbidden');
       }
     }
   );
