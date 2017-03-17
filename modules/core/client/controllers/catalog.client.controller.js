@@ -129,6 +129,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
           $scope.orgCheckboxes = {};
           var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
+          $scope.manufacturers.sort(function(a,b) {
+            if (a.toLowerCase() < b.toLowerCase()) return -1;
+            if (a.toLowerCase() > b.toLowerCase()) return 1;
+            return 0;
+          });
           $scope.manufacturers.forEach(function(manufacturer) {
             $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
           });
