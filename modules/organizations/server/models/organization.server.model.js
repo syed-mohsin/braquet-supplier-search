@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Project Schema
+ * Organization Schema
  */
 var OrganizationSchema = new Schema({
   created: {
@@ -43,6 +43,10 @@ var OrganizationSchema = new Schema({
     ref: 'Review'
   }],
   avg_review: {
+    type: Number,
+    default: 0
+  },
+  reviews_length: {
     type: Number,
     default: 0
   },
@@ -96,6 +100,32 @@ var OrganizationSchema = new Schema({
   about: {
     type: String
   }
+});
+
+OrganizationSchema.pre('save', function(next) {
+  var Review = mongoose.model('Review');
+
+  // remove invalid review ids if any
+  this.reviews = this.reviews.map(function(review) {
+    return review._id;
+  });
+
+  // set reviews_length and avg_review
+  var self = this;
+  Review.find({ _id: { $in: this.reviews } }, 'rating')
+  .exec()
+  .then(function(reviews) {
+    // update reviews length for querying in catalog
+    self.reviews_length = reviews.length;
+
+    // calculate new average review
+    self.avg_review = reviews.reduce(function(a,b) {
+      return a + b.rating;
+    }, 0) / reviews.length || 0;
+
+    // finish
+    next();
+  });
 });
 
 mongoose.model('Organization', OrganizationSchema);

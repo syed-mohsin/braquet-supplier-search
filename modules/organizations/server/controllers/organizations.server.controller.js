@@ -86,10 +86,6 @@ exports.readPublic = function(req, res) {
             return review;
           });
 
-          // calculate avg review
-          organization.avg_review = organization.reviews.reduce(function(a,b) {
-            return a + b.rating;
-          }, 0) / organization.reviews.length || 0;
           res.json(organization);
         }
       });
@@ -223,7 +219,7 @@ exports.list_basic = function (req, res) {
 exports.get_catalog = function (req, res) {
   var result = [];
   var queryParams = {}; // query object
-  queryParams.verified = true;
+  queryParams.verified = true; // get only verified organizations
 
   // build query for search using regular expression
   if (req.query.q) queryParams.companyName = new RegExp(req.query.q, 'i');
@@ -275,6 +271,7 @@ exports.get_catalog = function (req, res) {
 
   query.skip((req.query.page - 1 || 0) * 15)
   .populate('reviews')
+  .sort('-reviews_length')
   .limit(15)
   .exec()
   .then(function(orgs) {
@@ -283,21 +280,12 @@ exports.get_catalog = function (req, res) {
     return countQuery.count().exec();
   })
   .then(function(count) {
-    // remove unverified reviews
-
-    // calculate avg reviews for all orgs in this query
     result = result.map(function(org) {
       // remove unverified org reviews
       org.reviews = org.reviews.filter(function(review) {
         return review.verified === true;
       });
 
-      // calculate org average review
-      org.avg_review = org.reviews.reduce(function(a,b) {
-        return a + b.rating;
-      }, 0) / org.reviews.length || 0;
-
-      org.reviews = []; // clear reviews for catalog view
       return org;
     });
 
@@ -472,10 +460,6 @@ exports.organizationByID = function (req, res, next, id) {
             return review;
           });
 
-          // calculate average review
-          organization.avg_review = organization.reviews.reduce(function(a,b) {
-            return a + b.rating;
-          }, 0) / organization.reviews.length || 0;
           req.organization = organization;
           return next();
         }
