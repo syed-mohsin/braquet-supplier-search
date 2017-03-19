@@ -26,7 +26,7 @@ exports.validateEmail = function (req, res) {
         if (!user) {
           return res.redirect('/forbidden');
         }
-        
+
         done(err, user);
       });
     },
@@ -79,7 +79,7 @@ exports.validateEmail = function (req, res) {
     },
     // send notify email to Braquet admin using service
     function(emailHTML, user, done) {
-      var mailList = 'syedm.90@gmail.com, taka@braquet.io, dbnajafi@gmail.com';
+      var mailList = process.env.MAILER_INTERNAL_LIST;
 
       var mailOptions = {
         to: mailList,
