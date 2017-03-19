@@ -19,7 +19,9 @@ module.exports = {
         'public/lib/angular-file-upload/angular-file-upload.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/angular-aria/angular-aria.min.js',
-        'public/lib/angular-material/angular-material.min.js'
+        'public/lib/angular-material/angular-material.min.js',
+        'public/lib/angulartics/dist/angulartics.min.js',
+        'public/lib/angulartics-google-analytics/dist/angulartics-ga.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
