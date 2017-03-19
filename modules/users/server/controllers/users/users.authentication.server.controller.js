@@ -206,7 +206,7 @@ exports.signup = function (req, res) {
       });
     },
     function(emailHTML, done) {
-      var mailList = 'syedm.90@gmail.com, takayuki.koizumi@gmail.com, dbnajafi@gmail.com';
+      var mailList = process.env.MAILER_INTERNAL_LIST;
 
       var mailOptions = {
         to: mailList,
