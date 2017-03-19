@@ -45,7 +45,7 @@ angular.module('organizations').config(['$stateProvider',
           orgService: function($stateParams, Organizations) {
             return Organizations.get({
               organizationId: $stateParams.organizationId
-            });
+            }).$promise;
           }
         }
       })
