@@ -54,6 +54,10 @@ var OrganizationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'PanelModel'
   }],
+  panels_length: {
+    type: Number,
+    default: 0
+  },
   panel_manufacturers: [{
     type: String
   }],
@@ -104,6 +108,9 @@ var OrganizationSchema = new Schema({
 
 OrganizationSchema.pre('save', function(next) {
   var Review = mongoose.model('Review');
+
+  // set number of panels
+  this.panels_length = this.panel_models.length;
 
   // remove invalid review ids if any
   this.reviews = this.reviews.map(function(review) {

@@ -220,6 +220,7 @@ exports.get_catalog = function (req, res) {
   var result = [];
   var queryParams = {}; // query object
   queryParams.verified = true; // get only verified organizations
+  queryParams.panels_length = { '$gt': 0 }; // only show suppliers with an panel models
 
   // build query for search using regular expression
   if (req.query.q) queryParams.companyName = new RegExp(req.query.q, 'i');
@@ -271,7 +272,7 @@ exports.get_catalog = function (req, res) {
 
   query.skip((req.query.page - 1 || 0) * 15)
   .populate('reviews')
-  .sort('-reviews_length')
+  .sort('-avg_review')
   .limit(15)
   .exec()
   .then(function(orgs) {
