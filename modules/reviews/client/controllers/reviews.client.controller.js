@@ -1,8 +1,8 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Reviews',
-  function ($scope, $stateParams, $location, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Reviews',
+  function ($scope, $stateParams, $location, $http, Authentication, Reviews) {
     $scope.authentication = Authentication;
 
     // Remove existing Review
@@ -41,9 +41,20 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$statePara
       });
     };
 
-    // Find a list of Reviews
+    // Find a list of User Reviews
     $scope.find = function () {
       $scope.reviews = Reviews.query();
+    };
+
+    // Find a list of All Reviews
+    $scope.adminFind = function () {
+      $http.get('/api/reviews-admin-list')
+      .then(function(reviews) {
+        $scope.reviews = reviews.data;
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
     };
 
     // Find existing Review

@@ -23,6 +23,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/reviews/:reviewId',
       permissions: '*'
+    }, {
+      resources: '/api/reviews-admin-list',
+      permissions: 'get'
     }]
   }, {
     roles: ['user', 'seller'],
@@ -36,15 +39,6 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews/:reviewId',
       permissions: ['get']
     }]
-  }, {
-    roles: ['guest'],
-    allows: [{
-      resources: '/api/reviews',
-      permissions: ['get']
-    }, {
-      resources: '/api/reviews/:reviewId',
-      permissions: ['get']
-    }]
   }]);
 };
 
@@ -54,8 +48,21 @@ exports.invokeRolesPolicies = function () {
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
+  // if admin, allow any manipulation
+  if (req.user.roles.indexOf('admin') !== -1) {
+    return next();
+  }
+
+  // prevent non-authorized user from seeing unowned view
+  if (req.route.path === '/api/reviews/:reviewId' && req.review && req.user && req.review.user.id !== req.user.id) {
+    return res.status(403).json({
+      message: 'User is not authorized'
+    });
+  }
+
   // If a review is being processed and the current user created it then allow any manipulation
-  if (req.review && req.user && req.review.user.id === req.user.id) {
+  // (except for edit)
+  if (req.review && req.user && req.review.user.id === req.user.id && req.route.path === '/api/reviews/:reviewId' && req.method !== 'PUT') {
     return next();
   }
 
