@@ -10,12 +10,18 @@
         by
         <span ng-bind="review.user.displayName"></span>
       </small>
+      <br>
+      <small>
+        <em class="text-muted">
+          Review Submitted for
+          <span ng-bind="review.organization.companyName"</span>
+      </small>
       <h4 class="list-group-item-heading" ng-bind="review.title"></h4>
       <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
       <p class="list-group-item-text" ng-bind="review.content"></p>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
-    No reviews yet, why don't you <a ui-sref="reviews.create">create one</a>?
+    No reviews yet, why don't you <a ui-sref="catalog">rate a company</a>?
   </div>
 </section>

@@ -22,6 +22,10 @@ module.exports = function (app) {
     .put(reviews.update)
     .delete(reviews.delete);
 
+  // List of all reviews for super admins
+  app.route('/api/reviews-admin-list').all(reviewsPolicy.isAllowed)
+    .get(reviews.admin_list);
+
   // Finish by binding the review middleware
   app.param('reviewId', reviews.reviewByID);
   app.param('organizationId', organizations.organizationByID);
