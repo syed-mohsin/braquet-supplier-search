@@ -113,16 +113,16 @@ OrganizationSchema.pre('save', function(next) {
   // set number of panels
   this.panels_length = this.panel_models.length;
 
-  // remove invalid review ids if any
-  this.reviews = this.reviews.map(function(review) {
-    return review._id;
-  });
-
-  // set reviews_length and avg_review
+  // set reviews_length and avg_review and remove stale reviews
   var self = this;
-  Review.find({ _id: { $in: this.reviews } }, 'rating')
+  Review.find({ _id: { $in: this.reviews }, verified: true }, 'rating')
   .exec()
   .then(function(reviews) {
+    // remove invalid review ids if any
+    self.reviews = self.reviews.map(function(review) {
+      return review._id;
+    });
+
     // update reviews length for querying in catalog
     self.reviews_length = reviews.length;
 
