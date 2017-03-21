@@ -120,7 +120,11 @@ OrganizationSchema.pre('save', function(next) {
   .then(function(reviews) {
     // remove invalid review ids if any
     self.reviews = self.reviews.map(function(review) {
-      return review._id;
+      if (mongoose.Types.ObjectId.isValid(review._id)) {
+        return review._id;
+      } else {
+        return review;
+      }
     });
 
     // update reviews length for querying in catalog
