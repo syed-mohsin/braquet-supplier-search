@@ -107,6 +107,7 @@ var OrganizationSchema = new Schema({
 });
 
 OrganizationSchema.pre('save', function(next) {
+
   var Review = mongoose.model('Review');
 
   // set number of panels
@@ -131,6 +132,10 @@ OrganizationSchema.pre('save', function(next) {
     }, 0) / reviews.length || 0;
 
     // finish
+    next();
+  })
+  .catch(function(err) {
+    console.log('there was an error with org prehook saving', err);
     next();
   });
 });

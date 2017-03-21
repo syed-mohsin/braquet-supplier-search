@@ -447,7 +447,7 @@ exports.organizationByID = function (req, res, next, id) {
         } else {
           // remove unverified reviews
           organization.reviews = organization.reviews.filter(function(review) {
-            return review.verified === true;
+            return review && review.verified === true;
           });
 
           // remove displayName on anonymous reviews
