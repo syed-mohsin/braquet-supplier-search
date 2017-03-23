@@ -3,8 +3,8 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://f615e0a2-eb3c-43ef-ae60-96a42339ec2c:06851da9-1b8d-4136-8748-dee37ed578b0@ds145019.mlab.com:45019/braquet-db');
-// mongoose.connect('mongodb://localhost/mean-dev');
+// mongoose.connect(process.env.MONGO_PRODUCTION_CONNECTION_URL);
+mongoose.connect('mongodb://localhost/mean-dev');
 
 // register modules
 require('../modules/organizations/server/models/organization.server.model');
