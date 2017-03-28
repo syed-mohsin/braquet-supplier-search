@@ -304,7 +304,6 @@ describe('User Model Unit Tests:', function () {
     });
 
 
-
     it('should check for if there are more than 2 password violations', function(done) {
       var _user1 = new User(user1);
       // no special characters
@@ -312,9 +311,6 @@ describe('User Model Unit Tests:', function () {
       // no uppercase characters
       _user1.password = 'helloworl';
       _user1.validate(function (err) {
-        console.log('***********************');
-        console.log(err.errors.password.message.split('. '));
-        console.log('***********************');
         err.errors.password.message.split('. ').length.should.be.above(2);
         done();
       });
