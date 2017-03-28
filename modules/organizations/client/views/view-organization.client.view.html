@@ -42,7 +42,7 @@
                 <small><span ng-bind="organization.productTypes"></span></small>
 
                 <div class="menu">
-                    <a ng-if="organization._id !== authentication.user.organization" ng-click="showReviewView($event, organization._id)">
+                    <a ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization._id)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Write an anonymous review</span>
                     </a>
 

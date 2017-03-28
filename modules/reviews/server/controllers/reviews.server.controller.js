@@ -37,25 +37,9 @@ exports.create = function (req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else if (oldReview) { // handle updating old review
-      if (!req.body.content) { // make sure new message exists
-        return res.status(400).send({
-          message: 'Review description is required'
-        });
-      }
-
-      review = oldReview;
-      review.rating = req.body.rating;
-      review.content = review.content + '\n\n***UPDATE ' + (new Date()).toDateString() + '***\n\n' + req.body.content;
-
-      review.save(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(review);
-        }
+    } else if (oldReview) { // do not allow review creation if review exists
+      return res.status(400).send({
+        message: 'You have already reviewed this company'
       });
     } else { // handle creating new review
       review.save(function (err) {
@@ -169,6 +153,34 @@ exports.admin_list = function (req, res) {
     res.status(400).send({
       message: errorHandler.getErrorMessage(err)
     });
+  });
+};
+
+/**
+ * Check if review exists for an organization
+ */
+exports.isReviewed = function (req, res) {
+  if (!req.user || !mongoose.Types.ObjectId.isValid(req.query.organizationId)) {
+    res.status(400).json({
+      message: req.query
+    });
+  }
+
+  // see if review already exists
+  Review.findOne({
+    user: req.user._id,
+    organization: req.query.organizationId
+  })
+  .exec()
+  .then(function(existingReview) {
+    if (existingReview) {
+      res.json({ existingReview: true });
+    } else {
+      res.json({ existingReview: false });
+    }
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
   });
 };
 

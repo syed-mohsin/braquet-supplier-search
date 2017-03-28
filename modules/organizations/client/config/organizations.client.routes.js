@@ -46,6 +46,15 @@ angular.module('organizations').config(['$stateProvider',
             return Organizations.get({
               organizationId: $stateParams.organizationId
             }).$promise;
+          },
+          isReviewSubmitted: function($stateParams, $http) {
+            return $http({
+              url: '/api/reviews/is-reviewed',
+              params: { organizationId: $stateParams.organizationId }
+            })
+            .then(function(response) {
+              return response.data;
+            });
           }
         }
       })
