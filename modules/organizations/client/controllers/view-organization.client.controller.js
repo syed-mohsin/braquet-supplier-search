@@ -99,9 +99,11 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         windowClass: 'app-modal-window'
       });
 
+      // successfully created a review
       modalInstance.result.then(function() {
         if (organizationId) {
           $scope.findOne();
+          $scope.isReviewSubmitted = true;
         }
       });
     };
