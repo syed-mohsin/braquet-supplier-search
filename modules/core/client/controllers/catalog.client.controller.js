@@ -182,5 +182,13 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
+
+    $scope.routeToOrg = function (organizationId) {
+      if (Authentication.user) {
+        $state.go('organizations.view', { organizationId: organizationId });
+      } else {
+        $state.go('organizations.view-public', { organizationId: organizationId });
+      }
+    };
   }
 ]);
