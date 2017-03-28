@@ -25,9 +25,6 @@
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
       <li ui-sref-active="active">
-        <a ui-sref="contact"><span></span>Contact</a>
-      </li>
-      <li ui-sref-active="active">
         <a ui-sref="team"><span></span>Team</a>
       </li>
       <li ui-sref-active="active">
@@ -37,8 +34,14 @@
       <li ui-sref-active="active">
         <a ui-sref="authentication.signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a>
       </li>
+      <li ui-sref-active="active">
+        <a ui-sref="contact"><span class="glyphicon glyphicon-info-sign"></span>Contact</a>
+      </li>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+      <li ui-sref-active="active">
+        <a ui-sref="contact"><span class="glyphicon glyphicon-info-sign"></span>Contact</a>
+      </li>
       <li class="dropdown" dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
           <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
