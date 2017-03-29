@@ -1,88 +1,90 @@
 <section class="list-view" ng-controller="CatalogController">
-    <div class="page-header">
-        <div class="row">
-            <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
-            <div class="col-md-9 search extend">
-              <form ng-submit="searchSubmit()">
-                <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers in your area" />
-                <button type="submit" class="btn btn-primary submit">Submit</button>
-              </form>
-            </div>
-        </div>
-    </div>
     <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!pageStatus">
-    <section ng-show="pageStatus">
-        <div class="menu">
-            <button class="visible-xs btn-primary last" ng-click="toggleFilter()" data-toggle="collapse" data-target="side-navbar">See Filters</button>
-        </div>
-        <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
-            <label>Filters</label>
-            <div class="list-group">
-                <span class="catalog-label"><small>Crystalline Type ></small></span>
-                <li ng-repeat="crys in crystallineTypes">
-                    <input type="checkbox" ng-model="crysCheckboxes[crys]" ng-change="updateFilter()">
-                    <span><small>{{crys}}</small></span>
-                </li>
-            </div>
-
-            <div class="list-group">
-                <span class="catalog-label"><small>Frame Color ></small></span>
-                <li ng-repeat="color in frameColors">
-                    <input type="checkbox" ng-model="fColorCheckboxes[color]" ng-change="updateFilter()">
-                    <span><small>{{color}}</small></span>
-                </li>
-            </div>
-
-            <div class="list-group">
-                <span class="catalog-label"><small>Number of Cells ></small></span>
-                <li ng-repeat="cells in numberOfCells">
-                    <input type="checkbox" ng-model="numCellsCheckboxes[cells]" ng-change="updateFilter()">
-                    <span><small>{{cells}}</small></span>
-                </li>
-            </div>
-
-            <div class="list-group">
-                <span class="catalog-label"><small>Module Wattage ></small></span>
-                <li ng-repeat="range in ranges">
-                    <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
-                    <span><small>{{range}}</small></span>
-                </li>
-            </div>
-
-            <div class="list-group">
-                <span class="catalog-label"><small>Brand ></small></span>
-                <li ng-repeat="man in manufacturers">
-                    <input type="checkbox" ng-model="orgCheckboxes[man]" ng-change="updateFilter()">
-                    <span><small>{{man}}</small></span>
-                </li>
-            </div>
-        </div>
-
-        <div class="horizontal list-group col-sm-7">
-            <div class="alert alert-warning text-center" ng-if="pageStatus && !orgs.length">
-              No search results
-            </div>
-            <div>
-              <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
-            </div>
-            <a ng-repeat="organization in orgs" class="list-group-item col-sm-12" ng-click="routeToOrg(organization._id)">
-                <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
-                <div class="profile-info">
-                    <h5 class="list-group-item-heading" ng-bind="organization.companyName"></h5>
-                    <div class="reviews">
-                     <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
-                     <span>{{organization.reviews_length}} reviews</span>
-                    </div>
-                    <div class="detail">
-                      <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
-                      <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
-                      <small><span ng-bind="organization.productTypes"></span></small>
-                    </div>
-                </div>
-            </a>
-            <div>
-              <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+    <div id="catalog-page" ng-show="pageStatus">
+      <div class="page-header">
+          <div class="row">
+              <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
+              <div class="col-md-9 search extend">
+                <form ng-submit="searchSubmit()">
+                  <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers in your area" />
+                  <button type="submit" class="btn btn-primary submit">Submit</button>
+                </form>
+              </div>
           </div>
-        </div>
-    </section>
+      </div>
+      <section ng-show="pageStatus">
+          <div class="menu">
+              <button class="visible-xs btn-primary last" ng-click="toggleFilter()" data-toggle="collapse" data-target="side-navbar">See Filters</button>
+          </div>
+          <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
+              <label>Filters</label>
+              <div class="list-group">
+                  <span class="catalog-label"><small>Crystalline Type ></small></span>
+                  <li ng-repeat="crys in crystallineTypes">
+                      <input type="checkbox" ng-model="crysCheckboxes[crys]" ng-change="updateFilter()">
+                      <span><small>{{crys}}</small></span>
+                  </li>
+              </div>
+
+              <div class="list-group">
+                  <span class="catalog-label"><small>Frame Color ></small></span>
+                  <li ng-repeat="color in frameColors">
+                      <input type="checkbox" ng-model="fColorCheckboxes[color]" ng-change="updateFilter()">
+                      <span><small>{{color}}</small></span>
+                  </li>
+              </div>
+
+              <div class="list-group">
+                  <span class="catalog-label"><small>Number of Cells ></small></span>
+                  <li ng-repeat="cells in numberOfCells">
+                      <input type="checkbox" ng-model="numCellsCheckboxes[cells]" ng-change="updateFilter()">
+                      <span><small>{{cells}}</small></span>
+                  </li>
+              </div>
+
+              <div class="list-group">
+                  <span class="catalog-label"><small>Module Wattage ></small></span>
+                  <li ng-repeat="range in ranges">
+                      <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
+                      <span><small>{{range}}</small></span>
+                  </li>
+              </div>
+
+              <div class="list-group">
+                  <span class="catalog-label"><small>Brand ></small></span>
+                  <li ng-repeat="man in manufacturers">
+                      <input type="checkbox" ng-model="orgCheckboxes[man]" ng-change="updateFilter()">
+                      <span><small>{{man}}</small></span>
+                  </li>
+              </div>
+          </div>
+
+          <div class="horizontal list-group col-sm-7">
+              <div class="alert alert-warning text-center" ng-if="pageStatus && !orgs.length">
+                No search results
+              </div>
+              <div>
+                <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+              </div>
+              <a ng-repeat="organization in orgs" class="list-group-item col-sm-12" ng-click="routeToOrg(organization._id)">
+                  <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
+                  <div class="profile-info">
+                      <h5 class="list-group-item-heading" ng-bind="organization.companyName"></h5>
+                      <div class="reviews">
+                       <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                       <span>{{organization.reviews_length}} reviews</span>
+                      </div>
+                      <div class="detail">
+                        <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
+                        <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
+                        <small><span ng-bind="organization.productTypes"></span></small>
+                      </div>
+                  </div>
+              </a>
+              <div>
+                <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+            </div>
+          </div>
+      </section>
+    </div>
 </section>
