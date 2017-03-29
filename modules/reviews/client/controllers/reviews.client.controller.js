@@ -1,25 +1,35 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Reviews',
-  function ($scope, $stateParams, $location, $http, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'Reviews',
+  function ($scope, $stateParams, $location, $http, $mdDialog, Authentication, Reviews) {
     $scope.authentication = Authentication;
 
     // Remove existing Review
     $scope.remove = function (review) {
-      if (review) {
-        review.$remove();
+      var confirm = $mdDialog.confirm()
+        .title('Are you sure you want to delete this review?')
+        .clickOutsideToClose(true)
+        .ok('Yes')
+        .cancel('No');
 
-        for (var i in $scope.reviews) {
-          if ($scope.reviews[i] === review) {
-            $scope.reviews.splice(i, 1);
+      $mdDialog.show(confirm).then(function() {
+        if (review) {
+          review.$remove();
+
+          for (var i in $scope.reviews) {
+            if ($scope.reviews[i] === review) {
+              $scope.reviews.splice(i, 1);
+            }
           }
+        } else {
+          $scope.review.$remove(function () {
+            $location.path('reviews');
+          });
         }
-      } else {
-        $scope.review.$remove(function () {
-          $location.path('reviews');
-        });
-      }
+      }, function() {
+        // do nothing
+      });
     };
 
     // Update existing Review
