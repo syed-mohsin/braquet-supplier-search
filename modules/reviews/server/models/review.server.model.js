@@ -50,11 +50,13 @@ var ReviewSchema = new Schema({
   },
   organization: {
     type: Schema.ObjectId,
-    ref: 'Organization'
+    ref: 'Organization',
+    required: 'Organization is required'
   },
   user: {
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: 'User is required'
   }
 });
 
