@@ -3,7 +3,7 @@
 module.exports = {
   app: {
     title: 'Braquet',
-    description: 'Reverse Auctioning System for a solar marketplace',
+    description: 'Search for qualified solar hardware suppliers',
     keywords: 'mongodb, express, angularjs, node.js, mongoose, passport',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },

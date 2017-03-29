@@ -30,6 +30,12 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
         if (Authentication.user !== undefined && typeof Authentication.user === 'object') {
           $state.go('forbidden');
         } else {
+          // override when attempt is to view organization, go to public view
+          if (toState.name === 'organizations.view') {
+            console.log(toState, toParams);
+            return $state.go('organizations.view-public', toParams);
+          }
+          
           $state.go('authentication.signin').then(function () {
             storePreviousState(toState, toParams);
           });
@@ -40,12 +46,13 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
 
   // Record previous state
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
     storePreviousState(fromState, fromParams);
   });
 
   // Store previous state
   function storePreviousState(state, params) {
-    // only store this state if it shouldn't be ignored 
+    // only store this state if it shouldn't be ignored
     if (!state.data || !state.data.ignoreState) {
       $state.previous = {
         state: state,

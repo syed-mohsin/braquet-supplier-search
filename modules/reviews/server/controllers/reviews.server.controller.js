@@ -141,6 +141,7 @@ exports.list = function (req, res) {
   Review.find({ user: req.user._id })
   .sort('-created')
   .populate('user', 'displayName')
+  .populate('organization', 'companyName logoImageUrl')
   .exec(function (err, reviews) {
     if (err) {
       return res.status(400).send({
@@ -149,6 +150,25 @@ exports.list = function (req, res) {
     } else {
       res.json(reviews);
     }
+  });
+};
+
+/**
+ * Admin List of All Reviews
+ */
+exports.admin_list = function (req, res) {
+  Review.find({})
+  .sort('-created')
+  .populate('user')
+  .populate('organization')
+  .exec()
+  .then(function(reviews) {
+    res.json(reviews);
+  })
+  .catch(function(err) {
+    res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -165,7 +185,7 @@ exports.reviewByID = function (req, res, next, id) {
 
   Review.findById(id)
   .populate('user', 'displayName')
-  .populate('organization')
+  .populate('organization', 'companyName logoImageUrl')
   .exec(function (err, review) {
     if (err) {
       return next(err);

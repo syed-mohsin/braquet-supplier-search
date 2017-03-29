@@ -36,7 +36,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       var organization = new Organizations({
         companyName: this.companyName,
         industry: this.industry,
-        productTypes: this.product_types,
+        productTypes: this.productTypes,
         panel_models: this.panel_models,
         url: this.url,
         address1: this.address1,

@@ -25,14 +25,37 @@ exports.create = function (req, res) {
   var organization = new Organization(req.body);
   organization.verified = true;
 
-  organization.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(organization);
+  // add panel model filter fields
+  req.body.panel_models.forEach(function(panel) {
+    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
+      organization.panel_manufacturers.push(panel.manufacturer);
     }
+
+    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
+      organization.panel_stcPowers.push(panel.stcPower);
+    }
+
+    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
+      organization.panel_crystalline_types.push(panel.crystallineType);
+    }
+
+    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
+      organization.panel_frame_colors.push(panel.frameColor);
+    }
+
+    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
+      organization.panel_number_of_cells.push(panel.numberOfCells);
+    }
+  });
+
+  organization.save()
+  .then(function(savedOrg) {
+    res.json(organization);
+  })
+  .catch(function(err) {
+    res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -86,10 +109,6 @@ exports.readPublic = function(req, res) {
             return review;
           });
 
-          // calculate avg review
-          organization.avg_review = organization.reviews.reduce(function(a,b) {
-            return a + b.rating;
-          }, 0) / organization.reviews.length || 0;
           res.json(organization);
         }
       });
@@ -106,7 +125,7 @@ exports.update = function (req, res) {
   organization.companyName = req.body.companyName;
   organization.panel_models = req.body.panel_models;
   organization.industry = req.body.industry;
-  organization.producTypes = req.body.productTypes;
+  organization.productTypes = req.body.productTypes;
   organization.url = req.body.url;
   organization.address1 = req.body.address1;
   organization.address2 = req.body.address2;
@@ -116,14 +135,44 @@ exports.update = function (req, res) {
   organization.country = req.body.country;
   organization.about = req.body.about;
 
-  organization.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(organization);
+  // reset panel filtering fields
+  organization.panel_manufacturers = [];
+  organization.panel_stcPowers = [];
+  organization.panel_crystalline_types = [];
+  organization.panel_frame_colors = [];
+  organization.panel_number_of_cells = [];
+
+  // add panel model filter fields
+  req.body.panel_models.forEach(function(panel) {
+    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
+      organization.panel_manufacturers.push(panel.manufacturer);
     }
+
+    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
+      organization.panel_stcPowers.push(panel.stcPower);
+    }
+
+    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
+      organization.panel_crystalline_types.push(panel.crystallineType);
+    }
+
+    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
+      organization.panel_frame_colors.push(panel.frameColor);
+    }
+
+    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
+      organization.panel_number_of_cells.push(panel.numberOfCells);
+    }
+  });
+
+  organization.save()
+  .then(function(updatedOrg) {
+    res.json(organization);
+  })
+  .catch(function(err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -223,7 +272,8 @@ exports.list_basic = function (req, res) {
 exports.get_catalog = function (req, res) {
   var result = [];
   var queryParams = {}; // query object
-  queryParams.verified = true;
+  queryParams.verified = true; // get only verified organizations
+  queryParams.panels_length = { '$gt': 0 }; // only show suppliers with an panel models
 
   // build query for search using regular expression
   if (req.query.q) queryParams.companyName = new RegExp(req.query.q, 'i');
@@ -275,6 +325,7 @@ exports.get_catalog = function (req, res) {
 
   query.skip((req.query.page - 1 || 0) * 15)
   .populate('reviews')
+  .sort('-avg_review')
   .limit(15)
   .exec()
   .then(function(orgs) {
@@ -283,21 +334,12 @@ exports.get_catalog = function (req, res) {
     return countQuery.count().exec();
   })
   .then(function(count) {
-    // remove unverified reviews
-
-    // calculate avg reviews for all orgs in this query
     result = result.map(function(org) {
       // remove unverified org reviews
       org.reviews = org.reviews.filter(function(review) {
         return review.verified === true;
       });
 
-      // calculate org average review
-      org.avg_review = org.reviews.reduce(function(a,b) {
-        return a + b.rating;
-      }, 0) / org.reviews.length || 0;
-
-      org.reviews = []; // clear reviews for catalog view
       return org;
     });
 
@@ -472,10 +514,6 @@ exports.organizationByID = function (req, res, next, id) {
             return review;
           });
 
-          // calculate average review
-          organization.avg_review = organization.reviews.reduce(function(a,b) {
-            return a + b.rating;
-          }, 0) / organization.reviews.length || 0;
           req.organization = organization;
           return next();
         }

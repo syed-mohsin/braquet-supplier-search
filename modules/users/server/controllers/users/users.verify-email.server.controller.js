@@ -31,9 +31,6 @@ exports.validateEmail = function (req, res) {
       });
     },
     function(user, done){
-      // verify user has confirmed email
-      user.emailVerified = true;
-
       Review.update(
         {
           user: user._id,
@@ -53,6 +50,28 @@ exports.validateEmail = function (req, res) {
         });
     },
     function(user, done) {
+      Review.find({ user: user._id })
+      .populate('organization')
+      .then(function(reviews) {
+        // save all orgs to update review stats
+        var orgPromises = reviews.map(function(review) {
+          return review.organization.save();
+        });
+
+        return Promise.all(orgPromises);
+      })
+      .then(function(savedOrgs) {
+        var err = '';
+        done(err, user);
+      })
+      .catch(function(err) {
+        done(err, user);
+      });
+    },
+    function(user, done) {
+      // verify user has confirmed email
+      user.emailVerified = true;
+
       user.save(function(err) {
         if(err) {
           return res.redirect('/forbidden');

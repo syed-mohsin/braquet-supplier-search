@@ -1,16 +1,17 @@
 <section class="list-view" ng-controller="CatalogController">
-    <section>
-        <div class="page-header">
-            <div class="row">
-                <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
-                <div class="col-md-9 search extend">
-                  <form ng-submit="searchSubmit()">
-                    <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers in your area" />
-                    <button type="submit" class="btn btn-primary submit">Submit</button>
-                  </form>
-                </div>
+    <div class="page-header">
+        <div class="row">
+            <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
+            <div class="col-md-9 search extend">
+              <form ng-submit="searchSubmit()">
+                <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers in your area" />
+                <button type="submit" class="btn btn-primary submit">Submit</button>
+              </form>
             </div>
         </div>
+    </div>
+    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!pageStatus">
+    <section ng-show="pageStatus">
         <div class="menu">
             <button class="visible-xs btn-primary last" ng-click="toggleFilter()" data-toggle="collapse" data-target="side-navbar">See Filters</button>
         </div>
@@ -58,6 +59,9 @@
         </div>
 
         <div class="horizontal list-group col-sm-7">
+            <div class="alert alert-warning text-center" ng-if="pageStatus && !orgs.length">
+              No search results
+            </div>
             <div>
               <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
             </div>
@@ -65,6 +69,10 @@
                 <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
                 <div class="profile-info">
                     <h5 class="list-group-item-heading" ng-bind="organization.companyName"></h5>
+                    <div class="reviews">
+                     <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                     <span>{{organization.reviews_length}} reviews</span>
+                    </div>
                     <div class="detail">
                       <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
                       <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
