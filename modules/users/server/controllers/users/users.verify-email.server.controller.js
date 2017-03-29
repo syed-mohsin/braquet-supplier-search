@@ -31,23 +31,31 @@ exports.validateEmail = function (req, res) {
       });
     },
     function(user, done){
-      Review.update(
-        {
-          user: user._id,
-          verified: false
-        },
-        {
-          $set: { verified: true }
-        },
-        {
-          multi: true
-        },
-        function(err, reviews) {
-          if (err) {
-            return res.redirect('/forbidden');
-          }
-          done(err, user);
-        });
+      // only make all reviews public if
+      // admin has already verified user
+      if (user.verified) {
+        Review.update(
+          {
+            user: user._id,
+            verified: false
+          },
+          {
+            $set: { verified: true }
+          },
+          {
+            multi: true
+          },
+          function(err, reviews) {
+            if (err) {
+              return res.redirect('/forbidden');
+            }
+            done(err, user);
+          });
+      } else {
+        // do not make reviews public
+        var err = '';
+        done(err, user);
+      }
     },
     function(user, done) {
       Review.find({ user: user._id })
