@@ -59,6 +59,14 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     //     }
     //   }
     // })
+    .state('team', {
+      url: '/team',
+      templateUrl: 'modules/core/client/views/team.client.view.html'
+    })
+    .state('contact', {
+      url: '/contact',
+      templateUrl: 'modules/core/client/views/contact.client.view.html'
+    })
     .state('privacy-policy', {
       url: '/privacy-policy',
       templateUrl: 'modules/core/client/views/privacy-policy.client.view.html'
