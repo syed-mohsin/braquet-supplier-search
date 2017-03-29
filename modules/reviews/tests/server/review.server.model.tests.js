@@ -53,7 +53,8 @@ describe('Review Model Unit Tests:', function () {
   describe('Method Save', function () {
     it('should be able to save without problems', function (done) {
       this.timeout(10000);
-      return review.save(function (err) {
+      review.save(function (err) {
+        console.log('logging error:', err);
         should.not.exist(err);
         done();
       });
@@ -61,8 +62,7 @@ describe('Review Model Unit Tests:', function () {
 
     it('should be able to show an error when try to save without title', function (done) {
       review.title = '';
-
-      return review.save(function (err) {
+      review.save(function (err) {
         should.exist(err);
         done();
       });
