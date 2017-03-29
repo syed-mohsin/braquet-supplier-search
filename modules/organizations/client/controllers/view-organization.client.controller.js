@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'orgService',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, orgService) {
+angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -174,8 +174,4 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         $scope.findOne();
       });
     };
-
-    // initialize resolved organization;
-    $scope.organization = orgService;
-    $scope.buildUploader($scope.organization._id);
   }]);
