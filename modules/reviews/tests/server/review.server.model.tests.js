@@ -6,43 +6,54 @@
 var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Organization = mongoose.model('Organization'),
   Review = mongoose.model('Review');
 
 /**
  * Globals
  */
-var user, review;
+var user, review, organization;
 
 /**
  * Unit tests
  */
 describe('Review Model Unit Tests:', function () {
-
   beforeEach(function (done) {
     user = new User({
-      firstName: 'Full',
-      lastName: 'Name',
-      displayName: 'Full Name',
-      email: 'test@test.com',
-      username: 'username',
+      firstName: 'Blaise',
+      lastName: 'Najafi',
+      displayName: 'Blaise Najafi',
+      email: 'blaise@braquet.com',
+      username: 'dnajafi',
       password: 'M3@n.jsI$Aw3$0m3'
     });
 
     user.save(function () {
-      review = new Review({
-        title: 'Review Title',
-        content: 'Review Content',
-        user: user
+      organization = new Organization({
+        companyName: 'BOSS ORG',
+        url: 'www.boss.com'
       });
 
-      done();
+      organization.save(function () {
+        review = new Review({
+          title: 'Review_1',
+          rating: 1,
+          content: 'Content for Review 1',
+          category: 'Currently doing business with company',
+          user: user,
+          organization: organization
+        });
+
+        done();
+
+      });
     });
   });
 
   describe('Method Save', function () {
     it('should be able to save without problems', function (done) {
       this.timeout(10000);
-      return review.save(function (err) {
+      review.save(function (err) {
         should.not.exist(err);
         done();
       });
@@ -50,8 +61,7 @@ describe('Review Model Unit Tests:', function () {
 
     it('should be able to show an error when try to save without title', function (done) {
       review.title = '';
-
-      return review.save(function (err) {
+      review.save(function (err) {
         should.exist(err);
         done();
       });
