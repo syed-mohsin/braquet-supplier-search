@@ -6,6 +6,8 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Review = mongoose.model('Review'),
+  Organization = mongoose.model('Organization'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
@@ -49,13 +51,48 @@ exports.verifyUser = function (req, res) {
       message: 'User is already verified'
     });
   } else {
+    // verify user and verify user's reviews
     user.verified = true;
-    user.save(function(err) {
-      if (err) {
-        return res.status(400).json(err);
+
+    user.save()
+    .then(function(savedUser) {
+      // only make reviews public if
+      // email has already been verified
+      if (user.emailVerified) {
+        return (
+          Review.update(
+            {
+              user: user._id,
+              verified: false
+            },
+            { $set: { verified: true } },
+            { multi: true }
+          )
+        );
       } else {
-        res.json(user);
+        // return placeholder that doesn't actually resolve review
+        return 'place holder: do not make reviews public';
       }
+    })
+    .then(function(updateData) {
+      return Review.find({ user: user._id })
+      .populate('organization')
+      .exec();
+    })
+    .then(function(reviews) {
+      // save all orgs to update review stats
+      var orgPromises = reviews.map(function(review) {
+        return review.organization.save();
+      });
+
+      return Promise.all(orgPromises);
+    })
+    .then(function(savedOrgs) {
+      // successfully finished promise chain
+      res.json(user);
+    })
+    .catch(function(err) {
+      return res.status(400).json(err);
     });
   }
 };

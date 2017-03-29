@@ -16,6 +16,10 @@ module.exports = function (app) {
   app.route('/api/reviews/create/:organizationId').all(reviewsPolicy.isAllowed)
     .post(reviews.create);
 
+  // Route to see if review exists from user for organization
+  app.route('/api/reviews/is-reviewed').all(reviewsPolicy.isAllowed)
+    .get(reviews.isReviewed);
+
   // Single review routes
   app.route('/api/reviews/:reviewId').all(reviewsPolicy.isAllowed)
     .get(reviews.read)

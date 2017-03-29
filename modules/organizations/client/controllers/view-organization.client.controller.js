@@ -1,11 +1,12 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'orgService',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, orgService) {
+angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
     $scope.findOne = function () {
+      // get organization
       Organizations.get({
         organizationId: $stateParams.organizationId
       }, function(organization) {
@@ -13,6 +14,15 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         $scope.buildUploader(organization._id);
       }, function(error) {
         $location.path('/forbidden');
+      });
+
+      // check if user has already submitted a review for this organization
+      $http({
+        url: '/api/reviews/is-reviewed',
+        params: { organizationId: $stateParams.organizationId }
+      })
+      .then(function(response) {
+        $scope.isReviewSubmitted = response.data.existingReview;
       });
     };
 
@@ -98,9 +108,11 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         windowClass: 'app-modal-window'
       });
 
+      // successfully created a review
       modalInstance.result.then(function() {
         if (organizationId) {
           $scope.findOne();
+          $scope.isReviewSubmitted = true;
         }
       });
     };
@@ -175,7 +187,4 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       });
     };
 
-    // initialize resolved organization;
-    $scope.organization = orgService;
-    $scope.buildUploader($scope.organization._id);
   }]);
