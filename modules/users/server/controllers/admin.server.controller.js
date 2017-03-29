@@ -56,16 +56,23 @@ exports.verifyUser = function (req, res) {
 
     user.save()
     .then(function(savedUser) {
-      return (
-        Review.update(
-          {
-            user: user._id,
-            verified: false
-          },
-          { $set: { verified: true } },
-          { multi: true }
-        )
-      );
+      // only make reviews public if
+      // email has already been verified
+      if (user.emailVerified) {
+        return (
+          Review.update(
+            {
+              user: user._id,
+              verified: false
+            },
+            { $set: { verified: true } },
+            { multi: true }
+          )
+        );
+      } else {
+        // return placeholder that doesn't actually resolve review
+        return 'place holder: do not make reviews public';
+      }
     })
     .then(function(updateData) {
       return Review.find({ user: user._id })
