@@ -118,7 +118,7 @@ exports.update = function (req, res) {
 };
 
 /**
- * Delete a review
+ * Delete an review
  */
 exports.delete = function (req, res) {
   var review = req.review;
