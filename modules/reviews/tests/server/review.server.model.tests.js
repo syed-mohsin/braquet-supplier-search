@@ -54,7 +54,6 @@ describe('Review Model Unit Tests:', function () {
     it('should be able to save without problems', function (done) {
       this.timeout(10000);
       review.save(function (err) {
-        console.log('logging error:', err);
         should.not.exist(err);
         done();
       });
