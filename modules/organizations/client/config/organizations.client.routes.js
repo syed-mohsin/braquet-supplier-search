@@ -40,13 +40,6 @@ angular.module('organizations').config(['$stateProvider',
         controller:'ViewOrganizationController',
         data: {
           roles: ['user', 'seller', 'admin']
-        },
-        resolve: {
-          orgService: function($stateParams, Organizations) {
-            return Organizations.get({
-              organizationId: $stateParams.organizationId
-            }).$promise;
-          }
         }
       })
       .state('organizations.edit', {
