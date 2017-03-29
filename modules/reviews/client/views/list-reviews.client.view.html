@@ -1,27 +1,30 @@
 <section class="container reviews list-view border" ng-controller="ReviewsController" ng-init="find()">
-  <div class="page-header">
-    <h1>Reviews</h1>
-  </div>
-  <div class="list-group">
-    <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="review.created | date:'mediumDate'"></span>
-        by
-        <span ng-bind="review.user.displayName"></span>
-      </small>
-      <br>
-      <small>
-        <em class="text-muted">
-          Review Submitted for
-          <span ng-bind="review.organization.companyName"</span>
-      </small>
-      <h4 class="list-group-item-heading" ng-bind="review.title"></h4>
-      <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
-      <p class="list-group-item-text" ng-bind="review.content"></p>
-    </a>
-  </div>
-  <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
-    No reviews yet, why don't you <a ui-sref="catalog">rate a company</a>?
+  <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!reviews.$resolved">
+  <div id="reviews-list" ng-show="reviews.$resolved">
+    <div class="page-header">
+      <h1>Reviews</h1>
+    </div>
+    <div class="list-group">
+      <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
+        <small class="list-group-item-text">
+          Posted on
+          <span ng-bind="review.created | date:'mediumDate'"></span>
+          by
+          <span ng-bind="review.user.displayName"></span>
+        </small>
+        <br>
+        <small>
+          <em class="text-muted">
+            Review Submitted for
+            <span ng-bind="review.organization.companyName"</span>
+        </small>
+        <h4 class="list-group-item-heading" ng-bind="review.title"></h4>
+        <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+        <p class="list-group-item-text" ng-bind="review.content"></p>
+      </a>
+    </div>
+    <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
+      No reviews yet, why don't you <a ui-sref="catalog">rate a company</a>?
+    </div>
   </div>
 </section>

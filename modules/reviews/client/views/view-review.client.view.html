@@ -1,31 +1,35 @@
-<section ng-show="review.$resolved" ng-controller="ReviewsController" ng-init="findOne()" class="container list-view border">
-  <div class="page-header">
-  <div class="title">
-    "<span ng-bind="review.title"></span>"
-  </div>
-    <div class="menu" ng-show="authentication.user._id == review.user._id || authentication.user.roles.indexOf('admin') !== -1">
-        <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ui-sref="reviews.edit({reviewId: review._id})">
-            <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
-        </a>
-        <a ng-click="remove();">
-            <span class="glyphicon glyphicon-trash"></span><span>Delete Review</span>
-        </a>
+<section ng-controller="ReviewsController" ng-init="findOne()" class="container reviews list-view border">
+    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!review.$resolved">
+    <div "review-view" ng-show="review.$resolved">
+      <div class="page-header">
+        <div class="title">
+          "<span ng-bind="review.title"></span>"
+        </div>
+        <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+        <div class="menu" ng-show="authentication.user._id == review.user._id || authentication.user.roles.indexOf('admin') !== -1">
+            <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ui-sref="reviews.edit({reviewId: review._id})">
+                <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
+            </a>
+            <a ng-click="remove();">
+                <span class="glyphicon glyphicon-trash"></span><span>Delete Review</span>
+            </a>
+        </div>
+      </div>
+      <small>
+        <em class="text-muted">
+          Posted on
+          <span ng-bind="review.created | date:'mediumDate'"></span>
+          by
+          <span ng-bind="review.user.displayName"></span>
+        </em>
+      </small>
+      <br>
+      <small>
+        <em class="text-muted">
+          Review Submitted for
+          <span ng-bind="review.organization.companyName"</span>
+        </em>
+      </small>
+      <p class="lead" ng-bind="review.content"></p>
     </div>
-  </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="review.created | date:'mediumDate'"></span>
-      by
-      <span ng-bind="review.user.displayName"></span>
-    </em>
-  </small>
-  <br>
-  <small>
-    <em class="text-muted">
-      Review Submitted for
-      <span ng-bind="review.organization.companyName"</span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="review.content"></p>
 </section>
