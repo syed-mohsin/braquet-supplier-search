@@ -7,10 +7,6 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
-    if (Authentication.user) {
-      $state.go('organizations.view', { organizationId: publicOrgService.data._id });
-    }
-
     $scope.findOne = function() {
       $http.get('/api/organizations/' + $stateParams.organizationId + '/public')
       .then(function(resp) {
