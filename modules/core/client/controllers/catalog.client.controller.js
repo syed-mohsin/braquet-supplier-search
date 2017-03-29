@@ -4,6 +4,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
   function ($scope, $filter, $http, $state, $stateParams, Authentication, PanelModels) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
+    $scope.resolvedResources = 0;
     $scope.search = $stateParams.q;
 
     $scope.query = {};
@@ -17,30 +18,6 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
-
-    // initialize panel models
-    $http({
-      url: '/api/organizations-catalog',
-      params: {
-        q: $stateParams.q,
-        man: $stateParams.man,
-        pow: $stateParams.pow,
-        crys: $stateParams.crys,
-        color: $stateParams.color,
-        cells: $stateParams.cells,
-        page: $stateParams.page
-      }
-    })
-    .then(function(resp) {
-      $scope.orgs = resp.data.orgs;
-      $scope.buildPager(resp.data.count);
-
-      $scope.buildWattCheckboxes();
-      $scope.buildFilterCheckboxes();
-    })
-    .catch(function(err) {
-      console.log('err', err);
-    });
 
     $scope.updateFilter = function() {
       var man = '';
@@ -163,6 +140,9 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
             if (!numCells) return;
             $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
           });
+
+          // increment resolved resources
+          $scope.resolvedResources++;
         });
     };
 
@@ -190,5 +170,35 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $state.go('organizations.view-public', { organizationId: organizationId });
       }
     };
+
+    // load resources from server
+    
+    // initialize organizations on page
+    $http({
+      url: '/api/organizations-catalog',
+      params: {
+        q: $stateParams.q,
+        man: $stateParams.man,
+        pow: $stateParams.pow,
+        crys: $stateParams.crys,
+        color: $stateParams.color,
+        cells: $stateParams.cells,
+        page: $stateParams.page
+      }
+    })
+    .then(function(resp) {
+      $scope.orgs = resp.data.orgs;
+      $scope.buildPager(resp.data.count);
+
+      // increment resolvedResources
+      $scope.resolvedResources++;
+    })
+    .catch(function(err) {
+      console.log('err', err);
+    });
+
+    // initialize filter boxes
+    $scope.buildWattCheckboxes();
+    $scope.buildFilterCheckboxes();
   }
 ]);

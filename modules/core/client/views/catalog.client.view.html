@@ -1,6 +1,6 @@
 <section class="list-view" ng-controller="CatalogController">
-    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!pageStatus">
-    <div id="catalog-page" ng-show="pageStatus">
+    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="resolvedResources !== 2">
+    <div id="catalog-page" ng-show="resolvedResources === 2">
       <div class="page-header">
           <div class="row">
               <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
