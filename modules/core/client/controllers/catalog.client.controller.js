@@ -31,12 +31,15 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         page: $stateParams.page
       }
     })
-    .success(function(resp) {
-      $scope.orgs = resp.orgs;
-      $scope.buildPager(resp.count);
+    .then(function(resp) {
+      $scope.orgs = resp.data.orgs;
+      $scope.buildPager(resp.data.count);
 
       $scope.buildWattCheckboxes();
       $scope.buildFilterCheckboxes();
+    })
+    .catch(function(err) {
+      console.log('err', err);
     });
 
     $scope.updateFilter = function() {
@@ -121,7 +124,9 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     $scope.buildFilterCheckboxes = function() {
       $http.get('/api/panelmodels-filters')
-        .success(function(filters) {
+        .then(function(resp) {
+          var filters = resp.data;
+          $scope.pageStatus = resp.status;
           $scope.manufacturers = filters.manufacturers;
           $scope.crystallineTypes = filters.crystallineTypes;
           $scope.frameColors = filters.frameColors;

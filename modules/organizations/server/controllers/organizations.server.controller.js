@@ -25,14 +25,37 @@ exports.create = function (req, res) {
   var organization = new Organization(req.body);
   organization.verified = true;
 
-  organization.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(organization);
+  // add panel model filter fields
+  req.body.panel_models.forEach(function(panel) {
+    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
+      organization.panel_manufacturers.push(panel.manufacturer);
     }
+
+    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
+      organization.panel_stcPowers.push(panel.stcPower);
+    }
+
+    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
+      organization.panel_crystalline_types.push(panel.crystallineType);
+    }
+
+    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
+      organization.panel_frame_colors.push(panel.frameColor);
+    }
+
+    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
+      organization.panel_number_of_cells.push(panel.numberOfCells);
+    }
+  });
+
+  organization.save()
+  .then(function(savedOrg) {
+    res.json(organization);
+  })
+  .catch(function(err) {
+    res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -102,7 +125,7 @@ exports.update = function (req, res) {
   organization.companyName = req.body.companyName;
   organization.panel_models = req.body.panel_models;
   organization.industry = req.body.industry;
-  organization.producTypes = req.body.productTypes;
+  organization.productTypes = req.body.productTypes;
   organization.url = req.body.url;
   organization.address1 = req.body.address1;
   organization.address2 = req.body.address2;
@@ -112,14 +135,44 @@ exports.update = function (req, res) {
   organization.country = req.body.country;
   organization.about = req.body.about;
 
-  organization.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(organization);
+  // reset panel filtering fields
+  organization.panel_manufacturers = [];
+  organization.panel_stcPowers = [];
+  organization.panel_crystalline_types = [];
+  organization.panel_frame_colors = [];
+  organization.panel_number_of_cells = [];
+
+  // add panel model filter fields
+  req.body.panel_models.forEach(function(panel) {
+    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
+      organization.panel_manufacturers.push(panel.manufacturer);
     }
+
+    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
+      organization.panel_stcPowers.push(panel.stcPower);
+    }
+
+    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
+      organization.panel_crystalline_types.push(panel.crystallineType);
+    }
+
+    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
+      organization.panel_frame_colors.push(panel.frameColor);
+    }
+
+    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
+      organization.panel_number_of_cells.push(panel.numberOfCells);
+    }
+  });
+
+  organization.save()
+  .then(function(updatedOrg) {
+    res.json(organization);
+  })
+  .catch(function(err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
