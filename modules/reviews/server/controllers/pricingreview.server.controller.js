@@ -43,6 +43,23 @@ exports.create = function(req, res) {
 };
 
 /**
+ * Delete a pricing review
+ */
+exports.delete = function (req, res) {
+  var pricingReview = req.pricingReview;
+
+  pricingReview.remove(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(pricingReview);
+    }
+  });
+};
+
+/**
  * Pricing Review middleware
  */
 exports.pricingReviewByID = function (req, res, next, id) {
