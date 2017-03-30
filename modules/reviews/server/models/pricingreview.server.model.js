@@ -7,12 +7,24 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
+ * Load Currency type to the Mongoose Schema types
+ */
+require('mongoose-currency').loadType(mongoose);
+var Currency = mongoose.Types.Currency;
+
+/**
  * Pricing Review Schema
  */
 var PricingReviewSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  price: {
+    type: Currency,
+    min: 0,
+    max: 100000000,
+    required: 'Unit price for quote is required'
   },
   quantity: {
     type: String,
@@ -26,7 +38,7 @@ var PricingReviewSchema = new Schema({
   },
   shippingLocation: {
     type: String,
-    enum: ['Asia/Australia', 'Africa', 'Europe', 'N. America', 'S. America'],
+    enum: ['Asia/Australia', 'Africa', 'Europe', 'North America', 'South America'],
     required: 'Please specify a shipping location'
   },
   user: {

@@ -20,6 +20,8 @@ exports.create = function(req, res) {
   }
 
   var pricingReview = new PricingReview(req.body);
+  pricingReview.user = req.user._id;
+  pricingReview.organization = req.organization._id;
 
   PricingReview.findOne({
     user: req.user._id,
@@ -36,7 +38,9 @@ exports.create = function(req, res) {
         res.json(pricingReview);
       })
       .catch(function(err) {
-        res.status(400).json(err);
+        res.status(400).json({
+          message: errorHandler.getErrorMessage(err)
+        });
       });
     }
   });
@@ -55,7 +59,8 @@ exports.read = function(req, res) {
 exports.update = function (req, res) {
   var pricingReview = req.pricingReview;
 
-  pricingReview.title = req.body.title;
+  pricingReview.price = req.body.price;
+  pricingReview.quantity = req.body.quantity;
   pricingReview.panelType = req.body.panelType;
   pricingReview.shippingLocation = req.body.shippingLocation;
 

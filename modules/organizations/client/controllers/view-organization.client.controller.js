@@ -143,6 +143,28 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       });
     };
 
+    // popup dialog that allows user to create a review
+    $scope.showPricingReviewView = function(ev, organizationId) {
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/reviews/client/views/create-pricingreview.client.view.html',
+        controller: 'CreatePricingReviewsController',
+        resolve: {
+          modalOrganizationId: function() {
+            return organizationId;
+          }
+        },
+        windowClass: 'app-modal-window'
+      });
+
+      // successfully created a review
+      modalInstance.result.then(function() {
+        if (organizationId) {
+          $scope.findOne();
+          $scope.isQuoteSubmitted = true;
+        }
+      });
+    };
+
     $scope.showAddUsers = function(ev) {
       console.log(ev);
 
