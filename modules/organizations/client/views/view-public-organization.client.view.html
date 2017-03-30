@@ -29,8 +29,13 @@
               </div>
           </div>
 
+          <ul class="nav nav-tabs">
+            <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">Reviews</a></li>
+            <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">Quotes</a></li>
+            <li ng-class="{ active: shouldShowProducts }"><a ng-click="showProducts()">Products</a></li>
+          </ul>
       </div>
-      <div class="row">
+      <div class="row" ng-show="shouldShowReviews">
           <div class="box no-border reviews">
               <div class="content no-wrap">
                   <div class="sub-title name">
@@ -60,7 +65,7 @@
               </div>
           </div>
       </div>
-      <div class="row">
+      <div class="row" ng-show="shouldShowProducts">
           <div class="box title-content no-border product">
               <div class="content no-wrap">
                   <div class="sub-title name">

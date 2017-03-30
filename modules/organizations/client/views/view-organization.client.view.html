@@ -47,16 +47,23 @@
                     <a ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization._id)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Write an anonymous review</span>
                     </a>
-
-                      <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
-                          <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
-                      </a>
+                    <a ng-if="organization._id !== authentication.user.organization && !isQuoteSubmitted" ng-click="showReviewView($event, organization._id)">
+                        <span class="glyphicon glyphicon-new-window"></span><span>Submit an anonymous quote</span>
+                    </a>
+                    <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
+                        <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
+                    </a>
                 </div>
               </div>
           </div>
-
+          
+          <ul class="nav nav-tabs">
+            <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">Reviews</a></li>
+            <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">Quotes</a></li>
+            <li ng-class="{ active: shouldShowProducts }"><a ng-click="showProducts()">Products</a></li>
+          </ul>
       </div>
-      <div class="row">
+      <div class="row" ng-show="shouldShowReviews">
           <div class="box no-border reviews">
               <div class="content no-wrap">
                   <div class="sub-title name">
@@ -86,7 +93,7 @@
               </div>
           </div>
       </div>
-      <div class="row">
+      <div class="row" ng-show="shouldShowProducts">
           <div class="box title-content no-border product">
               <div class="content no-wrap">
                   <div class="sub-title name">
