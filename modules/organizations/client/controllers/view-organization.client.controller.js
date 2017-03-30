@@ -30,6 +30,9 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       $scope.shouldShowProducts = true;
     };
 
+    // initialize tabs
+    $scope.initializePageNavBar();
+
     $scope.findOne = function () {
       // get organization
       Organizations.get({
@@ -37,7 +40,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       }, function(organization) {
         $scope.organization = organization;
         $scope.buildUploader(organization._id);
-        $scope.initializePageNavBar();
       }, function(error) {
         $location.path('/forbidden');
       });
@@ -160,6 +162,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       modalInstance.result.then(function() {
         if (organizationId) {
           $scope.findOne();
+          $scope.showPrices();
         }
       });
     };

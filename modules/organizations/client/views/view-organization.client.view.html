@@ -26,7 +26,6 @@
               <div class="content no-wrap title-content">
                   <div class="title name">
                       <span ng-bind="organization.companyName"></span>
-
                   </div>
                   <div class="reviews">
                    <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
@@ -89,6 +88,30 @@
                                   <span ng-bind="review.created | date:'mediumDate'"></span></small>
                                   </div>
                                   <div class="review-content"><span class="list-group-item-text" ng-bind="review.content"></span></div>
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row" ng-show="shouldShowPrices">
+          <div class="box no-border">
+              <div class="content no-wrap">
+                  <div class="sub-title name">
+                      <span ng-bind="organization.pricing_reviews_length"></span> <span> Quotes (Average: {{organization.avg_price / 100 | currency}})</span>
+                  </div>
+                  <div class="list-group">
+                      <div class="list-group-item col-sm-12" ng-repeat="pricingReview in organization.pricingReviews">
+                          <img ng-src="{{organization.logoImageUrl}}" class="profile">
+                          <div class="detail no-wrap">
+                              <a class="project-title">
+                                  <div class="sub-title"><span class="list-group-item-heading" ng-bind="pricingReview.price / 100 | currency"></span></div>
+                                  <div class="review-user"><small>By
+                                  anonymous on
+                                  <span ng-bind="pricingReview.created | date:'mediumDate'"></span></small>
+                                  </div>
+                                  <div class="review-content"><span class="list-group-item-text" ng-bind="review.quantity"></span></div>
                               </a>
                           </div>
                       </div>

@@ -32,6 +32,9 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       $scope.shouldShowProducts = true;
     };
 
+    // initialize tabs
+    $scope.initializePageNavBar();
+
     $scope.findOne = function() {
       if (Authentication.user) {
         $state.go('organizations.view', { organizationId: $stateParams.organizationId });
@@ -40,7 +43,6 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
         $http.get('/api/organizations/' + $stateParams.organizationId + '/public')
         .then(function(resp) {
           $scope.organization = resp.data;
-          $scope.initializePageNavBar();
 
           $scope.organization.$resolved = true;
         });
