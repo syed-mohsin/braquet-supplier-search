@@ -63,26 +63,34 @@ var ReviewSchema = new Schema({
 ReviewSchema.pre('remove', function (next) {
   var Organization = mongoose.model('Organization');
   var review = this;
+  var organizationId = '';
 
   if (review.organization && mongoose.Types.ObjectId.isValid(review.organization._id)) {
-    Organization.findById(review.organization._id)
-    .exec()
-    .then(function(org) {
-      org.reviews = org.reviews.filter(function(reviewId) {
-        return !review._id.equals(reviewId);
-      });
-
-      return org.save();
-    })
-    .then(function(savedOrg) {
-      console.log('deleted review from org');
-      next();
-    })
-    .catch(function(err) {
-      console.log('failed to remove review from organization', err);
-      next();
-    });
+    organizationId = review.organization._id;
+  } else if (review.organization && mongoose.Types.ObjectId.isValid(review.organization)) {
+    organizationId = review.organization;
+  } else {
+    console.log('unable to update organization after deleting review');
+    next();
   }
+
+  Organization.findById(organizationId)
+  .exec()
+  .then(function(org) {
+    org.reviews = org.reviews.filter(function(reviewId) {
+      return !review._id.equals(reviewId);
+    });
+
+    return org.save();
+  })
+  .then(function(savedOrg) {
+    console.log('deleted review from org');
+    next();
+  })
+  .catch(function(err) {
+    console.log('failed to remove review from organization', err);
+    next();
+  });
 });
 
 mongoose.model('Review', ReviewSchema);

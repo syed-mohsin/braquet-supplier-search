@@ -7,15 +7,21 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$statePara
 
     // Remove existing Review
     $scope.remove = function (review) {
-      var confirm = $mdDialog.confirm()
+      var confirm = $mdDialog.confirm({ onComplete: function afterShowAnimation() {
+        var $dialog = angular.element(document.querySelector('md-dialog'));
+        var $actionsSection = $dialog.find('md-dialog-actions');
+        var $cancelButton = $actionsSection.children()[0];
+        var $confirmButton = $actionsSection.children()[1];
+        angular.element($confirmButton).removeClass('md-focused');
+        angular.element($cancelButton).addClass('md-focused');
+        $cancelButton.focus();
+      } })
         .title('Are you sure you want to delete this review?')
         .clickOutsideToClose(true)
-        .ok('No')
-        .cancel('Yes');
+        .ok('Yes')
+        .cancel('No');
 
       $mdDialog.show(confirm).then(function() {
-        // do nothing
-      }, function() {
         if (review) {
           review.$remove();
 
@@ -29,6 +35,8 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$statePara
             $location.path('reviews');
           });
         }
+      }, function() {
+        // do nothing
       });
     };
 

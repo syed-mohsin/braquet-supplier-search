@@ -504,6 +504,11 @@ exports.organizationByID = function (req, res, next, id) {
             return review.verified === true;
           });
 
+          // remove unverified pricing reviews
+          organization.pricingReviews = organization.pricingReviews.filter(function(pricingReview) {
+            return pricingReview.verified === true;
+          });
+
           // remove displayName on anonymous reviews
           organization.reviews.map(function(review) {
             if (review.anonymous && review.user) {

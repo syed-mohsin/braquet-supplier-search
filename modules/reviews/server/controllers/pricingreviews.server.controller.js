@@ -23,9 +23,9 @@ exports.create = function(req, res) {
   pricingReview.user = req.user._id;
   pricingReview.organization = req.organization._id;
 
-  if (!req.user.emailVerified && !req.user.verified) {
-    pricingReview.verified = false;
-  }
+  // if (!req.user.emailVerified && !req.user.verified) {
+  //   pricingReview.verified = false;
+  // }
 
   // save new pricing review
   pricingReview.save()
