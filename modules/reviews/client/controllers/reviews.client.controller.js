@@ -10,10 +10,12 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$statePara
       var confirm = $mdDialog.confirm()
         .title('Are you sure you want to delete this review?')
         .clickOutsideToClose(true)
-        .ok('Yes')
-        .cancel('No');
+        .ok('No')
+        .cancel('Yes');
 
       $mdDialog.show(confirm).then(function() {
+        // do nothing
+      }, function() {
         if (review) {
           review.$remove();
 
@@ -27,8 +29,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$statePara
             $location.path('reviews');
           });
         }
-      }, function() {
-        // do nothing
       });
     };
 
