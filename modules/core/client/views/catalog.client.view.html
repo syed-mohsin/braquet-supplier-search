@@ -19,6 +19,7 @@
             <label>Filters</label>
             <div class="list-group">
                 <span class="catalog-label"><small>Crystalline Type ></small></span>
+                <div ng-if="query.crys"><a ng-click="clearSectionCheckboxes('crystallineType')">Clear</a></div>
                 <li ng-repeat="crys in crystallineTypes">
                     <input type="checkbox" ng-model="crysCheckboxes[crys]" ng-change="updateFilter()">
                     <span><small>{{crys}}</small></span>
@@ -27,6 +28,7 @@
 
             <div class="list-group">
                 <span class="catalog-label"><small>Frame Color ></small></span>
+                <div ng-if="query.color"><a ng-click="clearSectionCheckboxes('frameColor')">Clear</a></div>
                 <li ng-repeat="color in frameColors">
                     <input type="checkbox" ng-model="fColorCheckboxes[color]" ng-change="updateFilter()">
                     <span><small>{{color}}</small></span>
@@ -35,6 +37,7 @@
 
             <div class="list-group">
                 <span class="catalog-label"><small>Number of Cells ></small></span>
+                <div ng-if="query.cells"><a ng-click="clearSectionCheckboxes('numCells')">Clear</a></div>
                 <li ng-repeat="cells in numberOfCells">
                     <input type="checkbox" ng-model="numCellsCheckboxes[cells]" ng-change="updateFilter()">
                     <span><small>{{cells}}</small></span>
@@ -43,6 +46,7 @@
 
             <div class="list-group">
                 <span class="catalog-label"><small>Module Wattage ></small></span>
+                <div ng-if="query.pow"><a ng-click="clearSectionCheckboxes('moduleWatt')">Clear</a></div>
                 <li ng-repeat="range in ranges">
                     <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
                     <span><small>{{range}}</small></span>
@@ -51,6 +55,7 @@
 
             <div class="list-group">
                 <span class="catalog-label"><small>Brand ></small></span>
+                <div ng-if="query.man"><a ng-click="clearSectionCheckboxes('brand')">Clear</a></div>
                 <li ng-repeat="man in manufacturers">
                     <input type="checkbox" ng-model="orgCheckboxes[man]" ng-change="updateFilter()">
                     <span><small>{{man}}</small></span>

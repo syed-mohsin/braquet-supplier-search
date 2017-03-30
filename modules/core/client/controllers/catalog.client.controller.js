@@ -93,6 +93,43 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $state.go('catalog', $scope.query);
     };
 
+    $scope.clearSectionCheckboxes = function(arg) {
+      switch(arg) {
+        case 'frameColor':
+          // clear all checked frame colors
+          for (var key in $scope.fColorCheckboxes) {
+            $scope.fColorCheckboxes[key] = false;
+          }
+          break;
+        case 'crystallineType':
+          // clear all checked crystalline types
+          for (key in $scope.crysCheckboxes) {
+            $scope.crysCheckboxes[key] = false;
+          }
+          break;
+        case 'numCells':
+          // clear all checked crystalline types
+          for (key in $scope.numCellsCheckboxes) {
+            $scope.numCellsCheckboxes[key] = false;
+          }
+          break;
+        case 'moduleWatt':
+          // clear all checked crystalline types
+          for (key in $scope.wattCheckboxes) {
+            $scope.wattCheckboxes[key] = false;
+          }
+          break;
+        case 'brand':
+          // clear all checked crystalline types
+          for (key in $scope.orgCheckboxes) {
+            $scope.orgCheckboxes[key] = false;
+          }
+          break;
+        default:
+          return;
+      }
+      $scope.updateFilter();
+    };
 
     $scope.toggleFilter = function() {
       $scope.hiddenFilterClass = $scope.hiddenFilterClass ? '' : 'hidden-xs';
