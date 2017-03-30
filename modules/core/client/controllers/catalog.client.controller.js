@@ -103,7 +103,6 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $http.get('/api/panelmodels-filters')
         .then(function(resp) {
           var filters = resp.data;
-          $scope.pageStatus = resp.status;
           $scope.manufacturers = filters.manufacturers;
           $scope.crystallineTypes = filters.crystallineTypes;
           $scope.frameColors = filters.frameColors;
@@ -172,7 +171,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     };
 
     // load resources from server
-    
+
     // initialize organizations on page
     $http({
       url: '/api/organizations-catalog',

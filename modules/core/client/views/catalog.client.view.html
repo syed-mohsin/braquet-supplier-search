@@ -12,7 +12,7 @@
               </div>
           </div>
       </div>
-      <section ng-show="pageStatus">
+      <section>
           <div class="menu">
               <button class="visible-xs btn-primary last" ng-click="toggleFilter()" data-toggle="collapse" data-target="side-navbar">See Filters</button>
           </div>
@@ -60,7 +60,7 @@
           </div>
 
           <div class="horizontal list-group col-sm-7">
-              <div class="alert alert-warning text-center" ng-if="pageStatus && !orgs.length">
+              <div class="alert alert-warning text-center" ng-if="resolvedResources === 2 && !orgs.length">
                 No search results
               </div>
               <div>
