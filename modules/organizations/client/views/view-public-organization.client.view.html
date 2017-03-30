@@ -12,7 +12,7 @@
                       <span ng-bind="organization.companyName"></span>
                   </div>
                   <div class="reviews">
-                   <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                   <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
                   </div>
                   <div class="bio">
                       <span ng-bind="organization.about"></span>

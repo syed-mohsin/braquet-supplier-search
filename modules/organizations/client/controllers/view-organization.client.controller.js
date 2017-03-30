@@ -160,7 +160,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       modalInstance.result.then(function() {
         if (organizationId) {
           $scope.findOne();
-          $scope.isQuoteSubmitted = true;
         }
       });
     };

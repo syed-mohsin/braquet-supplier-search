@@ -23,26 +23,23 @@ exports.create = function(req, res) {
   pricingReview.user = req.user._id;
   pricingReview.organization = req.organization._id;
 
-  PricingReview.findOne({
-    user: req.user._id,
-    organization: req.organization._id
-  }, function(err, existingPricingReview) {
-    if (existingPricingReview) {
-      res.status(400).json({
-        message: 'You have already submitted a quote for this company'
-      });
-    } else {
-      // save new pricing review
-      pricingReview.save()
-      .then(function(savedPricingReview) {
-        res.json(pricingReview);
-      })
-      .catch(function(err) {
-        res.status(400).json({
-          message: errorHandler.getErrorMessage(err)
-        });
-      });
-    }
+  if (!req.user.emailVerified && !req.user.verified) {
+    pricingReview.verified = false;
+  }
+
+  // save new pricing review
+  pricingReview.save()
+  .then(function(savedPricingReview) {
+    req.organization.pricingReviews.push(pricingReview._id);
+    return req.organization.save();
+  })
+  .then(function(savedOrg) {
+    res.json(pricingReview);
+  })
+  .catch(function(err) {
+    res.status(400).json({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 

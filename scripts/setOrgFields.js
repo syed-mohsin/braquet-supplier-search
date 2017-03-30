@@ -1,15 +1,14 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+  Schema = mongoose.Schema,
+  mg = require('../config/lib/mongoose');
 
 // mongoose.connect(process.env.MONGO_PRODUCTION_CONNECTION_URL);
 mongoose.connect('mongodb://localhost/mean-dev');
 
 // register modules
-require('../modules/organizations/server/models/organization.server.model');
-require('../modules/panels/server/models/panelmodel.server.model');
-require('../modules/reviews/server/models/review.server.model');
+mg.loadModels();
 
 
 var PanelModel = mongoose.model('PanelModel'),

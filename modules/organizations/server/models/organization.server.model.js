@@ -8,6 +8,12 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
+ * Load Currency type to the Mongoose Schema types
+ */
+require('mongoose-currency').loadType(mongoose);
+var Currency = mongoose.Types.Currency;
+
+/**
  * Organization Schema
  */
 var OrganizationSchema = new Schema({
@@ -42,11 +48,23 @@ var OrganizationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Review'
   }],
+  pricingReviews: [{
+    type: Schema.ObjectId,
+    ref: 'PricingReview'
+  }],
   avg_review: {
     type: Number,
     default: 0
   },
+  avg_price: {
+    type: Currency,
+    default: 0
+  },
   reviews_length: {
+    type: Number,
+    default: 0
+  },
+  pricing_reviews_length: {
     type: Number,
     default: 0
   },
@@ -108,14 +126,15 @@ var OrganizationSchema = new Schema({
 
 OrganizationSchema.pre('save', function(next) {
 
-  var Review = mongoose.model('Review');
+  var Review = mongoose.model('Review'),
+    PricingReview = mongoose.model('PricingReview');
 
   // set number of panels
   this.panels_length = this.panel_models.length;
 
   // set reviews_length and avg_review and remove stale reviews
   var self = this;
-  Review.find({ _id: { $in: this.reviews }, verified: true }, 'rating')
+  Review.find({ _id: { $in: self.reviews }, verified: true }, 'rating')
   .exec()
   .then(function(reviews) {
     // remove invalid review ids if any
@@ -134,6 +153,30 @@ OrganizationSchema.pre('save', function(next) {
     self.avg_review = reviews.reduce(function(a,b) {
       return a + b.rating;
     }, 0) / reviews.length || 0;
+
+    return PricingReview.find({ _id: { $in: self.pricingReviews }, verified: true }, 'price')
+      .exec();
+  })
+  .then(function(pricingReviews) {
+    // remove invalid pricing review ids if any
+    self.pricingReviews = self.pricingReviews.map(function(pricingReview) {
+      if (mongoose.Types.ObjectId.isValid(pricingReview._id)) {
+        return pricingReview._id;
+      } else {
+        return pricingReview;
+      }
+    });
+
+    // update reviews length for querying in catalog
+    self.pricing_reviews_length = pricingReviews.length;
+
+    // calculate new average review
+    var avg_price = pricingReviews.reduce(function(a,b) {
+      return a + b.price / 100;
+    }, 0) / pricingReviews.length || 0;
+
+    // set new avg_price
+    self.avg_price = avg_price * 100;
 
     // finish
     next();

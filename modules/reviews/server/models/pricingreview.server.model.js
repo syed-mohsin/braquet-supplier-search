@@ -41,6 +41,10 @@ var PricingReviewSchema = new Schema({
     enum: ['Asia/Australia', 'Africa', 'Europe', 'North America', 'South America'],
     required: 'Please specify a shipping location'
   },
+  verified: {
+    type: Boolean,
+    default: true
+  },
   user: {
     type: Schema.ObjectId,
     ref: 'User',

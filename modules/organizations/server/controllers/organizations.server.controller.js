@@ -484,6 +484,7 @@ exports.organizationByID = function (req, res, next, id) {
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .populate('admin', 'displayName')
     .populate('reviews')
+    .populate('pricingReviews')
     .exec(function (err, organization) {
       if (err) {
         return next(err);

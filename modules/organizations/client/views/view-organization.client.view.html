@@ -29,7 +29,7 @@
 
                   </div>
                   <div class="reviews">
-                   <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                   <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
                   </div>
                   <div class="menu edit">
                      <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
@@ -50,12 +50,9 @@
                     <button ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
                         <span>You already submitted a review</span>
                     </button>
-                    <a ng-if="organization._id !== authentication.user.organization && !isQuoteSubmitted" ng-click="showPricingReviewView($event, organization._id)">
+                    <a ng-if="organization._id !== authentication.user.organization" ng-click="showPricingReviewView($event, organization._id)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Submit an anonymous quote</span>
                     </a>
-                    <button ng-if="organization._id !== authentication.user.organization && isQuoteSubmitted" disabled>
-                        <span>You already submitted a quote</span>
-                    </button>
                     <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
                     </a>
