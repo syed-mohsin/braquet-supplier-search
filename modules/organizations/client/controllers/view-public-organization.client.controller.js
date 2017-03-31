@@ -2,8 +2,8 @@
 
 // Organizations controller
 
-angular.module('organizations').controller('PublicViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'Authentication', 'Socket', 'Notification',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, Authentication, Socket, Notification) {
+angular.module('organizations').controller('PublicViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'Authentication', 'Socket', 'growl',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, Authentication, Socket, growl) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -16,8 +16,8 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
         .then(function(resp) {
           $scope.organization = resp.data;
           $scope.organization.$resolved = true;
-          console.log('Notification:', Notification);
-          Notification.primary('Primary notification');
+          console.log('growl:', growl);
+          growl.error('This is a warning', { title: 'Error!' });
         });
       }
     };

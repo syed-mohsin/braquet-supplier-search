@@ -22,7 +22,9 @@ module.exports = {
         'public/lib/angular-material/angular-material.min.js',
         'public/lib/angulartics/dist/angulartics.min.js',
         'public/lib/angulartics-google-analytics/dist/angulartics-ga.min.js',
-        'public/lib/angular-ui-notification/dist/angular-ui-notification.min.js'
+        'public/lib/angular-ui-notification/dist/angular-ui-notification.min.js',
+        'public/lib/angular-growl-v2/build/angular-growl.min.js'
+
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
