@@ -21,7 +21,7 @@ angular.module('reviews').run(['Menus',
     // Add the reviews dropdown item
     Menus.addSubMenuItem('topbar', 'reviews', {
       title: 'Price Reviews',
-      state: 'pricereviews.List',
+      state: 'pricereviews.list',
       roles: ['user', 'seller', 'admin']
     });
   }

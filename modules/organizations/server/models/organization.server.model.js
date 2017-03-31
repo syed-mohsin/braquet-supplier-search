@@ -48,9 +48,9 @@ var OrganizationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Review'
   }],
-  pricingReviews: [{
+  priceReviews: [{
     type: Schema.ObjectId,
-    ref: 'PricingReview'
+    ref: 'PriceReview'
   }],
   avg_review: {
     type: Number,
@@ -64,7 +64,7 @@ var OrganizationSchema = new Schema({
     type: Number,
     default: 0
   },
-  pricing_reviews_length: {
+  price_reviews_length: {
     type: Number,
     default: 0
   },
@@ -127,7 +127,7 @@ var OrganizationSchema = new Schema({
 OrganizationSchema.pre('save', function(next) {
 
   var Review = mongoose.model('Review'),
-    PricingReview = mongoose.model('PricingReview');
+    PriceReview = mongoose.model('PriceReview');
 
   // set number of panels
   this.panels_length = this.panel_models.length;
@@ -154,26 +154,26 @@ OrganizationSchema.pre('save', function(next) {
       return a + b.rating;
     }, 0) / reviews.length || 0;
 
-    return PricingReview.find({ _id: { $in: self.pricingReviews }, verified: true }, 'price')
+    return PriceReview.find({ _id: { $in: self.priceReviews }, verified: true }, 'price')
       .exec();
   })
-  .then(function(pricingReviews) {
-    // remove invalid pricing review ids if any
-    self.pricingReviews = self.pricingReviews.map(function(pricingReview) {
-      if (mongoose.Types.ObjectId.isValid(pricingReview._id)) {
-        return pricingReview._id;
+  .then(function(priceReviews) {
+    // remove invalid price review ids if any
+    self.priceReviews = self.priceReviews.map(function(priceReview) {
+      if (mongoose.Types.ObjectId.isValid(priceReview._id)) {
+        return priceReview._id;
       } else {
-        return pricingReview;
+        return priceReview;
       }
     });
 
     // update reviews length for querying in catalog
-    self.pricing_reviews_length = pricingReviews.length;
+    self.price_reviews_length = priceReviews.length;
 
     // calculate new average review
-    var avg_price = pricingReviews.reduce(function(a,b) {
+    var avg_price = priceReviews.reduce(function(a,b) {
       return a + b.price / 100;
-    }, 0) / pricingReviews.length || 0;
+    }, 0) / priceReviews.length || 0;
 
     // set new avg_price
     self.avg_price = avg_price * 100;

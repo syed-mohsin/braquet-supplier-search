@@ -49,7 +49,7 @@
                     <button ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
                         <span>You already submitted a review</span>
                     </button>
-                    <a ng-if="organization._id !== authentication.user.organization" ng-click="showPricingReviewView($event, organization._id)">
+                    <a ng-if="organization._id !== authentication.user.organization" ng-click="showPriceReviewView($event, organization._id)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Submit an anonymous quote</span>
                     </a>
                     <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
@@ -99,17 +99,17 @@
           <div class="box no-border">
               <div class="content no-wrap">
                   <div class="sub-title name">
-                      <span ng-bind="organization.pricing_reviews_length"></span> <span> Quotes (Average: {{organization.avg_price / 100 | currency}})</span>
+                      <span ng-bind="organization.price_reviews_length"></span> <span> Quotes (Average: {{organization.avg_price / 100 | currency}})</span>
                   </div>
                   <div class="list-group">
-                      <div class="list-group-item col-sm-12" ng-repeat="pricingReview in organization.pricingReviews">
+                      <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
                           <img ng-src="{{organization.logoImageUrl}}" class="profile">
                           <div class="detail no-wrap">
                               <a class="project-title">
-                                  <div class="sub-title"><span class="list-group-item-heading" ng-bind="pricingReview.price / 100 | currency"></span></div>
+                                  <div class="sub-title"><span class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></span></div>
                                   <div class="review-user"><small>By
                                   anonymous on
-                                  <span ng-bind="pricingReview.created | date:'mediumDate'"></span></small>
+                                  <span ng-bind="priceReview.created | date:'mediumDate'"></span></small>
                                   </div>
                                   <div class="review-content"><span class="list-group-item-text" ng-bind="review.quantity"></span></div>
                               </a>

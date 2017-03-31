@@ -484,7 +484,7 @@ exports.organizationByID = function (req, res, next, id) {
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .populate('admin', 'displayName')
     .populate('reviews')
-    .populate('pricingReviews')
+    .populate('priceReviews')
     .exec(function (err, organization) {
       if (err) {
         return next(err);
@@ -504,9 +504,9 @@ exports.organizationByID = function (req, res, next, id) {
             return review.verified === true;
           });
 
-          // remove unverified pricing reviews
-          organization.pricingReviews = organization.pricingReviews.filter(function(pricingReview) {
-            return pricingReview.verified === true;
+          // remove unverified price reviews
+          organization.priceReviews = organization.priceReviews.filter(function(priceReview) {
+            return priceReview.verified === true;
           });
 
           // remove displayName on anonymous reviews

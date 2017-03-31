@@ -146,10 +146,10 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     };
 
     // popup dialog that allows user to create a review
-    $scope.showPricingReviewView = function(ev, organizationId) {
+    $scope.showPriceReviewView = function(ev, organizationId) {
       var modalInstance = $modal.open({
-        templateUrl: '/modules/reviews/client/views/create-pricingreview.client.view.html',
-        controller: 'CreatePricingReviewsController',
+        templateUrl: '/modules/pricereviews/client/views/create-pricereview.client.view.html',
+        controller: 'CreatePriceReviewsController',
         resolve: {
           modalOrganizationId: function() {
             return organizationId;
