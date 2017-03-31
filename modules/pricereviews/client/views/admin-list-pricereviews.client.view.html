@@ -1,0 +1,26 @@
+<section ng-controller="PriceReviewsController" ng-init="adminFind()">
+  <div class="page-header">
+    <h1>Price Submissions</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="priceReview in priceReviews" ui-sref="priceReviews.view({priceReviewId: priceReview._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="priceReview.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="priceReview.user.displayName"></span>
+      </small>
+      <br>
+      <small>
+        <em class="text-muted">
+          Price Review Submitted for
+          <span ng-bind="priceReview.organization.companyName"</span>
+        </em>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></h4>
+      <h4 class="list-group-item-heading" ng-bind="priceReview.quantity"></h4>
+      <p class="list-group-item-text" ng-bind="priceReview.panelType"></p>
+      <p class="list-group-item-text" ng-bind="priceReview.shippingLocation"></p>
+    </a>
+  </div>
+</section>

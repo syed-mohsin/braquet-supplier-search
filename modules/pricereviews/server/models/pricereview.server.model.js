@@ -13,9 +13,9 @@ require('mongoose-currency').loadType(mongoose);
 var Currency = mongoose.Types.Currency;
 
 /**
- * Pricing Review Schema
+ * Price Review Schema
  */
-var PricingReviewSchema = new Schema({
+var PriceReviewSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
@@ -57,25 +57,25 @@ var PricingReviewSchema = new Schema({
   }
 });
 
-PricingReviewSchema.pre('remove', function (next) {
+PriceReviewSchema.pre('remove', function (next) {
   var Organization = mongoose.model('Organization');
-  var pricingReview = this;
+  var priceReview = this;
   var organizationId = '';
 
-  if (pricingReview.organization && mongoose.Types.ObjectId.isValid(pricingReview.organization._id)) {
-    organizationId = pricingReview.organization._id;
-  } else if (pricingReview.organization && mongoose.Types.ObjectId.isValid(pricingReview.organization)) {
-    organizationId = pricingReview.organization;
+  if (priceReview.organization && mongoose.Types.ObjectId.isValid(priceReview.organization._id)) {
+    organizationId = priceReview.organization._id;
+  } else if (priceReview.organization && mongoose.Types.ObjectId.isValid(priceReview.organization)) {
+    organizationId = priceReview.organization;
   } else {
-    console.log('unable to update organization after deleting pricing review');
+    console.log('unable to update organization after deleting price review');
     next();
   }
 
   Organization.findById(organizationId)
   .exec()
   .then(function(org) {
-    org.pricingReviews = org.pricingReviews.filter(function(pricingReviewId) {
-      return !pricingReview._id.equals(pricingReviewId);
+    org.priceReviews = org.priceReviews.filter(function(priceReviewId) {
+      return !priceReview._id.equals(priceReviewId);
     });
 
     return org.save();
@@ -91,4 +91,4 @@ PricingReviewSchema.pre('remove', function (next) {
 
 });
 
-mongoose.model('PricingReview', PricingReviewSchema);
+mongoose.model('PriceReview', PriceReviewSchema);

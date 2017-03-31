@@ -1,0 +1,31 @@
+<section class="container list-view border" ng-controller="PriceReviewsController" ng-init="find()">
+  <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!reviews.$resolved">
+  <div id="pricereviews-list" ng-show="priceReviews.$resolved">
+    <div class="page-header">
+      <h1>Price Reviews</h1>
+    </div>
+    <div class="list-group">
+      <a ng-repeat="priceReview in priceReviews" ui-sref="priceReviews.view({priceReviewId: priceReview._id})" class="list-group-item">
+        <small class="list-group-item-text">
+          Posted on
+          <span ng-bind="priceReview.created | date:'mediumDate'"></span>
+          by
+          <span ng-bind="priceReview.user.displayName"></span>
+        </small>
+        <br>
+        <small>
+          <em class="text-muted">
+            Price Review Submitted for
+            <span ng-bind="priceReview.organization.companyName"</span>
+        </small>
+        <h4 class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></h4>
+        <h4 class="list-group-item-heading" ng-bind="priceReview.quantity"></h4>
+        <p class="list-group-item-text" ng-bind="priceReview.panelType"></p>
+        <p class="list-group-item-text" ng-bind="priceReview.shippingLocation"></p>
+      </a>
+    </div>
+    <div class="alert alert-warning text-center" ng-if="priceReviews.$resolved && !priceReviews.length">
+      No price quotes yet, why don't you <a ui-sref="catalog">submit a price quote</a>?
+    </div>
+  </div>
+</section>

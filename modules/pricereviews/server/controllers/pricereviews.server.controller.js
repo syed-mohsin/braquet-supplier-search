@@ -5,12 +5,12 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  PricingReview = mongoose.model('PricingReview'),
+  PriceReview = mongoose.model('PriceReview'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
- * Create a pricing review
+ * Create a price review
  */
 exports.create = function(req, res) {
   if (!req.organization || !req.user) {
@@ -19,22 +19,22 @@ exports.create = function(req, res) {
     });
   }
 
-  var pricingReview = new PricingReview(req.body);
-  pricingReview.user = req.user._id;
-  pricingReview.organization = req.organization._id;
+  var priceReview = new PriceReview(req.body);
+  priceReview.user = req.user._id;
+  priceReview.organization = req.organization._id;
 
   // if (!req.user.emailVerified && !req.user.verified) {
-  //   pricingReview.verified = false;
+  //   priceReview.verified = false;
   // }
 
-  // save new pricing review
-  pricingReview.save()
-  .then(function(savedPricingReview) {
-    req.organization.pricingReviews.push(pricingReview._id);
+  // save new price review
+  priceReview.save()
+  .then(function(savedPriceReview) {
+    req.organization.priceReviews.push(priceReview._id);
     return req.organization.save();
   })
   .then(function(savedOrg) {
-    res.json(pricingReview);
+    res.json(priceReview);
   })
   .catch(function(err) {
     res.status(400).json({
@@ -44,81 +44,81 @@ exports.create = function(req, res) {
 };
 
 /**
- * Read a pricing review
+ * Read a price review
  */
 exports.read = function(req, res) {
-  res.json(req.pricingReview);
+  res.json(req.priceReview);
 };
 
 /**
- * Update a pricing review
+ * Update a price review
  */
 exports.update = function (req, res) {
-  var pricingReview = req.pricingReview;
+  var priceReview = req.priceReview;
 
-  pricingReview.price = req.body.price;
-  pricingReview.quantity = req.body.quantity;
-  pricingReview.panelType = req.body.panelType;
-  pricingReview.shippingLocation = req.body.shippingLocation;
+  priceReview.price = req.body.price;
+  priceReview.quantity = req.body.quantity;
+  priceReview.panelType = req.body.panelType;
+  priceReview.shippingLocation = req.body.shippingLocation;
 
-  pricingReview.save(function (err) {
+  priceReview.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(pricingReview);
+      res.json(priceReview);
     }
   });
 };
 
 /**
- * Delete a pricing review
+ * Delete a price review
  */
 exports.delete = function (req, res) {
-  var pricingReview = req.pricingReview;
+  var priceReview = req.priceReview;
 
-  pricingReview.remove(function (err) {
+  priceReview.remove(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(pricingReview);
+      res.json(priceReview);
     }
   });
 };
 
 /**
- * List of Pricing Reviews
+ * List of Price Reviews
  */
 exports.list = function (req, res) {
-  PricingReview.find({ user: req.user._id })
+  PriceReview.find({ user: req.user._id })
   .sort('-created')
   .populate('user', 'displayName')
   .populate('organization', 'companyName logoImageUrl')
-  .exec(function (err, pricingReviews) {
+  .exec(function (err, priceReviews) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(pricingReviews);
+      res.json(priceReviews);
     }
   });
 };
 
 /**
- * Admin List of All Pricing Reviews
+ * Admin List of All Price Reviews
  */
 exports.admin_list = function (req, res) {
-  PricingReview.find({})
+  PriceReview.find({})
   .sort('-created')
   .populate('user')
   .populate('organization')
   .exec()
-  .then(function(pricingReviews) {
-    res.json(pricingReviews);
+  .then(function(priceReviews) {
+    res.json(priceReviews);
   })
   .catch(function(err) {
     res.status(400).send({
@@ -128,28 +128,28 @@ exports.admin_list = function (req, res) {
 };
 
 /**
- * Pricing Review middleware
+ * Price Review middleware
  */
-exports.pricingReviewByID = function (req, res, next, id) {
+exports.priceReviewByID = function (req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Pricing Review is invalid'
+      message: 'Price Review is invalid'
     });
   }
 
-  PricingReview.findById(id)
+  PriceReview.findById(id)
   .populate('user', 'displayName')
   .populate('organization', 'companyName logoImageUrl')
-  .exec(function (err, pricingReview) {
+  .exec(function (err, priceReview) {
     if (err) {
       return next(err);
-    } else if (!pricingReview) {
+    } else if (!priceReview) {
       return res.status(404).send({
-        message: 'No pricing review with that identifier has been found'
+        message: 'No price review with that identifier has been found'
       });
     }
-    req.pricingReview = pricingReview;
+    req.priceReview = priceReview;
     next();
   });
 };

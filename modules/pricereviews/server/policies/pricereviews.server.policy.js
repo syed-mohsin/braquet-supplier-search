@@ -9,41 +9,41 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke Pricing Review Permissions
+ * Invoke Price Review Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/pricingreviews',
+      resources: '/api/pricereviews',
       permissions: '*'
     }, {
-      resources: '/api/pricingreviews/create/:organizationId',
+      resources: '/api/pricereviews/create/:organizationId',
       permissions: ['post']
     }, {
-      resources: '/api/pricingreviews/:pricingReviewId',
+      resources: '/api/pricereviews/:priceReviewId',
       permissions: '*'
     }, {
-      resources: '/api/pricingreviews-admin-list',
+      resources: '/api/pricereviews-admin-list',
       permissions: 'get'
     }]
   }, {
     roles: ['user', 'seller'],
     allows: [{
-      resources: '/api/pricingreviews',
+      resources: '/api/pricereviews',
       permissions: ['get']
     }, {
-      resources: '/api/pricingreviews/create/:organizationId',
+      resources: '/api/pricereviews/create/:organizationId',
       permissions: ['post']
     }, {
-      resources: '/api/pricingreviews/:pricingReviewId',
+      resources: '/api/pricereviews/:priceReviewId',
       permissions: ['get']
     }]
   }]);
 };
 
 /**
- * Check If pricingreviews Policy Allows
+ * Check If pricereviews Policy Allows
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
@@ -54,15 +54,15 @@ exports.isAllowed = function (req, res, next) {
   }
 
   // prevent non-authorized user from seeing unowned view
-  if (req.route.path === '/api/pricingreviews/:pricingReviewId' && req.pricingReview && req.user && req.pricingReview.user.id !== req.user.id) {
+  if (req.route.path === '/api/pricereviews/:priceReviewId' && req.priceReview && req.user && req.priceReview.user.id !== req.user.id) {
     return res.status(403).json({
       message: 'User is not authorized'
     });
   }
 
-  // If a pricingreview is being processed and the current user created it then allow any manipulation
+  // If a pricereview is being processed and the current user created it then allow any manipulation
   // (except for edit)
-  if (req.pricingReview && req.user && req.pricingReview.user.id === req.user.id && req.route.path === '/api/pricingreviews/:pricingReviewId' && req.method !== 'PUT') {
+  if (req.priceReview && req.user && req.priceReview.user.id === req.user.id && req.route.path === '/api/pricereviews/:priceReviewId' && req.method !== 'PUT') {
     return next();
   }
 

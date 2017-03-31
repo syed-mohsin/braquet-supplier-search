@@ -1,11 +1,11 @@
 'use strict';
 
-// Reviews controller
-angular.module('reviews').controller('CreatePricingReviewsController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Reviews', 'modalOrganizationId',
-  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Reviews, modalOrganizationId) {
+// Price Reviews controller
+angular.module('pricereviews').controller('CreatePriceReviewsController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'PriceReviews', 'modalOrganizationId',
+  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, PriceReviews, modalOrganizationId) {
     $scope.authentication = Authentication;
 
-    // Create new Pricing Review
+    // Create new Price Review
     $scope.create = function (isValid) {
       $scope.error = null;
 
@@ -15,8 +15,8 @@ angular.module('reviews').controller('CreatePricingReviewsController', ['$scope'
         return false;
       }
 
-      // Create new Pricing Review object
-      var pricingReview = {
+      // Create new Price Review object
+      var priceReview = {
         price: this.price * 100,
         quantity: this.quantity,
         panelType: this.panelType,
@@ -24,7 +24,7 @@ angular.module('reviews').controller('CreatePricingReviewsController', ['$scope'
       };
 
       // Redirect after save
-      $http.post('/api/pricingreviews/create/' + modalOrganizationId, pricingReview)
+      $http.post('/api/pricereviews/create/' + modalOrganizationId, priceReview)
         .success(function (response) {
           $modalInstance.close();
         })
