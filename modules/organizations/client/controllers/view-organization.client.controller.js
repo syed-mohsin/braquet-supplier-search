@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations) {
+angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -12,6 +12,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       }, function(organization) {
         $scope.organization = organization;
         $scope.buildUploader(organization._id);
+        Notification.primary('Primary notification');
       }, function(error) {
         $location.path('/forbidden');
       });
@@ -113,6 +114,9 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         if (organizationId) {
           $scope.findOne();
           $scope.isReviewSubmitted = true;
+
+
+
         }
       });
     };

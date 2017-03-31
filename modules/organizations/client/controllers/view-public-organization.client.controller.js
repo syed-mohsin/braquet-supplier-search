@@ -2,8 +2,8 @@
 
 // Organizations controller
 
-angular.module('organizations').controller('PublicViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'Authentication', 'Socket',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, Authentication, Socket) {
+angular.module('organizations').controller('PublicViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'Authentication', 'Socket', 'Notification',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, Authentication, Socket, Notification) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -15,9 +15,9 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
         $http.get('/api/organizations/' + $stateParams.organizationId + '/public')
         .then(function(resp) {
           $scope.organization = resp.data;
-
-
           $scope.organization.$resolved = true;
+          console.log('Notification:', Notification);
+          Notification.primary('Primary notification');
         });
       }
     };
