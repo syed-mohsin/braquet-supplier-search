@@ -31,11 +31,11 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
           $state.go('forbidden');
         } else {
           // override when attempt is to view organization, go to public view
-          if (toState.name === 'organizations.view') {
-            console.log(toState, toParams);
+          if (fromState.name !== 'organizations.view-public' &&
+            toState.name === 'organizations.view') {
             return $state.go('organizations.view-public', toParams);
           }
-          
+
           $state.go('authentication.signin').then(function () {
             storePreviousState(toState, toParams);
           });
