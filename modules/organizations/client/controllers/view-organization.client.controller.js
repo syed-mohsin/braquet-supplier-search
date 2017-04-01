@@ -12,7 +12,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       }, function(organization) {
         $scope.organization = organization;
         $scope.buildUploader(organization._id);
-        Notification.primary('Primary notification');
       }, function(error) {
         $location.path('/forbidden');
       });
