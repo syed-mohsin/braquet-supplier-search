@@ -1,9 +1,15 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'Reviews',
-  function ($scope, $stateParams, $location, $http, $mdDialog, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$state', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'Reviews',
+  function ($scope, $state, $stateParams, $location, $http, $mdDialog, Authentication, Reviews) {
     $scope.authentication = Authentication;
+    $scope.shouldShowReviews = true;
+
+    // showPrices
+    $scope.showPrices = function() {
+      $state.go('pricereviews.list');
+    };
 
     // Remove existing Review
     $scope.remove = function (review) {
