@@ -91,6 +91,24 @@ var OrganizationSchema = new Schema({
   panel_stcPowers: [{
     type: Number
   }],
+  lessThan100KW_prices: [{
+    type: Currency
+  }],
+  lessThan1MW_prices: [{
+    type: Currency
+  }],
+  greaterThan1MW_prices: [{
+    type: Currency
+  }],
+  hasLessThan100KW: {
+    type: Boolean
+  },
+  hasLessThan1MW: {
+    type: Boolean
+  },
+  hasGreaterThan1MW: {
+    type: Boolean
+  },
   industry: {
     type: String
   },
@@ -138,7 +156,7 @@ OrganizationSchema.pre('save', function(next) {
   .exec()
   .then(function(reviews) {
     // remove invalid review ids if any
-    self.reviews = self.reviews.map(function(review) {
+    self.reviews = reviews.map(function(review) {
       if (mongoose.Types.ObjectId.isValid(review._id)) {
         return review._id;
       } else {
@@ -154,12 +172,12 @@ OrganizationSchema.pre('save', function(next) {
       return a + b.rating;
     }, 0) / reviews.length || 0;
 
-    return PriceReview.find({ _id: { $in: self.priceReviews }, verified: true }, 'price')
+    return PriceReview.find({ _id: { $in: self.priceReviews }, verified: true }, 'price quantity')
       .exec();
   })
   .then(function(priceReviews) {
     // remove invalid price review ids if any
-    self.priceReviews = self.priceReviews.map(function(priceReview) {
+    self.priceReviews = priceReviews.map(function(priceReview) {
       if (mongoose.Types.ObjectId.isValid(priceReview._id)) {
         return priceReview._id;
       } else {
@@ -177,6 +195,28 @@ OrganizationSchema.pre('save', function(next) {
 
     // set new avg_price
     self.avg_price = avg_price * 100;
+
+    // store prices in appropriate array
+    priceReviews.forEach(function(priceReview) {
+      if (priceReview.quantity === '0kW-100kW' &&
+        self.lessThan100KW_prices.indexOf(priceReview.price) === -1) {
+
+        self.lessThan100KW_prices.push(priceReview.price);
+      } else if (priceReview.quantity === '101kW-1MW' &&
+        self.lessThan1MW_prices.indexOf(priceReview.price) === -1) {
+
+        self.lessThan1MW_prices.push(priceReview.price);
+      } else if (priceReview.quantity === '>1MW' &&
+        self.greaterThan1MW_prices.indexOf(priceReview.price) === -1) {
+
+        self.greaterThan1MW_prices.push(priceReview.price);
+      }
+    });
+
+    // set quantities
+    if (self.lessThan100KW_price.length) { self.hasLessThan100KW = true; }
+    if (self.lessThan1MW_prices.length) { self.hasLessThan1MW = true; }
+    if (sef.greaterThan1MW_prices) { self.hasGreaterThan1MW = true; }
 
     // finish
     next();
