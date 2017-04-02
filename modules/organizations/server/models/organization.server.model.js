@@ -216,7 +216,7 @@ OrganizationSchema.pre('save', function(next) {
     // set quantities
     if (self.lessThan100KW_price.length) { self.hasLessThan100KW = true; }
     if (self.lessThan1MW_prices.length) { self.hasLessThan1MW = true; }
-    if (sef.greaterThan1MW_prices) { self.hasGreaterThan1MW = true; }
+    if (self.greaterThan1MW_prices) { self.hasGreaterThan1MW = true; }
 
     // finish
     next();
