@@ -27,6 +27,11 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
         message: notification.message,
         delay: null
       });
+    } else {
+      Notification.error({
+        message: notification.message,
+        delay: null
+      });
     }
   });
 

@@ -1,8 +1,8 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('CreateReviewsController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Reviews', 'modalOrganizationId', 'Notification',
-  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Reviews, modalOrganizationId, Notification) {
+angular.module('reviews').controller('CreateReviewsController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Reviews', 'modalOrganizationId',
+  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Reviews, modalOrganizationId) {
     $scope.authentication = Authentication;
     $scope.anonymous = true; // all created reviews should be anonymous by default
 
