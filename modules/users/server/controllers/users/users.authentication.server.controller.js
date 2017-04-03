@@ -247,7 +247,7 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err);
         } else {
-
+          // send socket notification for new user to submit first review
           if(user.reviews.length === 0) {
             var io = req.app.get('socketio');
             var sockets = req.app.get('socket-users');

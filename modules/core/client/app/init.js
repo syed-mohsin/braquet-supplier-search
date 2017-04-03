@@ -20,9 +20,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
     Socket.connect();
   }
 
-  console.log('Authentication User:', Authentication.user);
-
-  // Event listener for a verified-email user notification
+  // Event listener for a notifyUser notifications
   Socket.on('notifyUser', function(notification) {
     if(!notification.err) {
       Notification.primary({ 
@@ -31,10 +29,6 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
       });
     }
   });
-
-  // User should be notified if they have not submitted a review yet
-
-
 
   // Check authentication before changing state
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
