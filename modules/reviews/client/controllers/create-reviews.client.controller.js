@@ -28,7 +28,6 @@ angular.module('reviews').controller('CreateReviewsController', ['$scope', '$sta
       $http.post('/api/reviews/create/' + modalOrganizationId, review)
         .success(function (response) {
           $modalInstance.close();
-          Notification.primary('Submitted Review Successfully');
         })
         .error(function (errorResponse) {
           if (errorResponse && errorResponse.message) {
