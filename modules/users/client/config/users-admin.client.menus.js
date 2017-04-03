@@ -32,5 +32,11 @@ angular.module('users.admin').run(['Menus',
       state: 'reviews.admin-list',
       roles: ['admin']
     });
+
+    Menus.addSubMenuItem('topbar', 'admin', {
+      title: 'Manage Price Reviews',
+      state: 'pricereviews.admin-list',
+      roles: ['admin']
+    });
   }
 ]);

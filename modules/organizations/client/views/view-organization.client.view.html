@@ -99,7 +99,7 @@
           <div class="box no-border">
               <div class="content no-wrap">
                   <div class="sub-title name">
-                      <span ng-bind="organization.price_reviews_length"></span> <span> Quotes (Average: {{organization.avg_price / 100 | currency}})</span>
+                      <span ng-bind="organization.price_reviews_length"></span> <span> Quotes (0kW-100kW Average: {{organization.lessThan100KW_avg_price / 100 | currency}}) (100kW-1MW Average: {{organization.lessThan1MW_avg_price / 100 | currency}}) (>1MW Average: {{organization.greaterThan1MW_avg_price / 100 | currency}})</span>
                   </div>
                   <div class="list-group">
                       <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
@@ -111,7 +111,7 @@
                                   anonymous on
                                   <span ng-bind="priceReview.created | date:'mediumDate'"></span></small>
                                   </div>
-                                  <div class="review-content"><span class="list-group-item-text" ng-bind="review.quantity"></span></div>
+                                  <div class="review-content"><span class="list-group-item-text" ng-bind="priceReview.quantity"></span></div>
                               </a>
                           </div>
                       </div>

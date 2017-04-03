@@ -6,7 +6,7 @@
           <span ng-bind="priceReview.price / 100 | currency"></span>
         </div>
         <div class="menu" ng-show="authentication.user._id == priceReview.user._id || authentication.user.roles.indexOf('admin') !== -1">
-            <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ui-sref="priceReviews.edit({priceReviewId: priceReview._id})">
+            <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ui-sref="pricereviews.edit({priceReviewId: priceReview._id})">
                 <span class="glyphicon glyphicon-new-window"></span><span>Edit Price Review</span>
             </a>
             <a ng-click="remove();">

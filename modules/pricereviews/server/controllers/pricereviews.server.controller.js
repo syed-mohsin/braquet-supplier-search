@@ -128,6 +128,22 @@ exports.admin_list = function (req, res) {
 };
 
 /**
+ * Price Review fields for catalog
+ */
+exports.getFilters = function(req, res) {
+  var filters = {};
+
+  PriceReview.distinct('quantity').exec()
+  .then(function(quantities) {
+    filters.quantities = quantities;
+    res.json(filters);
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
+  });
+};
+
+/**
  * Price Review middleware
  */
 exports.priceReviewByID = function (req, res, next, id) {

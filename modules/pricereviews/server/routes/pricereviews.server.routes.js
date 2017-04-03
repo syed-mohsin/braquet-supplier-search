@@ -22,6 +22,10 @@ module.exports = function (app) {
     .put(priceReviews.update)
     .delete(priceReviews.delete);
 
+  // Get filterable items from pricereview model
+  app.route('/api/pricereviews-filters')
+    .get(priceReviews.getFilters);
+
   // List of all price reviews for super admins
   app.route('/api/pricereviews-admin-list').all(priceReviewsPolicy.isAllowed)
     .get(priceReviews.admin_list);

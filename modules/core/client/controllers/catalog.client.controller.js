@@ -15,6 +15,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.query.color = $stateParams.color;
     $scope.query.cells = $stateParams.cells;
     $scope.query.page = $stateParams.page;
+    $scope.query.quantity = $stateParams.quantity;
+    $scope.query.price = $stateParams.price;
 
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
@@ -25,9 +27,17 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       var crys = '';
       var color = '';
       var cells = '';
+      var quantity = '';
+
+      // find all checked boxes for quantities
+      for (var key in $scope.quantityCheckboxes) {
+        if ($scope.quantityCheckboxes[key]) {
+          quantity += key + '|';
+        }
+      }
 
       // find all checked boxes for wattage
-      for (var key in $scope.wattCheckboxes) {
+      for (key in $scope.wattCheckboxes) {
         if ($scope.wattCheckboxes[key]) {
           pow += $scope.rangesReverse[key] + '|';
         }
@@ -66,6 +76,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.query.crys = crys;
       $scope.query.color = color;
       $scope.query.cells = cells;
+      $scope.query.quantity = quantity;
       $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
@@ -100,6 +111,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     };
 
     $scope.buildFilterCheckboxes = function() {
+      // get panel model filters
       $http.get('/api/panelmodels-filters')
         .then(function(resp) {
           var filters = resp.data;
@@ -143,6 +155,21 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
           // increment resolved resources
           $scope.resolvedResources++;
         });
+
+      // get pricereview filters
+      $http.get('/api/pricereviews-filters')
+        .then(function(resp) {
+          var filters = resp.data;
+          $scope.quantities = filters.quantities;
+
+          $scope.quantityCheckboxes = {};
+          var queryCheckedBoxes = $stateParams.quantity ? $stateParams.quantity.split('|') : [];
+          $scope.quantities.forEach(function(quantity) {
+            $scope.quantityCheckboxes[quantity] = queryCheckedBoxes.indexOf(quantity) !== -1 ? true : false;
+          });
+
+          $scope.resolvedResources++;
+        });
     };
 
     $scope.buildPager = function (count) {
@@ -153,6 +180,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     $scope.pageChanged = function () {
       $scope.query.page = $scope.currentPage;
+      $state.go('catalog', $scope.query);
+    };
+
+    $scope.sortBy = function() {
+      $scope.query.price = $stateParams.price ? '' : true;
       $state.go('catalog', $scope.query);
     };
 
@@ -170,20 +202,12 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       }
     };
 
-    // load resources from server
+    // load resources from server after inititalizing all controller functions
 
-    // initialize organizations on page
+    // fetch results based on query
     $http({
       url: '/api/organizations-catalog',
-      params: {
-        q: $stateParams.q,
-        man: $stateParams.man,
-        pow: $stateParams.pow,
-        crys: $stateParams.crys,
-        color: $stateParams.color,
-        cells: $stateParams.cells,
-        page: $stateParams.page
-      }
+      params: $scope.query
     })
     .then(function(resp) {
       $scope.orgs = resp.data.orgs;

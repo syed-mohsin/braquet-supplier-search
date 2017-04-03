@@ -79,6 +79,7 @@ exports.readPublic = function(req, res) {
   Organization.findById(req.params.organizationId)
     .populate('panel_models')
     .populate('reviews')
+    .populate('priceReviews')
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);
@@ -96,6 +97,11 @@ exports.readPublic = function(req, res) {
           // remove unverified reviews
           organization.reviews = organization.reviews.filter(function(review) {
             return review.verified === true;
+          });
+
+          // remove unverified price reviews
+          organization.priceReviews = organization.priceReviews.filter(function(priceReview) {
+            return priceReview.verified === true;
           });
 
           // remove displayName on anonymous reviews
@@ -271,6 +277,7 @@ exports.list_basic = function (req, res) {
  */
 exports.get_catalog = function (req, res) {
   var result = [];
+  var sortObj = { avg_review: -1 }; // by default, sort by avg_review
   var queryParams = {}; // query object
   queryParams.verified = true; // get only verified organizations
   queryParams.panels_length = { '$gt': 0 }; // only show suppliers with an panel models
@@ -302,6 +309,29 @@ exports.get_catalog = function (req, res) {
     queryParams.panel_number_of_cells = { '$in' :  cellsCondition };
   }
 
+  // build query for quantity
+  if (req.query.quantity) {
+    var quantityCondition = req.query.quantity.split('|').filter(function(q) { return q.length !== 0; });
+    queryParams.quantities = { '$in' : quantityCondition };
+  }
+
+  // sort by price
+  if (req.query.price && req.query.quantity) {
+    delete sortObj.avg_review;
+
+    var quantityArr = req.query.quantity.split('|').filter(function(q) { return q.length !== 0; });
+    if (quantityArr.indexOf('0kW-100kW') !== -1) {
+      sortObj.lessThan100KW_avg_price = 1;
+    }
+    if (quantityArr.indexOf('101kW-1MW') !== -1) {
+      sortObj.lessThan1MW_avg_price = 1;
+    }
+    if (quantityArr.indexOf('>1MW') !== -1) {
+      sortObj.greaterThan1MW_avg_price = 1;
+    }
+  }
+  console.log(sortObj);
+
   // build query for wattage filter
   if (req.query.pow) {
     // or statement to check all wattage ranges passed in
@@ -325,7 +355,7 @@ exports.get_catalog = function (req, res) {
 
   query.skip((req.query.page - 1 || 0) * 15)
   .populate('reviews')
-  .sort('-avg_review')
+  .sort(sortObj)
   .limit(15)
   .exec()
   .then(function(orgs) {

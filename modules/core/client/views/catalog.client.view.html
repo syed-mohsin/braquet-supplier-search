@@ -1,6 +1,6 @@
 <section class="list-view" ng-controller="CatalogController">
-    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="resolvedResources !== 2">
-    <div id="catalog-page" ng-show="resolvedResources === 2">
+    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="resolvedResources !== 3">
+    <div id="catalog-page" ng-show="resolvedResources === 3">
       <div class="page-header">
           <div class="row">
               <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
@@ -15,9 +15,19 @@
       <section>
           <div class="menu">
               <button class="visible-xs btn-primary last" ng-click="toggleFilter()" data-toggle="collapse" data-target="side-navbar">See Filters</button>
+              <button class="btn-primary last" ng-click="sortBy()" data-target="side-navbar">Sort By Price</button>
           </div>
           <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
               <label>Filters</label>
+
+              <div class="list-group">
+                  <span class="catalog-label"><small>Quantity ></small></span>
+                  <li ng-repeat="quantity in quantities">
+                      <input type="checkbox" ng-model="quantityCheckboxes[quantity]" ng-change="updateFilter()">
+                      <span><small>{{quantity}}</small></span>
+                  </li>
+              </div>
+
               <div class="list-group">
                   <span class="catalog-label"><small>Crystalline Type ></small></span>
                   <li ng-repeat="crys in crystallineTypes">
@@ -60,7 +70,7 @@
           </div>
 
           <div class="horizontal list-group col-sm-7">
-              <div class="alert alert-warning text-center" ng-if="resolvedResources === 2 && !orgs.length">
+              <div class="alert alert-warning text-center" ng-if="resolvedResources === 3 && !orgs.length">
                 No search results
               </div>
               <div>
@@ -77,7 +87,8 @@
                       <div class="detail">
                         <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
                         <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
-                        <small><span ng-bind="organization.productTypes"></span></small>
+                        <small><span ng-bind="organization.productTypes"></span></small><br>
+                        <small><span>(0kW-100kW Average: {{organization.lessThan100KW_avg_price / 100 | currency}}) (100kW-1MW Average: {{organization.lessThan1MW_avg_price / 100 | currency}}) (>1MW Average: {{organization.greaterThan1MW_avg_price / 100 | currency}})</span></small>
                       </div>
                   </div>
               </a>

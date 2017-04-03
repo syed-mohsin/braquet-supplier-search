@@ -3,7 +3,7 @@
     <h1>Price Submissions</h1>
   </div>
   <div class="list-group">
-    <a ng-repeat="priceReview in priceReviews" ui-sref="priceReviews.view({priceReviewId: priceReview._id})" class="list-group-item">
+    <a ng-repeat="priceReview in priceReviews" ui-sref="pricereviews.view({priceReviewId: priceReview._id})" class="list-group-item">
       <small class="list-group-item-text">
         Posted on
         <span ng-bind="priceReview.created | date:'mediumDate'"></span>

@@ -56,7 +56,15 @@ var OrganizationSchema = new Schema({
     type: Number,
     default: 0
   },
-  avg_price: {
+  lessThan100KW_avg_price: {
+    type: Currency,
+    default: 0
+  },
+  lessThan1MW_avg_price: {
+    type: Currency,
+    default: 0
+  },
+  greaterThan1MW_avg_price: {
     type: Currency,
     default: 0
   },
@@ -100,15 +108,9 @@ var OrganizationSchema = new Schema({
   greaterThan1MW_prices: [{
     type: Currency
   }],
-  hasLessThan100KW: {
-    type: Boolean
-  },
-  hasLessThan1MW: {
-    type: Boolean
-  },
-  hasGreaterThan1MW: {
-    type: Boolean
-  },
+  quantities: [{
+    type: String
+  }],
   industry: {
     type: String
   },
@@ -189,12 +191,29 @@ OrganizationSchema.pre('save', function(next) {
     self.price_reviews_length = priceReviews.length;
 
     // calculate new average review
-    var avg_price = priceReviews.reduce(function(a,b) {
-      return a + b.price / 100;
-    }, 0) / priceReviews.length || 0;
+    var lessThan100KW_priceReviews = priceReviews.filter(function(r) {
+      return r.quantity === '0kW-100kW';
+    });
 
-    // set new avg_price
-    self.avg_price = avg_price * 100;
+    var lessThan1MW_priceReviews = priceReviews.filter(function(r) {
+      return r.quantity === '101kW-1MW';
+    });
+
+    var greaterThan1MW_priceReviews = priceReviews.filter(function(r) {
+      return r.quantity === '>1MW';
+    });
+
+    self.lessThan100KW_avg_price = lessThan100KW_priceReviews.reduce(function(a,b) {
+      return a + b.price ;
+    }, 0) / lessThan100KW_priceReviews.length || 0;
+
+    self.lessThan1MW_avg_price = lessThan1MW_priceReviews.reduce(function(a,b) {
+      return a + b.price ;
+    }, 0) / lessThan1MW_priceReviews.length || 0;
+
+    self.greaterThan1MW_avg_price = greaterThan1MW_priceReviews.reduce(function(a,b) {
+      return a + b.price ;
+    }, 0) / greaterThan1MW_priceReviews.length || 0;
 
     // store prices in appropriate array
     priceReviews.forEach(function(priceReview) {
@@ -214,9 +233,15 @@ OrganizationSchema.pre('save', function(next) {
     });
 
     // set quantities
-    if (self.lessThan100KW_price.length) { self.hasLessThan100KW = true; }
-    if (self.lessThan1MW_prices.length) { self.hasLessThan1MW = true; }
-    if (self.greaterThan1MW_prices) { self.hasGreaterThan1MW = true; }
+    if (self.lessThan100KW_prices.length && self.quantities.indexOf('0kW-100kW') === -1) {
+      self.quantities.push('0kW-100kW');
+    }
+    if (self.lessThan1MW_prices.length && self.quantities.indexOf('101kW-1MW') === -1) {
+      self.quantities.push('101kW-1MW');
+    }
+    if (self.greaterThan1MW_prices.length && self.quantities.indexOf('>1MW') === -1) {
+      self.quantities.push('>1MW');
+    }
 
     // finish
     next();
