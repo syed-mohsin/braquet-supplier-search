@@ -25,7 +25,6 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
   // Event listener for a verified-email user notification
   Socket.on('notifyUser', function(notification) {
     if(!notification.err) {
-      console.log('HIT HERE!!!!!');
       Notification.primary({ 
         message: notification.message,
         delay: null
