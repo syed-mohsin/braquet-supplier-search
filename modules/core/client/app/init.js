@@ -12,7 +12,30 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
   }
 ]);
 
-angular.module(ApplicationConfiguration.applicationModuleName).run(function ($rootScope, $state, Authentication) {
+angular.module(ApplicationConfiguration.applicationModuleName).run(function ($rootScope, $state, Authentication, Socket, Notification) {
+
+  // Make sure the Socket is connected
+  // Socket is listening for notification messages
+  if (!Socket.socket) {
+    Socket.connect();
+  }
+
+  console.log('Authentication User:', Authentication.user);
+
+  // Event listener for a verified-email user notification
+  Socket.on('notifyUser', function(notification) {
+    if(!notification.err) {
+      console.log('HIT HERE!!!!!');
+      Notification.primary({ 
+        message: notification.message,
+        delay: null
+      });
+    }
+  });
+
+  // User should be notified if they have not submitted a review yet
+
+
 
   // Check authentication before changing state
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {

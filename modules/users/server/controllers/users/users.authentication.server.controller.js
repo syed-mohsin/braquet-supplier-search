@@ -247,6 +247,20 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err);
         } else {
+
+          if(user.reviews.length === 0) {
+            var io = req.app.get('socketio');
+            var sockets = req.app.get('socket-users');
+            var recipientSockets = sockets[user._id];
+
+            recipientSockets.forEach(function(socketId) {
+              io.to(socketId).emit('notifyUser', {
+                err: false,
+                message: 'You have not written a review yet. Write your first review.'
+              });
+            });
+          }
+
           res.json(user);
         }
       });
