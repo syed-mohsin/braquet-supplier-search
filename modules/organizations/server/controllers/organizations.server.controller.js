@@ -317,8 +317,6 @@ exports.get_catalog = function (req, res) {
 
   // sort by price
   if (req.query.price && req.query.quantity) {
-    delete sortObj.avg_review;
-
     var quantityArr = req.query.quantity.split('|').filter(function(q) { return q.length !== 0; });
     if (quantityArr.indexOf('0kW-100kW') !== -1) {
       sortObj.lessThan100KW_avg_price = 1;
@@ -329,8 +327,11 @@ exports.get_catalog = function (req, res) {
     if (quantityArr.indexOf('>1MW') !== -1) {
       sortObj.greaterThan1MW_avg_price = 1;
     }
+  } else if (req.query.price) {
+    sortObj.lessThan100KW_avg_price = 1;
+    sortObj.lessThan1MW_avg_price = 1;
+    sortObj.greaterThan1MW_avg_price = 1;
   }
-  console.log(sortObj);
 
   // build query for wattage filter
   if (req.query.pow) {
