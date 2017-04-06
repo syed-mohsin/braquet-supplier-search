@@ -18,6 +18,65 @@ var path = require('path'),
   aws = require('aws-sdk'),
   s3 = new aws.S3();
 
+var smtpTransport = nodemailer.createTransport(config.mailer.options);
+
+/**
+ * Contact an organization through Braquet Admin
+ */
+exports.contact = function (req, res) {
+
+  var inquiry = req.body;
+  var userDisplayName = req.user.displayName;
+  var organizationName = req.organization.companyName;
+  
+  async.waterfall([
+    function(done) {
+      Organization.findOne({ _id: req.user.organization }, function(err, organization) {
+        if(!organization) {
+          return res.redirect('/forbidden');
+        }
+
+        done(err, organization.companyName);
+      });
+    },
+    // get email template to contact supplier
+    function(userOrganizationName, done) {
+      res.render('modules/organizations/server/templates/contact-supplier', {
+        name: userDisplayName,
+        userOrg: userOrganizationName,
+        orgName: organizationName,
+        content: inquiry.content
+      }, function(err, emailHTML) {
+        done(err, emailHTML);
+      });
+    },
+    // send contact-supplier email to Braquet admin using service
+    function(emailHTML, done) {
+      var mailList = process.env.MAILER_INTERNAL_LIST;
+
+      var mailOptions = {
+        to: mailList,
+        from: config.mailer.from,
+        subject: 'Braquet - Request to Contact a Supplier',
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: 'Failure sending email to admin to contact supplier'
+          });
+        }
+        return res.redirect('/');
+      });
+    }
+  ], function(err) {
+    if(err) {
+      res.redirect('/'); 
+    }
+  });
+};
+
 /**
  * Create a organization
  */

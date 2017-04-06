@@ -1,0 +1,22 @@
+<section>
+  <div class="col-md-12">
+    <form name="contactSupplierForm" class="form-horizontal" ng-submit="contact(contactSupplierForm.$valid)" novalidate>
+      <h2>Contact a supplier organization</h2>
+      <div class="form-group">
+          <strong>Upon submission of this form, our admin team will reach out to the requested organization and facilitate any requested correspondence</strong>
+      </div>
+      <fieldset>
+        <div class="form-group">
+          <label for="content">Please provide details on your inquiry</label>
+          <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10"></textarea>
+        </div>
+        <div class="form-group submit">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
