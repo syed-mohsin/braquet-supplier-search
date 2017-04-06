@@ -28,53 +28,62 @@ exports.contact = function (req, res) {
   var inquiry = req.body;
   var userDisplayName = req.user.displayName;
   var organizationName = req.organization.companyName;
-  
-  async.waterfall([
-    function(done) {
-      Organization.findOne({ _id: req.user.organization }, function(err, organization) {
-        if(!organization) {
-          return res.redirect('/forbidden');
-        }
 
-        done(err, organization.companyName);
-      });
-    },
-    // get email template to contact supplier
-    function(userOrganizationName, done) {
+
+  Organization.findOne({ _id: req.user.organization })
+  .exec()
+  .then(function(organization) {
+    if(!organization) {
+      return res.redirect('/forbidden');
+    }
+
+    return organization.companyName;
+  })
+  .then(function(userOrganizationName) {
+
+    return new Promise(function(resolve, reject) {
+
       res.render('modules/organizations/server/templates/contact-supplier', {
         name: userDisplayName,
         userOrg: userOrganizationName,
         orgName: organizationName,
         content: inquiry.content
       }, function(err, emailHTML) {
-        done(err, emailHTML);
+        if(err) {
+          reject(err);
+        }
+        resolve(emailHTML);
       });
-    },
-    // send contact-supplier email to Braquet admin using service
-    function(emailHTML, done) {
-      var mailList = process.env.MAILER_INTERNAL_LIST;
+    });
+  })
+  .then(function(emailHTML) {
+    var mailList = process.env.MAILER_INTERNAL_LIST;
 
-      var mailOptions = {
-        to: mailList,
-        from: config.mailer.from,
-        subject: 'Braquet - Request to Contact a Supplier',
-        html: emailHTML
-      };
+    var mailOptions = {
+      to: mailList,
+      from: config.mailer.from,
+      subject: 'Braquet - Request to Contact a Supplier',
+      html: emailHTML
+    };
 
+    return new Promise(function(resolve, reject) {
       smtpTransport.sendMail(mailOptions, function (err) {
         if (err) {
-          return res.status(400).send({
-            message: 'Failure sending email to admin to contact supplier'
-          });
+          reject(err);
         }
-        return res.redirect('/');
+        resolve(mailOptions);
       });
-    }
-  ], function(err) {
+    });
+  })
+  .then(function(mailOptions) {
+    res.json(mailOptions);
+  })
+  .catch(function(err) {
     if(err) {
-      res.redirect('/'); 
+      res.json(err);
     }
   });
+
 };
 
 /**

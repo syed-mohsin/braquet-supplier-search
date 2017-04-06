@@ -95,16 +95,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       };
     };
 
-    $scope.showContactSupplierView = function() {
-
-      var modalInstance = $modal.open({
-        templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
-        controller: ''
-
-      });
-
-    };
-
     $scope.contactSupplier = function(ev, organizationId) {
       var modalInstance = $modal.open({
         templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
@@ -117,12 +107,11 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         windowClass: 'app-modal-window'
       });
 
-      // modalInstance.result.then(function() {
-      //   if (organizationId) {
-      //     $scope.findOne();
-      //     $scope.isReviewSubmitted = true;
-      //   }
-      // });
+      modalInstance.result.then(function() {
+        if (organizationId) {
+          $scope.contactSupplier = true;
+        }
+      });
     };
 
     // popup dialog that allows user to create a review
