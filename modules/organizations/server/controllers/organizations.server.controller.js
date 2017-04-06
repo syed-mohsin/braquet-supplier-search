@@ -25,29 +25,6 @@ exports.create = function (req, res) {
   var organization = new Organization(req.body);
   organization.verified = true;
 
-  // add panel model filter fields
-  req.body.panel_models.forEach(function(panel) {
-    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
-      organization.panel_manufacturers.push(panel.manufacturer);
-    }
-
-    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
-      organization.panel_stcPowers.push(panel.stcPower);
-    }
-
-    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
-      organization.panel_crystalline_types.push(panel.crystallineType);
-    }
-
-    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
-      organization.panel_frame_colors.push(panel.frameColor);
-    }
-
-    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
-      organization.panel_number_of_cells.push(panel.numberOfCells);
-    }
-  });
-
   organization.save()
   .then(function(savedOrg) {
     res.json(organization);
@@ -141,35 +118,8 @@ exports.update = function (req, res) {
   organization.country = req.body.country;
   organization.about = req.body.about;
 
-  // reset panel filtering fields
-  organization.panel_manufacturers = [];
-  organization.panel_stcPowers = [];
-  organization.panel_crystalline_types = [];
-  organization.panel_frame_colors = [];
-  organization.panel_number_of_cells = [];
-
-  // add panel model filter fields
-  req.body.panel_models.forEach(function(panel) {
-    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
-      organization.panel_manufacturers.push(panel.manufacturer);
-    }
-
-    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
-      organization.panel_stcPowers.push(panel.stcPower);
-    }
-
-    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
-      organization.panel_crystalline_types.push(panel.crystallineType);
-    }
-
-    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
-      organization.panel_frame_colors.push(panel.frameColor);
-    }
-
-    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
-      organization.panel_number_of_cells.push(panel.numberOfCells);
-    }
-  });
+  // TODO: remove organization from association from any panel models
+  // no longer associated with this organization;
 
   organization.save()
   .then(function(updatedOrg) {
@@ -179,23 +129,6 @@ exports.update = function (req, res) {
     return res.status(400).send({
       message: errorHandler.getErrorMessage(err)
     });
-  });
-};
-
-/**
- * Delete a organization
- */
-exports.delete = function (req, res) {
-  var organization = req.organization;
-
-  organization.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
-
-    res.json(organization);
   });
 };
 
@@ -278,85 +211,68 @@ exports.list_basic = function (req, res) {
 exports.get_catalog = function (req, res) {
   var result = [];
   var sortObj = { avg_review: -1 }; // by default, sort by avg_review
-  var queryParams = {}; // query object
-  queryParams.verified = true; // get only verified organizations
-  queryParams.panels_length = { '$gt': 0 }; // only show suppliers with an panel models
+  var organizationQueryParams = {}; // query object for Organization
+  var panelModelQueryParams = {}; // query object for Panel Model
+  var priceReviewQueryParams = {}; // query object for Price Review
+  organizationQueryParams.verified = true; // get only verified organizations
+  organizationQueryParams.panels_length = { '$gt': 0 }; // only show suppliers with any panel models
 
   // build query for search using regular expression
-  if (req.query.q) queryParams.companyName = new RegExp(req.query.q, 'i');
+  if (req.query.q) {
+    organizationQueryParams.companyName = new RegExp(req.query.q, 'i');
+  }
 
   // build query for manufacturers
   if (req.query.man) {
     var manCondition = req.query.man.split('|').filter(function(m) { return m.length !== 0; });
-    queryParams.panel_manufacturers = { '$in' :  manCondition };
+    panelModelQueryParams.manufacturer = { '$in' :  manCondition };
   }
 
   // build query for crystaline types
   if (req.query.crys) {
     var crysCondition = req.query.crys.split('|').filter(function(c) { return c.length !== 0; });
-    queryParams.panel_crystalline_types = { '$in' :  crysCondition };
+    panelModelQueryParams.crystallineType = { '$in' :  crysCondition };
   }
 
   // build query for frame colors
   if (req.query.color) {
     var colorCondition = req.query.color.split('|').filter(function(c) { return c.length !== 0; });
-    queryParams.panel_frame_colors = { '$in' :  colorCondition };
+    panelModelQueryParams.frameColor = { '$in' :  colorCondition };
   }
 
   // build query for number of cells
   if (req.query.cells) {
     var cellsCondition = req.query.cells.split('|').filter(function(m) { return m.length !== 0; });
-    queryParams.panel_number_of_cells = { '$in' :  cellsCondition };
-  }
-
-  // build query for quantity
-  if (req.query.quantity) {
-    var quantityCondition = req.query.quantity.split('|').filter(function(q) { return q.length !== 0; });
-    queryParams.quantities = { '$in' : quantityCondition };
-  }
-
-  // sort by price
-  if (req.query.price && req.query.quantity) {
-    var quantityArr = req.query.quantity.split('|').filter(function(q) { return q.length !== 0; });
-    if (quantityArr.indexOf('0kW-100kW') !== -1) {
-      sortObj.lessThan100KW_avg_price = 1;
-    }
-    if (quantityArr.indexOf('101kW-1MW') !== -1) {
-      sortObj.lessThan1MW_avg_price = 1;
-    }
-    if (quantityArr.indexOf('>1MW') !== -1) {
-      sortObj.greaterThan1MW_avg_price = 1;
-    }
-  } else if (req.query.price) {
-    sortObj.lessThan100KW_avg_price = 1;
-    sortObj.lessThan1MW_avg_price = 1;
-    sortObj.greaterThan1MW_avg_price = 1;
+    panelModelQueryParams.numberOfCells = { '$in' :  cellsCondition };
   }
 
   // build query for wattage filter
   if (req.query.pow) {
     // or statement to check all wattage ranges passed in
     var powerArr = req.query.pow.split('|').filter(function(p) { return p.length !== 0 && !isNaN(p); });
-    queryParams.$or = powerArr.map(function(pow) {
+    panelModelQueryParams.$or = powerArr.map(function(pow) {
       return {
-        'panel_stcPowers':
+        'stcPower':
         {
-          '$elemMatch':
-          {
-            '$gt': parseInt(pow)-100,
-            '$lte': parseInt(pow)
-          }
+          '$gt': parseInt(pow)-100,
+          '$lte': parseInt(pow)
         }
       };
     });
   }
 
-  var query = Organization.find(queryParams);
-  var countQuery = Organization.find(queryParams);
+  // build query for quantity
+  if (req.query.quantity) {
+    var quantityCondition = req.query.quantity.split('|').filter(function(q) { return q.length !== 0; });
+    priceReviewQueryParams.quantity = { '$in' : quantityCondition };
+  }
+
+  var query = Organization.find(organizationQueryParams);
+  var countQuery = Organization.find(organizationQueryParams);
 
   query.skip((req.query.page - 1 || 0) * 15)
   .populate('reviews')
-  .sort(sortObj)
+  .sort('-avg_review')
   .limit(15)
   .exec()
   .then(function(orgs) {

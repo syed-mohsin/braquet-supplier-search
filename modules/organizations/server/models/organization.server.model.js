@@ -56,18 +56,6 @@ var OrganizationSchema = new Schema({
     type: Number,
     default: 0
   },
-  lessThan100KW_avg_price: {
-    type: Currency,
-    default: 0
-  },
-  lessThan1MW_avg_price: {
-    type: Currency,
-    default: 0
-  },
-  greaterThan1MW_avg_price: {
-    type: Currency,
-    default: 0
-  },
   reviews_length: {
     type: Number,
     default: 0
@@ -84,33 +72,6 @@ var OrganizationSchema = new Schema({
     type: Number,
     default: 0
   },
-  panel_manufacturers: [{
-    type: String
-  }],
-  panel_crystalline_types: [{
-    type: String
-  }],
-  panel_frame_colors: [{
-    type: String
-  }],
-  panel_number_of_cells: [{
-    type: Number
-  }],
-  panel_stcPowers: [{
-    type: Number
-  }],
-  lessThan100KW_prices: [{
-    type: Currency
-  }],
-  lessThan1MW_prices: [{
-    type: Currency
-  }],
-  greaterThan1MW_prices: [{
-    type: Currency
-  }],
-  quantities: [{
-    type: String
-  }],
   industry: {
     type: String
   },
@@ -147,15 +108,35 @@ var OrganizationSchema = new Schema({
 OrganizationSchema.pre('save', function(next) {
 
   var Review = mongoose.model('Review'),
-    PriceReview = mongoose.model('PriceReview');
+    PriceReview = mongoose.model('PriceReview'),
+    PanelModel = mongoose.model('PanelModel');
+
+  var self = this;
 
   // set number of panels
-  this.panels_length = this.panel_models.length;
+  self.panels_length = self.panel_models.length;
 
-  // set reviews_length and avg_review and remove stale reviews
-  var self = this;
-  Review.find({ _id: { $in: self.reviews }, verified: true }, 'rating')
-  .exec()
+  PanelModel.find({ _id: { $in: self.panel_models } }).exec()
+  .then(function(panelModels) {
+    var panelModelPromises = panelModels.map(function(panelModel) {
+      var sellerAlreadyExists = panelModel.sellers.some(function(sellerId) {
+        return sellerId.equals(self._id);
+      });
+
+      if (!sellerAlreadyExists) {
+        panelModel.sellers.push(self._id);
+      }
+
+      return panelModel.save();
+    });
+
+    return Promise.all(panelModelPromises);
+  })
+  .then(function(savedPanelModels) {
+    // set reviews_length and avg_review and remove stale reviews
+    return Review.find({ _id: { $in: self.reviews }, verified: true }, 'rating')
+    .exec()
+  })
   .then(function(reviews) {
     // remove invalid review ids if any
     self.reviews = reviews.map(function(review) {
@@ -189,59 +170,6 @@ OrganizationSchema.pre('save', function(next) {
 
     // update reviews length for querying in catalog
     self.price_reviews_length = priceReviews.length;
-
-    // calculate new average review
-    var lessThan100KW_priceReviews = priceReviews.filter(function(r) {
-      return r.quantity === '0kW-100kW';
-    });
-
-    var lessThan1MW_priceReviews = priceReviews.filter(function(r) {
-      return r.quantity === '101kW-1MW';
-    });
-
-    var greaterThan1MW_priceReviews = priceReviews.filter(function(r) {
-      return r.quantity === '>1MW';
-    });
-
-    self.lessThan100KW_avg_price = lessThan100KW_priceReviews.reduce(function(a,b) {
-      return a + b.price ;
-    }, 0) / lessThan100KW_priceReviews.length || 0;
-
-    self.lessThan1MW_avg_price = lessThan1MW_priceReviews.reduce(function(a,b) {
-      return a + b.price ;
-    }, 0) / lessThan1MW_priceReviews.length || 0;
-
-    self.greaterThan1MW_avg_price = greaterThan1MW_priceReviews.reduce(function(a,b) {
-      return a + b.price ;
-    }, 0) / greaterThan1MW_priceReviews.length || 0;
-
-    // store prices in appropriate array
-    priceReviews.forEach(function(priceReview) {
-      if (priceReview.quantity === '0kW-100kW' &&
-        self.lessThan100KW_prices.indexOf(priceReview.price) === -1) {
-
-        self.lessThan100KW_prices.push(priceReview.price);
-      } else if (priceReview.quantity === '101kW-1MW' &&
-        self.lessThan1MW_prices.indexOf(priceReview.price) === -1) {
-
-        self.lessThan1MW_prices.push(priceReview.price);
-      } else if (priceReview.quantity === '>1MW' &&
-        self.greaterThan1MW_prices.indexOf(priceReview.price) === -1) {
-
-        self.greaterThan1MW_prices.push(priceReview.price);
-      }
-    });
-
-    // set quantities
-    if (self.lessThan100KW_prices.length && self.quantities.indexOf('0kW-100kW') === -1) {
-      self.quantities.push('0kW-100kW');
-    }
-    if (self.lessThan1MW_prices.length && self.quantities.indexOf('101kW-1MW') === -1) {
-      self.quantities.push('101kW-1MW');
-    }
-    if (self.greaterThan1MW_prices.length && self.quantities.indexOf('>1MW') === -1) {
-      self.quantities.push('>1MW');
-    }
 
     // finish
     next();

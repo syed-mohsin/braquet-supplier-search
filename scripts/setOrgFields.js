@@ -16,7 +16,6 @@ var PanelModel = mongoose.model('PanelModel'),
   Review = mongoose.model('Review');
 
 Organization.find()
-.populate('reviews')
 .exec()
 .then(function(orgs) {
   var orgPromises = orgs.map(function(org) {
