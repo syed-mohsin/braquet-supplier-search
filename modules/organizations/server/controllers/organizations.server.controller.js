@@ -33,15 +33,19 @@ exports.contact = function (req, res) {
   Organization.findOne({ _id: req.user.organization })
   .exec()
   .then(function(organization) {
-    return organization.companyName;
-  })
-  .then(function(userOrganizationName) {
+
+    // check if organization doesn't exist
+    if(!organization) {
+      return res.status(400).json({
+        message: 'Organization does not exist'
+      });
+    }
 
     return new Promise(function(resolve, reject) {
 
       res.render('modules/organizations/server/templates/contact-supplier', {
         name: userDisplayName,
-        userOrg: userOrganizationName,
+        userOrg: organization.companyName,
         orgName: organizationName,
         content: inquiry.content
       }, function(err, emailHTML) {
@@ -76,7 +80,6 @@ exports.contact = function (req, res) {
   })
   .catch(function(err) {
     if(err) {
-      console.log('err:', err);
       res.status(400).json(err); 
     }
   });
