@@ -118,6 +118,7 @@ OrganizationSchema.pre('save', function(next) {
 
   PanelModel.find({ _id: { $in: self.panel_models } }).exec()
   .then(function(panelModels) {
+    // associate all organization with its panel models
     var panelModelPromises = panelModels.map(function(panelModel) {
       var sellerAlreadyExists = panelModel.sellers.some(function(sellerId) {
         return sellerId.equals(self._id);
@@ -135,7 +136,7 @@ OrganizationSchema.pre('save', function(next) {
   .then(function(savedPanelModels) {
     // set reviews_length and avg_review and remove stale reviews
     return Review.find({ _id: { $in: self.reviews }, verified: true }, 'rating')
-    .exec()
+    .exec();
   })
   .then(function(reviews) {
     // remove invalid review ids if any

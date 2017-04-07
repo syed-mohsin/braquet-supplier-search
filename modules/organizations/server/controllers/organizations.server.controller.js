@@ -10,6 +10,8 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Organization = mongoose.model('Organization'),
   Review = mongoose.model('Review'),
+  PriceReview = mongoose.model('PriceReview'),
+  PanelModel = mongoose.model('PanelModel'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   nodemailer = require('nodemailer'),
@@ -267,33 +269,36 @@ exports.get_catalog = function (req, res) {
     priceReviewQueryParams.quantity = { '$in' : quantityCondition };
   }
 
-  var query = Organization.find(organizationQueryParams);
-  var countQuery = Organization.find(organizationQueryParams);
+  // for catalog, do a reverse lookup on panels and price reviews
+  PanelModel.find(panelModelQueryParams, 'sellers').exec()
+  .then(function(panelModels) {
+    var organizationsFound = panelModels.reduce(function(orgsFound, panelModel) {
+      return orgsFound.concat(panelModel.sellers);
+    }, []);
 
-  query.skip((req.query.page - 1 || 0) * 15)
-  .populate('reviews')
-  .sort('-avg_review')
-  .limit(15)
-  .exec()
-  .then(function(orgs) {
-    result = orgs;
+    // set to find all orgs found in query
+    organizationQueryParams._id = { '$in': organizationsFound };
 
-    return countQuery.count().exec();
+    // now get results based on discovered organizations
+    var queryPromise = Organization.find(organizationQueryParams)
+      .populate('panel_models')
+      .populate('priceReviews')
+      .skip((req.query.page - 1 || 0) * 15)
+      .sort('-avg_review')
+      .limit(15)
+      .exec();
+
+    var countQueryPromise = Organization.find(organizationQueryParams)
+      .count()
+      .exec();
+
+    return Promise.all([queryPromise, countQueryPromise]);
   })
-  .then(function(count) {
-    result = result.map(function(org) {
-      // remove unverified org reviews
-      org.reviews = org.reviews.filter(function(review) {
-        return review.verified === true;
-      });
-
-      return org;
-    });
-
-    res.json({ orgs: result, count: count });
+  .then(function(queryResults) {
+    res.json({ orgs: queryResults[0], count: queryResults[1] });
   })
   .catch(function(err) {
-    res.json(err);
+    res.status(400).json(err);
   });
 };
 
