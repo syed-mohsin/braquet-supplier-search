@@ -1,8 +1,8 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('CreateReviewsController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Reviews', 'modalOrganizationId',
-  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Reviews, modalOrganizationId) {
+angular.module('reviews').controller('CreateReviewsController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Reviews', 'modalOrganization',
+  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Reviews, modalOrganization) {
     $scope.authentication = Authentication;
     $scope.anonymous = true; // all created reviews should be anonymous by default
 
@@ -26,7 +26,7 @@ angular.module('reviews').controller('CreateReviewsController', ['$scope', '$sta
       });
 
       // Redirect after save
-      $http.post('/api/reviews/create/' + modalOrganizationId, review)
+      $http.post('/api/reviews/create/' + modalOrganization._id, review)
         .success(function (response) {
           $modalInstance.close();
         })

@@ -72,6 +72,9 @@ var OrganizationSchema = new Schema({
     type: Number,
     default: 0
   },
+  manufacturers: [{
+    type: String
+  }],
   industry: {
     type: String
   },
@@ -118,6 +121,15 @@ OrganizationSchema.pre('save', function(next) {
 
   PanelModel.find({ _id: { $in: self.panel_models } }).exec()
   .then(function(panelModels) {
+    // extract all brands from panels
+    self.manufacturers = panelModels.reduce(function(manArr, panelModel) {
+      if (manArr.indexOf(panelModel.manufacturer) !== -1) {
+        manArr.push(panelModel.manufacturer);
+      }
+
+      return manArr;
+    }, []);
+
     // associate all organization with its panel models
     var panelModelPromises = panelModels.map(function(panelModel) {
       var sellerAlreadyExists = panelModel.sellers.some(function(sellerId) {

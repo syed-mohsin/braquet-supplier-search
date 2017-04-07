@@ -87,8 +87,7 @@
                       <div class="detail">
                         <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
                         <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
-                        <small><span ng-bind="organization.productTypes"></span></small><br>
-                        <small><span>(0kW-100kW Average: {{organization.lessThan100KW_avg_price / 100 | currency}}) (100kW-1MW Average: {{organization.lessThan1MW_avg_price / 100 | currency}}) (>1MW Average: {{organization.greaterThan1MW_avg_price / 100 | currency}})</span></small>
+                        <small><span ng-bind="organization.productTypes"></span></small>
                       </div>
                   </div>
               </a>

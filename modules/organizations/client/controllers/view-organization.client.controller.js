@@ -13,19 +13,19 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     };
 
     $scope.showReviews = function() {
-      $scope. shouldShowReviews = true;
+      $scope.shouldShowReviews = true;
       $scope.shouldShowPrices = false;
       $scope.shouldShowProducts = false;
     };
 
     $scope.showPrices = function() {
-      $scope. shouldShowReviews = false;
+      $scope.shouldShowReviews = false;
       $scope.shouldShowPrices = true;
       $scope.shouldShowProducts = false;
     };
 
     $scope.showProducts = function() {
-      $scope. shouldShowReviews = false;
+      $scope.shouldShowReviews = false;
       $scope.shouldShowPrices = false;
       $scope.shouldShowProducts = true;
     };
@@ -124,13 +124,13 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     };
 
     // popup dialog that allows user to create a review
-    $scope.showReviewView = function(ev, organizationId) {
+    $scope.showReviewView = function(ev, organization) {
       var modalInstance = $modal.open({
         templateUrl: '/modules/reviews/client/views/create-review.client.view.html',
         controller: 'CreateReviewsController',
         resolve: {
-          modalOrganizationId: function() {
-            return organizationId;
+          modalOrganization: function() {
+            return organization;
           }
         },
         windowClass: 'app-modal-window'
@@ -138,7 +138,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
 
       // successfully created a review
       modalInstance.result.then(function() {
-        if (organizationId) {
+        if (organization) {
           $scope.findOne();
           $scope.isReviewSubmitted = true;
         }
@@ -146,13 +146,13 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     };
 
     // popup dialog that allows user to create a review
-    $scope.showPriceReviewView = function(ev, organizationId) {
+    $scope.showPriceReviewView = function(ev, organization) {
       var modalInstance = $modal.open({
         templateUrl: '/modules/pricereviews/client/views/create-pricereview.client.view.html',
         controller: 'CreatePriceReviewsController',
         resolve: {
-          modalOrganizationId: function() {
-            return organizationId;
+          modalOrganization: function() {
+            return organization;
           }
         },
         windowClass: 'app-modal-window'
@@ -160,7 +160,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
 
       // successfully created a review
       modalInstance.result.then(function() {
-        if (organizationId) {
+        if (organization) {
           $scope.findOne();
           $scope.showPrices();
         }

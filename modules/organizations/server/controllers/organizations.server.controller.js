@@ -18,7 +18,8 @@ var path = require('path'),
   async = require('async'),
   crypto = require('crypto'),
   aws = require('aws-sdk'),
-  s3 = new aws.S3();
+  s3 = new aws.S3(),
+  _ = require('underscore');
 
 /**
  * Create a organization
@@ -282,7 +283,10 @@ exports.get_catalog = function (req, res) {
     // now get results based on discovered organizations
     var queryPromise = Organization.find(organizationQueryParams)
       .populate('panel_models')
-      .populate('priceReviews')
+      .populate({
+        path: 'priceReviews',
+        match: priceReviewQueryParams
+      })
       .skip((req.query.page - 1 || 0) * 15)
       .sort('-avg_review')
       .limit(15)

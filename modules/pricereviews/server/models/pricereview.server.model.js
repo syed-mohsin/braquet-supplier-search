@@ -26,10 +26,16 @@ var PriceReviewSchema = new Schema({
     max: 100000000,
     required: 'Unit price for quote is required'
   },
+  manufacturer: {
+    type: String,
+  },
   quantity: {
     type: String,
     enum: ['0kW-100kW', '101kW-1MW', '>1MW'],
     required: 'Please specify a quantity'
+  },
+  stcPower: {
+    type: Number
   },
   panelType: {
     type: String,

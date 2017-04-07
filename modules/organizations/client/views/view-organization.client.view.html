@@ -43,13 +43,13 @@
                   <small><span ng-bind="organization.productTypes"></span></small>
 
                 <div class="menu">
-                    <a ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization._id)">
+                    <a ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Write an anonymous review</span>
                     </a>
                     <button ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
                         <span>You already submitted a review</span>
                     </button>
-                    <a ng-if="organization._id !== authentication.user.organization" ng-click="showPriceReviewView($event, organization._id)">
+                    <a ng-if="organization._id !== authentication.user.organization" ng-click="showPriceReviewView($event, organization)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Submit an anonymous quote</span>
                     </a>
                     <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
