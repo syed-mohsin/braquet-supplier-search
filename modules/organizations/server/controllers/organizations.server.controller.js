@@ -33,10 +33,6 @@ exports.contact = function (req, res) {
   Organization.findOne({ _id: req.user.organization })
   .exec()
   .then(function(organization) {
-    if(!organization) {
-      return res.redirect('/forbidden');
-    }
-
     return organization.companyName;
   })
   .then(function(userOrganizationName) {
@@ -80,7 +76,8 @@ exports.contact = function (req, res) {
   })
   .catch(function(err) {
     if(err) {
-      res.json(err);
+      console.log('err:', err);
+      res.status(400).json(err); 
     }
   });
 

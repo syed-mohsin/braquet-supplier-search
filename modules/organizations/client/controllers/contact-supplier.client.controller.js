@@ -4,7 +4,6 @@
 angular.module('organizations').controller('ContactSupplierController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Organizations', 'modalOrganizationId',
   function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Organizations, modalOrganizationId) {
     $scope.authentication = Authentication;
-    $scope.anonymous = true; // all created reviews should be anonymous by default
 
     // Contact a supplier
     $scope.contact = function(isValid) {
