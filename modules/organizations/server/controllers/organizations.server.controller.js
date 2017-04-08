@@ -281,25 +281,15 @@ exports.get_catalog = function (req, res) {
     organizationQueryParams._id = { '$in': organizationsFound };
 
     // now get results based on discovered organizations
-    var queryPromise = Organization.find(organizationQueryParams)
-      .populate('panel_models')
-      .populate({
-        path: 'priceReviews',
-        match: priceReviewQueryParams
-      })
-      .skip((req.query.page - 1 || 0) * 15)
-      .sort('-avg_review')
-      .limit(15)
+    return Organization.find(organizationQueryParams)
       .exec();
-
-    var countQueryPromise = Organization.find(organizationQueryParams)
-      .count()
-      .exec();
-
-    return Promise.all([queryPromise, countQueryPromise]);
   })
-  .then(function(queryResults) {
-    res.json({ orgs: queryResults[0], count: queryResults[1] });
+  .then(function(orgs) {
+    // (req.query.page - 1 || 0) * 15
+    // get brands for orgs
+    orgs.sort(function(a,b) { return b.avg_review - a.avg_review; });
+    var start = (req.query.page - 1 || 0) * 15;
+    res.json({ orgs: orgs.slice(start, start + 15), count: orgs.length });
   })
   .catch(function(err) {
     res.status(400).json(err);
