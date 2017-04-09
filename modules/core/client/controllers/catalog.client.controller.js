@@ -15,7 +15,9 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.query.color = $stateParams.color;
     $scope.query.cells = $stateParams.cells;
     $scope.query.page = $stateParams.page;
+    $stateParams.quantity = $stateParams.quantity ? $stateParams.quantity : '0kW-100kW';
     $scope.query.quantity = $stateParams.quantity;
+    $scope.quantity = $scope.query.quantity;
     $scope.query.price = $stateParams.price;
 
     // used to toggle filter on xs screen size
@@ -27,17 +29,9 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       var crys = '';
       var color = '';
       var cells = '';
-      var quantity = '';
-
-      // find all checked boxes for quantities
-      for (var key in $scope.quantityCheckboxes) {
-        if ($scope.quantityCheckboxes[key]) {
-          quantity += key + '|';
-        }
-      }
 
       // find all checked boxes for wattage
-      for (key in $scope.wattCheckboxes) {
+      for (var key in $scope.wattCheckboxes) {
         if ($scope.wattCheckboxes[key]) {
           pow += $scope.rangesReverse[key] + '|';
         }
@@ -76,7 +70,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.query.crys = crys;
       $scope.query.color = color;
       $scope.query.cells = cells;
-      $scope.query.quantity = quantity;
+      $scope.query.quantity = $scope.quantity;
       $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
@@ -162,12 +156,6 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
           var filters = resp.data;
           $scope.quantities = filters.quantities;
 
-          $scope.quantityCheckboxes = {};
-          var queryCheckedBoxes = $stateParams.quantity ? $stateParams.quantity.split('|') : [];
-          $scope.quantities.forEach(function(quantity) {
-            $scope.quantityCheckboxes[quantity] = queryCheckedBoxes.indexOf(quantity) !== -1 ? true : false;
-          });
-
           $scope.resolvedResources++;
         });
     };
@@ -212,7 +200,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     .then(function(resp) {
       $scope.orgs = resp.data.orgs;
       $scope.buildPager(resp.data.count);
-      console.log($scope.orgs); 
+
       // increment resolvedResources
       $scope.resolvedResources++;
     })

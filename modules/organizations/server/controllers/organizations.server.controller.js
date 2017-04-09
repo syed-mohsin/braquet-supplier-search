@@ -266,8 +266,7 @@ exports.get_catalog = function (req, res) {
 
   // build query for quantity
   if (req.query.quantity) {
-    var quantityCondition = req.query.quantity.split('|').filter(function(q) { return q.length !== 0; });
-    priceReviewQueryParams.quantity = { '$in' : quantityCondition };
+    priceReviewQueryParams.quantity = req.query.quantity;
   }
 
   // for catalog, do a reverse lookup on panels and price reviews

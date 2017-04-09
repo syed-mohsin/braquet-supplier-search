@@ -32,7 +32,7 @@ var PriceReviewSchema = new Schema({
   },
   quantity: {
     type: String,
-    enum: ['0kW-100kW', '101kW-1MW', '>1MW'],
+    enum: ['0kW-100kW', '101kW-500kW', '501kW-1MW', '>1MW'],
     required: 'Please specify a quantity'
   },
   stcPower: {

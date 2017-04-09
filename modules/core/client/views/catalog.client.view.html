@@ -15,56 +15,65 @@
       <section>
           <div class="menu">
               <button class="visible-xs btn-primary last" ng-click="toggleFilter()" data-toggle="collapse" data-target="side-navbar">See Filters</button>
-              <button class="btn-primary last" ng-click="sortBy()" data-target="side-navbar">Sort By Price</button>
+              <button ng-if="false" class="btn-primary last" ng-click="sortBy()" data-target="side-navbar">Sort By Price</button>
           </div>
           <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
               <label>Filters</label>
 
               <div class="list-group">
                   <span class="catalog-label"><small>Quantity ></small></span>
-                  <li ng-repeat="quantity in quantities">
-                      <input type="checkbox" ng-model="quantityCheckboxes[quantity]" ng-change="updateFilter()">
-                      <span><small>{{quantity}}</small></span>
+                  <li ng-repeat="quant in quantities">
+                    <label><input type="radio" name="quantity" ng-model="$parent.quantity" ng-value="quant" ng-change="updateFilter()" /> {{quant}}</label><br>
                   </li>
               </div>
 
               <div class="list-group">
                   <span class="catalog-label"><small>Crystalline Type ></small></span>
                   <li ng-repeat="crys in crystallineTypes">
+                    <label>
                       <input type="checkbox" ng-model="crysCheckboxes[crys]" ng-change="updateFilter()">
                       <span><small>{{crys}}</small></span>
+                    </label>
                   </li>
               </div>
 
               <div class="list-group">
                   <span class="catalog-label"><small>Frame Color ></small></span>
                   <li ng-repeat="color in frameColors">
+                    <label>
                       <input type="checkbox" ng-model="fColorCheckboxes[color]" ng-change="updateFilter()">
                       <span><small>{{color}}</small></span>
+                    </label>
                   </li>
               </div>
 
               <div class="list-group">
                   <span class="catalog-label"><small>Number of Cells ></small></span>
                   <li ng-repeat="cells in numberOfCells">
+                    <label>
                       <input type="checkbox" ng-model="numCellsCheckboxes[cells]" ng-change="updateFilter()">
                       <span><small>{{cells}}</small></span>
+                    </label>
                   </li>
               </div>
 
               <div class="list-group">
                   <span class="catalog-label"><small>Module Wattage ></small></span>
                   <li ng-repeat="range in ranges">
+                    <label>
                       <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
                       <span><small>{{range}}</small></span>
+                    </label>
                   </li>
               </div>
 
               <div class="list-group">
                   <span class="catalog-label"><small>Brand ></small></span>
                   <li ng-repeat="man in manufacturers">
+                    <label>
                       <input type="checkbox" ng-model="orgCheckboxes[man]" ng-change="updateFilter()">
                       <span><small>{{man}}</small></span>
+                    </label>
                   </li>
               </div>
           </div>
