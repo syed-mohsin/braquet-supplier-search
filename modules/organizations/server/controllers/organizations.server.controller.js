@@ -83,7 +83,7 @@ exports.contact = function (req, res) {
   })
   .catch(function(err) {
     if(err) {
-      res.status(400).json(err); 
+      res.status(400).json(err);
     }
   });
 
@@ -333,9 +333,8 @@ exports.get_catalog = function (req, res) {
   }
 
   // build query for quantity
-  if (req.query.quantity) {
-    priceReviewQueryParams.quantity = req.query.quantity;
-  }
+  priceReviewQueryParams.quantity = req.query.quantity || '0kW-100kW';
+
 
   // for catalog, do a reverse lookup on panels and price reviews
   PanelModel.find(panelModelQueryParams, 'sellers').exec()
@@ -398,7 +397,6 @@ exports.get_catalog = function (req, res) {
     orgs.sort(function(a,b) {
       return a.brands_avg_poly - b.brands_avg_poly || b.avg_review - a.avg_review;
     });
-
 
     var start = (req.query.page - 1 || 0) * 15;
     res.json({ orgs: orgs.slice(start, start + 15), count: orgs.length });
