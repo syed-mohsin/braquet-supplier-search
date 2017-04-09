@@ -154,7 +154,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $http.get('/api/pricereviews-filters')
         .then(function(resp) {
           var filters = resp.data;
-          $scope.quantities = filters.quantities;
+          $scope.quantities = filters.quantities.sort(function(a,b) {
+            if (a.toLowerCase() < b.toLowerCase()) return -1;
+            if (a.toLowerCase() > b.toLowerCase()) return 1;
+            return 0;
+          });
 
           $scope.resolvedResources++;
         });
