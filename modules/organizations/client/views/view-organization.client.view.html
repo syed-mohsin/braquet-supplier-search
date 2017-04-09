@@ -55,6 +55,9 @@
                     <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
                         <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
                     </a>
+                    <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization._id)">
+                      <span class="glyphicon glyphicon-pencil"></span><span>Contact Supplier</span>
+                    </a>
                 </div>
               </div>
           </div>

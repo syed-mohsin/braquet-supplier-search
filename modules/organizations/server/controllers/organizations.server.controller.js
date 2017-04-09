@@ -21,6 +21,74 @@ var path = require('path'),
   s3 = new aws.S3(),
   _ = require('underscore');
 
+var smtpTransport = nodemailer.createTransport(config.mailer.options);
+
+/**
+ * Contact an organization through Braquet Admin
+ */
+exports.contact = function (req, res) {
+
+  var inquiry = req.body;
+  var userDisplayName = req.user.displayName;
+  var organizationName = req.organization.companyName;
+
+
+  Organization.findOne({ _id: req.user.organization })
+  .exec()
+  .then(function(organization) {
+
+    // check if organization doesn't exist
+    if(!organization) {
+      return res.status(400).json({
+        message: 'Organization does not exist'
+      });
+    }
+
+    return new Promise(function(resolve, reject) {
+
+      res.render('modules/organizations/server/templates/contact-supplier', {
+        name: userDisplayName,
+        userOrg: organization.companyName,
+        orgName: organizationName,
+        content: inquiry.content
+      }, function(err, emailHTML) {
+        if(err) {
+          reject(err);
+        }
+        resolve(emailHTML);
+      });
+    });
+  })
+  .then(function(emailHTML) {
+    var mailList = process.env.MAILER_INTERNAL_LIST;
+
+    var mailOptions = {
+      to: mailList,
+      from: config.mailer.from,
+      subject: 'Braquet - Request to Contact a Supplier',
+      html: emailHTML
+    };
+
+    return new Promise(function(resolve, reject) {
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (err) {
+          reject(err);
+        }
+        resolve(mailOptions);
+      });
+    });
+  })
+  .then(function(mailOptions) {
+    res.json(mailOptions);
+  })
+  .catch(function(err) {
+    if(err) {
+      res.status(400).json(err); 
+    }
+  });
+
+};
+
 /**
  * Create a organization
  */

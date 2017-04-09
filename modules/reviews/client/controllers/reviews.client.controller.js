@@ -1,8 +1,8 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$state', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'Reviews',
-  function ($scope, $state, $stateParams, $location, $http, $mdDialog, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$state', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'Reviews', 'Notification',
+  function ($scope, $state, $stateParams, $location, $http, $mdDialog, Authentication, Reviews, Notification) {
     $scope.authentication = Authentication;
     $scope.shouldShowReviews = true;
 
@@ -30,6 +30,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$state', '
       $mdDialog.show(confirm).then(function() {
         if (review) {
           review.$remove();
+          Notification.primary('Successully Deleted Review');
 
           for (var i in $scope.reviews) {
             if ($scope.reviews[i] === review) {
@@ -38,11 +39,12 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$state', '
           }
         } else {
           $scope.review.$remove(function () {
+            Notification.primary('Successully Deleted Review');
             $location.path('reviews');
           });
         }
       }, function() {
-        // do nothing
+        Notification.error('Failed to Delete Review');
       });
     };
 

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations) {
+angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -123,6 +123,25 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       };
     };
 
+    $scope.contactSupplier = function(ev, organizationId) {
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
+        controller: 'ContactSupplierController',
+        resolve: {
+          modalOrganizationId: function() {
+            return organizationId;            
+          }
+        },
+        windowClass: 'app-modal-window'
+      });
+
+      modalInstance.result.then(function() {
+        if (organizationId) {
+          $scope.contactSupplier = true;
+        }
+      });
+    };
+
     // popup dialog that allows user to create a review
     $scope.showReviewView = function(ev, organization) {
       var modalInstance = $modal.open({
@@ -141,6 +160,9 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         if (organization) {
           $scope.findOne();
           $scope.isReviewSubmitted = true;
+
+          // Notify user that their review was successully created
+          Notification.primary('Submitted Review Successfully');
         }
       });
     };

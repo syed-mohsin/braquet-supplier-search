@@ -24,6 +24,10 @@ module.exports = function (app) {
   app.route('/api/organizations-unverified').all(organizationsPolicy.isAllowed)
     .get(organizations.list_unverified);
 
+  // contact supplier route
+  app.route('/api/organizations/:organizationId/contact').all(organizationsPolicy.isAllowed)
+    .post(organizations.contact);
+
   // admin verify route
   app.route('/api/organizations/:organizationId/verify').all(organizationsPolicy.isAllowed)
     .post(organizations.verify);
