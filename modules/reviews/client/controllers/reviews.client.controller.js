@@ -1,8 +1,8 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Reviews',
-  function ($scope, $stateParams, $location, $http, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Reviews', 'Notification',
+  function ($scope, $stateParams, $location, $http, Authentication, Reviews, Notification) {
     $scope.authentication = Authentication;
 
     // Remove existing Review
@@ -17,7 +17,10 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$statePara
         }
       } else {
         $scope.review.$remove(function () {
+          Notification.primary('Successully Deleted Review');
           $location.path('reviews');
+        }, function() {
+          Notification.error('Failed to Delete Review');
         });
       }
     };

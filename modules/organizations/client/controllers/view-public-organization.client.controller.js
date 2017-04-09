@@ -15,8 +15,6 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
         $http.get('/api/organizations/' + $stateParams.organizationId + '/public')
         .then(function(resp) {
           $scope.organization = resp.data;
-
-
           $scope.organization.$resolved = true;
         });
       }

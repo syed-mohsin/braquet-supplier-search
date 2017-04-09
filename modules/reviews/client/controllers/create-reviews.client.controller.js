@@ -12,7 +12,6 @@ angular.module('reviews').controller('CreateReviewsController', ['$scope', '$sta
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'reviewForm');
-
         return false;
       }
 
