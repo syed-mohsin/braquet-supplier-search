@@ -43,11 +43,6 @@
                   </div>
                   <div class="list-group">
                       <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
-                          <!-- <div class="menu pull-right" ng-show="authentication.user._id == review.user._id">
-                              <a ui-sref="reviews.edit({reviewId: review._id})">
-                                  <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
-                              </a>
-                          </div> -->
                           <img ng-src="{{organization.logoImageUrl}}" class="profile">
                           <div class="detail no-wrap">
                               <a class="project-title">
@@ -69,7 +64,7 @@
           <div class="box no-border">
               <div class="content no-wrap">
                   <div class="sub-title name">
-                      <span ng-bind="organization.price_reviews_length"></span> <span> Quotes (0kW-100kW Average: {{organization.lessThan100KW_avg_price / 100 | currency}}) (100kW-1MW Average: {{organization.lessThan1MW_avg_price / 100 | currency}}) (>1MW Average: {{organization.greaterThan1MW_avg_price / 100 | currency}})</span>
+                      <span ng-bind="organization.price_reviews_length"></span> <span> Quotes</span>
                   </div>
                   <div class="list-group">
                       <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
