@@ -73,11 +73,6 @@
                   </div>
                   <div class="list-group">
                       <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
-                          <!-- <div class="menu pull-right" ng-show="authentication.user._id == review.user._id">
-                              <a ui-sref="reviews.edit({reviewId: review._id})">
-                                  <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
-                              </a>
-                          </div> -->
                           <img ng-src="{{organization.logoImageUrl}}" class="profile">
                           <div class="detail no-wrap">
                               <a class="project-title">
@@ -112,6 +107,7 @@
                                   <span ng-bind="priceReview.created | date:'mediumDate'"></span></small>
                                   </div>
                                   <div class="review-content"><span class="list-group-item-text" ng-bind="priceReview.quantity"></span></div>
+                                  <div class="review-content"><span class="list-group-item-text" ng-bind="priceReview.manufacturer"></span></div>
                               </a>
                           </div>
                       </div>

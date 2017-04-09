@@ -212,7 +212,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     .then(function(resp) {
       $scope.orgs = resp.data.orgs;
       $scope.buildPager(resp.data.count);
-
+      console.log($scope.orgs); 
       // increment resolvedResources
       $scope.resolvedResources++;
     })

@@ -123,7 +123,7 @@ OrganizationSchema.pre('save', function(next) {
   .then(function(panelModels) {
     // extract all brands from panels
     self.manufacturers = panelModels.reduce(function(manArr, panelModel) {
-      if (manArr.indexOf(panelModel.manufacturer) !== -1) {
+      if (manArr.indexOf(panelModel.manufacturer) === -1) {
         manArr.push(panelModel.manufacturer);
       }
 

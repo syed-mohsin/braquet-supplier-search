@@ -282,12 +282,57 @@ exports.get_catalog = function (req, res) {
 
     // now get results based on discovered organizations
     return Organization.find(organizationQueryParams)
+      .populate({
+        path: 'priceReviews',
+        match: priceReviewQueryParams
+      })
+      .lean() // returns documents as plain JS objects so you can modify them
       .exec();
   })
   .then(function(orgs) {
-    // (req.query.page - 1 || 0) * 15
     // get brands for orgs
-    orgs.sort(function(a,b) { return b.avg_review - a.avg_review; });
+    orgs = orgs.map(function(org) {
+      // group all price reviews by brand
+      org.brands = _.groupBy(org.priceReviews, function(priceReview) {
+        return priceReview.manufacturer + '#' + priceReview.panelType;
+      });
+
+      // calcuate median of all price reviews under a brand
+      org.brands = _.mapObject(org.brands, function(brand) {
+        brand.sort(function (a, b) { return a.price - b.price; });
+        var lowMiddle = Math.floor((brand.length - 1) / 2);
+        var highMiddle = Math.ceil((brand.length - 1) / 2);
+        var median = (brand[lowMiddle].price + brand[highMiddle].price) / 2;
+        return median;
+      });
+
+      // calculate for each type of panel
+      var price_sum_mono = 0;
+      var price_sum_poly = 0;
+      var brands_length_mono = 0;
+      var brands_length_poly = 0;
+      for (var key in org.brands) {
+        if (key.split('#')[1] === 'Mono') {
+          price_sum_mono += org.brands[key];
+          ++brands_length_mono;
+        } else {
+          price_sum_poly += org.brands[key];
+          ++brands_length_poly;
+        }
+      }
+
+      // calcuate average for each panel type across brands
+      org.brands_avg_mono = price_sum_mono / brands_length_mono;
+      org.brands_avg_poly = price_sum_poly / brands_length_poly;
+      return org;
+    });
+
+    // sort organizations by brand avg and then avg_review
+    orgs.sort(function(a,b) {
+      return a.brands_avg_poly - b.brands_avg_poly || b.avg_review - a.avg_review;
+    });
+
+
     var start = (req.query.page - 1 || 0) * 15;
     res.json({ orgs: orgs.slice(start, start + 15), count: orgs.length });
   })

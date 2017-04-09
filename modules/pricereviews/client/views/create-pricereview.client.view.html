@@ -7,6 +7,25 @@
       </div>
       <fieldset>
         <div class="form-group" show-errors>
+          <label for="manufacturer">Brand</label><br>
+          <md-autocomplete
+            name="manufacturer"
+            ng-model="manufacturer"
+            md-selected-item="manufacturer"
+            md-search-text="searchManufacturerText"
+            md-items="man in search(searchManufacturerText)"
+            md-item-text="man"
+            md-min-length="0"
+            placeholder="Please select a brand">
+            <md-item-template>
+              <span md-highlight-text="searchManufacturerText" md-highlight-flags="^i">{{man}}</span>
+            </md-item-template>
+            <md-not-found>
+              No brands matching "{{searchManufacturerText}}" were found.
+            </md-not-found>
+          </md-autocomplete>
+        </div>
+        <div class="form-group" show-errors>
           <label for="price">Unit Price ($USD per watt)</label><br>
           <input name="price" type="number" min="0.00" step="0.01" ng-model="price" id="price" class="form-control" placeholder="$0.00">
           <div ng-messages="priceReviewForm.price.$error" role="alert">

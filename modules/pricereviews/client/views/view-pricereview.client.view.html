@@ -9,7 +9,7 @@
             <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ui-sref="pricereviews.edit({priceReviewId: priceReview._id})">
                 <span class="glyphicon glyphicon-new-window"></span><span>Edit Price Review</span>
             </a>
-            <a ng-click="remove();">
+            <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ng-click="remove();">
                 <span class="glyphicon glyphicon-trash"></span><span>Delete Price Review</span>
             </a>
         </div>
@@ -30,6 +30,7 @@
         </em>
       </small>
       <h4 class="list-group-item-heading" ng-bind="priceReview.quantity"></h4>
+      <p class="list-group-item-text" ng-bind="priceReview.manufacturer"></p>
       <p class="list-group-item-text" ng-bind="priceReview.panelType"></p>
       <p class="list-group-item-text" ng-bind="priceReview.shippingLocation"></p>
     </div>

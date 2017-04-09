@@ -28,6 +28,7 @@ var PriceReviewSchema = new Schema({
   },
   manufacturer: {
     type: String,
+    required: 'Please select a brand'
   },
   quantity: {
     type: String,

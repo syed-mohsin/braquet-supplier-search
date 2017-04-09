@@ -1,8 +1,8 @@
 'use strict';
 
 // Price Reviews controller
-angular.module('pricereviews').controller('CreatePriceReviewsController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'PriceReviews', 'modalOrganization',
-  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, PriceReviews, modalOrganization) {
+angular.module('pricereviews').controller('CreatePriceReviewsController', ['$scope', '$stateParams', '$location', '$http', '$filter', '$modalInstance', 'Authentication', 'PriceReviews', 'modalOrganization',
+  function ($scope, $stateParams, $location, $http, $filter, $modalInstance, Authentication, PriceReviews, modalOrganization) {
     $scope.authentication = Authentication;
 
     // Create new Price Review
@@ -17,6 +17,7 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
 
       // Create new Price Review object
       var priceReview = {
+        manufacturer: this.manufacturer,
         price: this.price * 100,
         quantity: this.quantity,
         panelType: this.panelType,
@@ -36,6 +37,12 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
             $scope.error = 'Something went wrong...';
           }
         });
+    };
+
+    $scope.search = function(searchManufacturerText) {
+      return $filter('filter')(modalOrganization.manufacturers, {
+        $: searchManufacturerText
+      });
     };
   }
 ]);
