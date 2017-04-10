@@ -72,6 +72,21 @@ var OrganizationSchema = new Schema({
     type: Number,
     default: 0
   },
+  panel_manufacturers: [{
+    type: String
+  }],
+  panel_crystalline_types: [{
+    type: String
+  }],
+  panel_frame_colors: [{
+    type: String
+  }],
+  panel_number_of_cells: [{
+    type: Number
+  }],
+  panel_stcPowers: [{
+    type: Number
+  }],
   manufacturers: [{
     type: String
   }],

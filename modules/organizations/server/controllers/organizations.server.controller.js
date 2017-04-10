@@ -96,6 +96,29 @@ exports.create = function (req, res) {
   var organization = new Organization(req.body);
   organization.verified = true;
 
+  // add panel model filter fields
+  req.body.panel_models.forEach(function(panel) {
+    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
+      organization.panel_manufacturers.push(panel.manufacturer);
+    }
+
+    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
+      organization.panel_stcPowers.push(panel.stcPower);
+    }
+
+    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
+      organization.panel_crystalline_types.push(panel.crystallineType);
+    }
+
+    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
+      organization.panel_frame_colors.push(panel.frameColor);
+    }
+
+    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
+      organization.panel_number_of_cells.push(panel.numberOfCells);
+    }
+  });
+
   organization.save()
   .then(function(savedOrg) {
     res.json(organization);
@@ -189,8 +212,35 @@ exports.update = function (req, res) {
   organization.country = req.body.country;
   organization.about = req.body.about;
 
-  // TODO: remove organization from association from any panel models
-  // no longer associated with this organization;
+  // reset panel filtering fields
+  organization.panel_manufacturers = [];
+  organization.panel_stcPowers = [];
+  organization.panel_crystalline_types = [];
+  organization.panel_frame_colors = [];
+  organization.panel_number_of_cells = [];
+
+  // add panel model filter fields
+  req.body.panel_models.forEach(function(panel) {
+    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
+      organization.panel_manufacturers.push(panel.manufacturer);
+    }
+
+    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
+      organization.panel_stcPowers.push(panel.stcPower);
+    }
+
+    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
+      organization.panel_crystalline_types.push(panel.crystallineType);
+    }
+
+    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
+      organization.panel_frame_colors.push(panel.frameColor);
+    }
+
+    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
+      organization.panel_number_of_cells.push(panel.numberOfCells);
+    }
+  });
 
   organization.save()
   .then(function(updatedOrg) {
@@ -283,7 +333,6 @@ exports.get_catalog = function (req, res) {
   var result = [];
   var sortObj = { avg_review: -1 }; // by default, sort by avg_review
   var organizationQueryParams = {}; // query object for Organization
-  var panelModelQueryParams = {}; // query object for Panel Model
   var priceReviewQueryParams = {}; // query object for Price Review
   organizationQueryParams.verified = true; // get only verified organizations
   organizationQueryParams.panels_length = { '$gt': 0 }; // only show suppliers with any panel models
@@ -296,37 +345,40 @@ exports.get_catalog = function (req, res) {
   // build query for manufacturers
   if (req.query.man) {
     var manCondition = req.query.man.split('|').filter(function(m) { return m.length !== 0; });
-    panelModelQueryParams.manufacturer = { '$in' :  manCondition };
+    organizationQueryParams.panel_manufacturers = { '$in' :  manCondition };
   }
 
   // build query for crystaline types
   if (req.query.crys) {
     var crysCondition = req.query.crys.split('|').filter(function(c) { return c.length !== 0; });
-    panelModelQueryParams.crystallineType = { '$in' :  crysCondition };
+    organizationQueryParams.panel_crystalline_types = { '$in' :  crysCondition };
   }
 
   // build query for frame colors
   if (req.query.color) {
     var colorCondition = req.query.color.split('|').filter(function(c) { return c.length !== 0; });
-    panelModelQueryParams.frameColor = { '$in' :  colorCondition };
+    organizationQueryParams.panel_frame_colors = { '$in' :  colorCondition };
   }
 
   // build query for number of cells
   if (req.query.cells) {
     var cellsCondition = req.query.cells.split('|').filter(function(m) { return m.length !== 0; });
-    panelModelQueryParams.numberOfCells = { '$in' :  cellsCondition };
+    organizationQueryParams.panel_number_of_cells = { '$in' :  cellsCondition };
   }
 
   // build query for wattage filter
   if (req.query.pow) {
     // or statement to check all wattage ranges passed in
     var powerArr = req.query.pow.split('|').filter(function(p) { return p.length !== 0 && !isNaN(p); });
-    panelModelQueryParams.$or = powerArr.map(function(pow) {
+    organizationQueryParams.$or = powerArr.map(function(pow) {
       return {
-        'stcPower':
+        'panel_stcPowers':
         {
-          '$gt': parseInt(pow)-100,
-          '$lte': parseInt(pow)
+          '$elemMatch':
+          {
+            '$gt': parseInt(pow)-100,
+            '$lte': parseInt(pow)
+          }
         }
       };
     });
@@ -337,24 +389,13 @@ exports.get_catalog = function (req, res) {
 
 
   // for catalog, do a reverse lookup on panels and price reviews
-  PanelModel.find(panelModelQueryParams, 'sellers').exec()
-  .then(function(panelModels) {
-    var organizationsFound = panelModels.reduce(function(orgsFound, panelModel) {
-      return orgsFound.concat(panelModel.sellers);
-    }, []);
-
-    // set to find all orgs found in query
-    organizationQueryParams._id = { '$in': organizationsFound };
-
-    // now get results based on discovered organizations
-    return Organization.find(organizationQueryParams)
-      .populate({
-        path: 'priceReviews',
-        match: priceReviewQueryParams
-      })
-      .lean() // returns documents as plain JS objects so you can modify them
-      .exec();
+  Organization.find(organizationQueryParams)
+  .populate({
+    path: 'priceReviews',
+    match: priceReviewQueryParams
   })
+  .lean() // returns documents as plain JS objects so you can modify them
+  .exec()
   .then(function(orgs) {
     // get brands for orgs
     orgs = orgs.map(function(org) {
