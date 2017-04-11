@@ -7,6 +7,24 @@
       </div>
       <fieldset>
         <div class="form-group" show-errors>
+            <label for="quoteDate">Quote Date</label>
+            <input name="quoteDate" type="date" ng-model="quoteDate" id="quoteDate" class="form-control" required>
+            <div ng-messages="priceReviewForm.quoteDate.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Quote date is required. When did you receive the quote?</p>
+                <p class="help-block error-text" ng-message="date">Sorry! Not a valid date. Please try again.</p>
+            </div>
+        </div>
+
+        <div class="form-group" show-errors>
+            <label for="deliveryDate">Anticipated Delivery Date</label>
+            <input name="deliveryDate" type="date" ng-model="deliveryDate" id="deliveryDate" class="form-control" required>
+            <div ng-messages="priceReviewForm.deliveryDate.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Anticipated delivery date is required.</p>
+                <p class="help-block error-text" ng-message="date">Sorry! Not a valid date. Please try again.</p>
+            </div>
+        </div>
+
+        <div class="form-group" show-errors>
           <label for="manufacturer">Brand</label><br>
           <md-autocomplete
             name="manufacturer"
@@ -25,6 +43,19 @@
             </md-not-found>
           </md-autocomplete>
         </div>
+
+        <div class="form-group" show-errors>
+          <label for="stcPower">Panel Wattage (Watts)</label><br>
+          <md-slider-container>
+            <md-slider min="{{minStcPower}}" name="stcPower" id="stcPower" max="{{maxStcPower}}" ng-model="stcPower" aria-label="red">
+            </md-slider>
+            <md-input-container>
+              <input type="number" name="stcPowerNumber" ng-model="stcPower" id="stcPowerNumber" aria-label="red" aria-controls="red-slider">
+              Watts
+            </md-input-container>
+          </md-slider-container>
+        </div>
+
         <div class="form-group" show-errors>
           <label for="price">Unit Price ($USD per watt)</label><br>
           <input name="price" type="number" min="0.00" step="0.01" ng-model="price" id="price" class="form-control" placeholder="$0.00">
@@ -48,6 +79,12 @@
         </div>
 
         <div class="form-group" show-errors>
+            <label for="includesShipping">Includes Shipping?</label><br>
+            <label><input type="radio" name="includesShipping" ng-model="includesShipping" value="true"  /> Yes</label><br>
+            <label><input type="radio" name="includesShipping" ng-model="includesShipping" value="false"  /> No</label><br>
+        </div>
+
+        <div ng-show="includesShipping === 'true'" class="form-group" show-errors>
             <label for="shippingLocation">Shipping Location</label><br>
             <label><input type="radio" name="shippingLocation" ng-model="shippingLocation" value="Asia/Australia"  /> Asia/Australia</label><br>
             <label><input type="radio" name="shippingLocation" ng-model="shippingLocation" value="Africa"  /> Africa</label><br>

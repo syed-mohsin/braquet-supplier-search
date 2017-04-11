@@ -20,6 +20,18 @@ var PriceReviewSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  quoteDate: {
+    type: Date,
+    required: 'Quote date is required.'
+  },
+  deliveryDate: {
+    type: Date,
+    required: 'Delivery date is required.'
+  },
+  stcPower: {
+    type: Number,
+    required: 'Wattage is required'
+  },
   price: {
     type: Currency,
     min: 0,
@@ -35,18 +47,18 @@ var PriceReviewSchema = new Schema({
     enum: ['0kW-100kW', '101kW-500kW', '501kW-1MW', '>1MW'],
     required: 'Please specify a quantity'
   },
-  stcPower: {
-    type: Number
-  },
   panelType: {
     type: String,
     enum: ['Poly', 'Mono'],
     required: 'Please specify panel type'
   },
+  includesShipping: {
+    type: Boolean,
+    required: 'Please specify if shipping was included'
+  },
   shippingLocation: {
     type: String,
     enum: ['Asia/Australia', 'Africa', 'Europe', 'North America', 'South America'],
-    required: 'Please specify a shipping location'
   },
   verified: {
     type: Boolean,

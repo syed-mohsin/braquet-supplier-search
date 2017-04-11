@@ -10,7 +10,7 @@
             <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ui-sref="reviews.edit({reviewId: review._id})">
                 <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
             </a>
-            <a ng-click="remove();">
+            <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ng-click="remove();">
                 <span class="glyphicon glyphicon-trash"></span><span>Delete Review</span>
             </a>
         </div>
