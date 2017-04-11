@@ -813,6 +813,9 @@ img.company-logo {
     border-radius: inherit;
     float: left;
 }
+.profile-info .reviews {
+    margin-top: 5px;
+}
 .reviews .sub-title {
     margin-bottom: 3px;
 }
@@ -824,7 +827,7 @@ img.company-logo {
 }
 .reviews .glyphicon-star-empty, .reviews .glyphicon-star {
     padding: 2px 2px 2px 3px;
-    margin-right: 2px;
+    margin-right: 0;
     border-radius: 2px;
     color: white;
 }
@@ -875,4 +878,42 @@ img.company-logo {
 }
 .app-modal-window .modal-content {
   padding: 0 10px;
+}
+.brand-list {
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid lightgrey;
+}
+.brand-list table {
+    width: 95%;
+    max-width: 350px;
+}
+.brand-list td {
+    text-align: center;
+    padding-bottom: 5px;
+    min-width: 75px;
+    width: 50%;
+}
+.brand-list .category {
+    max-width: 77px;
+    margin: auto auto;
+    margin-top: 5px;
+}
+.brand-list .price {
+    color: orange;
+    font-size: 17px;
+    font-weight: 500;
+}
+.brand-list .img-wrapper {
+    height: 84px;
+}
+.brand-list .helper {
+    height: 100%;
+    display: inline-block;
+}
+.brand-list img {
+    width: 50px;
+    vertical-align: inherit;
 }

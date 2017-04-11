@@ -98,10 +98,15 @@
                         <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                         <small><span ng-bind="organization.productTypes"></span></small>
                       </div>
-                      <div class="brands">
-                        <ul>
-                          <li ng-repeat="brand in organization.manufacturers">{{brand}}| Poly: <span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency) : 'no quote'"></span> | Mono: <span ng-bind="organization.brands[brand+'#Mono'] ? (organization.brands[brand+'#Mono']/100 | currency) : 'no quote'"></span></li>
-                        </ul>
+                      <div class="brand-list">
+                        <table>
+                        <tr class="header">
+                          
+                          <td><div class="img-wrapper"><span class="helper"></span><img src="http://img.directindustry.com/images_di/photo-g/98295-8089666.jpg"></div><div class="category"><small>Polycrystalline Module</small></div></td>
+                          <td><div class="img-wrapper"><span class="helper"></span><img src="http://www.hesolarllc.com/content/uploads/2014/02/solar-panels-cost.jpg"></div><div class="category"><small>Monocrystalline Module</small></div></td>
+                        </tr>
+                          <tr ng-repeat="brand in organization.manufacturers" class="line-item"><td><span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency): 'no quote'" class="price"></span><br><span><small>{{brand}}</small></span></td><td><span ng-bind="organization.brands[brand+'#Mono'] ? (organization.brands[brand+'#Mono']/100 | currency): 'no quote'" class="price"></span><br><span><small>{{brand}}</small></span></td></tr>
+                        </table>
                       </div>
                   </div>
               </a>
