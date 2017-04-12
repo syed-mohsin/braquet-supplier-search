@@ -1,9 +1,9 @@
 <section>
   <div class="col-md-12">
     <form name="priceReviewForm" class="form-horizontal" ng-submit="create(priceReviewForm.$valid)" novalidate>
-      <h2>Submit an anonymous price review</h2>
+      <h2>Submit an anonymous quote from this supplier</h2>
       <div class="form-group">
-          <strong>Your price quote will not display your user information including name, email or the organization you are associated with.</strong>
+          <strong>Your quote submission will not display your user information including name, email or the organization you are associated with.</strong>
       </div>
       <fieldset>
         <div class="form-group" show-errors>
@@ -112,7 +112,7 @@
           <strong ng-bind="error"></strong>
         </div>
         <div ng-show="!authentication.user.emailVerified" class="form-group" style="color:red">
-          <strong>Your price quote will not be displayed publicly until you have verified your email address.</strong>
+          <strong>Your quote will not be displayed publicly until you have verified your email address.</strong>
         </div>
       </fieldset>
     </form>
