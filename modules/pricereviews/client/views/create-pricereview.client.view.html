@@ -8,19 +8,21 @@
       <fieldset>
         <div class="form-group" show-errors>
             <label for="quoteDate">Quote Date</label>
-            <input name="quoteDate" type="date" ng-model="quoteDate" id="quoteDate" class="form-control" required>
+            <input name="quoteDate" type="date" ng-model="quoteDate" max="{{currentDate | date:'yyyy-MM-dd'}}" id="quoteDate" class="form-control" required>
             <div ng-messages="priceReviewForm.quoteDate.$error" role="alert">
                 <p class="help-block error-text" ng-message="required">Quote date is required. When did you receive the quote?</p>
                 <p class="help-block error-text" ng-message="date">Sorry! Not a valid date. Please try again.</p>
+                <p class="help-block error-text" ng-message="max">Quote date should occur before today.</p>
             </div>
         </div>
 
         <div class="form-group" show-errors>
             <label for="deliveryDate">Anticipated Delivery Date</label>
-            <input name="deliveryDate" type="date" ng-model="deliveryDate" id="deliveryDate" class="form-control" required>
+            <input name="deliveryDate" type="date" ng-model="deliveryDate" min="{{quoteDate | date:'yyyy-MM-dd'}}" id="deliveryDate" class="form-control" required>
             <div ng-messages="priceReviewForm.deliveryDate.$error" role="alert">
                 <p class="help-block error-text" ng-message="required">Anticipated delivery date is required.</p>
                 <p class="help-block error-text" ng-message="date">Sorry! Not a valid date. Please try again.</p>
+                <p class="help-block error-text" ng-message="min">Anticipated delivery date should occur after quote received date.</p>
             </div>
         </div>
 
@@ -44,10 +46,21 @@
           </md-autocomplete>
         </div>
 
+        <div ng-if="manufacturer === 'other'" class="form-group" show-errors>
+          <select name="otherManufacturer" ng-model="$parent.otherManufacturer" id="otherManufacturer" class="form-control" required>
+            <option value="">---Select Other Brands---</option>
+            <option ng-repeat="brand in otherBrands" value="{{brand}}">{{brand}}</option>
+          </select>
+
+          <div ng-messages="priceReviewForm.otherManufacturer.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Please select a valid brand.</p>
+          </div>
+        </div>
+
         <div class="form-group" show-errors>
           <label for="stcPower">Panel Wattage (Watts)</label><br>
           <md-slider-container>
-            <md-slider min="{{minStcPower}}" name="stcPower" id="stcPower" max="{{maxStcPower}}" ng-model="stcPower" aria-label="red">
+            <md-slider min="{{minStcPower}}" name="stcPower" id="stcPower" max="{{500}}" ng-model="stcPower" aria-label="red">
             </md-slider>
             <md-input-container>
               <input type="number" name="stcPowerNumber" ng-model="stcPower" id="stcPowerNumber" aria-label="red" aria-controls="red-slider">

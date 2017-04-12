@@ -125,6 +125,19 @@ exports.getWattageValues = function(req, res) {
 };
 
 /**
+ * Get distinct manufacturer values
+ */
+exports.getManufacturerValues = function(req, res) {
+  PanelModel.distinct('manufacturer').exec()
+  .then(function(manufacturers) {
+    res.json(manufacturers);
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
+  });
+};
+
+/**
  * PanelModel middleware
  */
 exports.panelmodelByID = function (req, res, next, id) {

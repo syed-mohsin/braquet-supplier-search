@@ -56,7 +56,6 @@
                     </label>
                     </li>
                 </div>
-
                 <div class="list-group">
                     <span class="catalog-label"><small>Module Wattage ></small></span>
                     <li ng-repeat="range in ranges">
@@ -66,7 +65,15 @@
                     </label>
                     </li>
                 </div>
-
+              <!-- <div class="list-group">
+                  <span class="catalog-label"><small>Module Wattage ></small></span>
+                  <li ng-repeat="range in ranges">
+                    <label>
+                      <input type="checkbox" ng-model="wattCheckboxes[range]" ng-change="updateFilter()">
+                      <span><small>{{range}}</small></span>
+                    </label>
+                  </li>
+              </div> -->
                 <div class="list-group">
                     <span class="catalog-label"><small>Brand ></small></span>
                     <li ng-repeat="man in manufacturers">

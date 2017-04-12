@@ -30,15 +30,15 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       var color = '';
       var cells = '';
 
-      // find all checked boxes for wattage
-      for (var key in $scope.wattCheckboxes) {
-        if ($scope.wattCheckboxes[key]) {
-          pow += $scope.rangesReverse[key] + '|';
-        }
-      }
+      // // find all checked boxes for wattage
+      // for (var key in $scope.wattCheckboxes) {
+      //   if ($scope.wattCheckboxes[key]) {
+      //     pow += $scope.rangesReverse[key] + '|';
+      //   }
+      // }
 
       // find all checked manufacturers
-      for (key in $scope.orgCheckboxes) {
+      for (var key in $scope.orgCheckboxes) {
         if ($scope.orgCheckboxes[key]) {
           man += key + '|';
         }
@@ -140,7 +140,12 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
           $scope.numCellsCheckboxes = {};
           queryCheckedBoxes = $stateParams.cells ? $stateParams.cells.split('|').filter(function(c) { return c.length && !isNaN(c); }) : [];
           $scope.numberOfCells.sort(function(a,b) { return a-b; });
-          $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1);
+          $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1); // remove one null item
+
+          // only accept 3 number of cells
+          var accepted = [60, 72, 96];
+          $scope.numberOfCells = $scope.numberOfCells.filter(function(numCells) { return accepted.indexOf(numCells) !== -1; });
+
           $scope.numberOfCells.forEach(function(numCells) {
             if (!numCells) return;
             $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;

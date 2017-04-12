@@ -348,7 +348,7 @@ exports.get_catalog = function (req, res) {
     organizationQueryParams.panel_manufacturers = { '$in' :  manCondition };
   }
 
-  // build query for crystaline types
+  // build query for crystalline types
   if (req.query.crys) {
     var crysCondition = req.query.crys.split('|').filter(function(c) { return c.length !== 0; });
     organizationQueryParams.panel_crystalline_types = { '$in' :  crysCondition };
@@ -436,7 +436,7 @@ exports.get_catalog = function (req, res) {
 
     // sort organizations by brand avg and then avg_review
     orgs.sort(function(a,b) {
-      return a.brands_avg_poly - b.brands_avg_poly || b.avg_review - a.avg_review;
+      return a.brands_avg_poly - b.brands_avg_poly || b.reviews_length - a.reviews_length;
     });
 
     var start = (req.query.page - 1 || 0) * 15;

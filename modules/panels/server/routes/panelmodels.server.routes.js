@@ -24,6 +24,9 @@ module.exports = function (app) {
   app.route('/api/panelmodels-wattages')
     .get(panelmodels.getWattageValues);
 
+  app.route('/api/panelmodels-manufacturers')
+    .get(panelmodels.getManufacturerValues);
+
   // Finish by binding the panelmodel middleware
   app.param('panelId', panelmodels.panelmodelByID);
 };
