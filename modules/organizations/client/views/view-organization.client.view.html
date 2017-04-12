@@ -108,7 +108,7 @@
                            
                                     <section>
                                     <img ng-src="{{organization.logoImageUrl}}" class="profile">
-                                            <div class="quote-header">
+                                            <div class="quote-header no-wrap">
                                                  <div>
                                                  <small>
                                                  <div>
@@ -123,11 +123,10 @@
                                                 </small>
                                                 </div>
                                             </div>
-                                        <div class="table-responsive">
+                                        <div>
                                             <table class="table quote">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
                                                         <th>Unit Price</th>
                                                         <th>Description</th>
                                                         <th>Quantity</th>
@@ -135,7 +134,6 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr class="line-item">
-                                                        <td>1</td>
                                                         <td>
                                                             <span class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></span> per watt
                                                         </td>
