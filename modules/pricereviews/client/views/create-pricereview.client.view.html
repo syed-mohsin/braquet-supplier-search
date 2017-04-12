@@ -8,19 +8,21 @@
       <fieldset>
         <div class="form-group" show-errors>
             <label for="quoteDate">Quote Date</label>
-            <input name="quoteDate" type="date" ng-model="quoteDate" id="quoteDate" class="form-control" required>
+            <input name="quoteDate" type="date" ng-model="quoteDate" max="{{currentDate | date:'yyyy-MM-dd'}}" id="quoteDate" class="form-control" required>
             <div ng-messages="priceReviewForm.quoteDate.$error" role="alert">
                 <p class="help-block error-text" ng-message="required">Quote date is required. When did you receive the quote?</p>
                 <p class="help-block error-text" ng-message="date">Sorry! Not a valid date. Please try again.</p>
+                <p class="help-block error-text" ng-message="max">Quote date should occur before today.</p>
             </div>
         </div>
 
         <div class="form-group" show-errors>
             <label for="deliveryDate">Anticipated Delivery Date</label>
-            <input name="deliveryDate" type="date" ng-model="deliveryDate" id="deliveryDate" class="form-control" required>
+            <input name="deliveryDate" type="date" ng-model="deliveryDate" min="{{quoteDate | date:'yyyy-MM-dd'}}" id="deliveryDate" class="form-control" required>
             <div ng-messages="priceReviewForm.deliveryDate.$error" role="alert">
                 <p class="help-block error-text" ng-message="required">Anticipated delivery date is required.</p>
                 <p class="help-block error-text" ng-message="date">Sorry! Not a valid date. Please try again.</p>
+                <p class="help-block error-text" ng-message="min">Anticipated delivery date should occur after quote received date.</p>
             </div>
         </div>
 

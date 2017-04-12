@@ -4,6 +4,7 @@
 angular.module('pricereviews').controller('CreatePriceReviewsController', ['$scope', '$stateParams', '$location', '$http', '$filter', '$modalInstance', 'Authentication', 'PriceReviews', 'modalOrganization',
   function ($scope, $stateParams, $location, $http, $filter, $modalInstance, Authentication, PriceReviews, modalOrganization) {
     $scope.authentication = Authentication;
+    $scope.currentDate = new Date();
 
     $http.get('/api/panelmodels-wattages')
     .then(function(response) {
@@ -27,7 +28,7 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
         $scope.error = 'Please specify if shipping was included';
         return false;
       }
-      
+
       // verify shippingLocation is specified if so indicated
       if (this.includesShipping === 'true' && !this.shippingLocation) {
         $scope.error = 'Please select a shipping location';
