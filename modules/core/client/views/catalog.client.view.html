@@ -28,6 +28,22 @@
                 </div>
 
                 <div class="list-group">
+                    <span class="catalog-label"><small>Supplier Type ></small></span>
+                    <li>
+                      <label>
+                        <input type="checkbox" ng-model="isman" ng-change="updateFilter()">
+                        <span><small>Manufacturers</small></span>
+                      </label>
+                    </li>
+                    <li>
+                      <label>
+                        <input type="checkbox" ng-model="isreseller" ng-change="updateFilter()">
+                        <span><small>Resellers</small></span>
+                      </label>
+                    </li>
+                </div>
+
+                <div class="list-group">
                     <span class="catalog-label"><small>Technology Type ></small></span>
                     <li ng-repeat="crys in crystallineTypes">
                         <label>

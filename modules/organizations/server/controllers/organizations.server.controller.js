@@ -337,6 +337,13 @@ exports.get_catalog = function (req, res) {
   organizationQueryParams.verified = true; // get only verified organizations
   organizationQueryParams.panels_length = { '$gt': 0 }; // only show suppliers with any panel models
 
+  // check for filtering for manufacturers and/or resellers
+  if (req.query.isman === 'true' && req.query.isreseller !== 'true') {
+    organizationQueryParams.isManufacturer = true;
+  } else if (req.query.isman !=='true' && req.query.isreseller === 'true') {
+    organizationQueryParams.isManufacturer = false;
+  }
+
   // build query for search using regular expression
   if (req.query.q) {
     organizationQueryParams.companyName = new RegExp(req.query.q, 'i');

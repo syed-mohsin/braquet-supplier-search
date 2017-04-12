@@ -39,7 +39,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       templateUrl: 'modules/core/client/views/search.client.view.html'
     })
     .state('catalog', {
-      url: '/catalog?q&quantity&man&pow&crys&color&cells&page&price',
+      url: '/catalog?q&quantity&man&pow&crys&color&cells&page&price&isman&isreseller',
       templateUrl: 'modules/core/client/views/catalog.client.view.html'
     })
     // .state('welcome', {
