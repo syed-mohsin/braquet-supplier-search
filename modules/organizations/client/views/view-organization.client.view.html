@@ -48,13 +48,13 @@
 
                     <div class="menu">
                         <a ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization)">
-                            <span class="glyphicon glyphicon-new-window"></span><span>Write an anonymous review</span>
+                            <span class="glyphicon glyphicon-star"></span><span>Write anonymous review</span>
                         </a>
                         <button ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
                         <span>You already submitted a review</span>
                     </button>
                         <a ng-if="organization._id !== authentication.user.organization" ng-click="showPriceReviewView($event, organization)">
-                            <span class="glyphicon glyphicon-new-window"></span><span>Submit an anonymous quote</span>
+                            <span class="glyphicon glyphicon-usd"></span><span>Add quote</span>
                         </a>
                         <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
                             <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
