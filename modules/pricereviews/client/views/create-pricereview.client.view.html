@@ -46,6 +46,17 @@
           </md-autocomplete>
         </div>
 
+        <div ng-if="manufacturer === 'other'" class="form-group" show-errors>
+          <select name="otherManufacturer" ng-model="$parent.otherManufacturer" id="otherManufacturer" class="form-control" required>
+            <option value="">---Select Other Brands---</option>
+            <option ng-repeat="brand in otherBrands" value="{{brand}}">{{brand}}</option>
+          </select>
+
+          <div ng-messages="priceReviewForm.otherManufacturer.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Please select a valid brand.</p>
+          </div>
+        </div>
+
         <div class="form-group" show-errors>
           <label for="stcPower">Panel Wattage (Watts)</label><br>
           <md-slider-container>

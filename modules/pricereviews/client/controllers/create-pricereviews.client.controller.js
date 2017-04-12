@@ -5,12 +5,20 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
   function ($scope, $stateParams, $location, $http, $filter, $modalInstance, Authentication, PriceReviews, modalOrganization) {
     $scope.authentication = Authentication;
     $scope.currentDate = new Date();
+    modalOrganization.manufacturers.push('other');
 
     $http.get('/api/panelmodels-wattages')
     .then(function(response) {
       var wattages = response.data.sort(function(a,b) { return a-b; });
       $scope.minStcPower = wattages[0];
       $scope.maxStcPower = wattages[wattages.length-1];
+    });
+
+    $http.get('/api/panelmodels-manufacturers')
+    .then(function(response) {
+      $scope.otherBrands = response.data.filter(function(brand) {
+        return modalOrganization.manufacturers.indexOf(brand) === -1;
+      });
     });
 
     // Create new Price Review
@@ -36,17 +44,19 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
       }
 
       // verify correct brand was selected
-      if (modalOrganization.manufacturers.indexOf(this.manufacturer) === -1) {
+      if (modalOrganization.manufacturers.indexOf(this.manufacturer) === -1 &&
+          $scope.otherBrands.indexOf(this.otherManufacturer) === -1) {
         $scope.error = 'Please select a valid brand';
         return false;
       }
 
       // Create new Price Review object
+      console.log(this.otherManufacturer);
       var priceReview = {
         quoteDate: this.quoteDate,
         deliveryDate: this.deliveryDate,
         stcPower: this.stcPower,
-        manufacturer: this.manufacturer,
+        manufacturer: this.manufacturer !== 'other' ? this.manufacturer : this.otherManufacturer,
         price: this.price * 100,
         quantity: this.quantity,
         panelType: this.panelType,
