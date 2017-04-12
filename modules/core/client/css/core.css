@@ -91,11 +91,6 @@ a:hover {
     border-color: lightgrey;
     border-width: 1px;
 }
-.list-view, .bid-view {
-    background: white;
-    margin-top: 35px;
-    padding: 10px 15px 40px;
-}
 .welcome form {
     border-style: none;
     border-width: 0;
@@ -135,12 +130,6 @@ form label {
     left: 0;
     padding: 10px;
 }
-.extend .chat-profile-image {
-    margin-right: 10px;
-}
-.extend .chat-message {
-    border-top: 0 solid #e7e7e7;
-}
 .chat-message-details {
     overflow: auto;
 }
@@ -148,19 +137,6 @@ form label {
     min-width: initial;
     max-width: initial;
     padding: inherit;
-}
-.extend .chat-section {
-    position: relative;
-    /*height: 700px;*/
-    overflow: hidden;
-    width: 100%;
-    background: white;
-}
-.extend .chat-content {
-    position: absolute;
-    overflow: auto;
-    bottom: 0;
-    /*max-height: 700px;*/
 }
 .extend button {
     float: left;
@@ -201,6 +177,10 @@ form label {
 .notice.error {
     background: #C74B4B;
 }
+.warning {
+    color: #C74B4B;
+    font-weight: 700;
+}
 .notice.user-specific, .project .notice.user-specific {
     font-size: 11px;
     background: initial;
@@ -222,7 +202,7 @@ form label {
 .form-group div {
     padding-top: 8px;
 }
-input[type="checkbox"] {
+input[type="checkbox"], input[type="radio"] {
     margin-right: 10px;
 }
 .signup {
@@ -591,7 +571,6 @@ section h2 {
 .list-item img.profile, .list-group img.profile {
     width: 25px;
     margin-right: 5px;
-    border-radius: 50%;
     float: left;
 }
 .logo-background {
@@ -902,7 +881,7 @@ img.company-logo {
     margin-top: 5px;
 }
 .brand-list .price {
-    color: orange;
+    color: darkslategrey;
     font-size: 17px;
     font-weight: 500;
 }
@@ -916,4 +895,10 @@ img.company-logo {
 .brand-list img {
     width: 50px;
     vertical-align: inherit;
+}
+.quote-header {
+    margin-bottom: 10px;
+}
+.table.quote {
+    font-size: 85%;
 }
