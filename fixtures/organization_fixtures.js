@@ -60,7 +60,9 @@ var createOrganization = function() {
 	}
 };
 
-var generateMockOrgData = function(numOrgs) {
+var generateMockOrgData = function(numOrgs, currPanels) {
+	currentPanels = currPanels;
+
 	var mongooseOrgs = [];
 
 	for(var i=0; i<numOrgs; i++) {
@@ -86,7 +88,6 @@ var clearOrgData = function() {
 var gatherCurrentPanelData = function() {
 	return Panel.find().exec();
 };
-
 
 module.exports = {
 	'clearOrgData': clearOrgData,

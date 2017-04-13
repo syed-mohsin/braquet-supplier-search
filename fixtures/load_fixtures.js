@@ -33,24 +33,6 @@ mongoose.connect(dbUrl, function(err) {
   }
 });
 
-/*
-	*Load new panel data first, then load org data to reinforce associations between panels and orgs
-*/
-// var loadNewPanelDataPromise = require('./panel_fixtures');
-
-/*
-	*Grab the load new org-data promise.
-*/
-// var loadNewOrgDataPromise = require('./organization_fixtures');
-
-/*
-	*Grab the load new review-data promise.
-*/
-// var loadNewReviewDataPromise = require('./review_fixtures');
-
-
-
-
 
 /*
 	*Returns a promise to clear current panel models in the Db
@@ -97,59 +79,26 @@ var gatherCurrentUserData = require('./review_fixtures').gatherCurrentUserData;
 */
 var generateMockReviewData = require('./review_fixtures').generateMockReviewData;
 
+var currentOrgs = [];
+var promiseClearPanelsFromDb = clearPanelsfromDb();
 
-var p1 = clearPanelsfromDb();
-var p2 = generateMockPanelData(); // array of promises
-var p3 = clearOrgData();
-var p4 = gatherCurrentPanelData();
-var p5 = generateMockOrgData(); // array of promises
-var p6 = clearReviewData();
-var p7 = gatherCurrentOrgData();
-var p8 = gatherCurrentUserData();
-var p9 = generateMockReviewData(); // array of promises
-
-p1.then(function() {
-	console.log('1111111');
-	return Promise.all(p2);
+promiseClearPanelsFromDb.then(function() {
+	return Promise.all(generateMockPanelData(100));
 }).then(function() {
-	console.log('222222');
-	return p3;
+	return clearOrgData();
 }).then(function() {
-	console.log('33333');
-	return p4;
+	return gatherCurrentPanelData();
+}).then(function(currentPanels) {
+	return Promise.all(generateMockOrgData(100, currentPanels));
 }).then(function() {
-	console.log('444444');
-	return Promise.all(p5);
+	return clearReviewData();
 }).then(function() {
-	console.log('5555555');
-	return p6;
-}).then(function() {
-	console.log('6666666');
-	return p7;
-}).then(function() {
-	console.log('77777777');
-	return p8;
-}).then(function() {
-	console.log('88888888');
-	return Promise.all(p9);
+	return gatherCurrentOrgData();
+}).then(function(currOrgs) {
+	currentOrgs = currOrgs;
+	return gatherCurrentUserData();
+}).then(function(currUsers) {
+	return Promise.all(generateMockReviewData(100, currentOrgs, currUsers));
 }).catch(function(err) {
 	console.log(err);
 });
-
-
-//The order is preserved regardless of what resolved first
-// Promise.all([p1, p2, p3, p4, p5, p6, p7, p8, p9])
-// 	.then(function(responses) {
-// 		console.log(responses);
-//   	// responses.map(response => console.log(response));
-// 	})
-// 	.catch(function(err) {
-// 		console.log('************************************************************');
-// 		console.log(err);
-// 	});
-
-
-
-
-
-

@@ -13,33 +13,30 @@ var currentUsers;
 
 var createReview = function() {
   var review = {};
-
   var randomReviewandRatingNumber = Math.floor(Math.random() * 4);
   review['title'] = potentialReviewTitles[randomReviewandRatingNumber];
   review['rating'] = randomReviewandRatingNumber + 1;
   review['content'] = potentialReviewContents[randomReviewandRatingNumber];
   review['category'] = potentialCategories[randomReviewandRatingNumber];
-  console.log(currentOrgs[Math.floor(Math.random() * (currentOrgs.length - 1))]);
   review['organization'] = currentOrgs[Math.floor(Math.random() * (currentOrgs.length - 1))]['_id'];
   review['user'] = currentUsers[Math.floor(Math.random() * (currentUsers.length - 1))]['_id'];
-
-  return new Review(updatedProfile);
+  return new Review(review);
 };
 
 
 
-var generateMockReviewData = function(numberOfReviews) {
+var generateMockReviewData = function(numberOfReviews, currOrgs, currUsers) {
+  currentOrgs = currOrgs;
+  currentUsers = currUsers;
   var mongooseReviews = [];
 
   for(var i=0; i<numberOfReviews; i++) {
-
     var reviewCreation = createReview();
-
     if(reviewCreation) {
       mongooseReviews.push(reviewCreation);
     }
   }
-
+  
   var promises = mongooseReviews.map(function(review) {
     return review.save();
   });

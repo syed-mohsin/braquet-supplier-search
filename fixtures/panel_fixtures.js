@@ -6,21 +6,6 @@ var technologyTypes = ['SolarCell1', 'SolarCell2', 'SolarCell3', 'SolarCell4', '
 
 var mongoose = require('mongoose');
 
-//******************************************************************************
-// Update to ES6 Promises
-mongoose.Promise = global.Promise;
-
-var dbUrl = 'mongodb://localhost/mean-dev';
-
-require('../modules/panels/server/models/panelmodel.server.model');
-
-mongoose.connect(dbUrl, function(err) {
-  if (!err) {
-    console.log('connected to', dbUrl);
-  }
-});
-//******************************************************************************
-
 var Panel = mongoose.model('PanelModel');
 
 // Object with key: Manfucturer Name and value: array of models from that manufacturer
@@ -77,32 +62,12 @@ var generateMockPanelData = function(numPanels){
 		return panel.save();
 	});
 
-	console.log('GOGOGOGO');
 	return promises;
 };
 
 var clearPanelsfromDb = function() {
-	// return Panel.remove({}).exec();
-	return Panel.remove({});
-
+	return Panel.remove({}).exec();
 };
-
-//********************************************************************************
-
-console.log('HIT HERE');
-var promise = clearPanelsfromDb();
-
-promise.then(function() {
-	var pormises = generateMockPanelData();
-	return Promise.all(pormises);
-}).catch(function(err) {
-	console.log('ERROR');
-	console.log(err);
-});
-
-console.log('HIT THE END');
-//********************************************************************************
-
 
 module.exports = {
 	'clearPanelsfromDb': clearPanelsfromDb,
