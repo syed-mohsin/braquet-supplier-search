@@ -3,10 +3,10 @@
     <div id="catalog-page" ng-show="resolvedResources === 3">
         <div class="page-header">
             <div class="row">
-                <h4 class="side-title col-md-3"><b>Best module suppliers</b><br> in your area</h4>
+                <h4 class="side-title col-md-3"><b>Best module suppliers</b></h4>
                 <div class="col-md-9 search extend">
                     <form ng-submit="searchSubmit()">
-                        <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers in your area" />
+                        <input class="form-control col-md-12" type="text" ng-model="search" placeholder="Search for solar suppliers" />
                         <button type="submit" class="btn btn-primary submit">Submit</button>
                     </form>
                 </div>
@@ -20,10 +20,10 @@
             <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
                 <label>Filters</label>
 
-                <div class="list-group">
+                <div class="list-group quantity-filter">
                     <span class="catalog-label"><small>Quantity ></small></span>
                     <li ng-repeat="quant in quantities">
-                        <span><input type="radio" name="quantity" ng-model="$parent.quantity" ng-value="quant" ng-change="updateFilter()" /> <small>{{quant}}</small></span><br>
+                        <label><input type="radio" name="quantity" ng-model="$parent.quantity" ng-value="quant" ng-change="updateFilter()" /> <small>{{quant}}</small></label><br>
                     </li>
                 </div>
 
@@ -109,11 +109,14 @@
                     <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
                 </div>
                 <div ng-repeat="organization in orgs" class="list-group-item col-sm-12">
-                    <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
+                    <a ng-click="routeToOrg(organization._id)">
+                      <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
+                    </a>
                     <div class="profile-info">
                         <a ng-click="routeToOrg(organization._id)">
+                        <div>
                             <h5 class="list-group-item-heading" ng-bind="organization.companyName"></h5>
-                        </a>
+                        
                         <div class="reviews">
                             <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
                             <span>{{organization.reviews_length}} reviews</span>
@@ -122,23 +125,38 @@
                             <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
                             <!-- <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                         <small><span ng-bind="organization.productTypes"></span></small> -->
+                        </div>
+                        </a>
+                        </div>
                         <div class="menu">
                             <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                             </a>
                         </div>
-                        </div>
+                        
                         <div class="brand-list">
                             <table>
                                 <tr class="header">
 
                                     <td ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1">
-                                        <div class="img-wrapper"><span class="helper"></span><img src="http://img.directindustry.com/images_di/photo-g/98295-8089666.jpg"></div>
-                                        <div class="category"><small>Polycrystalline Module</small></div>
+                                        <div class="img-wrapper">
+                                          <span class="helper"></span>
+                                          <img src="http://img.directindustry.com/images_di/photo-g/98295-8089666.jpg">
+                                        </div>
+                                        <div class="category">
+                                          <small>Polycrystalline Module</small>
+                                          <div><small>(USD per watt)</small></div>
+                                        </div>
                                     </td>
                                     <td ng-show="organization.panel_crystalline_types.indexOf('Mono') !== -1">
-                                        <div class="img-wrapper"><span class="helper"></span><img src="http://www.hesolarllc.com/content/uploads/2014/02/solar-panels-cost.jpg"></div>
-                                        <div class="category"><small>Monocrystalline Module</small></div>
+                                        <div class="img-wrapper">
+                                          <span class="helper"></span>
+                                          <img src="http://www.hesolarllc.com/content/uploads/2014/02/solar-panels-cost.jpg">
+                                        </div>
+                                        <div class="category">
+                                          <small>Monocrystalline Module</small>
+                                          <div><small>(USD per watt)</small></div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr ng-repeat="brand in organization.manufacturers" class="line-item">

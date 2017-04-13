@@ -14,6 +14,11 @@
                   <div class="reviews">
                    <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
                   </div>
+                   <div class="menu edit">
+                     <a ui-sref="organizations.view({organizationId: organization._id})">
+                          <span class="glyphicon glyphicon-envelope"></span><span>Login to contact seller</span>
+                      </a>
+                   </div>
                   <div class="bio">
                       <span ng-bind="organization.about"></span>
                   </div>
@@ -23,15 +28,18 @@
 
                   <div class="menu">
                       <a ui-sref="organizations.view({organizationId: organization._id})">
-                          <span class="glyphicon glyphicon-new-window"></span><span>Login to Write an anonymous review</span>
+                          <span class="glyphicon glyphicon-star"></span><span>Login to write anonymous review</span>
+                      </a>
+                      <a ui-sref="organizations.view({organizationId: organization._id})">
+                          <span class="glyphicon glyphicon-usd"></span><span>Login to submit quote</span>
                       </a>
                   </div>
               </div>
           </div>
 
           <ul class="nav nav-tabs">
-            <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">Reviews</a></li>
             <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">Quotes</a></li>
+            <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">Reviews</a></li>
             <li ng-class="{ active: shouldShowProducts }"><a ng-click="showProducts()">Products</a></li>
           </ul>
       </div>
@@ -60,31 +68,66 @@
               </div>
           </div>
       </div>
-      <div class="row" ng-show="shouldShowPrices">
-          <div class="box no-border">
-              <div class="content no-wrap">
-                  <div class="sub-title name">
-                      <span ng-bind="organization.price_reviews_length"></span> <span> Quotes</span>
-                  </div>
-                  <div class="list-group">
-                      <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
-                          <img ng-src="{{organization.logoImageUrl}}" class="profile">
-                          <div class="detail no-wrap">
-                              <a class="project-title">
-                                  <div class="sub-title"><span class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></span></div>
-                                  <div class="review-user"><small>By
-                                  anonymous on
-                                  <span ng-bind="priceReview.created | date:'mediumDate'"></span></small>
-                                  </div>
-                                  <div class="review-content"><span class="list-group-item-text" ng-bind="priceReview.quantity"></span></div>
-                                  <div class="review-content"><span class="list-group-item-text" ng-bind="priceReview.manufacturer"></span></div>
-                              </a>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+              <div class="row" ng-show="shouldShowPrices">
+            <div class="box no-border">
+                <div class="content no-wrap">
+                    <div class="sub-title name">
+                        <span ng-bind="organization.price_reviews_length"></span> <span> Quotes</span>
+                    </div>
+                    <div class="list-group">
+                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
+
+                            <div class="detail no-wrap">
+
+                                    <section>
+                                    <img ng-src="{{organization.logoImageUrl}}" class="profile">
+                                            <div class="quote-header no-wrap">
+                                                 <div>
+                                                 <small>
+                                                 <div>
+                                                    <span class="list-group-item-text" ng-bind="priceReview.quoteDate | date:'mediumDate'"></span>
+                                                  </div>
+                                                  <div ng-if="priceReview.includesShipping">
+                                                    Delivered quote to <span class="list-group-item-text" ng-bind="priceReview.shippingLocation"></span>
+                                                  </div>
+                                                  <div ng-if="!priceReview.includesShipping">
+                                                    <span class="list-group-item-text warning">Does not include shipping cost</span>
+                                                  </div>
+                                                </small>
+                                                </div>
+                                            </div>
+                                        <div>
+                                            <table class="table quote">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Unit Price</th>
+                                                        <th>Description</th>
+                                                        <th>Quantity</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="line-item">
+                                                        <td>
+                                                            <span class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></span> per watt
+                                                        </td>
+                                                        <td>
+                                                            <span class="list-group-item-text" ng-bind="priceReview.stcPower"></span> W <span class="list-group-item-text" ng-bind="priceReview.manufacturer"></span> <span class="list-group-item-text" ng-bind="priceReview.panelType"></span>crystalline Solar Module
+                                                        </td>
+                                                        <td>
+                                                            <span class="list-group-item-text" ng-bind="priceReview.quantity"></span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </section>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
       <div class="row" ng-show="shouldShowProducts">
           <div class="box title-content no-border product">
               <div class="content no-wrap">
