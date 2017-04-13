@@ -123,21 +123,21 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       };
     };
 
-    $scope.contactSupplier = function(ev, organizationId) {
+    $scope.contactSupplier = function(ev, organization) {
       var modalInstance = $modal.open({
         templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
         controller: 'ContactSupplierController',
         resolve: {
           modalOrganizationId: function() {
-            return organizationId;            
+            return organization._id;
           }
         },
         windowClass: 'app-modal-window'
       });
 
       modalInstance.result.then(function() {
-        if (organizationId) {
-          $scope.contactSupplier = true;
+        if (organization) {
+          Notification.primary('A contact request has been sent to ' + organization.companyName + '.');
         }
       });
     };

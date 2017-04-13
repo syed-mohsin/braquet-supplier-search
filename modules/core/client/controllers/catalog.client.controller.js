@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', 'Authentication', 'PanelModels',
-  function ($scope, $filter, $http, $state, $stateParams, Authentication, PanelModels) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'Notification',
+  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, Notification) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resolvedResources = 0;
@@ -205,6 +205,28 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       } else {
         $state.go('organizations.view-public', { organizationId: organizationId });
       }
+    };
+
+    $scope.contactSupplier = function(ev, organization) {
+      if (!$scope.authentication.user) {
+        return $state.go('authentication.signin');
+      }
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
+        controller: 'ContactSupplierController',
+        resolve: {
+          modalOrganizationId: function() {
+            return organization._id;
+          }
+        },
+        windowClass: 'app-modal-window'
+      });
+
+      modalInstance.result.then(function() {
+        if (organization) {
+          Notification.primary('A contact request has been sent to ' + organization.companyName + '.');
+        }
+      });
     };
 
     // load resources from server after inititalizing all controller functions

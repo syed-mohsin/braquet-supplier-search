@@ -31,7 +31,7 @@
                         <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
                     </div>
                     <div class="menu edit">
-                        <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization._id)">
+                        <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
                             <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                         </a>
                         <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
@@ -103,9 +103,9 @@
                     </div>
                     <div class="list-group">
                         <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
-                           
+
                             <div class="detail no-wrap">
-                           
+
                                     <section>
                                     <img ng-src="{{organization.logoImageUrl}}" class="profile">
                                             <div class="quote-header no-wrap">
@@ -148,7 +148,7 @@
                                             </table>
                                         </div>
                                     </section>
-                               
+
                             </div>
                         </div>
                     </div>
