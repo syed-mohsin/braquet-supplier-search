@@ -7,8 +7,8 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
 
     $scope.initializePageNavBar = function() {
       // tab viewing booleans
-      $scope.shouldShowReviews = true;
-      $scope.shouldShowPrices = false;
+      $scope.shouldShowReviews = false;
+      $scope.shouldShowPrices = true;
       $scope.shouldShowProducts = false;
     };
 

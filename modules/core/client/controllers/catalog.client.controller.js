@@ -19,6 +19,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.query.quantity = $stateParams.quantity;
     $scope.quantity = $scope.query.quantity;
     $scope.query.price = $stateParams.price;
+    $scope.query.isman = $stateParams.isman;
+    $scope.query.isreseller = $stateParams.isreseller;
 
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
@@ -71,6 +73,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.query.color = color;
       $scope.query.cells = cells;
       $scope.query.quantity = $scope.quantity;
+      $scope.query.isman = $scope.isman;
+      $scope.query.isreseller = $scope.isreseller;
       $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
@@ -150,6 +154,10 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
             if (!numCells) return;
             $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
           });
+
+          // add checkbox values for is man or reseller
+          $scope.isman = $stateParams.isman === 'true' ? true : false;
+          $scope.isreseller = $stateParams.isreseller === 'true' ? true : false;
 
           // increment resolved resources
           $scope.resolvedResources++;

@@ -90,6 +90,10 @@ var OrganizationSchema = new Schema({
   manufacturers: [{
     type: String
   }],
+  isManufacturer: {
+    type: Boolean,
+    default: false
+  },
   industry: {
     type: String
   },
