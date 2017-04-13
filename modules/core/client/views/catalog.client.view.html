@@ -107,7 +107,7 @@
                             <!-- <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                         <small><span ng-bind="organization.productTypes"></span></small> -->
                         <div class="menu">
-                            <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization._id)">
+                            <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                             </a>
                         </div>

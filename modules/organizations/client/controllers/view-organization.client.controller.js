@@ -129,7 +129,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         controller: 'ContactSupplierController',
         resolve: {
           modalOrganizationId: function() {
-            return organizationId;            
+            return organizationId;
           }
         },
         windowClass: 'app-modal-window'
@@ -137,7 +137,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
 
       modalInstance.result.then(function() {
         if (organizationId) {
-          $scope.contactSupplier = true;
         }
       });
     };
