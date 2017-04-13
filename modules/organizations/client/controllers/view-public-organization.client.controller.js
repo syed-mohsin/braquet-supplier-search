@@ -7,6 +7,34 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
+    $scope.initializePageNavBar = function() {
+      // tab viewing booleans
+      $scope.shouldShowReviews = true;
+      $scope.shouldShowPrices = false;
+      $scope.shouldShowProducts = false;
+    };
+
+    $scope.showReviews = function() {
+      $scope. shouldShowReviews = true;
+      $scope.shouldShowPrices = false;
+      $scope.shouldShowProducts = false;
+    };
+
+    $scope.showPrices = function() {
+      $scope. shouldShowReviews = false;
+      $scope.shouldShowPrices = true;
+      $scope.shouldShowProducts = false;
+    };
+
+    $scope.showProducts = function() {
+      $scope. shouldShowReviews = false;
+      $scope.shouldShowPrices = false;
+      $scope.shouldShowProducts = true;
+    };
+
+    // initialize tabs
+    $scope.initializePageNavBar();
+
     $scope.findOne = function() {
       if (Authentication.user) {
         $state.go('organizations.view', { organizationId: $stateParams.organizationId });

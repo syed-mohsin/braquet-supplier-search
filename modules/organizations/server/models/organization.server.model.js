@@ -8,6 +8,12 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
+ * Load Currency type to the Mongoose Schema types
+ */
+require('mongoose-currency').loadType(mongoose);
+var Currency = mongoose.Types.Currency;
+
+/**
  * Organization Schema
  */
 var OrganizationSchema = new Schema({
@@ -42,11 +48,19 @@ var OrganizationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Review'
   }],
+  priceReviews: [{
+    type: Schema.ObjectId,
+    ref: 'PriceReview'
+  }],
   avg_review: {
     type: Number,
     default: 0
   },
   reviews_length: {
+    type: Number,
+    default: 0
+  },
+  price_reviews_length: {
     type: Number,
     default: 0
   },
@@ -72,6 +86,9 @@ var OrganizationSchema = new Schema({
   }],
   panel_stcPowers: [{
     type: Number
+  }],
+  manufacturers: [{
+    type: String
   }],
   industry: {
     type: String
@@ -108,18 +125,49 @@ var OrganizationSchema = new Schema({
 
 OrganizationSchema.pre('save', function(next) {
 
-  var Review = mongoose.model('Review');
+  var Review = mongoose.model('Review'),
+    PriceReview = mongoose.model('PriceReview'),
+    PanelModel = mongoose.model('PanelModel');
+
+  var self = this;
 
   // set number of panels
-  this.panels_length = this.panel_models.length;
+  self.panels_length = self.panel_models.length;
 
-  // set reviews_length and avg_review and remove stale reviews
-  var self = this;
-  Review.find({ _id: { $in: this.reviews }, verified: true }, 'rating')
-  .exec()
+  PanelModel.find({ _id: { $in: self.panel_models } }).exec()
+  .then(function(panelModels) {
+    // extract all brands from panels
+    self.manufacturers = panelModels.reduce(function(manArr, panelModel) {
+      if (manArr.indexOf(panelModel.manufacturer) === -1) {
+        manArr.push(panelModel.manufacturer);
+      }
+
+      return manArr;
+    }, []);
+
+    // associate all organization with its panel models
+    var panelModelPromises = panelModels.map(function(panelModel) {
+      var sellerAlreadyExists = panelModel.sellers.some(function(sellerId) {
+        return sellerId.equals(self._id);
+      });
+
+      if (!sellerAlreadyExists) {
+        panelModel.sellers.push(self._id);
+      }
+
+      return panelModel.save();
+    });
+
+    return Promise.all(panelModelPromises);
+  })
+  .then(function(savedPanelModels) {
+    // set reviews_length and avg_review and remove stale reviews
+    return Review.find({ _id: { $in: self.reviews }, verified: true }, 'rating')
+    .exec();
+  })
   .then(function(reviews) {
     // remove invalid review ids if any
-    self.reviews = self.reviews.map(function(review) {
+    self.reviews = reviews.map(function(review) {
       if (mongoose.Types.ObjectId.isValid(review._id)) {
         return review._id;
       } else {
@@ -134,6 +182,22 @@ OrganizationSchema.pre('save', function(next) {
     self.avg_review = reviews.reduce(function(a,b) {
       return a + b.rating;
     }, 0) / reviews.length || 0;
+
+    return PriceReview.find({ _id: { $in: self.priceReviews }, verified: true }, 'price quantity')
+      .exec();
+  })
+  .then(function(priceReviews) {
+    // remove invalid price review ids if any
+    self.priceReviews = priceReviews.map(function(priceReview) {
+      if (mongoose.Types.ObjectId.isValid(priceReview._id)) {
+        return priceReview._id;
+      } else {
+        return priceReview;
+      }
+    });
+
+    // update reviews length for querying in catalog
+    self.price_reviews_length = priceReviews.length;
 
     // finish
     next();

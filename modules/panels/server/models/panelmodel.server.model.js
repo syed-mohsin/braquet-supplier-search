@@ -13,6 +13,10 @@ var PanelModelSchema = new Schema({
   manufacturer: {
     type: String
   },
+  sellers: [{
+    type: Schema.ObjectId,
+    ref: 'Organization'
+  }],
   model: {
     type: String
   },

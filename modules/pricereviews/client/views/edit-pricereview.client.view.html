@@ -1,0 +1,49 @@
+<section ng-controller="PriceReviewsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1>Edit Price Review</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="editPriceReviewForm" class="form-horizontal" ng-submit="update(editPriceReviewForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="price">Unit Price ($USD per watt)</label><br>
+          <input name="price" type="number" min="0.00" step="0.01" ng-model="priceReview.price" id="price" class="form-control" placeholder="$0.00">
+          <div ng-messages="priceReviewForm.price.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Quote Unit Price is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+            <label for="quantity">Quantity</label><br>
+            <label><input type="radio" name="quantity" ng-model="priceReview.quantity" value="0kW-100kW"  /> 0kW-100kW</label><br>
+            <label><input type="radio" name="quantity" ng-model="priceReview.quantity" value="101kW-1MW"  /> 101kW-1MW</label><br>
+            <label><input type="radio" name="quantity" ng-model="priceReview.quantity" value=">1MW"  /> >1MW</label><br>
+        </div>
+
+        <div class="form-group" show-errors>
+            <label for="panelType">Panel Type</label><br>
+            <label><input type="radio" name="panelType" ng-model="priceReview.panelType" value="Mono"  /> Mono</label><br>
+            <label><input type="radio" name="panelType" ng-model="priceReview.panelType" value="Poly"  /> Poly</label><br>
+        </div>
+
+        <div class="form-group" show-errors>
+            <label for="shippingLocation">Shipping Location</label><br>
+            <label><input type="radio" name="shippingLocation" ng-model="priceReview.shippingLocation" value="Asia/Australia"  /> Asia/Australia</label><br>
+            <label><input type="radio" name="shippingLocation" ng-model="priceReview.shippingLocation" value="Africa"  /> Africa</label><br>
+            <label><input type="radio" name="shippingLocation" ng-model="priceReview.shippingLocation" value="Europe"  /> Europe</label><br>
+            <label><input type="radio" name="shippingLocation" ng-model="priceReview.shippingLocation" value="North America"  /> North America</label><br>
+            <label><input type="radio" name="shippingLocation" ng-model="priceReview.shippingLocation" value="South America"  /> South America</label><br>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Update" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+        <div ng-show="!authentication.user.emailVerified" class="form-group" style="color:red">
+          <strong>Your price quote will not be displayed publicly until you have verified your email address.</strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

@@ -3,6 +3,11 @@
   <div id="reviews-list" ng-show="reviews.$resolved">
     <div class="page-header">
       <h1>Reviews</h1>
+
+      <ul class="nav nav-tabs">
+        <li ng-class="{ active: shouldShowReviews }"><a>Reviews</a></li>
+        <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">Quotes</a></li>
+      </ul>
     </div>
     <div class="list-group">
       <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">

@@ -43,8 +43,7 @@ module.exports = function (app) {
   // Single organization routes (all require user-authentication)
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)
-    .put(organizations.update)
-    .delete(organizations.delete);
+    .put(organizations.update);
 
   app.route('/api/organizations/logo/:organizationId').all(organizationsPolicy.isAllowed)
     .post(organizations.changeLogo);

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', 'Authentication', 'PanelModels',
-  function ($scope, $filter, $http, $state, $stateParams, Authentication, PanelModels) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'Notification',
+  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, Notification) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resolvedResources = 0;
@@ -15,6 +15,10 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.query.color = $stateParams.color;
     $scope.query.cells = $stateParams.cells;
     $scope.query.page = $stateParams.page;
+    $stateParams.quantity = $stateParams.quantity ? $stateParams.quantity : '0kW-100kW';
+    $scope.query.quantity = $stateParams.quantity;
+    $scope.quantity = $scope.query.quantity;
+    $scope.query.price = $stateParams.price;
 
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
@@ -26,15 +30,15 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       var color = '';
       var cells = '';
 
-      // find all checked boxes for wattage
-      for (var key in $scope.wattCheckboxes) {
-        if ($scope.wattCheckboxes[key]) {
-          pow += $scope.rangesReverse[key] + '|';
-        }
-      }
+      // // find all checked boxes for wattage
+      // for (var key in $scope.wattCheckboxes) {
+      //   if ($scope.wattCheckboxes[key]) {
+      //     pow += $scope.rangesReverse[key] + '|';
+      //   }
+      // }
 
       // find all checked manufacturers
-      for (key in $scope.orgCheckboxes) {
+      for (var key in $scope.orgCheckboxes) {
         if ($scope.orgCheckboxes[key]) {
           man += key + '|';
         }
@@ -66,6 +70,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.query.crys = crys;
       $scope.query.color = color;
       $scope.query.cells = cells;
+      $scope.query.quantity = $scope.quantity;
       $scope.query.page = 1;
       $state.go('catalog', $scope.query);
     };
@@ -100,10 +105,10 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     };
 
     $scope.buildFilterCheckboxes = function() {
+      // get panel model filters
       $http.get('/api/panelmodels-filters')
         .then(function(resp) {
           var filters = resp.data;
-          $scope.pageStatus = resp.status;
           $scope.manufacturers = filters.manufacturers;
           $scope.crystallineTypes = filters.crystallineTypes;
           $scope.frameColors = filters.frameColors;
@@ -135,13 +140,31 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
           $scope.numCellsCheckboxes = {};
           queryCheckedBoxes = $stateParams.cells ? $stateParams.cells.split('|').filter(function(c) { return c.length && !isNaN(c); }) : [];
           $scope.numberOfCells.sort(function(a,b) { return a-b; });
-          $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1);
+          $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1); // remove one null item
+
+          // only accept 3 number of cells
+          var accepted = [60, 72, 96];
+          $scope.numberOfCells = $scope.numberOfCells.filter(function(numCells) { return accepted.indexOf(numCells) !== -1; });
+
           $scope.numberOfCells.forEach(function(numCells) {
             if (!numCells) return;
             $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
           });
 
           // increment resolved resources
+          $scope.resolvedResources++;
+        });
+
+      // get pricereview filters
+      $http.get('/api/pricereviews-filters')
+        .then(function(resp) {
+          var filters = resp.data;
+          $scope.quantities = filters.quantities.sort(function(a,b) {
+            if (a.toLowerCase() < b.toLowerCase()) return -1;
+            if (a.toLowerCase() > b.toLowerCase()) return 1;
+            return 0;
+          });
+
           $scope.resolvedResources++;
         });
     };
@@ -154,6 +177,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     $scope.pageChanged = function () {
       $scope.query.page = $scope.currentPage;
+      $state.go('catalog', $scope.query);
+    };
+
+    $scope.sortBy = function() {
+      $scope.query.price = $stateParams.price ? '' : true;
       $state.go('catalog', $scope.query);
     };
 
@@ -171,20 +199,34 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       }
     };
 
-    // load resources from server
-    
-    // initialize organizations on page
+    $scope.contactSupplier = function(ev, organization) {
+      if (!$scope.authentication.user) {
+        return $state.go('authentication.signin');
+      }
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
+        controller: 'ContactSupplierController',
+        resolve: {
+          modalOrganizationId: function() {
+            return organization._id;
+          }
+        },
+        windowClass: 'app-modal-window'
+      });
+
+      modalInstance.result.then(function() {
+        if (organization) {
+          Notification.primary('A contact request has been sent to ' + organization.companyName + '.');
+        }
+      });
+    };
+
+    // load resources from server after inititalizing all controller functions
+
+    // fetch results based on query
     $http({
       url: '/api/organizations-catalog',
-      params: {
-        q: $stateParams.q,
-        man: $stateParams.man,
-        pow: $stateParams.pow,
-        crys: $stateParams.crys,
-        color: $stateParams.color,
-        cells: $stateParams.cells,
-        page: $stateParams.page
-      }
+      params: $scope.query
     })
     .then(function(resp) {
       $scope.orgs = resp.data.orgs;
