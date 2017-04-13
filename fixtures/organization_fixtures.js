@@ -54,7 +54,6 @@ var createOrganization = function() {
 
 	if(!finalOrgNames[profile.companyName]) {
 		var updatedProfile = populatePanelModel(profile);
-		// var organization = new Organization(updatedProfile);
 		return new Organization(updatedProfile);
 	} else{
 		return createOrganization();
@@ -62,7 +61,6 @@ var createOrganization = function() {
 };
 
 var generateMockOrgData = function(numOrgs) {
-
 	var mongooseOrgs = [];
 
 	for(var i=0; i<numOrgs; i++) {
@@ -77,36 +75,21 @@ var generateMockOrgData = function(numOrgs) {
 		return org.save();
 	});
 
-	Promise.all(promises)
-	.then(function(savedOrgs) {
-		console.log("SAVED ", savedOrgs.length, "ORGS");
-	})
-	.catch(function(err) {
-		console.log(err);
-	});
+	return promises;
 };
 
-var loadNewOrgData = function() {
-	
-	Organization.remove({}, function(err) {
-		// Drop any old organization data in DB 
-		console.log('Organization Collection Removed');
-	})
-	.then(function() {
-		//Fetch all panels in DB
-		return Panel.find().exec();
-	})
-	.then(function(panelsInDB) {
-		//Populate currentPanels global array
-		currentPanels = panelsInDB;
-	})
-	.then(function() {
-		//Generate mock org data; send in the number of orgs to be generated
-		generateMockOrgData(100);
-	})
-	.catch(function(err) {
-		console.log(err);
-	});
+
+var clearOrgData = function() {
+	return Organization.remove({}).exec();
 };
 
-module.exports = loadNewOrgData;
+var gatherCurrentPanelData = function() {
+	return Panel.find().exec();
+};
+
+
+module.exports = {
+	'clearOrgData': clearOrgData,
+	'gatherCurrentPanelData': gatherCurrentPanelData,
+	'generateMockOrgData': generateMockOrgData
+};

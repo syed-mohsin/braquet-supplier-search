@@ -5,6 +5,22 @@ var models = ['model1', 'model2', 'model3', 'model4', 'model5'];
 var technologyTypes = ['SolarCell1', 'SolarCell2', 'SolarCell3', 'SolarCell4', 'SolarCell5'];
 
 var mongoose = require('mongoose');
+
+//******************************************************************************
+// Update to ES6 Promises
+mongoose.Promise = global.Promise;
+
+var dbUrl = 'mongodb://localhost/mean-dev';
+
+require('../modules/panels/server/models/panelmodel.server.model');
+
+mongoose.connect(dbUrl, function(err) {
+  if (!err) {
+    console.log('connected to', dbUrl);
+  }
+});
+//******************************************************************************
+
 var Panel = mongoose.model('PanelModel');
 
 // Object with key: Manfucturer Name and value: array of models from that manufacturer
@@ -61,25 +77,42 @@ var generateMockPanelData = function(numPanels){
 		return panel.save();
 	});
 
-	Promise.all(promises)
-	.then(function(savedPanels) {
-		console.log("SAVED ", savedPanels.length, "PANELS");
-	})
-	.catch(function(err) {
-		console.log(err);
-	});
+	console.log('GOGOGOGO');
+	return promises;
 };
 
-var loadNewPanelDataPromise = new Promise(function(resolve, reject) {
-	Panel.remove({}, function(err) { 
-		console.log('Panel Collection Removed') 
-	})
-	.then(function() {
-		resolve(generateMockPanelData(1000));
-	})
-	.catch(function(err) {
-		reject(err);
-	});
+var clearPanelsfromDb = function() {
+	// return Panel.remove({}).exec();
+	return Panel.remove({});
+
+};
+
+//********************************************************************************
+
+console.log('HIT HERE');
+var promise = clearPanelsfromDb();
+
+promise.then(function() {
+	var pormises = generateMockPanelData();
+	return Promise.all(pormises);
+}).catch(function(err) {
+	console.log('ERROR');
+	console.log(err);
 });
 
-module.exports = loadNewPanelDataPromise;
+console.log('HIT THE END');
+//********************************************************************************
+
+
+module.exports = {
+	'clearPanelsfromDb': clearPanelsfromDb,
+	'generateMockPanelData': generateMockPanelData
+};
+
+
+
+
+
+
+
+
