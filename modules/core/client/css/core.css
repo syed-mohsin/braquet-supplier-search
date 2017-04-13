@@ -902,3 +902,6 @@ img.company-logo {
 .table.quote {
     font-size: 85%;
 }
+.quantity-filter label {
+    font-weight: inherit;
+}
