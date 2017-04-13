@@ -123,12 +123,24 @@
                                 <tr class="header">
 
                                     <td ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1">
-                                        <div class="img-wrapper"><span class="helper"></span><img src="http://img.directindustry.com/images_di/photo-g/98295-8089666.jpg"></div>
-                                        <div class="category"><small>Polycrystalline Module</small></div>
+                                        <div class="img-wrapper">
+                                          <span class="helper"></span>
+                                          <img src="http://img.directindustry.com/images_di/photo-g/98295-8089666.jpg">
+                                        </div>
+                                        <div class="category">
+                                          <small>Polycrystalline Module</small>
+                                          <div><small>(USD per watt)</small></div>
+                                        </div>
                                     </td>
                                     <td ng-show="organization.panel_crystalline_types.indexOf('Mono') !== -1">
-                                        <div class="img-wrapper"><span class="helper"></span><img src="http://www.hesolarllc.com/content/uploads/2014/02/solar-panels-cost.jpg"></div>
-                                        <div class="category"><small>Monocrystalline Module</small></div>
+                                        <div class="img-wrapper">
+                                          <span class="helper"></span>
+                                          <img src="http://www.hesolarllc.com/content/uploads/2014/02/solar-panels-cost.jpg">
+                                        </div>
+                                        <div class="category">
+                                          <small>Monocrystalline Module</small>
+                                          <div><small>(USD per watt)</small></div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr ng-repeat="brand in organization.manufacturers" class="line-item">
