@@ -5,7 +5,7 @@ var Organization = mongoose.model('Organization');
 var User = mongoose.model('User');
 var Review = mongoose.model('Review');
 
-var potentialReviewTitles = ['This organization is great.', 'This is organization is ok.', 'This is organization is mediocre.', 'This is organization is bad.', 'This is organization is absolutely terrible.'];
+var potentialReviewTitles = ['This organization is great.', 'This organization is ok.', 'This organization is mediocre.', 'This organization is bad.', 'This organization is absolutely terrible.'];
 var potentialReviewContents = ['Experience buying from them', 'Dealt with customer service', 'Connected them with other clients', 'Visited them onsite', 'Have reviewed their financials'];
 var potentialCategories = ['Currently doing business with company','Have done business with company','Discussed business with company','General','Other'];
 var currentOrgs;
@@ -66,7 +66,7 @@ var updateOrganizations = function(currOrgs) {
           org.reviews.push(rev._id);
         });
 
-        promises.org.save();
+        promises.push(org.save());
       })
   });
 
@@ -80,10 +80,4 @@ module.exports = {
   'generateMockReviewData': generateMockReviewData,
   'updateOrganizations': updateOrganizations
 };
-
-
-
-
-
-
 

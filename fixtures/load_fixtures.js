@@ -15,6 +15,11 @@
 */
 
 var mongoose = require('mongoose');
+
+var mg = require('../config/lib/mongoose');
+// register modules
+mg.loadModels();
+
 var dbUrl = 'mongodb://localhost/mean-dev';
 
 // Update to ES6 Promises
@@ -83,12 +88,6 @@ var generateMockReviewData = require('./review_fixtures').generateMockReviewData
 	*Returns promises that updates orgs after new review fixtures have been generated
 */
 var updateOrganizations = require('./review_fixtures').updateOrganizations;
-
-
-
-
-
-
 
 var currentOrgs = [];
 var promiseClearPanelsFromDb = clearPanelsfromDb();
