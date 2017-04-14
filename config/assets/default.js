@@ -6,7 +6,8 @@ module.exports = {
       css: [
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
-        'public/lib/angular-material/angular-material.css'
+        'public/lib/angular-material/angular-material.css',
+        'public/lib/angular-ui-notification/dist/angular-ui-notification.min.css'
       ],
       js: [
         'public/lib/angular/angular.js',
@@ -21,7 +22,8 @@ module.exports = {
         'public/lib/angular-aria/angular-aria.min.js',
         'public/lib/angular-material/angular-material.min.js',
         'public/lib/angulartics/dist/angulartics.min.js',
-        'public/lib/angulartics-google-analytics/dist/angulartics-ga.min.js'
+        'public/lib/angulartics-google-analytics/dist/angulartics-ga.min.js',
+        'public/lib/angular-ui-notification/dist/angular-ui-notification.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

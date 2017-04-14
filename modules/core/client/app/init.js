@@ -12,7 +12,28 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
   }
 ]);
 
-angular.module(ApplicationConfiguration.applicationModuleName).run(function ($rootScope, $state, Authentication) {
+angular.module(ApplicationConfiguration.applicationModuleName).run(function ($rootScope, $state, Authentication, Socket, Notification) {
+
+  // Make sure the Socket is connected
+  // Socket is listening for notification messages
+  if (!Socket.socket) {
+    Socket.connect();
+  }
+
+  // Event listener for a notifyUser notifications
+  Socket.on('notifyUser', function(notification) {
+    if(!notification.err) {
+      Notification.primary({ 
+        message: notification.message,
+        delay: null
+      });
+    } else {
+      Notification.error({
+        message: notification.message,
+        delay: null
+      });
+    }
+  });
 
   // Check authentication before changing state
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {

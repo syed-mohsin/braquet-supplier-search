@@ -1,0 +1,37 @@
+<section ng-controller="PriceReviewsController" ng-init="findOne()" class="container list-view border">
+    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!priceReview.$resolved">
+    <div id="pricereview-view" ng-show="priceReview.$resolved">
+      <div class="page-header">
+        <div class="title">
+          <span ng-bind="priceReview.price / 100 | currency"></span>
+        </div>
+        <div class="menu" ng-show="authentication.user._id == priceReview.user._id || authentication.user.roles.indexOf('admin') !== -1">
+            <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ui-sref="pricereviews.edit({priceReviewId: priceReview._id})">
+                <span class="glyphicon glyphicon-new-window"></span><span>Edit Price Review</span>
+            </a>
+            <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ng-click="remove();">
+                <span class="glyphicon glyphicon-trash"></span><span>Delete Price Review</span>
+            </a>
+        </div>
+      </div>
+      <small>
+        <em class="text-muted">
+          Posted on
+          <span ng-bind="priceReview.created | date:'mediumDate'"></span>
+          by
+          <span ng-bind="priceReview.user.displayName"></span>
+        </em>
+      </small>
+      <br>
+      <small>
+        <em class="text-muted">
+          Price Review Submitted for
+          <span ng-bind="priceReview.organization.companyName"</span>
+        </em>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="priceReview.quantity"></h4>
+      <p class="list-group-item-text" ng-bind="priceReview.manufacturer"></p>
+      <p class="list-group-item-text" ng-bind="priceReview.panelType"></p>
+      <p class="list-group-item-text" ng-bind="priceReview.shippingLocation"></p>
+    </div>
+</section>

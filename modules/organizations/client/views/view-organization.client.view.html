@@ -1,115 +1,184 @@
 <section class="organization container list-view border profile" ng-controller="ViewOrganizationController" ng-init="findOne()">
     <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!organization.$resolved">
     <div id="organization-view-member" ng-show="organization.$resolved">
-      <div class="page-header">
-          <div>
-              <div class="profile-photo">
-                  <!-- <img ng-src="{{organization.logo}}"> -->
-                  <img ng-src="{{organization.logoImageUrl}}">
-                  <fieldset class="menu" ng-if="authentication.user.roles.indexOf('admin') !== -1">
-                      <div class="btn-file">
-                          <span class="glyphicon glyphicon-camera"></span><span>Edit logo</span><input type="file" nv-file-select uploader="uploader">
+        <div class="page-header">
+            <div>
+                <div class="profile-photo">
+                    <!-- <img ng-src="{{organization.logo}}"> -->
+                    <img ng-src="{{organization.logoImageUrl}}">
+                    <fieldset class="menu" ng-if="authentication.user.roles.indexOf('admin') !== -1">
+                        <div class="btn-file">
+                            <span class="glyphicon glyphicon-camera"></span><span>Edit logo</span><input type="file" nv-file-select uploader="uploader">
 
-                      </div>
-                      <div class="text-center form-group" ng-show="uploader.queue.length">
-                          <a ng-click="uploadProfilePicture();">Upload</a>
-                          <a ng-click="cancelUpload();">Cancel</a>
-                      </div>
-                      <div ng-show="success" class="text-center text-success">
-                          <strong>Company Logo Changed Successfully</strong>
-                      </div>
-                      <div ng-show="error" class="text-center text-danger">
-                          <strong ng-bind="error"></strong>
-                      </div>
-                  </fieldset>
-              </div>
-              <div class="content no-wrap title-content">
-                  <div class="title name">
-                      <span ng-bind="organization.companyName"></span>
-
-                  </div>
-                  <div class="reviews">
-                   <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
-                  </div>
-                  <div class="menu edit">
-                     <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
-                      <span class="glyphicon glyphicon-new-window"></span><span>Edit organization</span>
-                      </a>
-                  </div>
-                  <div class="bio">
-                      <span ng-bind="organization.about"></span>
-                  </div>
-                  <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
-                  <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
-                  <small><span ng-bind="organization.productTypes"></span></small>
-
-                <div class="menu">
-                    <a ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization._id)">
-                        <span class="glyphicon glyphicon-new-window"></span><span>Write an anonymous review</span>
-                    </a>
-
-                      <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
-                          <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
-                      </a>
+                        </div>
+                        <div class="text-center form-group" ng-show="uploader.queue.length">
+                            <a ng-click="uploadProfilePicture();">Upload</a>
+                            <a ng-click="cancelUpload();">Cancel</a>
+                        </div>
+                        <div ng-show="success" class="text-center text-success">
+                            <strong>Company Logo Changed Successfully</strong>
+                        </div>
+                        <div ng-show="error" class="text-center text-danger">
+                            <strong ng-bind="error"></strong>
+                        </div>
+                    </fieldset>
                 </div>
-              </div>
-          </div>
+                <div class="content no-wrap title-content">
+                    <div class="title name">
+                        <span ng-bind="organization.companyName"></span>
+                    </div>
+                    <div class="reviews">
+                        <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
+                    </div>
+                    <div class="menu edit">
+                        <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
+                            <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
+                        </a>
+                        <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
+                            <span class="glyphicon glyphicon-new-window"></span><span>Edit organization</span>
+                        </a>
 
-      </div>
-      <div class="row">
-          <div class="box no-border reviews">
-              <div class="content no-wrap">
-                  <div class="sub-title name">
-                      <span ng-bind="organization.reviews.length"></span> <span> Reviews</span>
-                  </div>
-                  <div class="list-group">
-                      <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
-                          <!-- <div class="menu pull-right" ng-show="authentication.user._id == review.user._id">
-                              <a ui-sref="reviews.edit({reviewId: review._id})">
-                                  <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
-                              </a>
-                          </div> -->
-                          <img ng-src="{{organization.logoImageUrl}}" class="profile">
-                          <div class="detail no-wrap">
-                              <a class="project-title">
-                                  <div class="sub-title">"<span class="list-group-item-heading" ng-bind="review.title"></span>"</div>
-                                  <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
-                                  <div class="review-user"><small>By
+                    </div>
+                    <div class="bio">
+                        <span ng-bind="organization.about"></span>
+                    </div>
+                    <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
+                    <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
+                    <small><span ng-bind="organization.productTypes"></span></small>
+
+                    <div class="menu">
+                        <a ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization)">
+                            <span class="glyphicon glyphicon-star"></span><span>Write anonymous review</span>
+                        </a>
+                        <button ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
+                        <span>You already submitted a review</span>
+                    </button>
+                        <a ng-if="organization._id !== authentication.user.organization" ng-click="showPriceReviewView($event, organization)">
+                            <span class="glyphicon glyphicon-usd"></span><span>Add quote</span>
+                        </a>
+                        <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
+                            <span class="glyphicon glyphicon-new-window"></span><span>Add employees</span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            <ul class="nav nav-tabs">
+                <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">Quotes</a></li>
+                <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">Reviews</a></li>
+                <li ng-class="{ active: shouldShowProducts }"><a ng-click="showProducts()">Products</a></li>
+            </ul>
+        </div>
+        <div class="row" ng-show="shouldShowReviews">
+            <div class="box no-border reviews">
+                <div class="content no-wrap">
+                    <div class="sub-title name">
+                        <span ng-bind="organization.reviews.length"></span> <span> Reviews</span>
+                    </div>
+                    <div class="list-group">
+                        <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
+                            <img ng-src="{{organization.logoImageUrl}}" class="profile">
+                            <div class="detail no-wrap">
+                                <a class="project-title">
+                                    <div class="sub-title">"<span class="list-group-item-heading" ng-bind="review.title"></span>"</div>
+                                    <rating ng-model="review.rating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                                    <div class="review-user"><small>By
                                   <span ng-bind="review.user.displayName"></span> on
                                   <span ng-bind="review.created | date:'mediumDate'"></span></small>
-                                  </div>
-                                  <div class="review-content"><span class="list-group-item-text" ng-bind="review.content"></span></div>
-                              </a>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="row">
-          <div class="box title-content no-border product">
-              <div class="content no-wrap">
-                  <div class="sub-title name">
-                      <span>Products</span>
-                  </div>
-                  <div class="list-group">
-                      <div class="list-group-item col-sm-2" ng-repeat="panel_model in organization.panel_models">
-                          <img ng-src="{{panel_model.panelPhotoUrl}}">
-                          <div class="detail">
-                              <a class="project-title">
-                                  <!-- ng-show="authentication.user._id == project.user._id" -->
-                                  <h4 class="list-group-item-heading" ng-bind="panel_model.model"></h4><small class="manufacturer"><span>by <span ng-bind="panel_model.manufacturer"></span></span></small>
-                              </a>
-                              <div class="specifications sub-text">
-                                  Power (w): <span ng-bind="panel_model.stcPower"></span><br> Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br> Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
-                              </div>
+                                    </div>
+                                    <div class="review-content"><span class="list-group-item-text" ng-bind="review.content"></span></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="shouldShowPrices">
+            <div class="box no-border">
+                <div class="content no-wrap">
+                    <div class="sub-title name">
+                        <span ng-bind="organization.price_reviews_length"></span> <span> Quotes</span>
+                    </div>
+                    <div class="list-group">
+                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
 
-                          </div>
+                            <div class="detail no-wrap">
 
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+                                    <section>
+                                    <img ng-src="{{organization.logoImageUrl}}" class="profile">
+                                            <div class="quote-header no-wrap">
+                                                 <div>
+                                                 <small>
+                                                 <div>
+                                                    <span class="list-group-item-text" ng-bind="priceReview.quoteDate | date:'mediumDate'"></span>
+                                                  </div>
+                                                  <div ng-if="priceReview.includesShipping">
+                                                    Delivered quote to <span class="list-group-item-text" ng-bind="priceReview.shippingLocation"></span>
+                                                  </div>
+                                                  <div ng-if="!priceReview.includesShipping">
+                                                    <span class="list-group-item-text warning">Does not include shipping cost</span>
+                                                  </div>
+                                                </small>
+                                                </div>
+                                            </div>
+                                        <div>
+                                            <table class="table quote">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Unit Price</th>
+                                                        <th>Description</th>
+                                                        <th>Quantity</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="line-item">
+                                                        <td>
+                                                            <span class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></span> per watt
+                                                        </td>
+                                                        <td>
+                                                            <span class="list-group-item-text" ng-bind="priceReview.stcPower"></span> W <span class="list-group-item-text" ng-bind="priceReview.manufacturer"></span> <span class="list-group-item-text" ng-bind="priceReview.panelType"></span>crystalline Solar Module
+                                                        </td>
+                                                        <td>
+                                                            <span class="list-group-item-text" ng-bind="priceReview.quantity"></span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </section>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="shouldShowProducts">
+            <div class="box title-content no-border product">
+                <div class="content no-wrap">
+                    <div class="sub-title name">
+                        <span>Products</span>
+                    </div>
+                    <div class="list-group">
+                        <div class="list-group-item col-sm-2" ng-repeat="panel_model in organization.panel_models">
+                            <img ng-src="{{panel_model.panelPhotoUrl}}">
+                            <div class="detail">
+                                <a class="project-title">
+                                    <!-- ng-show="authentication.user._id == project.user._id" -->
+                                    <h4 class="list-group-item-heading" ng-bind="panel_model.model"></h4><small class="manufacturer"><span>by <span ng-bind="panel_model.manufacturer"></span></span></small>
+                                </a>
+                                <div class="specifications sub-text">
+                                    Power (w): <span ng-bind="panel_model.stcPower"></span><br> Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br> Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

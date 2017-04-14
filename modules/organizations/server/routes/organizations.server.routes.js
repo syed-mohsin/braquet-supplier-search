@@ -24,6 +24,10 @@ module.exports = function (app) {
   app.route('/api/organizations-unverified').all(organizationsPolicy.isAllowed)
     .get(organizations.list_unverified);
 
+  // contact supplier route
+  app.route('/api/organizations/:organizationId/contact').all(organizationsPolicy.isAllowed)
+    .post(organizations.contact);
+
   // admin verify route
   app.route('/api/organizations/:organizationId/verify').all(organizationsPolicy.isAllowed)
     .post(organizations.verify);
@@ -39,8 +43,7 @@ module.exports = function (app) {
   // Single organization routes (all require user-authentication)
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)
-    .put(organizations.update)
-    .delete(organizations.delete);
+    .put(organizations.update);
 
   app.route('/api/organizations/logo/:organizationId').all(organizationsPolicy.isAllowed)
     .post(organizations.changeLogo);

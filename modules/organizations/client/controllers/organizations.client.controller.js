@@ -104,7 +104,6 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         organizationId: $stateParams.organizationId
       }, function(organization) {
         $scope.organization = organization;
-        $scope.buildUploader(organization._id);
       }, function(error) {
         $location.path('/forbidden');
       });
