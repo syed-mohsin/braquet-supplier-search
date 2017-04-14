@@ -199,7 +199,7 @@ OrganizationSchema.pre('save', function(next) {
   })
   .then(function(savedPanelModels) {
     // set reviews_length and avg_review and remove stale reviews
-    return Review.find({ _id: { $in: self.reviews }, verified: true }, 'rating')
+    return Review.find({ organization: self._id, verified: true }, 'rating')
     .exec();
   })
   .then(function(reviews) {
