@@ -49,7 +49,7 @@ var PriceReviewSchema = new Schema({
   },
   panelType: {
     type: String,
-    enum: ['Poly', 'Mono'],
+    enum: ['Poly', 'Mono', 'other'],
     required: 'Please specify panel type'
   },
   includesShipping: {

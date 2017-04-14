@@ -26,7 +26,7 @@ Organization.find()
   return Promise.all(orgPromises);
 })
 .then(function(savedOrgs) {
-  console.log(savedOrgs.length, 'org review lengths updated');
+  console.log(savedOrgs.length, 'organizations updated');
   process.exit(0);
 })
 .catch(function(err) {

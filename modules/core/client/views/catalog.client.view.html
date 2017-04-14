@@ -116,7 +116,7 @@
                         <a ng-click="routeToOrg(organization._id)">
                         <div>
                             <h5 class="list-group-item-heading" ng-bind="organization.companyName"></h5>
-                        
+
                         <div class="reviews">
                             <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
                             <span>{{organization.reviews_length}} reviews</span>
@@ -133,7 +133,7 @@
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                             </a>
                         </div>
-                        
+
                         <div class="brand-list">
                             <table>
                                 <tr class="header">
@@ -161,11 +161,11 @@
                                 </tr>
                                 <tr ng-repeat="brand in organization.manufacturers" class="line-item">
                                     <td ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1">
-                                        <span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency): 'no quote'" class="price"></span><br>
+                                        <span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
                                     <td ng-show="organization.panel_crystalline_types.indexOf('Mono') !== -1">
-                                        <span ng-bind="organization.brands[brand+'#Mono'] ? (organization.brands[brand+'#Mono']/100 | currency): 'no quote'" class="price"></span><br>
+                                        <span ng-bind="organization.brands[brand+'#Mono'] ? (organization.brands[brand+'#Mono']/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
                                 </tr>

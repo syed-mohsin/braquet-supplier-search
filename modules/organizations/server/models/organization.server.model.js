@@ -140,6 +140,36 @@ OrganizationSchema.pre('save', function(next) {
 
   PanelModel.find({ _id: { $in: self.panel_models } }).exec()
   .then(function(panelModels) {
+    // reset panel filtering fields
+    self.panel_manufacturers = [];
+    self.panel_stcPowers = [];
+    self.panel_crystalline_types = [];
+    self.panel_frame_colors = [];
+    self.panel_number_of_cells = [];
+
+    // add panel model filter fields
+    panelModels.forEach(function(panel) {
+      if (self.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
+        self.panel_manufacturers.push(panel.manufacturer);
+      }
+
+      if (self.panel_stcPowers.indexOf(panel.stcPower) === -1) {
+        self.panel_stcPowers.push(panel.stcPower);
+      }
+
+      if (self.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
+        self.panel_crystalline_types.push(panel.crystallineType);
+      }
+
+      if (self.panel_frame_colors.indexOf(panel.frameColor) === -1) {
+        self.panel_frame_colors.push(panel.frameColor);
+      }
+
+      if (self.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
+        self.panel_number_of_cells.push(panel.numberOfCells);
+      }
+    });
+
     // extract all brands from panels
     self.manufacturers = panelModels.reduce(function(manArr, panelModel) {
       if (manArr.indexOf(panelModel.manufacturer) === -1) {
@@ -148,6 +178,9 @@ OrganizationSchema.pre('save', function(next) {
 
       return manArr;
     }, []);
+
+    // set if is manufacturer or not
+    self.isManufacturer = self.manufacturers.length === 1;
 
     // associate all organization with its panel models
     var panelModelPromises = panelModels.map(function(panelModel) {
@@ -187,7 +220,7 @@ OrganizationSchema.pre('save', function(next) {
       return a + b.rating;
     }, 0) / reviews.length || 0;
 
-    return PriceReview.find({ _id: { $in: self.priceReviews }, verified: true }, 'price quantity')
+    return PriceReview.find({ organization: self._id, verified: true }, 'price quantity')
       .exec();
   })
   .then(function(priceReviews) {
