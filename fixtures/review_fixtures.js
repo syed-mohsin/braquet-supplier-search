@@ -23,8 +23,6 @@ var createReview = function() {
   return new Review(review);
 };
 
-
-
 var generateMockReviewData = function(numberOfReviews, currOrgs, currUsers) {
   currentOrgs = currOrgs;
   currentUsers = currUsers;
@@ -57,9 +55,35 @@ var gatherCurrentUserData = function() {
 };
 
 
+var updateOrganizations = function(currOrgs) {
+  var promises = [];
+
+  currOrgs.forEach(function(org) {
+    Review.find({ organization: org._id }).exec()
+      .then(function(reviewsForOrg) {
+
+        reviewsForOrg.forEach(function(rev) {
+          org.reviews.push(rev._id);
+        });
+
+        promises.org.save();
+      })
+  });
+
+  return promises;
+};
+
 module.exports = {
   'clearReviewData': clearReviewData,
   'gatherCurrentOrgData': gatherCurrentOrgData,
   'gatherCurrentUserData': gatherCurrentUserData,
-  'generateMockReviewData': generateMockReviewData
+  'generateMockReviewData': generateMockReviewData,
+  'updateOrganizations': updateOrganizations
 };
+
+
+
+
+
+
+

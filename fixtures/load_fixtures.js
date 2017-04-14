@@ -79,6 +79,17 @@ var gatherCurrentUserData = require('./review_fixtures').gatherCurrentUserData;
 */
 var generateMockReviewData = require('./review_fixtures').generateMockReviewData;
 
+/*
+	*Returns promises that updates orgs after new review fixtures have been generated
+*/
+var updateOrganizations = require('./review_fixtures').updateOrganizations;
+
+
+
+
+
+
+
 var currentOrgs = [];
 var promiseClearPanelsFromDb = clearPanelsfromDb();
 
@@ -99,6 +110,10 @@ promiseClearPanelsFromDb.then(function() {
 	return gatherCurrentUserData();
 }).then(function(currUsers) {
 	return Promise.all(generateMockReviewData(100, currentOrgs, currUsers));
+}).then(function() {
+	return gatherCurrentOrgData();
+}).then(function(currOrgs) {
+	return Promise.all(updateOrganizations(currOrgs));
 }).catch(function(err) {
 	console.log(err);
 });
