@@ -149,8 +149,8 @@ exports.readPublic = function(req, res) {
 
   Organization.findById(req.params.organizationId)
     .populate('panel_models')
-    .populate('reviews')
-    .populate('priceReviews')
+    .populate({ path: 'reviews', match: { verified: true } })
+    .populate({ path: 'priceReviews', match: { verified: true } })
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);
@@ -158,37 +158,7 @@ exports.readPublic = function(req, res) {
         return res.status(400).json(new Error('Failed to load organization ' + req.params.organizationId));
       }
 
-      Review.populate(organization.reviews, [
-        { path: 'organization' },
-        { path: 'user', populate: { path: 'organization', select: 'companyName logoImageUrl' } }
-      ], function(err, reviews) {
-        if (err) {
-          return res.status(400).json(err);
-        } else {
-          // remove unverified reviews
-          organization.reviews = organization.reviews.filter(function(review) {
-            return review.verified === true;
-          });
-
-          // remove unverified price reviews
-          organization.priceReviews = organization.priceReviews.filter(function(priceReview) {
-            return priceReview.verified === true;
-          });
-
-          // remove displayName on anonymous reviews
-          organization.reviews.map(function(review) {
-            if (review.anonymous && review.user) {
-              review.user.displayName = 'anonymous';
-              review.user.firstName = 'anonymous';
-              review.user.lastName = 'anonymous';
-            }
-
-            return review;
-          });
-
-          res.json(organization);
-        }
-      });
+      res.json(organization);
     });
 };
 
@@ -608,46 +578,15 @@ exports.organizationByID = function (req, res, next, id) {
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .populate('admin', 'displayName')
-    .populate('reviews')
-    .populate('priceReviews')
+    .populate({ path: 'reviews', match: { verified: true } })
+    .populate({ path: 'priceReviews', match: { verified: true } })
     .exec(function (err, organization) {
       if (err) {
         return next(err);
       } else if (!organization) {
         return next(new Error('Failed to load organization ' + id));
       }
-
-      Review.populate(organization.reviews, [
-        { path: 'organization' },
-        { path: 'user', populate: { path: 'organization', select: 'companyName logoImageUrl' } }
-      ], function(err, reviews) {
-        if (err) {
-          return next(err);
-        } else {
-          // remove unverified reviews
-          organization.reviews = organization.reviews.filter(function(review) {
-            return review.verified === true;
-          });
-
-          // remove unverified price reviews
-          organization.priceReviews = organization.priceReviews.filter(function(priceReview) {
-            return priceReview.verified === true;
-          });
-
-          // remove displayName on anonymous reviews
-          organization.reviews.map(function(review) {
-            if (review.anonymous && review.user) {
-              review.user.displayName = 'anonymous';
-              review.user.firstName = 'anonymous';
-              review.user.lastName = 'anonymous';
-            }
-
-            return review;
-          });
-
-          req.organization = organization;
-          return next();
-        }
-      });
+      req.organization = organization;
+      return next();
     });
 };
