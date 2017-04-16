@@ -8,6 +8,7 @@ var path = require('path'),
   multer = require('multer'),
   multerS3 = require('multer-s3'),
   mongoose = require('mongoose'),
+  OrganizationService = require('../services/organizations.server.service'),
   Organization = mongoose.model('Organization'),
   Review = mongoose.model('Review'),
   PriceReview = mongoose.model('PriceReview'),
@@ -95,29 +96,7 @@ exports.contact = function (req, res) {
 exports.create = function (req, res) {
   var organization = new Organization(req.body);
   organization.verified = true;
-
-  // add panel model filter fields
-  req.body.panel_models.forEach(function(panel) {
-    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
-      organization.panel_manufacturers.push(panel.manufacturer);
-    }
-
-    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
-      organization.panel_stcPowers.push(panel.stcPower);
-    }
-
-    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
-      organization.panel_crystalline_types.push(panel.crystallineType);
-    }
-
-    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
-      organization.panel_frame_colors.push(panel.frameColor);
-    }
-
-    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
-      organization.panel_number_of_cells.push(panel.numberOfCells);
-    }
-  });
+  organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
   organization.save()
   .then(function(savedOrg) {
@@ -182,35 +161,7 @@ exports.update = function (req, res) {
   organization.country = req.body.country;
   organization.about = req.body.about;
 
-  // reset panel filtering fields
-  organization.panel_manufacturers = [];
-  organization.panel_stcPowers = [];
-  organization.panel_crystalline_types = [];
-  organization.panel_frame_colors = [];
-  organization.panel_number_of_cells = [];
-
-  // add panel model filter fields
-  req.body.panel_models.forEach(function(panel) {
-    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
-      organization.panel_manufacturers.push(panel.manufacturer);
-    }
-
-    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
-      organization.panel_stcPowers.push(panel.stcPower);
-    }
-
-    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
-      organization.panel_crystalline_types.push(panel.crystallineType);
-    }
-
-    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
-      organization.panel_frame_colors.push(panel.frameColor);
-    }
-
-    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
-      organization.panel_number_of_cells.push(panel.numberOfCells);
-    }
-  });
+  organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
   organization.save()
   .then(function(updatedOrg) {
@@ -367,9 +318,7 @@ exports.get_catalog = function (req, res) {
 
   // for catalog, do a reverse lookup on panels and price reviews
   Organization.find(organizationQueryParams)
-  .populate({
-    path: 'priceReviews',
-    match: priceReviewQueryParams
+  .populate({ path: 'priceReviews', match: priceReviewQueryParams
   })
   .lean() // returns documents as plain JS objects so you can modify them
   .exec()
