@@ -117,8 +117,7 @@ module.exports = function (grunt) {
     ngAnnotate: {
       production: {
         files: {
-          'public/dist/application.js': defaultAssets.client.js,
-          'public/dist/vendor.js': defaultAssets.client.lib.js
+          'public/dist/application.js': _.union(defaultAssets.client.lib.js, defaultAssets.client.js),
         }
       }
     },
@@ -126,17 +125,6 @@ module.exports = function (grunt) {
       production: {
         files: {
           'public/dist/application.min.js': 'public/dist/application.js'
-        }
-      },
-      vendor: {
-        options: {
-          compress: false,
-          mangle: false,
-          sourceMap: true,
-          preserveComments: 'all'
-        },
-        files: {
-          'public/dist/vendor.min.js': 'public/dist/vendor.js'
         }
       }
     },
