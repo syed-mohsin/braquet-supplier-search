@@ -251,70 +251,9 @@ exports.list_basic = function (req, res) {
  * Available to all
  */
 exports.get_catalog = function (req, res) {
-  var result = [];
-  var sortObj = { avg_review: -1 }; // by default, sort by avg_review
-  var organizationQueryParams = {}; // query object for Organization
-  var priceReviewQueryParams = {}; // query object for Price Review
-  organizationQueryParams.verified = true; // get only verified organizations
-  organizationQueryParams.panels_length = { '$gt': 0 }; // only show suppliers with any panel models
-
-  // check for filtering for manufacturers and/or resellers
-  if (req.query.isman === 'true' && req.query.isreseller !== 'true') {
-    organizationQueryParams.isManufacturer = true;
-  } else if (req.query.isman !=='true' && req.query.isreseller === 'true') {
-    organizationQueryParams.isManufacturer = false;
-  }
-
-  // build query for search using regular expression
-  if (req.query.q) {
-    organizationQueryParams.companyName = new RegExp(req.query.q, 'i');
-  }
-
-  // build query for manufacturers
-  if (req.query.man) {
-    var manCondition = req.query.man.split('|').filter(function(m) { return m.length !== 0; });
-    organizationQueryParams.panel_manufacturers = { '$in' :  manCondition };
-  }
-
-  // build query for crystalline types
-  if (req.query.crys) {
-    var crysCondition = req.query.crys.split('|').filter(function(c) { return c.length !== 0; });
-    organizationQueryParams.panel_crystalline_types = { '$in' :  crysCondition };
-  }
-
-  // build query for frame colors
-  if (req.query.color) {
-    var colorCondition = req.query.color.split('|').filter(function(c) { return c.length !== 0; });
-    organizationQueryParams.panel_frame_colors = { '$in' :  colorCondition };
-  }
-
-  // build query for number of cells
-  if (req.query.cells) {
-    var cellsCondition = req.query.cells.split('|').filter(function(m) { return m.length !== 0; });
-    organizationQueryParams.panel_number_of_cells = { '$in' :  cellsCondition };
-  }
-
-  // build query for wattage filter
-  if (req.query.pow) {
-    // or statement to check all wattage ranges passed in
-    var powerArr = req.query.pow.split('|').filter(function(p) { return p.length !== 0 && !isNaN(p); });
-    organizationQueryParams.$or = powerArr.map(function(pow) {
-      return {
-        'panel_stcPowers':
-        {
-          '$elemMatch':
-          {
-            '$gt': parseInt(pow)-100,
-            '$lte': parseInt(pow)
-          }
-        }
-      };
-    });
-  }
-
-  // build query for quantity
-  priceReviewQueryParams.quantity = req.query.quantity || '0kW-100kW';
-
+  var queries = OrganizationService.processQuery(req.query);
+  var organizationQueryParams = queries.organizationQueryParams;
+  var priceReviewQueryParams = queries.priceReviewQueryParams;
 
   // for catalog, do a reverse lookup on panels and price reviews
   Organization.find(organizationQueryParams)

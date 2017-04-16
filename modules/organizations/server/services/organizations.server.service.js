@@ -56,3 +56,73 @@ exports.cachePanelFields = function(organization, panelModels) {
 
   return organization;
 };
+
+exports.processQuery = function(query) {
+  var result = [];
+  var organizationQueryParams = {}; // query object for Organization
+  var priceReviewQueryParams = {}; // query object for Price Review
+  organizationQueryParams.verified = true; // get only verified organizations
+  organizationQueryParams.panels_length = { '$gt': 0 }; // only show suppliers with any panel models
+
+  // check for filtering for manufacturers and/or resellers
+  if (query.isman === 'true' && query.isreseller !== 'true') {
+    organizationQueryParams.isManufacturer = true;
+  } else if (query.isman !=='true' && query.isreseller === 'true') {
+    organizationQueryParams.isManufacturer = false;
+  }
+
+  // build query for search using regular expression
+  if (query.q) {
+    organizationQueryParams.companyName = new RegExp(query.q, 'i');
+  }
+
+  // build query for manufacturers
+  if (query.man) {
+    var manCondition = query.man.split('|').filter(function(m) { return m.length !== 0; });
+    organizationQueryParams.panel_manufacturers = { '$in' :  manCondition };
+  }
+
+  // build query for crystalline types
+  if (query.crys) {
+    var crysCondition = query.crys.split('|').filter(function(c) { return c.length !== 0; });
+    organizationQueryParams.panel_crystalline_types = { '$in' :  crysCondition };
+  }
+
+  // build query for frame colors
+  if (query.color) {
+    var colorCondition = query.color.split('|').filter(function(c) { return c.length !== 0; });
+    organizationQueryParams.panel_frame_colors = { '$in' :  colorCondition };
+  }
+
+  // build query for number of cells
+  if (query.cells) {
+    var cellsCondition = query.cells.split('|').filter(function(m) { return m.length !== 0; });
+    organizationQueryParams.panel_number_of_cells = { '$in' :  cellsCondition };
+  }
+
+  // build query for wattage filter
+  if (query.pow) {
+    // or statement to check all wattage ranges passed in
+    var powerArr = query.pow.split('|').filter(function(p) { return p.length !== 0 && !isNaN(p); });
+    organizationQueryParams.$or = powerArr.map(function(pow) {
+      return {
+        'panel_stcPowers':
+        {
+          '$elemMatch':
+          {
+            '$gt': parseInt(pow)-100,
+            '$lte': parseInt(pow)
+          }
+        }
+      };
+    });
+  }
+
+  // build query for quantity
+  priceReviewQueryParams.quantity = query.quantity || '0kW-100kW';
+
+  return {
+    organizationQueryParams: organizationQueryParams,
+    priceReviewQueryParams: priceReviewQueryParams
+  };
+};
