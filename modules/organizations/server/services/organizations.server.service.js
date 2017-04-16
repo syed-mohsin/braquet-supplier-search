@@ -164,3 +164,32 @@ exports.extractBrands = function(organizations) {
     return org;
   });
 };
+
+exports.sortByQuery = function(orgs, query) {
+  // build query for crystalline types
+  if (query.crys &&
+      query.crys.indexOf('Mono') !== -1 &&
+      query.crys.indexOf('Poly') === -1) { // sort by mono
+    orgs.sort(function(a,b) {
+      if(!isFinite(a.brands_avg_mono-b.brands_avg_mono)) {
+        return !isFinite(a.brands_avg_mono) ? 1 : -1;
+      } else {
+        return a.brands_avg_mono - b.brands_avg_mono ||
+          a.brands_avg_poly - b.brands_avg_poly ||
+          b.reviews_length - a.reviews_length;
+      }
+    });
+  } else { // sort by poly
+    orgs.sort(function(a,b) {
+      if(!isFinite(a.brands_avg_poly-b.brands_avg_poly)) {
+        return !isFinite(a.brands_avg_poly) ? 1 : -1;
+      } else {
+        return a.brands_avg_poly - b.brands_avg_poly ||
+          a.brands_avg_mono - b.brands_avg_mono ||
+          b.reviews_length - a.reviews_length;
+      }
+    });
+  }
+
+  return orgs;
+};

@@ -262,34 +262,10 @@ exports.get_catalog = function (req, res) {
   .lean() // returns documents as plain JS objects so you can modify them
   .exec()
   .then(function(orgs) {
-    // get brands for orgs
+    // get brands for organizations
     orgs = OrganizationService.extractBrands(orgs);
-
-    // sort organizations by mono/poly avg and then num reviews
-    // build query for crystalline types
-    if (req.query.crys &&
-        req.query.crys.indexOf('Mono') !== -1 &&
-        req.query.crys.indexOf('Poly') === -1) { // sort by mono
-      orgs.sort(function(a,b) {
-        if(!isFinite(a.brands_avg_mono-b.brands_avg_mono)) {
-          return !isFinite(a.brands_avg_mono) ? 1 : -1;
-        } else {
-          return a.brands_avg_mono - b.brands_avg_mono ||
-            a.brands_avg_poly - b.brands_avg_poly ||
-            b.reviews_length - a.reviews_length;
-        }
-      });
-    } else { // sort by poly
-      orgs.sort(function(a,b) {
-        if(!isFinite(a.brands_avg_poly-b.brands_avg_poly)) {
-          return !isFinite(a.brands_avg_poly) ? 1 : -1;
-        } else {
-          return a.brands_avg_poly - b.brands_avg_poly ||
-            a.brands_avg_mono - b.brands_avg_mono ||
-            b.reviews_length - a.reviews_length;
-        }
-      });
-    }
+    // sort organizations
+    orgs = OrganizationService.sortByQuery(orgs, req.query);
 
     var start = (req.query.page - 1 || 0) * 15;
     res.json({ orgs: orgs.slice(start, start + 15), count: orgs.length });
