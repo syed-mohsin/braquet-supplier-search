@@ -126,3 +126,41 @@ exports.processQuery = function(query) {
     priceReviewQueryParams: priceReviewQueryParams
   };
 };
+
+exports.extractBrands = function(organizations) {
+  return organizations.map(function(org) {
+    // group all price reviews by brand
+    org.brands = _.groupBy(org.priceReviews, function(priceReview) {
+      return priceReview.manufacturer + '#' + priceReview.panelType;
+    });
+
+    // calcuate median of all price reviews under a brand
+    org.brands = _.mapObject(org.brands, function(brand) {
+      brand.sort(function (a, b) { return a.price - b.price; });
+      var lowMiddle = Math.floor((brand.length - 1) / 2);
+      var highMiddle = Math.ceil((brand.length - 1) / 2);
+      var median = (brand[lowMiddle].price + brand[highMiddle].price) / 2;
+      return median;
+    });
+
+    // calculate for each type of panel
+    var price_sum_mono = 0;
+    var price_sum_poly = 0;
+    var brands_length_mono = 0;
+    var brands_length_poly = 0;
+    for (var key in org.brands) {
+      if (key.split('#')[1] === 'Mono') {
+        price_sum_mono += org.brands[key];
+        ++brands_length_mono;
+      } else {
+        price_sum_poly += org.brands[key];
+        ++brands_length_poly;
+      }
+    }
+
+    // calcuate average for each panel type across brands
+    org.brands_avg_mono = price_sum_mono / brands_length_mono;
+    org.brands_avg_poly = price_sum_poly / brands_length_poly;
+    return org;
+  });
+};
