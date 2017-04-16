@@ -16,13 +16,9 @@ var path = require('path'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   nodemailer = require('nodemailer'),
-  async = require('async'),
-  crypto = require('crypto'),
   aws = require('aws-sdk'),
   s3 = new aws.S3(),
-  _ = require('underscore');
-
-var smtpTransport = nodemailer.createTransport(config.mailer.options);
+  smtpTransport = nodemailer.createTransport(config.mailer.options);
 
 /**
  * Contact an organization through Braquet Admin
