@@ -35,10 +35,11 @@ module.exports.initLocalVariables = function (app) {
   app.locals.facebookAppId = config.facebook.clientID;
   if (process.env.NODE_ENV === 'production') {
     app.locals.jsFiles = productionAssets.client.js;
+    app.locals.cssFiles = productionAssets.client.css;
   } else {
     app.locals.jsFiles = config.files.client.js;
+    app.locals.cssFiles = config.files.client.css;
   }
-  app.locals.cssFiles = config.files.client.css;
   app.locals.livereload = config.livereload;
   app.locals.logo = config.logo;
   app.locals.favicon = config.favicon;

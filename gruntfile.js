@@ -131,7 +131,7 @@ module.exports = function (grunt) {
     cssmin: {
       combine: {
         files: {
-          'public/dist/application.min.css': defaultAssets.client.css
+          'public/dist/application.min.css': _.union(defaultAssets.client.lib.css, defaultAssets.client.css)
         }
       }
     },
@@ -219,6 +219,12 @@ module.exports = function (grunt) {
         filter: function () {
           return !fs.existsSync('config/env/local.js');
         }
+      },
+      fonts: {
+        expand: true,
+        cwd: 'public/lib/bootstrap/fonts/',
+        src: '**',
+        dest: 'public/fonts/'
       }
     }
   });
@@ -314,5 +320,5 @@ module.exports = function (grunt) {
   grunt.registerTask('debug', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);
 
   // Run the project in production mode
-  grunt.registerTask('prod', ['build', 'env:prod', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
+  grunt.registerTask('prod', ['build', 'env:prod', 'mkdir:upload', 'copy', 'concurrent:default']);
 };
