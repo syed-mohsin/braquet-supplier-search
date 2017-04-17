@@ -19,6 +19,7 @@ coverage/
 # MEAN.js app and assets
 # ======================
 public/dist/
+public/fonts/
 uploads
 modules/users/client/img/profile/uploads
 config/env/local.js
