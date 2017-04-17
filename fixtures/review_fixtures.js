@@ -55,7 +55,7 @@ var gatherCurrentUserData = function() {
 };
 
 
-var updateOrganizations = function(currOrgs) {
+var updateOrganizationsAfterReviewsCreation = function(currOrgs) {
   var promises = [];
 
   currOrgs.forEach(function(org) {
@@ -78,6 +78,6 @@ module.exports = {
   'gatherCurrentOrgData': gatherCurrentOrgData,
   'gatherCurrentUserData': gatherCurrentUserData,
   'generateMockReviewData': generateMockReviewData,
-  'updateOrganizations': updateOrganizations
+  'updateOrganizations': updateOrganizationsAfterReviewsCreation
 };
 

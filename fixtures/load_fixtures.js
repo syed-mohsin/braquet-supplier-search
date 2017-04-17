@@ -87,32 +87,67 @@ var generateMockReviewData = require('./review_fixtures').generateMockReviewData
 /*
 	*Returns promises that updates orgs after new review fixtures have been generated
 */
-var updateOrganizations = require('./review_fixtures').updateOrganizations;
+var updateOrganizationsAfterReviewsCreation = require('./review_fixtures').updateOrganizations;
+
+/*
+	*Returns a promise to clear current price_review models in the Db
+*/
+var clearPriceReviewData = require('./priceReview_fixtures').clearPriceReviewData;
+
+/*
+  *Returns promises that generate mock price review data
+*/
+var generateMockPriceReviewData = require('./priceReview_fixtures').generateMockPriceReviewData;
+
+/*
+  *Returns promises that updates orgs after new price review fixtures have been generated
+*/
+var updateOrganizationsAfterPriceReviewsCreation = require('./priceReview_fixtures').updateOrganizations;
+
 
 var currentOrgs = [];
+var currentUsers = [];
 var promiseClearPanelsFromDb = clearPanelsfromDb();
 
 promiseClearPanelsFromDb.then(function() {
-	return Promise.all(generateMockPanelData(100));
+  return Promise.all(generateMockPanelData(100));
 }).then(function() {
-	return clearOrgData();
+  return clearOrgData();
 }).then(function() {
-	return gatherCurrentPanelData();
+  return gatherCurrentPanelData();
 }).then(function(currentPanels) {
-	return Promise.all(generateMockOrgData(100, currentPanels));
+  return Promise.all(generateMockOrgData(100, currentPanels));
 }).then(function() {
-	return clearReviewData();
+  return clearReviewData();
 }).then(function() {
-	return gatherCurrentOrgData();
+  return gatherCurrentOrgData();
 }).then(function(currOrgs) {
-	currentOrgs = currOrgs;
-	return gatherCurrentUserData();
+  currentOrgs = currOrgs;
+  return gatherCurrentUserData();
 }).then(function(currUsers) {
-	return Promise.all(generateMockReviewData(100, currentOrgs, currUsers));
+  currentUsers = currUsers;
+  return Promise.all(generateMockReviewData(100, currentOrgs, currUsers));
 }).then(function() {
-	return gatherCurrentOrgData();
+  return Promise.all(updateOrganizationsAfterReviewsCreation(currentOrgs));
+}).then(function() {
+  return clearPriceReviewData();
+}).then(function() {
+  return gatherCurrentOrgData();
 }).then(function(currOrgs) {
-	return Promise.all(updateOrganizations(currOrgs));
+  currentOrgs = currOrgs;
+  return Promise.all(generateMockPriceReviewData(currentOrgs, currentUsers)); 
+}).then(function() {
+  return Promise.all(updateOrganizationsAfterPriceReviewsCreation(currentOrgs));
 }).catch(function(err) {
 	console.log(err);
 });
+
+
+
+
+
+
+
+
+
+
