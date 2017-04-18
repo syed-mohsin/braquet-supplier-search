@@ -1,16 +1,3 @@
-// get all users
-// get all orgs 
-// fill in price reveiew organization and user
-// grab the panel manufacturer off of the org panel manufacturer array and place this as the price review manufacturer
-
-// quote date should be in the past
-// delivery date should be anytime after quote date
-// stc power should be between 0-500
-// price can be anything between 0-200
-// manufacturer is something in the orgs manufacturer array
-// Each company should have 500-1000 price reviews; one-to-one mapping so no 2 companies should have share the same price review
-// Need to place newly created price review on the org; once done you need to update all of the orgs
-
 'use strict';
 
 var mongoose = require('mongoose');
@@ -70,37 +57,10 @@ var generateMockPriceReviewData = function(currOrgs, currUsers) {
 };
 
 var updateOrganizationsAfterPriceReviewsCreation = function(currOrgs) {
-  // var promises = [];
-
-  // currOrgs.forEach(function(org) {
-  //   PriceReview.find({ organization: org._id }).exec()
-  //     .then(function(priceReviewsForOrg) {
-  //       priceReviewsForOrg.forEach(function(priceRev) {
-  //         org.priceReviews.push(priceRev._id);
-  //       });
-  //       promises.push(org.save());
-  //     })
-  //     .catch(function(err) {
-  //       console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&');
-  //       console.log(err);
-  //     })
-  // });
-
-  // return promises;
-
-
   return currOrgs.map(function(org) {
     return org.save();
   });
-
-
-
 };
-
-
-
-
-
 
 module.exports = {
   'clearPriceReviewData': clearPriceReviewData,

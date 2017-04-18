@@ -20,7 +20,7 @@ var mg = require('../config/lib/mongoose');
 // register modules
 mg.loadModels();
 
-var dbUrl = 'mongodb://localhost/mean-dev/?connectTimeoutMS=3000'; //?connectTimeoutMS=20000
+var dbUrl = 'mongodb://localhost/mean-dev/?connectTimeoutMS=10000'; //?connectTimeoutMS=3000
 
 // Update to ES6 Promises
 mongoose.Promise = global.Promise;
@@ -40,8 +40,13 @@ mongoose.connect(dbUrl, function(err) {
 
 
 /*
+  *Returns a promise to clear current panel models in the Db
+*/
+var promisesClearDataFromDb = require('./panel_fixtures').promisesClearDataFromDb;
+/*
 	*Returns a promise to clear current panel models in the Db
 */
+
 var clearPanelsfromDb = require('./panel_fixtures').clearPanelsfromDb;
 
 /*
@@ -104,71 +109,46 @@ var generateMockPriceReviewData = require('./priceReview_fixtures').generateMock
 */
 var updateOrganizationsAfterPriceReviewsCreation = require('./priceReview_fixtures').updateOrganizations;
 
-
 var currentOrgs = [];
 var currentUsers = [];
-var promiseClearPanelsFromDb = clearPanelsfromDb();
+var promisesToClearData = promisesClearDataFromDb();
 
-promiseClearPanelsFromDb.then(function() {
-  console.log('1. Cleared Panels from the db');
+Promise.all(promisesToClearData).then(function() {
+  console.log('1. Cleared Panels, Orgs, Reviews, and Price Reviews from the db');
   return Promise.all(generateMockPanelData(100));
 }).then(function() {
   console.log('2. Generated mock panel data');
-  return clearOrgData();
-}).then(function() {
-  console.log('3. Cleared Organization from the db');
   return gatherCurrentPanelData();
 }).then(function(currentPanels) {
-  console.log('4. Gathered panel data from the db');
+  console.log('3. Gathered panel data from the db');
   return Promise.all(generateMockOrgData(100, currentPanels));
 }).then(function() {
-  console.log('5. Generated mock org data');
-  return clearReviewData();
-}).then(function() {
-  console.log('6. Cleared Reviews from the db');
+  console.log('4. Generated mock org data');
   return gatherCurrentOrgData();
 }).then(function(currOrgs) {
-  console.log('7. Gathered org data from the db');
+  console.log('5. Gathered org data from the db');
   currentOrgs = currOrgs;
   return gatherCurrentUserData();
 }).then(function(currUsers) {
-  console.log('8. Gathered user data from the db');
+  console.log('6. Gathered user data from the db');
   currentUsers = currUsers;
   return Promise.all(generateMockReviewData(100, currentOrgs, currUsers));
-})
-// .then(function() {
-//   console.log('9. Generated mock review data');
-//   return Promise.all(updateOrganizationsAfterReviewsCreation(currentOrgs));
-// })
-.then(function() {
-  console.log('10. Updated organizations after reviews creation');
-  return clearPriceReviewData();
 }).then(function() {
-  console.log('11. Cleared price review data');
+  console.log('7. Generated mock review data');
   return gatherCurrentOrgData();
 }).then(function(currOrgs) {
-  console.log('12. Gathered org data from the db');
+  console.log('8. Gathered org data from the db');
   currentOrgs = currOrgs;
   return Promise.all(generateMockPriceReviewData(currentOrgs, currentUsers)); 
 }).then(function() {
-  console.log('13. Generated mock price review data');
+  console.log('9. Generated mock price review data');
   return Promise.all(updateOrganizationsAfterPriceReviewsCreation(currentOrgs));
 }).then(function() {
   console.log('Successfully generated mock data.');
   process.exit(0);
-})
-.catch(function(err) {
+}).catch(function(err) {
   console.log('*** Hit error catch ***');
-	console.log(err);
+  console.log(err);
   process.exit(1);
 });
-
-
-
-
-
-
-
-
-
 

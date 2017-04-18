@@ -8,6 +8,10 @@ var panelTypes = ['Poly', 'Mono'];
 var mongoose = require('mongoose');
 
 var Panel = mongoose.model('PanelModel');
+var Organization = mongoose.model('Organization');
+var Review = mongoose.model('Review');
+var PriceReview = mongoose.model('PriceReview');
+
 
 // Object with key: Manfucturer Name and value: array of models from that manufacturer
 var finalPanelManufacturers = {};
@@ -71,9 +75,14 @@ var clearPanelsfromDb = function() {
   return Panel.remove({}).exec();
 };
 
+var clearAllDataFromDb = function() {
+  return [Panel.remove({}).exec(), Organization.remove({}).exec(), Review.remove({}).exec(), PriceReview.remove({}).exec()];
+};
+
 module.exports = {
   'clearPanelsfromDb': clearPanelsfromDb,
-  'generateMockPanelData': generateMockPanelData
+  'generateMockPanelData': generateMockPanelData,
+  'promisesClearDataFromDb': clearAllDataFromDb
 };
 
 
