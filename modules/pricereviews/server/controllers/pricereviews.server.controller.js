@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   PriceReview = mongoose.model('PriceReview'),
+  Organization = mongoose.model('Organization'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
@@ -78,14 +79,17 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
   var priceReview = req.priceReview;
 
-  priceReview.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(priceReview);
-    }
+  priceReview.remove()
+  .then(function(removedPriceReview) {
+    return priceReview.organization.save();
+  })
+  .then(function(updatedOrganization) {
+    res.json(priceReview);
+  })
+  .catch(function(err) {
+    res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -116,6 +120,7 @@ exports.admin_list = function (req, res) {
   .sort('-created')
   .populate('user')
   .populate('organization')
+  .limit(100)
   .exec()
   .then(function(priceReviews) {
     res.json(priceReviews);
@@ -156,7 +161,7 @@ exports.priceReviewByID = function (req, res, next, id) {
 
   PriceReview.findById(id)
   .populate('user', 'displayName')
-  .populate('organization', 'companyName logoImageUrl')
+  .populate('organization', 'companyName logoImageUrl panel_models')
   .exec(function (err, priceReview) {
     if (err) {
       return next(err);

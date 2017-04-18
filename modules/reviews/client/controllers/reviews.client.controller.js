@@ -85,8 +85,12 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$state', '
 
     // Find existing Review
     $scope.findOne = function () {
-      $scope.review = Reviews.get({
+      Reviews.get({
         reviewId: $stateParams.reviewId
+      }, function(review) {
+        $scope.review = review;
+      }, function(error) {
+        $location.path('/forbidden');
       });
     };
   }
