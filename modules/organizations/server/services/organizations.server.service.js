@@ -141,8 +141,10 @@ exports.extractBrands = function(organizations) {
     }
 
     // calcuate average for each panel type across brands
-    org.brands_avg_mono = price_sum_mono / brands_length_mono;
-    org.brands_avg_poly = price_sum_poly / brands_length_poly;
+    org.brands_avg_mono = (price_sum_mono / brands_length_mono) || Infinity;
+    org.brands_avg_poly = (price_sum_poly / brands_length_poly) || Infinity;
+    org.brands_avg_min = Math.min(org.brands_avg_poly, org.brands_avg_mono);
+
     return org;
   });
 };
@@ -150,28 +152,27 @@ exports.extractBrands = function(organizations) {
 exports.sortByQuery = function(orgs, query) {
   // build query for crystalline types
   if (query.crys &&
+      query.crys.indexOf('Mono') === -1 &&
+      query.crys.indexOf('Poly') !== -1) { // sort by mono
+
+    return _.chain(orgs)
+      .sortBy('reviews_length')
+      .reverse()
+      .sortBy('brands_avg_poly')
+      .value();
+  } else if (query.crys &&
       query.crys.indexOf('Mono') !== -1 &&
-      query.crys.indexOf('Poly') === -1) { // sort by mono
-    orgs.sort(function(a,b) {
-      if(!isFinite(a.brands_avg_mono-b.brands_avg_mono)) {
-        return !isFinite(a.brands_avg_mono) ? 1 : -1;
-      } else {
-        return a.brands_avg_mono - b.brands_avg_mono ||
-          a.brands_avg_poly - b.brands_avg_poly ||
-          b.reviews_length - a.reviews_length;
-      }
-    });
-  } else { // sort by poly
-    orgs.sort(function(a,b) {
-      if(!isFinite(a.brands_avg_poly-b.brands_avg_poly)) {
-        return !isFinite(a.brands_avg_poly) ? 1 : -1;
-      } else {
-        return a.brands_avg_poly - b.brands_avg_poly ||
-          a.brands_avg_mono - b.brands_avg_mono ||
-          b.reviews_length - a.reviews_length;
-      }
-    });
+      query.crys.indexOf('Poly') === -1) {
+    return _.chain(orgs)
+      .sortBy('reviews_length')
+      .reverse()
+      .sortBy('brands_avg_mono')
+      .value();
   }
 
-  return orgs;
+  return _.chain(orgs)
+    .sortBy('reviews_length')
+    .reverse()
+    .sortBy('brands_avg_min')
+    .value();
 };
