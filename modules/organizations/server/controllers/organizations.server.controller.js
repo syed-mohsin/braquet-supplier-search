@@ -8,6 +8,7 @@ var path = require('path'),
   multer = require('multer'),
   multerS3 = require('multer-s3'),
   mongoose = require('mongoose'),
+  OrganizationService = require('../services/organizations.server.service'),
   Organization = mongoose.model('Organization'),
   Review = mongoose.model('Review'),
   PriceReview = mongoose.model('PriceReview'),
@@ -15,13 +16,9 @@ var path = require('path'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   nodemailer = require('nodemailer'),
-  async = require('async'),
-  crypto = require('crypto'),
   aws = require('aws-sdk'),
   s3 = new aws.S3(),
-  _ = require('underscore');
-
-var smtpTransport = nodemailer.createTransport(config.mailer.options);
+  smtpTransport = nodemailer.createTransport(config.mailer.options);
 
 /**
  * Contact an organization through Braquet Admin
@@ -95,29 +92,7 @@ exports.contact = function (req, res) {
 exports.create = function (req, res) {
   var organization = new Organization(req.body);
   organization.verified = true;
-
-  // add panel model filter fields
-  req.body.panel_models.forEach(function(panel) {
-    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
-      organization.panel_manufacturers.push(panel.manufacturer);
-    }
-
-    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
-      organization.panel_stcPowers.push(panel.stcPower);
-    }
-
-    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
-      organization.panel_crystalline_types.push(panel.crystallineType);
-    }
-
-    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
-      organization.panel_frame_colors.push(panel.frameColor);
-    }
-
-    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
-      organization.panel_number_of_cells.push(panel.numberOfCells);
-    }
-  });
+  organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
   organization.save()
   .then(function(savedOrg) {
@@ -149,8 +124,8 @@ exports.readPublic = function(req, res) {
 
   Organization.findById(req.params.organizationId)
     .populate('panel_models')
-    .populate('reviews')
-    .populate('priceReviews')
+    .populate({ path: 'reviews', match: { verified: true } })
+    .populate({ path: 'priceReviews', match: { verified: true } })
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);
@@ -158,37 +133,7 @@ exports.readPublic = function(req, res) {
         return res.status(400).json(new Error('Failed to load organization ' + req.params.organizationId));
       }
 
-      Review.populate(organization.reviews, [
-        { path: 'organization' },
-        { path: 'user', populate: { path: 'organization', select: 'companyName logoImageUrl' } }
-      ], function(err, reviews) {
-        if (err) {
-          return res.status(400).json(err);
-        } else {
-          // remove unverified reviews
-          organization.reviews = organization.reviews.filter(function(review) {
-            return review.verified === true;
-          });
-
-          // remove unverified price reviews
-          organization.priceReviews = organization.priceReviews.filter(function(priceReview) {
-            return priceReview.verified === true;
-          });
-
-          // remove displayName on anonymous reviews
-          organization.reviews.map(function(review) {
-            if (review.anonymous && review.user) {
-              review.user.displayName = 'anonymous';
-              review.user.firstName = 'anonymous';
-              review.user.lastName = 'anonymous';
-            }
-
-            return review;
-          });
-
-          res.json(organization);
-        }
-      });
+      res.json(organization);
     });
 };
 
@@ -197,9 +142,8 @@ exports.readPublic = function(req, res) {
  */
 exports.update = function (req, res) {
   var organization = req.organization;
-
-  organization.title = req.body.title;
   organization.companyName = req.body.companyName;
+  organization.isManufacturer = req.body.isManufacturer;
   organization.panel_models = req.body.panel_models;
   organization.industry = req.body.industry;
   organization.productTypes = req.body.productTypes;
@@ -212,35 +156,7 @@ exports.update = function (req, res) {
   organization.country = req.body.country;
   organization.about = req.body.about;
 
-  // reset panel filtering fields
-  organization.panel_manufacturers = [];
-  organization.panel_stcPowers = [];
-  organization.panel_crystalline_types = [];
-  organization.panel_frame_colors = [];
-  organization.panel_number_of_cells = [];
-
-  // add panel model filter fields
-  req.body.panel_models.forEach(function(panel) {
-    if (organization.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
-      organization.panel_manufacturers.push(panel.manufacturer);
-    }
-
-    if (organization.panel_stcPowers.indexOf(panel.stcPower) === -1) {
-      organization.panel_stcPowers.push(panel.stcPower);
-    }
-
-    if (organization.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
-      organization.panel_crystalline_types.push(panel.crystallineType);
-    }
-
-    if (organization.panel_frame_colors.indexOf(panel.frameColor) === -1) {
-      organization.panel_frame_colors.push(panel.frameColor);
-    }
-
-    if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
-      organization.panel_number_of_cells.push(panel.numberOfCells);
-    }
-  });
+  organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
   organization.save()
   .then(function(updatedOrg) {
@@ -330,142 +246,21 @@ exports.list_basic = function (req, res) {
  * Available to all
  */
 exports.get_catalog = function (req, res) {
-  var result = [];
-  var sortObj = { avg_review: -1 }; // by default, sort by avg_review
-  var organizationQueryParams = {}; // query object for Organization
-  var priceReviewQueryParams = {}; // query object for Price Review
-  organizationQueryParams.verified = true; // get only verified organizations
-  organizationQueryParams.panels_length = { '$gt': 0 }; // only show suppliers with any panel models
-
-  // check for filtering for manufacturers and/or resellers
-  if (req.query.isman === 'true' && req.query.isreseller !== 'true') {
-    organizationQueryParams.isManufacturer = true;
-  } else if (req.query.isman !=='true' && req.query.isreseller === 'true') {
-    organizationQueryParams.isManufacturer = false;
-  }
-
-  // build query for search using regular expression
-  if (req.query.q) {
-    organizationQueryParams.companyName = new RegExp(req.query.q, 'i');
-  }
-
-  // build query for manufacturers
-  if (req.query.man) {
-    var manCondition = req.query.man.split('|').filter(function(m) { return m.length !== 0; });
-    organizationQueryParams.panel_manufacturers = { '$in' :  manCondition };
-  }
-
-  // build query for crystalline types
-  if (req.query.crys) {
-    var crysCondition = req.query.crys.split('|').filter(function(c) { return c.length !== 0; });
-    organizationQueryParams.panel_crystalline_types = { '$in' :  crysCondition };
-  }
-
-  // build query for frame colors
-  if (req.query.color) {
-    var colorCondition = req.query.color.split('|').filter(function(c) { return c.length !== 0; });
-    organizationQueryParams.panel_frame_colors = { '$in' :  colorCondition };
-  }
-
-  // build query for number of cells
-  if (req.query.cells) {
-    var cellsCondition = req.query.cells.split('|').filter(function(m) { return m.length !== 0; });
-    organizationQueryParams.panel_number_of_cells = { '$in' :  cellsCondition };
-  }
-
-  // build query for wattage filter
-  if (req.query.pow) {
-    // or statement to check all wattage ranges passed in
-    var powerArr = req.query.pow.split('|').filter(function(p) { return p.length !== 0 && !isNaN(p); });
-    organizationQueryParams.$or = powerArr.map(function(pow) {
-      return {
-        'panel_stcPowers':
-        {
-          '$elemMatch':
-          {
-            '$gt': parseInt(pow)-100,
-            '$lte': parseInt(pow)
-          }
-        }
-      };
-    });
-  }
-
-  // build query for quantity
-  priceReviewQueryParams.quantity = req.query.quantity || '0kW-100kW';
-
+  var queries = OrganizationService.processQuery(req.query);
+  var organizationQueryParams = queries.organizationQueryParams;
+  var priceReviewQueryParams = queries.priceReviewQueryParams;
 
   // for catalog, do a reverse lookup on panels and price reviews
   Organization.find(organizationQueryParams)
-  .populate({
-    path: 'priceReviews',
-    match: priceReviewQueryParams
+  .populate({ path: 'priceReviews', match: priceReviewQueryParams
   })
   .lean() // returns documents as plain JS objects so you can modify them
   .exec()
   .then(function(orgs) {
-    // get brands for orgs
-    orgs = orgs.map(function(org) {
-      // group all price reviews by brand
-      org.brands = _.groupBy(org.priceReviews, function(priceReview) {
-        return priceReview.manufacturer + '#' + priceReview.panelType;
-      });
-
-      // calcuate median of all price reviews under a brand
-      org.brands = _.mapObject(org.brands, function(brand) {
-        brand.sort(function (a, b) { return a.price - b.price; });
-        var lowMiddle = Math.floor((brand.length - 1) / 2);
-        var highMiddle = Math.ceil((brand.length - 1) / 2);
-        var median = (brand[lowMiddle].price + brand[highMiddle].price) / 2;
-        return median;
-      });
-
-      // calculate for each type of panel
-      var price_sum_mono = 0;
-      var price_sum_poly = 0;
-      var brands_length_mono = 0;
-      var brands_length_poly = 0;
-      for (var key in org.brands) {
-        if (key.split('#')[1] === 'Mono') {
-          price_sum_mono += org.brands[key];
-          ++brands_length_mono;
-        } else {
-          price_sum_poly += org.brands[key];
-          ++brands_length_poly;
-        }
-      }
-
-      // calcuate average for each panel type across brands
-      org.brands_avg_mono = price_sum_mono / brands_length_mono;
-      org.brands_avg_poly = price_sum_poly / brands_length_poly;
-      return org;
-    });
-
-    // sort organizations by mono/poly avg and then num reviews
-    // build query for crystalline types
-    if (req.query.crys &&
-        req.query.crys.indexOf('Mono') !== -1 &&
-        req.query.crys.indexOf('Poly') === -1) { // sort by mono
-      orgs.sort(function(a,b) {
-        if(!isFinite(a.brands_avg_mono-b.brands_avg_mono)) {
-          return !isFinite(a.brands_avg_mono) ? 1 : -1;
-        } else {
-          return a.brands_avg_mono - b.brands_avg_mono ||
-            a.brands_avg_poly - b.brands_avg_poly ||
-            b.reviews_length - a.reviews_length;
-        }
-      });
-    } else { // sort by poly
-      orgs.sort(function(a,b) {
-        if(!isFinite(a.brands_avg_poly-b.brands_avg_poly)) {
-          return !isFinite(a.brands_avg_poly) ? 1 : -1;
-        } else {
-          return a.brands_avg_poly - b.brands_avg_poly ||
-            a.brands_avg_mono - b.brands_avg_mono ||
-            b.reviews_length - a.reviews_length;
-        }
-      });
-    }
+    // get brands for organizations
+    orgs = OrganizationService.extractBrands(orgs);
+    // sort organizations
+    orgs = OrganizationService.sortByQuery(orgs, req.query);
 
     var start = (req.query.page - 1 || 0) * 15;
     res.json({ orgs: orgs.slice(start, start + 15), count: orgs.length });
@@ -608,46 +403,15 @@ exports.organizationByID = function (req, res, next, id) {
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .populate('admin', 'displayName')
-    .populate('reviews')
-    .populate('priceReviews')
+    .populate({ path: 'reviews', match: { verified: true } })
+    .populate({ path: 'priceReviews', match: { verified: true } })
     .exec(function (err, organization) {
       if (err) {
         return next(err);
       } else if (!organization) {
         return next(new Error('Failed to load organization ' + id));
       }
-
-      Review.populate(organization.reviews, [
-        { path: 'organization' },
-        { path: 'user', populate: { path: 'organization', select: 'companyName logoImageUrl' } }
-      ], function(err, reviews) {
-        if (err) {
-          return next(err);
-        } else {
-          // remove unverified reviews
-          organization.reviews = organization.reviews.filter(function(review) {
-            return review.verified === true;
-          });
-
-          // remove unverified price reviews
-          organization.priceReviews = organization.priceReviews.filter(function(priceReview) {
-            return priceReview.verified === true;
-          });
-
-          // remove displayName on anonymous reviews
-          organization.reviews.map(function(review) {
-            if (review.anonymous && review.user) {
-              review.user.displayName = 'anonymous';
-              review.user.firstName = 'anonymous';
-              review.user.lastName = 'anonymous';
-            }
-
-            return review;
-          });
-
-          req.organization = organization;
-          return next();
-        }
-      });
+      req.organization = organization;
+      return next();
     });
 };
