@@ -82,8 +82,12 @@ angular.module('pricereviews').controller('PriceReviewsController', ['$scope', '
 
     // Find existing Price Review
     $scope.findOne = function () {
-      $scope.priceReview = PriceReviews.get({
+      PriceReviews.get({
         priceReviewId: $stateParams.priceReviewId
+      }, function(priceReview) {
+        $scope.priceReview = priceReview;
+      }, function(error) {
+        $location.path('/forbidden');
       });
     };
   }
