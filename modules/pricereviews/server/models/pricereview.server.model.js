@@ -76,38 +76,4 @@ var PriceReviewSchema = new Schema({
   }
 });
 
-PriceReviewSchema.pre('remove', function (next) {
-  var Organization = mongoose.model('Organization');
-  var priceReview = this;
-  var organizationId = '';
-
-  if (priceReview.organization && mongoose.Types.ObjectId.isValid(priceReview.organization._id)) {
-    organizationId = priceReview.organization._id;
-  } else if (priceReview.organization && mongoose.Types.ObjectId.isValid(priceReview.organization)) {
-    organizationId = priceReview.organization;
-  } else {
-    console.log('unable to update organization after deleting price review');
-    next();
-  }
-
-  Organization.findById(organizationId)
-  .exec()
-  .then(function(org) {
-    org.priceReviews = org.priceReviews.filter(function(priceReviewId) {
-      return !priceReview._id.equals(priceReviewId);
-    });
-
-    return org.save();
-  })
-  .then(function(savedOrg) {
-    console.log('deleted review from org');
-    next();
-  })
-  .catch(function(err) {
-    console.log('failed to remove review from organization', err);
-    next();
-  });
-
-});
-
 mongoose.model('PriceReview', PriceReviewSchema);
