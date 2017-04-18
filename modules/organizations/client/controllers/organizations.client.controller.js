@@ -67,6 +67,9 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       }
 
       var organization = $scope.organization;
+      // unnecessary fields that cause the request body to become huge
+      delete organization.reviews;
+      delete organization.priceReviews;
 
       organization.$update(function () {
         $state.go('organizations.view', {
