@@ -70,19 +70,31 @@ var generateMockPriceReviewData = function(currOrgs, currUsers) {
 };
 
 var updateOrganizationsAfterPriceReviewsCreation = function(currOrgs) {
-  var promises = [];
+  // var promises = [];
 
-  currOrgs.forEach(function(org) {
-    PriceReview.find({ organization: org._id }).exec()
-      .then(function(priceReviewsForOrg) {
-        priceReviewsForOrg.forEach(function(priceRev) {
-          org.priceReviews.push(priceRev._id);
-        });
-        promises.push(org.save());
-      })
+  // currOrgs.forEach(function(org) {
+  //   PriceReview.find({ organization: org._id }).exec()
+  //     .then(function(priceReviewsForOrg) {
+  //       priceReviewsForOrg.forEach(function(priceRev) {
+  //         org.priceReviews.push(priceRev._id);
+  //       });
+  //       promises.push(org.save());
+  //     })
+  //     .catch(function(err) {
+  //       console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&');
+  //       console.log(err);
+  //     })
+  // });
+
+  // return promises;
+
+
+  return currOrgs.map(function(org) {
+    return org.save();
   });
 
-  return promises;
+
+
 };
 
 

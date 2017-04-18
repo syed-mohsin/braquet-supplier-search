@@ -3,6 +3,7 @@
 var manufacturNames = ['Altech', 'Bigtech', 'Jamtech', 'ForceTech', 'Siegeltech', 'FreshTech', 'Niebeltech', 'Ziedletech', 'Yorktech', 'Didliotech'];
 var models = ['model1', 'model2', 'model3', 'model4', 'model5'];
 var technologyTypes = ['SolarCell1', 'SolarCell2', 'SolarCell3', 'SolarCell4', 'SolarCell5'];
+var panelTypes = ['Poly', 'Mono'];
 
 var mongoose = require('mongoose');
 
@@ -18,6 +19,7 @@ var createPanel = function(profile){
 	profile['model'] = models[Math.floor(Math.random()*models.length)];
 	profile['technologyType'] = technologyTypes[Math.floor(Math.random()*technologyTypes.length)];
 	profile['stcModuleEfficiency'] = "20%";
+	profile['crystallineType'] = panelTypes[Math.floor(Math.random()*panelTypes.length)];
 	profile['stcPower'] = Math.floor(Math.random()*500);
 	profile['frameColor'] = "Blue";
 	profile['numberOfCells'] = Math.floor(Math.random()*50);
@@ -58,20 +60,20 @@ var generateMockPanelData = function(numPanels){
 		}
 	}
 
-	var promises = mongoosePanels.map(function(panel) {
-		return panel.save();
-	});
+  var promises = mongoosePanels.map(function(panel) {
+  	return panel.save();
+  });
 
-	return promises;
+  return promises;
 };
 
 var clearPanelsfromDb = function() {
-	return Panel.remove({}).exec();
+  return Panel.remove({}).exec();
 };
 
 module.exports = {
-	'clearPanelsfromDb': clearPanelsfromDb,
-	'generateMockPanelData': generateMockPanelData
+  'clearPanelsfromDb': clearPanelsfromDb,
+  'generateMockPanelData': generateMockPanelData
 };
 
 

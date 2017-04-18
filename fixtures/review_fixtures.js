@@ -68,6 +68,10 @@ var updateOrganizationsAfterReviewsCreation = function(currOrgs) {
 
         promises.push(org.save());
       })
+      .catch(function(err) {
+        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%');
+        console.log(err);
+      })
   });
 
   return promises;
