@@ -142,9 +142,8 @@ exports.readPublic = function(req, res) {
  */
 exports.update = function (req, res) {
   var organization = req.organization;
-
-  organization.title = req.body.title;
   organization.companyName = req.body.companyName;
+  organization.isManufacturer = req.body.isManufacturer;
   organization.panel_models = req.body.panel_models;
   organization.industry = req.body.industry;
   organization.productTypes = req.body.productTypes;

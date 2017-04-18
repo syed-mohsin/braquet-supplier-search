@@ -11,7 +11,12 @@
             <p class="help-block error-text" ng-message="required">Company name is required.</p>
           </div>
         </div>
-
+        <div class="form-group" show-errors>
+          <label>
+            <input name="isManufacturer" type="checkbox" ng-model="isManufacturer" id="isManufacturer">
+            <span>Is this a manufacturer?</span>
+          </label>
+        </div>
         <div class="form-group" show-errors>
           <input name="industry" type="text" ng-model="industry" id="industry" class="form-control" placeholder="Industry" required>
           <div ng-messages="organizationForm.industry.$error" role="alert">
@@ -36,8 +41,7 @@
               md-items="item in getMatches(searchText)"
               md-item-text="item.model"
               md-min-length="0"
-              placeholder="Please select panel model"
-              ng-hide="panel_models.length >= 10">
+              placeholder="Please select panel model">
                 <span md-highlight-text="searchText">
                   {{item.manufacturer}}, {{item.model}}
                 </span>
