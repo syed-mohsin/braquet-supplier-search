@@ -179,9 +179,6 @@ OrganizationSchema.pre('save', function(next) {
       return manArr;
     }, []);
 
-    // set if is manufacturer or not
-    self.isManufacturer = self.manufacturers.length === 1;
-
     // associate all organization with its panel models
     var panelModelPromises = panelModels.map(function(panelModel) {
       var sellerAlreadyExists = panelModel.sellers.some(function(sellerId) {
