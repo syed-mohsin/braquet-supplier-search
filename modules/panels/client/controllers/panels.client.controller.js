@@ -47,7 +47,7 @@ angular.module('panels').controller('PanelController', ['$scope', '$state', '$st
 
     $scope.update = function (isValid) {
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'panelForm');
+        $scope.$broadcast('show-errors-check-validity', 'editPanelForm');
 
         return false;
       }

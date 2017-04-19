@@ -16,6 +16,12 @@ angular.module('users.admin').run(['Menus',
     });
 
     Menus.addSubMenuItem('topbar', 'admin', {
+      title: 'Create New Panel Model',
+      state: 'panels.create',
+      roles: ['admin']
+    });
+
+    Menus.addSubMenuItem('topbar', 'admin', {
       title: 'Manage Organizations',
       state: 'admin.organizations',
       roles: ['admin']
