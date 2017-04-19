@@ -36,8 +36,8 @@ angular.module('panels').controller('PanelController', ['$scope', '$state', '$st
 
       // Redirect after save
       panel.$save(function (response) {
-        $state.go('panelModels.view', {
-          panelModelId: response._id
+        $state.go('panels.view', {
+          panelId: response._id
         });
 
       }, function (errorResponse) {
@@ -55,8 +55,8 @@ angular.module('panels').controller('PanelController', ['$scope', '$state', '$st
       var panel = $scope.panel;
 
       panel.$update(function () {
-        $state.go('panelModels.view', {
-          panelModelId: panel._id
+        $state.go('panels.view', {
+          panelId: panel._id
         });
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;

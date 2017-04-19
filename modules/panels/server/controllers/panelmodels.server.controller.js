@@ -14,6 +14,50 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
+ * Create a panelmodel
+ */
+exports.create = function (req, res) {
+  var panelmodel = new PanelModel(req.body);
+
+  panelmodel.save()
+  .then(function(savedPanelModel) {
+    res.json(panelmodel);
+  })
+  .catch(function(err) {
+    res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+/**
+ * Update a panel model
+ */
+exports.update = function (req, res) {
+  var panelmodel = req.panelmodel;
+  panelmodel.manufacturer = req.body.manufacturer;
+  panelmodel.model = req.body.model;
+  panelmodel.technologyType = req.body.technologyType;
+  panelmodel.stcModuleEfficiency = req.body.stcModuleEfficiency;
+  panelmodel.crystallineType = req.body.crystallineType;
+  panelmodel.stcPower = req.body.stcPower;
+  panelmodel.frameColor = req.body.frameColor;
+  panelmodel.numberOfCells = req.body.numberOfCells;
+  panelmodel.manufacturingLocations = req.body.manufacturingLocations;
+  panelmodel.specSheetLink = req.body.specSheetLink;
+
+  panelmodel.save()
+  .then(function(updatedPanelModel) {
+    res.json(panelmodel);
+  })
+  .catch(function(err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+/**
  * Return a json array of panel models based on name
  */
 exports.searchByName = function (req, res) {

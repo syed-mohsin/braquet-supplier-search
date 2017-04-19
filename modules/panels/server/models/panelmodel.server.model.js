@@ -50,7 +50,7 @@ var PanelModelSchema = new Schema({
   },
   panelPhotoUrl: {
     type: String,
-    default: 'modules/core/client/img/asset/generic-module.png'
+    default: 'modules/core/client/img/asset/generic-module.jpg'
   }
 });
 
