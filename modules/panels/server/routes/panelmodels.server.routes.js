@@ -10,10 +10,12 @@ var panelmodelsPolicy = require('../policies/panelmodels.server.policy');
 module.exports = function (app) {
   // projects collection routes
   app.route('/api/panelmodels').all(panelmodelsPolicy.isAllowed)
-    .get(panelmodels.searchByName);
+    .get(panelmodels.searchByName)
+    .post(panelmodels.create);
 
   app.route('/api/panelmodels/:panelId').all(panelmodelsPolicy.isAllowed)
-   	.get(panelmodels.read);
+   	.get(panelmodels.read)
+    .put(panelmodels.update);
 
   app.route('/api/panels/photo/:panelId').all(panelmodelsPolicy.isAllowed)
   	.post(panelmodels.uploadPhoto);

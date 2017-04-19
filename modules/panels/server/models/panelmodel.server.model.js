@@ -10,6 +10,10 @@ var mongoose = require('mongoose'),
  * Panel Model Schema
  */
 var PanelModelSchema = new Schema({
+  created: {
+    type: Date,
+    default: Date.now
+  },
   manufacturer: {
     type: String
   },
@@ -46,7 +50,7 @@ var PanelModelSchema = new Schema({
   },
   panelPhotoUrl: {
     type: String,
-    default: 'https://www.oremonte.org/wp-content/uploads/t/t-sunpower-solar-panels-ebay-sunpower-solar-panels-for-sale-sunpower-solar-panels-for-boats-sunpower-solar-panels-for-rv-sunpower-solar-panels-financing-sunpower-solar-panels-for-marine-use-sunp.jpg'
+    default: 'modules/core/client/img/asset/generic-module.jpg'
   }
 });
 

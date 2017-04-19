@@ -40,30 +40,6 @@ angular.module('users.admin.routes').config(['$stateProvider',
         data: {
           roles: ['admin']
         }
-      })
-      .state('panels', {
-        abstract: true,
-        url: '/panels',
-        template: '<ui-view/>',
-        data: {
-          roles: ['admin']
-        }
-      })
-      .state('panels.list', {
-        url: '/panels-list',
-        templateUrl: 'modules/panels/client/views/list-panels.client.view.html',
-        controller: 'PanelController',
-        data: {
-          roles: ['admin']
-        }
-      })
-      .state('panels.view', {
-        url: '/:panelId',
-        templateUrl: 'modules/panels/client/views/view-panel.client.view.html',
-        controller: 'PanelController',
-        data: {
-          roles: ['admin']
-        }
       });
   }
 ]);

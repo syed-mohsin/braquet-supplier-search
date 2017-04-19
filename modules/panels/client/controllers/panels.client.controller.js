@@ -1,11 +1,67 @@
 'use strict';
 
-angular.module('panels').controller('PanelController', ['$scope', '$stateParams', '$filter', '$timeout', '$window', 'FileUploader', 'PanelModels',
-  function ($scope, $stateParams, $filter, $timeout, $window, FileUploader, PanelModels) {
-    PanelModels.query(function (data) {
-      $scope.panel_models = data;
-      $scope.buildPager();
-    });
+angular.module('panels').controller('PanelController', ['$scope', '$state', '$stateParams', '$filter', '$timeout', '$window', 'FileUploader', 'PanelModels',
+  function ($scope, $state, $stateParams, $filter, $timeout, $window, FileUploader, PanelModels) {
+    $scope.find = function() {
+      PanelModels.query(function (data) {
+        $scope.panel_models = data;
+        $scope.buildPager();
+      });
+    };
+
+    // Add new panelModel
+    $scope.create = function (isValid) {
+      $scope.error = null;
+
+      // Check for form submission errors
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'panelForm');
+
+        return false;
+      }
+
+      // Create new PanelModel object
+      var panel = new PanelModels({
+        manufacturer: this.manufacturer,
+        model: this.model,
+        technologyType: this.technologyType,
+        stcModuleEfficiency: this.stcModuleEfficiency,
+        crystallineType: this.crystallineType,
+        stcPower: this.stcPower,
+        frameColor: this.frameColor,
+        numberOfCells: this.numberOfCells,
+        manufacturingLocations: this.manufacturingLocations,
+        specSheetLink: this.specSheetLink,
+      });
+
+      // Redirect after save
+      panel.$save(function (response) {
+        $state.go('panels.view', {
+          panelId: response._id
+        });
+
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    $scope.update = function (isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'editPanelForm');
+
+        return false;
+      }
+
+      var panel = $scope.panel;
+
+      panel.$update(function () {
+        $state.go('panels.view', {
+          panelId: panel._id
+        });
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
 
     $scope.findOne = function() {
       PanelModels.get({
