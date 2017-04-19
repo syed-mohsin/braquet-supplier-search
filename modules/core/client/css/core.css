@@ -748,6 +748,10 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     z-index:100000 !important; /* any number of choice > 1050*/
 }
 
+.md-datepicker-calendar-pane{
+    z-index:1200 !important;
+}
+
 .connections.profile .page-header {
     margin: 0;
     padding: 70px 0 20px;
