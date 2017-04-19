@@ -17,80 +17,72 @@ var currentPanels;
 var finalOrgNames = {};
 
 var populatePanelModel = function(profile) {
-	var randomNumberPanels = Math.floor(Math.random() * (panelMax - panelMin)) + panelMin;
+  var randomNumberPanels = Math.floor(Math.random() * (panelMax - panelMin)) + panelMin;
 
-	for(var i=0; i<randomNumberPanels; i++) {
-		var randomIndex = Math.floor(Math.random() * (currentPanels.length - 1));
-		profile.panel_models.push(currentPanels[randomIndex]._id);
-		profile.panel_manufacturers.push(currentPanels[randomIndex].manufacturer);
-		profile.panel_stcPowers.push(currentPanels[randomIndex].stcPower);
-	}
+  for(var i=0; i<randomNumberPanels; i++) {
+    var randomIndex = Math.floor(Math.random() * (currentPanels.length - 1));
+    profile.panel_models.push(currentPanels[randomIndex]._id);
+    profile.panel_manufacturers.push(currentPanels[randomIndex].manufacturer);
+    profile.panel_stcPowers.push(currentPanels[randomIndex].stcPower);
+  }
 
-	return profile;
+  return profile;
 };
 
 var createOrganization = function() {
-	var profile = {};
-	profile['verified'] = true;
-	profile['users'] = [];
-	profile['possibleUsers'] = [];
-	profile['companyName'] = companyNames[Math.floor(Math.random()*companyNames.length)] + Math.floor(Math.random()*100).toString();
-	profile['reviews'] = [];
-	profile['avg_review'] = Math.floor(Math.random()*100);
-	profile['panel_models'] = [];
-	profile['industry'] = industryNames[Math.floor(Math.random()*industryNames.length)];
-	profile['productTypes'] = productTypes[Math.floor(Math.random()*productTypes.length)];
-	profile['url'] = 'www.' + profile['companyName'] + '.com';
-	profile['address1'] = '329 12th Street';
-	profile['address2'] = '329 12th Street';
-	profile['city'] = 'San Francisco';
-	profile['state'] = 'California';
-	profile['zipcode'] = '94117';
-	profile['country'] = 'USA';
-	profile['about'] = 'We love solar';
-	profile['panel_manufacturers'] = [];
-	profile['panel_stcPowers'] = [];
+  var profile = {};
+  profile['verified'] = true;
+  profile['users'] = [];
+  profile['possibleUsers'] = [];
+  profile['companyName'] = companyNames[Math.floor(Math.random()*companyNames.length)] + Math.floor(Math.random()*100).toString();
+  profile['reviews'] = [];
+  profile['avg_review'] = Math.floor(Math.random()*100);
+  profile['panel_models'] = [];
+  profile['industry'] = industryNames[Math.floor(Math.random()*industryNames.length)];
+  profile['productTypes'] = productTypes[Math.floor(Math.random()*productTypes.length)];
+  profile['url'] = 'www.' + profile['companyName'] + '.com';
+  profile['address1'] = '329 12th Street';
+  profile['address2'] = '329 12th Street';
+  profile['city'] = 'San Francisco';
+  profile['state'] = 'California';
+  profile['zipcode'] = '94117';
+  profile['country'] = 'USA';
+  profile['about'] = 'We love solar';
+  profile['panel_manufacturers'] = [];
+  profile['panel_stcPowers'] = [];
 
 
-	if(!finalOrgNames[profile.companyName]) {
-		var updatedProfile = populatePanelModel(profile);
-		return new Organization(updatedProfile);
-	} else{
-		return createOrganization();
-	}
+  if(!finalOrgNames[profile.companyName]) {
+    var updatedProfile = populatePanelModel(profile);
+    return new Organization(updatedProfile);
+  } else{
+    return createOrganization();
+  }
 };
 
 var generateMockOrgData = function(numOrgs, currPanels) {
-	currentPanels = currPanels;
+  currentPanels = currPanels;
 
-	var mongooseOrgs = [];
+  var orgs = [];
 
-	for(var i=0; i<numOrgs; i++) {
-		var orgCreation = createOrganization();
+  for(var i=0; i<numOrgs; i++) {
+    var orgCreation = createOrganization();
 
-		if(orgCreation) {
-			mongooseOrgs.push(orgCreation);
-		}
-	}
+    if(orgCreation) {
+		  orgs.push(orgCreation);
+	  }
+  }
 
-	var promises = mongooseOrgs.map(function(org) {
-		return org.save();
-	});
-
-	return promises;
-};
-
-
-var clearOrgData = function() {
-	return Organization.remove({}).exec();
+  return orgs.map(function(org) {
+    return org.save();
+  });
 };
 
 var gatherCurrentPanelData = function() {
-	return Panel.find().exec();
+  return Panel.find().exec();
 };
 
 module.exports = {
-	'clearOrgData': clearOrgData,
-	'gatherCurrentPanelData': gatherCurrentPanelData,
-	'generateMockOrgData': generateMockOrgData
+  'gatherCurrentPanelData': gatherCurrentPanelData,
+  'generateMockOrgData': generateMockOrgData
 };

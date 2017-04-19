@@ -25,39 +25,21 @@ var dbUrl = 'mongodb://localhost/mean-dev/?connectTimeoutMS=10000'; //?connectTi
 // Update to ES6 Promises
 mongoose.Promise = global.Promise;
 
-// register relevant models
-require('../modules/panels/server/models/panelmodel.server.model');
-require('../modules/users/server/models/user.server.model');
-require('../modules/reviews/server/models/review.server.model');
-require('../modules/organizations/server/models/organization.server.model');
-
-
 mongoose.connect(dbUrl, function(err) {
   if (!err) {
     console.log('connected to', dbUrl);
   }
 });
 
-
 /*
   *Returns a promise to clear current panel models in the Db
 */
 var promisesClearDataFromDb = require('./panel_fixtures').promisesClearDataFromDb;
-/*
-	*Returns a promise to clear current panel models in the Db
-*/
-
-var clearPanelsfromDb = require('./panel_fixtures').clearPanelsfromDb;
 
 /*
 	*Returns promises that generate mock panel data
 */
 var generateMockPanelData = require('./panel_fixtures').generateMockPanelData;
-
-/*
-	*Returns a promise to clear current org models in the Db
-*/
-var clearOrgData = require('./organization_fixtures').clearOrgData;
 
 /*
 	*Returns a promise to gather all panels currently in the Db
@@ -68,11 +50,6 @@ var gatherCurrentPanelData = require('./organization_fixtures').gatherCurrentPan
 	*Returns promises that generate mock org data
 */
 var generateMockOrgData = require('./organization_fixtures').generateMockOrgData;
-
-/*
-	*Returns a promise to clear current review models in the Db
-*/
-var clearReviewData = require('./review_fixtures').clearReviewData;
 
 /*
 	*Returns a promise to gather all orgs currently in the Db
@@ -88,16 +65,6 @@ var gatherCurrentUserData = require('./review_fixtures').gatherCurrentUserData;
 	*Returns promises that generate mock review data
 */
 var generateMockReviewData = require('./review_fixtures').generateMockReviewData;
-
-/*
-	*Returns promises that updates orgs after new review fixtures have been generated
-*/
-var updateOrganizationsAfterReviewsCreation = require('./review_fixtures').updateOrganizations;
-
-/*
-	*Returns a promise to clear current price_review models in the Db
-*/
-var clearPriceReviewData = require('./priceReview_fixtures').clearPriceReviewData;
 
 /*
   *Returns promises that generate mock price review data
@@ -144,11 +111,10 @@ Promise.all(promisesToClearData).then(function() {
   console.log('9. Generated mock price review data');
   return Promise.all(updateOrganizationsAfterPriceReviewsCreation(currentOrgs));
 }).then(function() {
-  console.log('Successfully generated mock data.');
+  console.log('10. Successfully generated mock data.');
   process.exit(0);
 }).catch(function(err) {
   console.log('*** Hit error catch ***');
   console.log(err);
   process.exit(1);
 });
-

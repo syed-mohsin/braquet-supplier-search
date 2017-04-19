@@ -9,11 +9,6 @@ var quantities = ['0kW-100kW', '101kW-500kW', '501kW-1MW', '>1MW'];
 var panelTypes = ['Poly', 'Mono', 'other'];
 var shippingLocations = ['Asia/Australia', 'Africa', 'Europe', 'North America', 'South America'];
 
-
-var clearPriceReviewData = function() {
-  return PriceReview.remove({}).exec();
-};
-
 function randomDate(start, end) {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
@@ -39,21 +34,19 @@ var createPriceReview = function(currentOrganization) {
 var generateMockPriceReviewData = function(currOrgs, currUsers) {
   currentOrgs = currOrgs;
   currentUsers = currUsers;
-  var mongoosePriceReviews = [];
+  var priceReviews = [];
 
   currentOrgs.forEach(function(org) {
     var randomNumberOfPriceReviews = Math.floor(Math.random() * 500) + 500;
 
     for(var i=0; i<randomNumberOfPriceReviews; i++) {
-      mongoosePriceReviews.push(createPriceReview(org));
+      priceReviews.push(createPriceReview(org));
     }
   });
 
-  var promises = mongoosePriceReviews.map(function(price_review) {
+  return priceReviews.map(function(price_review) {
     return price_review.save();
   });
-
-  return promises;
 };
 
 var updateOrganizationsAfterPriceReviewsCreation = function(currOrgs) {
@@ -63,7 +56,6 @@ var updateOrganizationsAfterPriceReviewsCreation = function(currOrgs) {
 };
 
 module.exports = {
-  'clearPriceReviewData': clearPriceReviewData,
   'generateMockPriceReviewData': generateMockPriceReviewData,
   'updateOrganizations': updateOrganizationsAfterPriceReviewsCreation
 };

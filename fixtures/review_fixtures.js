@@ -26,24 +26,18 @@ var createReview = function() {
 var generateMockReviewData = function(numberOfReviews, currOrgs, currUsers) {
   currentOrgs = currOrgs;
   currentUsers = currUsers;
-  var mongooseReviews = [];
+  var reviews = [];
 
   for(var i=0; i<numberOfReviews; i++) {
     var reviewCreation = createReview();
     if(reviewCreation) {
-      mongooseReviews.push(reviewCreation);
+      reviews.push(reviewCreation);
     }
   }
-  
-  var promises = mongooseReviews.map(function(review) {
+
+  return reviews.map(function(review) {
     return review.save();
   });
-
-  return promises;
-};
-
-var clearReviewData = function() {
-  return Review.remove({}).exec();
 };
 
 var gatherCurrentOrgData = function() {
@@ -54,33 +48,9 @@ var gatherCurrentUserData = function() {
   return User.find().exec();
 };
 
-
-var updateOrganizationsAfterReviewsCreation = function(currOrgs) {
-  var promises = [];
-
-  currOrgs.forEach(function(org) {
-    Review.find({ organization: org._id }).exec()
-      .then(function(reviewsForOrg) {
-
-        reviewsForOrg.forEach(function(rev) {
-          org.reviews.push(rev._id);
-        });
-
-        promises.push(org.save());
-      })
-      .catch(function(err) {
-        console.log(err);
-      })
-  });
-
-  return promises;
-};
-
 module.exports = {
-  'clearReviewData': clearReviewData,
   'gatherCurrentOrgData': gatherCurrentOrgData,
   'gatherCurrentUserData': gatherCurrentUserData,
-  'generateMockReviewData': generateMockReviewData,
-  'updateOrganizations': updateOrganizationsAfterReviewsCreation
+  'generateMockReviewData': generateMockReviewData
 };
 
