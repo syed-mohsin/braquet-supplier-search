@@ -1,6 +1,6 @@
 <section class="list-view" ng-controller="CatalogController">
-    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="resolvedResources !== 3">
-    <div id="catalog-page" ng-show="resolvedResources === 3">
+    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="resolvedResources !== expectedResources">
+    <div id="catalog-page" ng-show="resolvedResources === expectedResources">
         <div class="page-header">
             <div class="row">
                 <h4 class="side-title col-md-3"><b>Best module suppliers</b></h4>
@@ -93,7 +93,7 @@
             </div>
 
             <div class="horizontal list-group col-sm-7">
-                <div class="alert alert-warning text-center" ng-if="resolvedResources === 3 && !orgs.length">
+                <div class="alert alert-warning text-center" ng-if="resolvedResources === expectedResources && !orgs.length">
                     No search results
                 </div>
                 <div>
@@ -122,7 +122,10 @@
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                             </a>
                             <a ng-if="organization._id !== authentication.user.organization" ng-click="followOrganization($event, organization)">
-                                <span></span><span>Follow</span>
+                                <span class=""></span><span>
+                                  {{(!emailNotification.followingOrganizations || emailNotification.followingOrganizations.indexOf(organization._id) === -1) ?
+                                        ('Follow') : ('Following')
+                                  }}</span>
                             </a>
                         </div>
 

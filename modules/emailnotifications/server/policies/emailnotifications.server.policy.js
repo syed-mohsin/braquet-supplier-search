@@ -35,6 +35,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/emailnotifications-follow/:organizationId',
       permissions: ['get']
+    }, {
+      resources: '/api/emailnotifications/get-my-notification',
+      permissions: ['get']
     }]
   }]);
 };
@@ -49,7 +52,7 @@ exports.isAllowed = function (req, res, next) {
   if (roles.indexOf('admin') !== -1) {
     return next();
   }
-  console.log(roles);
+
   // If an emailNotification is being processed and the
   // current user created it then allow any manipulation
   if (req.emailNotification && req.user && req.emailNotification.user.id === req.user.id) {
@@ -58,7 +61,6 @@ exports.isAllowed = function (req, res, next) {
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
-    console.log('ami allowed', isAllowed);
     if (err) {
       // An authorization error occurred.
       return res.status(500).send('Unexpected authorization error');

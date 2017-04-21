@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'Notification',
-  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, Notification) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification',
+  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, EmailNotifications, Notification) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resolvedResources = 0;
+    $scope.expectedResources = 4;
     $scope.search = $stateParams.q;
 
     $scope.query = {};
@@ -24,6 +25,40 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
+
+    $scope.getOrganizations = function() {
+      $http({
+        url: '/api/organizations-catalog',
+        params: $scope.query
+      })
+      .then(function(resp) {
+        $scope.orgs = resp.data.orgs;
+        $scope.buildPager(resp.data.count);
+
+        // increment resolvedResources
+        $scope.resolvedResources++;
+      })
+      .catch(function(err) {
+        console.log('err', err);
+      });
+    };
+
+    $scope.getUserEmailNotification = function() {
+      if (!Authentication.user) {
+        $scope.emailNotification = {};
+        $scope.resolvedResources++;
+        return;
+      }
+
+      $http.get('/api/emailnotifications/get-my-notification')
+      .then(function(resp) {
+        $scope.emailNotification = resp.data ? resp.data : {};
+        $scope.resolvedResources++;
+      })
+      .catch(function(err) {
+        console.log('Unable to load user email settings', err);
+      });
+    };
 
     $scope.updateFilter = function() {
       var man = '';
@@ -233,10 +268,13 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       if (!Authentication.user) {
         return $state.go('authentication.signin');
       }
-      
+
       $http.get('/api/emailnotifications-follow/' + organization._id)
       .then(function(response) {
-        console.log(response.data);
+        $scope.emailNotification = response.data.newEmailNotification;
+        var isFollowing = response.data.isFollowing;
+        var notificationString = isFollowing ? 'Following' : 'Unfollowed';
+        Notification.primary(notificationString + ' ' + organization.companyName);
       })
       .catch(function(err) {
         console.log('unable to follow organization', err);
@@ -246,20 +284,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // load resources from server after inititalizing all controller functions
 
     // fetch results based on query
-    $http({
-      url: '/api/organizations-catalog',
-      params: $scope.query
-    })
-    .then(function(resp) {
-      $scope.orgs = resp.data.orgs;
-      $scope.buildPager(resp.data.count);
-
-      // increment resolvedResources
-      $scope.resolvedResources++;
-    })
-    .catch(function(err) {
-      console.log('err', err);
-    });
+    $scope.getOrganizations();
+    $scope.getUserEmailNotification();
 
     // initialize filter boxes
     $scope.buildWattCheckboxes();

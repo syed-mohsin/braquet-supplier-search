@@ -30,6 +30,8 @@ exports.create = function (req, res) {
  * Follow/Unfollow an organization
  */
 exports.followOrganization = function (req, res) {
+  var isFollowing = false; // to determine if this is follow or unfollow action
+
   EmailNotification.findOne({ user: req.user._id })
   .exec()
   .then(function(emailNotification) {
@@ -41,16 +43,41 @@ exports.followOrganization = function (req, res) {
 
     // decide whether to follow or unfollow organization
     var orgIndex = emailNotification.followingOrganizations.indexOf(req.organization.id);
+
     if (orgIndex !== -1) {
       emailNotification.followingOrganizations.splice(orgIndex, 1);
     } else {
       emailNotification.followingOrganizations.push(req.organization._id);
+      isFollowing = true;
     }
 
     return emailNotification.save();
   })
   .then(function(savedEmailOrganization) {
-    res.json(savedEmailOrganization);
+    res.json({
+      newEmailNotification: savedEmailOrganization,
+      isFollowing: isFollowing
+    });
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
+  });
+};
+
+/**
+ * Find current user's emailNotification preferences
+ */
+exports.getUserEmailNotification = function (req, res) {
+  if (!req.user) {
+    return res.status(400).json({
+      message: 'No user exists'
+    });
+  }
+
+  EmailNotification.findOne({ user: req.user._id })
+  .exec()
+  .then(function(emailNotification) {
+    res.json(emailNotification);
   })
   .catch(function(err) {
     res.status(400).json(err);
