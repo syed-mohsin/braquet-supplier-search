@@ -273,11 +273,13 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       .then(function(response) {
         $scope.emailNotification = response.data.newEmailNotification;
         var isFollowing = response.data.isFollowing;
+
         var notificationString = isFollowing ? 'Following' : 'Unfollowed';
         Notification.primary(notificationString + ' ' + organization.companyName);
       })
       .catch(function(err) {
         console.log('unable to follow organization', err);
+        Notification.error('Error updating supplier following settings');
       });
     };
 
