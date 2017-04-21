@@ -229,6 +229,20 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       });
     };
 
+    $scope.followOrganization = function(ev, organization) {
+      if (!Authentication.user) {
+        return $state.go('authentication.signin');
+      }
+      
+      $http.get('/api/emailnotifications-follow/' + organization._id)
+      .then(function(response) {
+        console.log(response.data);
+      })
+      .catch(function(err) {
+        console.log('unable to follow organization', err);
+      });
+    };
+
     // load resources from server after inititalizing all controller functions
 
     // fetch results based on query
