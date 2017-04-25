@@ -7,6 +7,8 @@ var path = require('path'),
   config = require(path.resolve('./config/config')),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Organization = mongoose.model('Organization'),
+  OrganizationService = require('../../../organizations/server/services/organizations.server.service'),
   EmailNotification = mongoose.model('EmailNotification'),
   mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN }),
   schedule = require('node-schedule');
@@ -17,23 +19,63 @@ var path = require('path'),
 module.exports = function (app, db) {
   // initialize scheduled emailing
   var rule = new schedule.RecurrenceRule();
-  rule.minute = 37;
+  var ONE_DAY = 24*60*60*1000;
+  var dateCheck = new Date(Date.now() - ONE_DAY);
+  rule.minute = 44;
 
-  var j = schedule.scheduleJob(rule, function(){
-    var data = {
-      from: 'no-reply <no-reply@braquet.io>',
-      to: 'syedm.90@gmail.com',
-      subject: 'Test',
-      text: 'Testing mailgun API'
-    };
+  var data = {
+    from: 'Braquet <no-reply@braquet.io>',
+    to: 'syedm.90@gmail.com',
+    subject: 'Test Update'
+  };
 
+  User.findOne({ email: 'syedm.90@gmail.com' }).exec()
+  .then(function(user) {
+    return EmailNotification.findOne({ user: user._id }).exec();
+  })
+  .then(function(emailNotification) {
+    return Organization.find({
+      _id: { $in: emailNotification.followingOrganizations },
+      updated: { $gt: dateCheck }
+    }).populate('priceReviews').lean().exec();
+  })
+  .then(function(orgs) {
+    orgs = OrganizationService.extractBrands(orgs);
+    orgs = orgs.filter(function(org) {
+      return isFinite(org.brands_avg_min);
+    });
+    orgs = orgs.map(function(org) {
+      org.id = org._id.toString();
+      return org;
+    });
+
+    return new Promise(function(resolve, reject) {
+
+      app.render('modules/emailnotifications/server/templates/user-update', {
+        organizations: orgs
+      }, function(err, emailHTML) {
+        if(err) {
+          reject(err);
+        }
+        resolve(emailHTML);
+      });
+    });
+  })
+  .then(function(emailHTML) {
+    data.html = emailHTML;
     mailgun.messages().send(data, function (err, body) {
       if (err) {
         console.log(err);
+      } else {
+        console.log('body', body);
       }
-      console.log('body', body);
     });
+  })
+  .catch(function(err) {
+    console.log('failed to fetch user', err);
+  });
 
-    console.log('The answer to life, the universe, and everything!');
+  var j = schedule.scheduleJob(rule, function(){
+
   });
 };

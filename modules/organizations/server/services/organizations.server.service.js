@@ -109,12 +109,65 @@ exports.processQuery = function(query) {
   };
 };
 
+exports.calculateBrandsAveragePrice = function(org) {
+  var price_sum_mono = 0;
+  var price_sum_poly = 0;
+  var brands_length_mono = 0;
+  var brands_length_poly = 0;
+
+  for (var key in org.brands) {
+    if (key.split('#')[1] === 'Mono') {
+      price_sum_mono += org.brands[key];
+      ++brands_length_mono;
+    } else if (key.split('#')[1] === 'Poly') {
+      price_sum_poly += org.brands[key];
+      ++brands_length_poly;
+    }
+  }
+
+  // calcuate average for each panel type across brands
+  org.brands_avg_mono = (price_sum_mono / brands_length_mono) || Infinity;
+  org.brands_avg_poly = (price_sum_poly / brands_length_poly) || Infinity;
+  org.brands_avg_min = Math.min(org.brands_avg_poly, org.brands_avg_mono);
+
+  return org;
+};
+
 exports.extractBrands = function(organizations) {
   return organizations.map(function(org) {
     // group all price reviews by brand
     org.brands = _.groupBy(org.priceReviews, function(priceReview) {
       return priceReview.manufacturer + '#' + priceReview.panelType;
     });
+
+    org.testbrands = _.chain(org.priceReviews)
+      .groupBy(function(priceReview) {
+        return priceReview.manufacturer;
+      })
+      .mapObject(function(brandPrices) {
+        return _.chain(brandPrices)
+          .groupBy(function(priceReview) {
+            return priceReview.panelType;
+          })
+          .mapObject(function(panelPrices) {
+            return _.groupBy(panelPrices, function(priceReview) {
+              return priceReview.quantity;
+            });
+          })
+          .value();
+      })
+      .mapObject(function(brand) {
+        return _.mapObject(brand, function(panel) {
+          return _.mapObject(panel, function(pricesByQuantity) {
+            pricesByQuantity.sort(function (a, b) { return a.price - b.price; });
+            var lowMiddle = Math.floor((pricesByQuantity.length - 1) / 2);
+            var highMiddle = Math.ceil((pricesByQuantity.length - 1) / 2);
+            var median = (pricesByQuantity[lowMiddle].price + pricesByQuantity[highMiddle].price) / 2;
+            return median;
+          });
+        });
+      })
+      .value();
 
     // calcuate median of all price reviews under a brand
     org.brands = _.mapObject(org.brands, function(brand) {
@@ -125,25 +178,8 @@ exports.extractBrands = function(organizations) {
       return median;
     });
 
-    // calculate for each type of panel
-    var price_sum_mono = 0;
-    var price_sum_poly = 0;
-    var brands_length_mono = 0;
-    var brands_length_poly = 0;
-    for (var key in org.brands) {
-      if (key.split('#')[1] === 'Mono') {
-        price_sum_mono += org.brands[key];
-        ++brands_length_mono;
-      } else {
-        price_sum_poly += org.brands[key];
-        ++brands_length_poly;
-      }
-    }
-
-    // calcuate average for each panel type across brands
-    org.brands_avg_mono = (price_sum_mono / brands_length_mono) || Infinity;
-    org.brands_avg_poly = (price_sum_poly / brands_length_poly) || Infinity;
-    org.brands_avg_min = Math.min(org.brands_avg_poly, org.brands_avg_mono);
+    // calculate average for each type of panel
+    org = exports.calculateBrandsAveragePrice(org);
 
     return org;
   });

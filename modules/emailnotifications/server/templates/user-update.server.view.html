@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Contact Supplier</title>
+</head>
+
+<body>
+  <p>Organizations updated!</p>
+  {% for org in organizations %}
+    <p>{{org.companyName}} => avg. review: {{org.avg_review}}, https://www.braquet.io/organizations/{{org.id}}</p>
+    {% for brand in org.testbrands %}
+      <p>{{ loop.key }}</p>
+      {% for panelType in brand %}
+      {{ loop.key }}:
+        {% for quantity in panelType %}
+          {{loop.key}}: ${{ quantity / 100 }}
+        {% endfor %}
+      {% endfor %}
+    {% endfor %}
+
+  {% endfor %}
+</body>
+
+</html>

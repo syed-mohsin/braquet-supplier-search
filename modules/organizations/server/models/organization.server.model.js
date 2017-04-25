@@ -21,6 +21,9 @@ var OrganizationSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  updated: {
+    type: Date
+  },
   verified: {
     type: Boolean
   },
@@ -134,6 +137,9 @@ OrganizationSchema.pre('save', function(next) {
     PanelModel = mongoose.model('PanelModel');
 
   var self = this;
+
+  // update timestamp
+  self.updated = Date.now();
 
   // set number of panels
   self.panels_length = self.panel_models.length;
