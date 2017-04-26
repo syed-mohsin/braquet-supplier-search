@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification) {
+angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.resolvedResources = 0;
@@ -64,6 +64,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
 
         var notificationString = isFollowing ? 'Following' : 'Unfollowed';
         Notification.primary(notificationString + ' ' + organization.companyName);
+        $analytics.eventTrack('User ' + Authentication.user.displayName + ' ' + (isFollowing ? 'Following' : 'Unfollowed') + ' ' + organization.companyName);
       })
       .catch(function(err) {
         console.log('unable to follow organization', err);
