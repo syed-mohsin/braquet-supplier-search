@@ -25,11 +25,11 @@ module.exports = function (app, db) {
 
   var data = {
     from: 'Braquet <no-reply@braquet.io>',
-    to: 'syedm.90@gmail.com',
+    to: process.env.NOTIFICATION_TEST_EMAIL,
     subject: 'Test Update'
   };
 
-  User.findOne({ email: 'syedm.90@gmail.com' }).exec()
+  User.findOne({ email: process.env.NOTIFICATION_TEST_EMAIL }).exec()
   .then(function(user) {
     return EmailNotification.findOne({ user: user._id }).exec();
   })
