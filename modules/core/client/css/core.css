@@ -328,7 +328,6 @@ section h2 {
     background-color: rgba(0,0,0,0.2);
 }
 .welcome.banner {
-    text-align: center;
     background: url('https://c1.staticflickr.com/8/7126/8167308930_b50811e2a7_k.jpg');
     height: 100vh;
     background-size: cover;
@@ -338,7 +337,6 @@ section h2 {
     position: relative;
     top: 10em;
     padding: 20px 36px;
-    margin: 0 auto;
 }
 .banner h2 {
     margin-bottom: 20px;
@@ -369,18 +367,16 @@ section h2 {
     border-radius: 0;
 }
 .banner .detail {
-    margin: 180px auto 133px auto;
-    max-width: 500px;
-    text-align: center;
+    max-width: 450px;
 }
 .banner h1 {
-    text-align: center;
     line-height: 55px;
-    font-weight: 400;
+    font-weight: 700;
     color: white;
-    font-size: 35px;
+    font-size: 40pt;
     position: relative;
     top: -39px;
+    left: -378px;
 }
 .banner .btn {
     background: #4CAF50;
