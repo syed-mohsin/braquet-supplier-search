@@ -20,11 +20,5 @@ module.exports = function (app, db) {
   //
   // });
   //
-  EmailNotificationService.sendEmailToUser(app)
-  .then(function(body) {
-    console.log(body);
-  })
-  .catch(function(err) {
-    console.log(err);
-  });
+  EmailNotificationService.sendEmailNotificationToUsers(app);
 };

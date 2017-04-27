@@ -9,23 +9,21 @@ var path = require('path'),
   EmailNotification = mongoose.model('EmailNotification'),
   mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN });
 
-exports.sendEmailToUser = function(app) {
+exports.sendEmailNotificationToUser = function(app, user) {
   // initialize scheduled emailing
   var ONE_DAY = 24*60*60*1000;
   var dateCheck = new Date(Date.now() - ONE_DAY*100);
 
   var data = {
     from: 'Braquet <no-reply@braquet.io>',
-    to: process.env.NOTIFICATION_TEST_EMAIL,
+    to: user.email,
     subject: 'Test Update'
   };
 
+  console.log('STARTING TO EMAIL USER', user.displayName, 'WITH EMAIL:', user.email);
   return new Promise(function(resolve, reject) {
-    User.findOne({ email: process.env.NOTIFICATION_TEST_EMAIL }).exec()
-    .then(function(user) {
-      console.log('user', user._id);
-      return EmailNotification.findOne({ user: user._id }).exec();
-    })
+    EmailNotification.findOne({ user: user._id, isSubscribed: true })
+    .exec()
     .then(function(emailNotification) {
       if (!emailNotification) {
         throw new Error('email notification does not exist');
@@ -35,9 +33,15 @@ exports.sendEmailToUser = function(app) {
       return Organization.find({
         _id: { $in: emailNotification.followingOrganizations },
         updated: { $gt: dateCheck }
-      }).populate('priceReviews').lean().exec();
+      })
+      .populate('priceReviews')
+      .lean()
+      .exec();
     })
     .then(function(orgs) {
+      if (!orgs.length) {
+        throw new Error('No organizations update for following user', user.email);
+      }
       console.log('orgs', orgs.length);
       orgs = OrganizationService.extractBrands(orgs);
       orgs = orgs.filter(function(org) {
@@ -66,14 +70,34 @@ exports.sendEmailToUser = function(app) {
     .then(function(emailHTML) {
       console.log('got email html');
       data.html = emailHTML;
-      return mailgun.messages().send(data);
+      // return mailgun.messages().send(data);
+      return 'test, not sending email yet';
     })
     .then(function(body) {
       console.log('about to resolve email body');
       resolve(body);
     })
     .catch(function(err) {
-      reject(err);
+      console.log('FAILED FOR USER', user.displayName, 'WITH EMAIL:', user.email);
+      resolve(err);
     });
+  });
+};
+
+exports.sendEmailNotificationToUsers = function(app) {
+  User.find({ verified: true })
+  .then(function(users) {
+    console.log('THERE ARE', users.length, 'verified users');
+    var emailNotifPromises = users.map(function(user) {
+      return exports.sendEmailNotificationToUser(app, user);
+    });
+
+    return Promise.all(emailNotifPromises);
+  })
+  .then(function(resps) {
+    console.log('DFJSDL:FKJSDLK:FJL:SKDJF SUCCESSFUL EMAILSS', resps.length, resps);
+  })
+  .catch(function(err) {
+    console.log('failed to send email to all users', err);
   });
 };
