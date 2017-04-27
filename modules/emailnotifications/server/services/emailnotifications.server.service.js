@@ -50,7 +50,7 @@ exports.sendEmailToUser = function(app) {
 
       console.log('about to hydrate template');
       return new Promise(function(resolve, reject) {
-
+        console.log('inside emailHtml promise');
         app.render('modules/emailnotifications/server/templates/user-update', {
           organizations: orgs
         }, function(err, emailHTML) {
