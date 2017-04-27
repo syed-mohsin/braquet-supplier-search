@@ -23,12 +23,14 @@ exports.sendEmailToUser = function(app) {
   return new Promise(function(resolve, reject) {
     User.findOne({ email: process.env.NOTIFICATION_TEST_EMAIL }).exec()
     .then(function(user) {
+      console.log('user', user._id);
       return EmailNotification.findOne({ user: user._id }).exec();
     })
     .then(function(emailNotification) {
       if (!emailNotification) {
         throw new Error('email notification does not exist');
       }
+      console.log('emailNotification', emailNotification);
 
       return Organization.find({
         _id: { $in: emailNotification.followingOrganizations },
@@ -36,6 +38,7 @@ exports.sendEmailToUser = function(app) {
       }).populate('priceReviews').lean().exec();
     })
     .then(function(orgs) {
+      console.log('orgs', orgs.length);
       orgs = OrganizationService.extractBrands(orgs);
       orgs = orgs.filter(function(org) {
         return isFinite(org.brands_avg_min);
@@ -52,8 +55,9 @@ exports.sendEmailToUser = function(app) {
         }, function(err, emailHTML) {
           if(err) {
             reject(err);
+          } else {
+            resolve(emailHTML);
           }
-          resolve(emailHTML);
         });
       });
     })
