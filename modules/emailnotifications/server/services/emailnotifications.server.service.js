@@ -62,10 +62,12 @@ exports.sendEmailToUser = function(app) {
       });
     })
     .then(function(emailHTML) {
+      console.log('getting email html');
       data.html = emailHTML;
       return mailgun.messages().send(data);
     })
     .then(function(body) {
+      console.log('about to resolve email body');
       resolve(body);
     })
     .catch(function(err) {
