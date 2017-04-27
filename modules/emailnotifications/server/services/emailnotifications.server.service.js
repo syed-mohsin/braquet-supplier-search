@@ -48,6 +48,7 @@ exports.sendEmailToUser = function(app) {
         return org;
       });
 
+      console.log('about to hydrate template');
       return new Promise(function(resolve, reject) {
 
         app.render('modules/emailnotifications/server/templates/user-update', {
@@ -56,13 +57,14 @@ exports.sendEmailToUser = function(app) {
           if(err) {
             reject(err);
           } else {
+            console.log('successfully hydrated email');
             resolve(emailHTML);
           }
         });
       });
     })
     .then(function(emailHTML) {
-      console.log('getting email html');
+      console.log('got email html');
       data.html = emailHTML;
       return mailgun.messages().send(data);
     })
