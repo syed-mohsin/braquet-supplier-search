@@ -16,15 +16,15 @@ module.exports = function (app, db) {
   var rule = new schedule.RecurrenceRule();
   rule.minute = 44;
 
-  var job = schedule.scheduleJob(rule, function(){
-
-  });
-
-  EmailNotificationService.sendEmailToUser(app)
-  .then(function(body) {
-    console.log(body);
-  })
-  .catch(function(err) {
-    console.log(err);
-  });
+  // var job = schedule.scheduleJob(rule, function(){
+  //
+  // });
+  //
+  // EmailNotificationService.sendEmailToUser(app)
+  // .then(function(body) {
+  //   console.log(body);
+  // })
+  // .catch(function(err) {
+  //   console.log(err);
+  // });
 };
