@@ -3,13 +3,25 @@
     	<div class="banner-shade">
 	        <div class="detail container">
 
-		            <h1>Search hundreds of solar suppliers at once</h1>
-		            <!-- <a ui-sref="catalog">Panel Modules</a> -->
-		            <select ng-model="groupId" ng-change="goToCatalog()" class="braquet-dropdown">
-		            	<option value="">Select a product type</option>
-		            	<option value="catalog">Solar Modules</option>
-		            </select>
+	            <h1>Search module supplier reviews and quotes</h1>
+
+	            <form ng-submit="searchSubmit()" class="ng-pristine ng-valid no-background no-padding no-margin">
+                        <input class="form-control col-md-12 ng-pristine ng-valid ng-touched" type="text" ng-model="search" placeholder="Search for solar module suppliers" aria-invalid="false">
+                        <button type="submit" class="btn btn-primary submit">Submit</button>
+                </form>
+	            <div class="review">
+    				<img style="width:120px; float:left; margin-right:10px;" src="/modules/core/client/img/asset/logo_canadian_solar.png">
+    				<div class="info" style="overflow:auto; color:white;">
+    					<div style="font-size: 14pt; font-weight:700">Canadian Solar</div>
+    					<div>"Can't go wrong with Canadian Solar"</div>
+    					<div class="reviews">
+                        	<rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                    	</div>
+    				</div>
+   		 		</div>
 	        </div>
+	        
         </div>
+
     </section>
 </section>
