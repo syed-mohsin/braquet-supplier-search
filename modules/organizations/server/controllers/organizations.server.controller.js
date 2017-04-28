@@ -25,7 +25,7 @@ var path = require('path'),
  */
 exports.contact = function (req, res) {
 
-  var inquiry = req.body;
+  var form = req.body;
   var userDisplayName = req.user.displayName;
   var organizationName = req.organization.companyName;
 
@@ -47,7 +47,7 @@ exports.contact = function (req, res) {
         name: userDisplayName,
         userOrg: organization.companyName,
         orgName: organizationName,
-        content: inquiry.content
+        content: form.content
       }, function(err, emailHTML) {
         if(err) {
           reject(err);
