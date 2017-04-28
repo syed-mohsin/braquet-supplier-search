@@ -74,12 +74,10 @@ exports.sendEmailNotificationToUser = function(app, user) {
       return 'test, not sending email yet';
     })
     .then(function(body) {
-      console.log('about to resolve email body');
       resolve(body);
     })
     .catch(function(err) {
-      console.log('FAILED FOR USER', user.displayName, 'WITH EMAIL:', user.email);
-      resolve(err);
+      reject(err);
     });
   });
 };
@@ -88,16 +86,18 @@ exports.sendEmailNotificationToUsers = function(app) {
   User.find({ verified: true })
   .then(function(users) {
     console.log('THERE ARE', users.length, 'verified users');
-    var emailNotifPromises = users.map(function(user) {
-      return exports.sendEmailNotificationToUser(app, user);
+    users.forEach(function(user) {
+      return exports.sendEmailNotificationToUser(app, user)
+        .then(function(resp) {
+          console.log('SUCCESS', resp);
+        })
+        .catch(function(err) {
+          console.log('FAILED FOR USER', user.displayName, 'WITH EMAIL:', user.email);
+          console.log(err);
+        });
     });
-
-    return Promise.all(emailNotifPromises);
-  })
-  .then(function(resps) {
-    console.log('DFJSDL:FKJSDLK:FJL:SKDJF SUCCESSFUL EMAILSS', resps.length, resps);
   })
   .catch(function(err) {
-    console.log('failed to send email to all users', err);
+    console.log('failed to fetch users', err);
   });
 };

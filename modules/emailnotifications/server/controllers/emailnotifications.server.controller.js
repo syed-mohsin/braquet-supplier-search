@@ -6,7 +6,45 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   EmailNotification = mongoose.model('EmailNotification'),
+  User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+
+/**
+ * Handle Mailgun Unsubscribe Webhook
+ */
+exports.unsubscribe = function (req, res) {
+  if (!req.params.token) {
+    res.redirect('/forbidden');
+  }
+
+  User.findOne({ inviteToken: req.params.token })
+  .exec()
+  .then(function(user) {
+    if (!user) {
+      throw new Error('no user found!');
+    } else if (!req.user || !req.user._id.equals(user._id)) {
+      throw new Error('invalid user');
+    }
+
+    return EmailNotification.findOne({ user: user._id })
+    .exec();
+  })
+  .then(function(emailNotification) {
+    if (!emailNotification) {
+      throw new Error('no email notification doc!');
+    }
+
+    emailNotification.isSubscribed = false;
+    return emailNotification.save();
+  })
+  .then(function(savedEmailNotification) {
+    res.send('unsubscribed');
+  })
+  .catch(function(err) {
+    console.log('failed to unsubscribe', err);
+    res.redirect('/forbidden');
+  });
+};
 
 /**
  * Create a emailNotification
@@ -53,9 +91,9 @@ exports.followOrganization = function (req, res) {
 
     return emailNotification.save();
   })
-  .then(function(savedEmailOrganization) {
+  .then(function(savedEmailNotification) {
     res.json({
-      newEmailNotification: savedEmailOrganization,
+      newEmailNotification: savedEmailNotification,
       isFollowing: isFollowing
     });
   })
