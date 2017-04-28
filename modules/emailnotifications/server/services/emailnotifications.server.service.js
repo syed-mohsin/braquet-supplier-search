@@ -56,7 +56,8 @@ exports.sendEmailNotificationToUser = function(app, user) {
       return new Promise(function(resolve, reject) {
         console.log('inside emailHtml promise');
         app.render('modules/emailnotifications/server/templates/user-update', {
-          organizations: orgs
+          organizations: orgs,
+          user: user
         }, function(err, emailHTML) {
           if(err) {
             reject(err);
@@ -70,8 +71,11 @@ exports.sendEmailNotificationToUser = function(app, user) {
     .then(function(emailHTML) {
       console.log('got email html');
       data.html = emailHTML;
-      // return mailgun.messages().send(data);
-      return 'test, not sending email yet';
+      if (user.email === process.env.NOTIFICATION_TEST_EMAIL) {
+        return mailgun.messages().send(data);
+      } else {
+        return 'test, not sending email yet';
+      }
     })
     .then(function(body) {
       resolve(body);

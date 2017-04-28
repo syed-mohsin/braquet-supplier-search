@@ -10,6 +10,8 @@
   {% for org in organizations %}
     <p>{{org.companyName}} https://www.braquet.io/organizations/{{org.id}}</p>
   {% endfor %}
+
+  <p> Unsubscribe http://localhost:3000/api/emailnotifications/unsubscribe/{{user.inviteToken}}
 </body>
 
 </html>
