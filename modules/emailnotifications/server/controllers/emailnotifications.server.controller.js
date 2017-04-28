@@ -135,8 +135,8 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var emailNotification = req.emailNotification;
 
-  emailNotification.title = req.body.title;
-  emailNotification.content = req.body.content;
+  emailNotification.frequency = parseInt(req.body.frequency);
+  emailNotification.isSubscribed = req.body.isSubscribed;
 
   emailNotification.save(function (err) {
     if (err) {
