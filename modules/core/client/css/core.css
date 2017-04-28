@@ -311,8 +311,7 @@ section h2 {
 }
 .banner-shade {
     height: 100vh;
-    background-color: black;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.3);
 }
 .welcome.banner {
     background: url('https://c1.staticflickr.com/8/7126/8167308930_b50811e2a7_k.jpg');
@@ -336,7 +335,7 @@ section h2 {
 .banner h1 {
     line-height: 55px;
     font-weight: 700;
-    color: #3B3B3B;
+    color: white;
     font-size: 38pt;
     position: relative;
     top: -39px;
@@ -347,6 +346,14 @@ section h2 {
     padding:15px; 
     background: rgba(1,1,1,0.2); 
     max-width: 450px;
+}
+.welcome .reviews {
+    margin-top: 5px;
+}
+.welcome .review img {
+    width:120px; 
+    float:left; 
+    margin-right:10px;
 }
 @media (max-width: 767px) {
     .banner h1 {
