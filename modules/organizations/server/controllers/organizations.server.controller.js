@@ -9,6 +9,7 @@ var path = require('path'),
   multerS3 = require('multer-s3'),
   mongoose = require('mongoose'),
   OrganizationService = require('../services/organizations.server.service'),
+  ContactOrganization = mongoose.model('ContactOrganization'),
   Organization = mongoose.model('Organization'),
   Review = mongoose.model('Review'),
   PriceReview = mongoose.model('PriceReview'),
@@ -25,7 +26,7 @@ var path = require('path'),
  */
 exports.contact = function (req, res) {
 
-  var form = req.body;
+  var ContactOrganizationForm = new ContactOrganization(req.body);
   var userDisplayName = req.user.displayName;
   var organizationName = req.organization.companyName;
 

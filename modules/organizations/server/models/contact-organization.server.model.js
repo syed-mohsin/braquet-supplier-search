@@ -15,6 +15,14 @@ var ContactOrganizationSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  organization: {
+    type: Schema.ObjectId,
+    ref: 'Organization'
+  },
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User',
+  },
   projectRole: {
     type: String,
     enum: ['Installer', 'EPC', 'Developer', 'Other']
