@@ -60,6 +60,7 @@ exports.sendEmailNotificationToUser = function(app, user) {
           user: user
         }, function(err, emailHTML) {
           if(err) {
+            console.log('EMAIL HYDRADTION FAILED', err);
             reject(err);
           } else {
             console.log('successfully hydrated email');
