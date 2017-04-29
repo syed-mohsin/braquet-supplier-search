@@ -11,7 +11,8 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   async = require('async'),
   User = mongoose.model('User'),
-  Organization = mongoose.model('Organization');
+  Organization = mongoose.model('Organization'),
+  EmailNotification = mongoose.model('EmailNotification');
 
 var smtpTransport = nodemailer.createTransport(config.mailer.options);
 
@@ -151,6 +152,13 @@ exports.signup = function (req, res) {
           done(err, user);
         });
       }
+    },
+    function(user, done) {
+      var emailNotification = new EmailNotification();
+      emailNotification.user = user._id;
+      emailNotification.save(function(err) {
+        done(err, user);
+      });
     },
     function (user, done) {
       var httpTransport = 'http://';

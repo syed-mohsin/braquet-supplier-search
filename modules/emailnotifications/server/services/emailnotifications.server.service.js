@@ -80,11 +80,11 @@ exports.sendEmailNotificationToUser = function(app, user) {
   });
 };
 
-exports.sendEmailNotificationToUsers = function(app) {
+exports.sendEmailNotificationToUsers = function(app, frequency) {
   User.find({ verified: true })
   .then(function(users) {
     users.forEach(function(user) {
-      return exports.sendEmailNotificationToUser(app, user)
+      return exports.sendEmailNotificationToUser(app, user, frequency)
         .then(function(resp) {
           console.log('SUCCESS', resp);
         })

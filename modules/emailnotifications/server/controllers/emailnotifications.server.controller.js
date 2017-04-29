@@ -135,6 +135,12 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var emailNotification = req.emailNotification;
 
+  // create email notification for user if one does not exist
+  if (!emailNotification) {
+    emailNotification = new EmailNotification();
+    emailNotification.user = req.user;
+  }
+
   emailNotification.frequency = parseInt(req.body.frequency);
   emailNotification.isSubscribed = req.body.isSubscribed;
 
