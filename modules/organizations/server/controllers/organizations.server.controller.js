@@ -26,10 +26,12 @@ var path = require('path'),
  */
 exports.contact = function (req, res) {
 
-  var ContactOrganizationForm = new ContactOrganization(req.body);
+  var contactOrganizationForm = new ContactOrganization(req.body);
+  contactOrganizationForm.user = req.user;
+  contactOrganizationForm.organization = req.organization;
+
   var userDisplayName = req.user.displayName;
   var organizationName = req.organization.companyName;
-
 
   Organization.findOne({ _id: req.user.organization })
   .exec()
@@ -48,7 +50,7 @@ exports.contact = function (req, res) {
         name: userDisplayName,
         userOrg: organization.companyName,
         orgName: organizationName,
-        content: form.content
+        formData: contactOrganizationForm
       }, function(err, emailHTML) {
         if(err) {
           reject(err);

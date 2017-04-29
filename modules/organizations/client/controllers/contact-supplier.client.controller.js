@@ -15,11 +15,16 @@ angular.module('organizations').controller('ContactSupplierController', ['$scope
         return false;
       }
 
-      var inquiry = {
-        'content': this.content
+      var contactOrganization = {
+        content: this.content,
+        projectRole: this.projectRole,
+        preferredModuleWattage: this.preferredModuleWattage,
+        quantity: this.quantity,
+        deliveryDate: this.deliveryDate,
+        shippingAddress: this.shippingAddress
       };
-      
-      $http.post('/api/organizations/'+ modalOrganizationId + '/contact', inquiry)
+
+      $http.post('/api/organizations/'+ modalOrganizationId + '/contact', contactOrganization)
         .success(function(response) {
           $modalInstance.close();
         })

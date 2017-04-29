@@ -25,7 +25,8 @@ var ContactOrganizationSchema = new Schema({
   },
   projectRole: {
     type: String,
-    enum: ['Installer', 'EPC', 'Developer', 'Other']
+    enum: ['Installer', 'EPC', 'Developer', 'Other'],
+    required: 'Project Role is required'
   },
   preferredModuleWattage: {
     type: Number,
@@ -39,6 +40,9 @@ var ContactOrganizationSchema = new Schema({
   deliveryDate: {
     type: Date,
     required: 'Delivery date is required.'
+  },
+  content: {
+    type: String
   },
   shippingAddress: {
     address1: {
