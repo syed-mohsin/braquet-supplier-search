@@ -1,6 +1,6 @@
 <section class="organization container list-view border profile" ng-controller="ViewOrganizationController" ng-init="findOne()">
-    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!organization.$resolved">
-    <div id="organization-view-member" ng-show="organization.$resolved">
+    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="resolvedResources !== expectedResources">
+    <div id="organization-view-member" ng-show="resolvedResources === expectedResources">
         <div class="page-header">
             <div>
                 <div class="profile-photo">
@@ -33,6 +33,14 @@
                     <div class="menu edit">
                         <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
                             <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
+                        </a>
+                        <a ng-if="organization._id !== authentication.user.organization" ng-click="followOrganization($event, organization)">
+                            <span class=""></span>
+                            <span>
+                              {{(!emailNotification.followingOrganizations || emailNotification.followingOrganizations.indexOf(organization._id) === -1) ?
+                                    ('Follow') : ('Following')
+                              }}
+                            </span>
                         </a>
                         <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
                             <span class="glyphicon glyphicon-new-window"></span><span>Edit organization</span>
