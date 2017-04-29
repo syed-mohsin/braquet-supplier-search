@@ -9,10 +9,10 @@ var path = require('path'),
   EmailNotification = mongoose.model('EmailNotification'),
   mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN });
 
-exports.sendEmailNotificationToUser = function(app, user) {
+exports.sendEmailNotificationToUser = function(app, user, frequency) {
   // initialize scheduled emailing
   var ONE_DAY = 24*60*60*1000;
-  var dateCheck = new Date(Date.now() - ONE_DAY*100);
+  var dateCheck = new Date(Date.now() - ONE_DAY*(frequency || 7));
 
   var data = {
     from: 'Braquet <no-reply@braquet.io>',
