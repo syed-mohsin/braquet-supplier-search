@@ -38,6 +38,4 @@ module.exports = function (app, db) {
     console.log('EXECUTING INSIDE MONTHLY JOB');
     EmailNotificationService.sendEmailNotificationToUsers(app, frequency);
   });
-
-  EmailNotificationService.sendEmailNotificationToUsers(app);
 };
