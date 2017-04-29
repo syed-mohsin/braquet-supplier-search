@@ -13,18 +13,31 @@ var path = require('path'),
  */
 module.exports = function (app, db) {
   // initialize scheduled emailing
-  var rule = new schedule.RecurrenceRule();
-  rule.minute = 44;
+  var weeklyRule = new schedule.RecurrenceRule();
+  weeklyRule.dayOfWeek = 1;
+  weeklyRule.hour = 12;
+  weeklyRule.minute = 0;
 
-  var job = schedule.scheduleJob(rule, function(){
-
+  var weeklyJob = schedule.scheduleJob(weeklyRule, function(){
+    // weekly job
+    var frequency = 7;
+    console.log('EXECUTING INSIDE WEEKLY JOB');
+    EmailNotificationService.sendEmailNotificationToUsers(app, frequency);
   });
 
-  EmailNotificationService.sendEmailToUser(app)
-  .then(function(body) {
-    console.log(body);
-  })
-  .catch(function(err) {
-    console.log(err);
+  // initialize scheduled emailing
+  var monthlyRule = new schedule.RecurrenceRule();
+  monthlyRule.dayOfWeek = 1;
+  monthlyRule.hour = 12;
+  monthlyRule.minute = 0;
+  monthlyRule.month = [new schedule.Range(0, 11)];
+
+  var monthlyJob = schedule.scheduleJob(monthlyRule, function(){
+    // monthly job
+    var frequency = 30;
+    console.log('EXECUTING INSIDE MONTHLY JOB');
+    EmailNotificationService.sendEmailNotificationToUsers(app, frequency);
   });
+
+  EmailNotificationService.sendEmailNotificationToUsers(app);
 };

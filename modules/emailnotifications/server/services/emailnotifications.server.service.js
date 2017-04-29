@@ -9,33 +9,38 @@ var path = require('path'),
   EmailNotification = mongoose.model('EmailNotification'),
   mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN });
 
-exports.sendEmailToUser = function(app) {
+exports.sendEmailNotificationToUser = function(app, user, frequency) {
   // initialize scheduled emailing
   var ONE_DAY = 24*60*60*1000;
-  var dateCheck = new Date(Date.now() - ONE_DAY*100);
+  var dateCheck = new Date(Date.now() - ONE_DAY*(frequency || 7));
 
   var data = {
     from: 'Braquet <no-reply@braquet.io>',
-    to: process.env.NOTIFICATION_TEST_EMAIL,
-    subject: 'Test Update'
+    to: user.email,
+    subject: 'Braquet - Module Pricing Update'
   };
 
   return new Promise(function(resolve, reject) {
-    User.findOne({ email: process.env.NOTIFICATION_TEST_EMAIL }).exec()
-    .then(function(user) {
-      return EmailNotification.findOne({ user: user._id }).exec();
-    })
+    EmailNotification.findOne({ user: user._id, isSubscribed: true })
+    .exec()
     .then(function(emailNotification) {
       if (!emailNotification) {
-        throw new Error('email notification does not exist');
+        throw new Error('email notification does not exist or user is unsubscribed', user.displayName);
       }
 
       return Organization.find({
         _id: { $in: emailNotification.followingOrganizations },
         updated: { $gt: dateCheck }
-      }).populate('priceReviews').lean().exec();
+      })
+      .populate('priceReviews')
+      .lean()
+      .exec();
     })
     .then(function(orgs) {
+      if (!orgs.length) {
+        throw new Error('No organizations update for following user', user.email);
+      }
+
       orgs = OrganizationService.extractBrands(orgs);
       orgs = orgs.filter(function(org) {
         return isFinite(org.brands_avg_min);
@@ -46,20 +51,25 @@ exports.sendEmailToUser = function(app) {
       });
 
       return new Promise(function(resolve, reject) {
-
         app.render('modules/emailnotifications/server/templates/user-update', {
-          organizations: orgs
+          organizations: orgs,
+          user: user
         }, function(err, emailHTML) {
           if(err) {
             reject(err);
+          } else {
+            resolve(emailHTML);
           }
-          resolve(emailHTML);
         });
       });
     })
     .then(function(emailHTML) {
       data.html = emailHTML;
-      return mailgun.messages().send(data);
+      if (user.email === process.env.NOTIFICATION_TEST_EMAIL) {
+        return mailgun.messages().send(data);
+      } else {
+        return 'test, not sending email yet';
+      }
     })
     .then(function(body) {
       resolve(body);
@@ -67,5 +77,24 @@ exports.sendEmailToUser = function(app) {
     .catch(function(err) {
       reject(err);
     });
+  });
+};
+
+exports.sendEmailNotificationToUsers = function(app, frequency) {
+  User.find({ verified: true })
+  .then(function(users) {
+    users.forEach(function(user) {
+      return exports.sendEmailNotificationToUser(app, user, frequency)
+        .then(function(resp) {
+          console.log('SUCCESS', resp);
+        })
+        .catch(function(err) {
+          console.log('FAILED FOR USER', user.displayName, 'WITH EMAIL:', user.email);
+          console.log(err);
+        });
+    });
+  })
+  .catch(function(err) {
+    console.log('failed to fetch users', err);
   });
 };

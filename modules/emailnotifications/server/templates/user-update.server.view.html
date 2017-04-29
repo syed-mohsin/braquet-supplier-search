@@ -2,14 +2,29 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-  <title>Contact Supplier</title>
+  <title>This week's module pricing update</title>
 </head>
 
 <body>
-  <p>{{organizations.length}} Organizations updated!</p>
+<div style="text-align:center; width: 100%;">
+<div>
+<img style="width:150px;" src="https://www.braquet.io/modules/core/client/img/brand/logo.png">
+</div>
+<div style="padding: 30px;">
+  <p>{{organizations.length}} organizations you are following have updated pricing: </p>
   {% for org in organizations %}
-    <p>{{org.companyName}} https://www.braquet.io/organizations/{{org.id}}</p>
+    <a href="https://www.braquet.io/organizations/{{org.id}}"><p>{{org.companyName}}</p></a>
   {% endfor %}
+
+
+    <a style="text-decoration:none;" href="/authentication/signin">
+    <div style="color:white; width: 200px; margin: 30px auto; font-weight: 700; padding: 9px 22px; text-shadow:none; background:#222; border:none; border-radius: 4px; text-align:center;">
+      Sign in
+    </div>
+  </a>
+  <a href="http://localhost:3000/api/emailnotifications/unsubscribe/{{user.inviteToken}}"><p style="color: gray;">Unsubscribe</p></a>
+  </div>
+  </div>
 </body>
 
 </html>

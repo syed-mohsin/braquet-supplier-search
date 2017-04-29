@@ -20,7 +20,7 @@ var EmailNotificationSchema = new Schema({
   frequency: {
     type: Number,
     enum: [1,2,3,5,7,14,30],
-    default: 1
+    default: 7
   },
   followingOrganizations: [{
     type: Schema.ObjectId,
