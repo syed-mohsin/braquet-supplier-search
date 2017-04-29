@@ -32,6 +32,8 @@ exports.create = function(req, res) {
   priceReview.save()
   .then(function(savedPriceReview) {
     req.organization.priceReviews.push(priceReview._id);
+    req.organization.updated = Date.now(); // update timestamp
+    
     return req.organization.save();
   })
   .then(function(savedOrg) {

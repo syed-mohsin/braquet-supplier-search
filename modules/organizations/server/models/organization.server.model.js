@@ -138,9 +138,6 @@ OrganizationSchema.pre('save', function(next) {
 
   var self = this;
 
-  // update timestamp
-  self.updated = Date.now();
-
   // set number of panels
   self.panels_length = self.panel_models.length;
 
