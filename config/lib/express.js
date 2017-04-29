@@ -32,6 +32,7 @@ module.exports.initLocalVariables = function (app) {
   }
   app.locals.keywords = config.app.keywords;
   app.locals.googleAnalyticsTrackingID = config.app.googleAnalyticsTrackingID;
+  app.locals.facebookPixelTrackingID = config.app.facebookPixelTrackingID;
   app.locals.facebookAppId = config.facebook.clientID;
   if (process.env.NODE_ENV === 'production') {
     app.locals.jsFiles = productionAssets.client.js;

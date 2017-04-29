@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification',
-  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, EmailNotifications, Notification) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification', '$analytics',
+  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, EmailNotifications, Notification, $analytics) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resolvedResources = 0;
@@ -276,6 +276,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
         var notificationString = isFollowing ? 'Following' : 'Unfollowed';
         Notification.primary(notificationString + ' ' + organization.companyName);
+        $analytics.eventTrack('User ' + Authentication.user.displayName + ' ' + (isFollowing ? 'Following' : 'Unfollowed') + ' ' + organization.companyName);
       })
       .catch(function(err) {
         console.log('unable to follow organization', err);
