@@ -1,6 +1,6 @@
 <section class="list-view" ng-controller="CatalogController">
-    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="resolvedResources !== 3">
-    <div id="catalog-page" ng-show="resolvedResources === 3">
+    <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="resolvedResources !== expectedResources">
+    <div id="catalog-page" ng-show="resolvedResources === expectedResources">
         <div class="page-header">
             <div class="row">
                 <h4 class="side-title col-md-3"><b>Best module suppliers</b></h4>
@@ -23,7 +23,7 @@
                 <div class="list-group quantity-filter">
                     <span class="catalog-label"><small>Quantity ></small></span>
                     <li ng-repeat="quant in quantities">
-                        <label><input type="radio" name="quantity" ng-model="$parent.quantity" ng-value="quant" ng-change="updateFilter()" /> <small>{{quant}}</small></label><br>
+                        <label><input type="radio" name="quantity" ng-model="$parent.quantity" ng-value="quant" analytics-on="click" analytics-event="Click Quantity Filter: {{$parent.quantity}}" ng-change="updateFilter()" /> <small>{{quant}}</small></label><br>
                     </li>
                 </div>
 
@@ -31,13 +31,13 @@
                     <span class="catalog-label"><small>Supplier Type ></small></span>
                     <li>
                       <label>
-                        <input type="checkbox" ng-model="isman" ng-change="updateFilter()">
+                        <input type="checkbox" ng-model="isman" analytics-on="click" analytics-event="Click Manufacturer Only Filter: {{!isman}}" ng-change="updateFilter()">
                         <span><small>Manufacturers</small></span>
                       </label>
                     </li>
                     <li>
                       <label>
-                        <input type="checkbox" ng-model="isreseller" ng-change="updateFilter()">
+                        <input type="checkbox" ng-model="isreseller" analytics-on="click" analytics-event="Click Reseller Only Filter: {{!isreseller}}" ng-change="updateFilter()">
                         <span><small>Resellers</small></span>
                       </label>
                     </li>
@@ -47,7 +47,7 @@
                     <span class="catalog-label"><small>Technology Type ></small></span>
                     <li ng-repeat="crys in crystallineTypes">
                         <label>
-                      <input type="checkbox" ng-model="crysCheckboxes[crys]" ng-change="updateFilter()">
+                      <input type="checkbox" ng-model="crysCheckboxes[crys]" analytics-on="click" analytics-event="Click Supplier Type Filter: {{crys}}" ng-change="updateFilter()">
                       <span><small>{{crys}}</small></span>
                     </label>
                     </li>
@@ -57,7 +57,7 @@
                     <span class="catalog-label"><small>Frame Color ></small></span>
                     <li ng-repeat="color in frameColors">
                         <label>
-                      <input type="checkbox" ng-model="fColorCheckboxes[color]" ng-change="updateFilter()">
+                      <input type="checkbox" ng-model="fColorCheckboxes[color]" analytics-on="click" analytics-event="Click Frame Color Filter: {{color}}" ng-change="updateFilter()">
                       <span><small>{{color}}</small></span>
                     </label>
                     </li>
@@ -67,7 +67,7 @@
                     <span class="catalog-label"><small>Number of Cells ></small></span>
                     <li ng-repeat="cells in numberOfCells">
                         <label>
-                      <input type="checkbox" ng-model="numCellsCheckboxes[cells]" ng-change="updateFilter()">
+                      <input type="checkbox" ng-model="numCellsCheckboxes[cells]" analytics-on="click" analytics-event="Click Number of Cells Filter: {{cells}}" ng-change="updateFilter()">
                       <span><small>{{cells}}</small></span>
                     </label>
                     </li>
@@ -85,7 +85,7 @@
                     <span class="catalog-label"><small>Brand ></small></span>
                     <li ng-repeat="man in manufacturers">
                         <label>
-                      <input type="checkbox" ng-model="orgCheckboxes[man]" ng-change="updateFilter()">
+                      <input type="checkbox" ng-model="orgCheckboxes[man]" analytics-on="click" analytics-event="Click Brand Filter: {{man}}" ng-change="updateFilter()">
                       <span><small>{{man}}</small></span>
                     </label>
                     </li>
@@ -93,7 +93,7 @@
             </div>
 
             <div class="horizontal list-group col-sm-7">
-                <div class="alert alert-warning text-center" ng-if="resolvedResources === 3 && !orgs.length">
+                <div class="alert alert-warning text-center" ng-if="resolvedResources === expectedResources && !orgs.length">
                     No search results
                 </div>
                 <div>
@@ -114,14 +114,18 @@
                         </div>
                         <div class="detail">
                             <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
-                            <!-- <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
-                        <small><span ng-bind="organization.productTypes"></span></small> -->
                         </div>
                         </a>
                         </div>
                         <div class="menu">
                             <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
+                            </a>
+                            <a ng-if="organization._id !== authentication.user.organization" ng-click="followOrganization($event, organization)">
+                                <span class=""></span><span>
+                                  {{(!emailNotification.followingOrganizations || emailNotification.followingOrganizations.indexOf(organization._id) === -1) ?
+                                        ('Follow') : ('Following')
+                                  }}</span>
                             </a>
                         </div>
 

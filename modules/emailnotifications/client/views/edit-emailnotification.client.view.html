@@ -1,0 +1,28 @@
+<section ng-controller="EmailNotificationsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1>Edit EmailNotification</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="emailNotificationForm" class="form-horizontal" ng-submit="update(emailNotificationForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="title">Title</label>
+          <input name="title" type="text" ng-model="emailNotification.title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="emailNotificationForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">EmailNotification title is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="content">Content</label>
+          <textarea name="content" ng-model="emailNotification.content" id="content" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Update" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
