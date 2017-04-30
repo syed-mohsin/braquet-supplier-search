@@ -1,9 +1,15 @@
 'use strict';
 
 // Reviews controller
-angular.module('organizations').controller('ContactSupplierController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Organizations', 'modalOrganizationId',
-  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Organizations, modalOrganizationId) {
+angular.module('organizations').controller('ContactSupplierController', ['$scope', '$stateParams', '$location', '$http', '$modalInstance', 'Authentication', 'Organizations', 'modalOrganization',
+  function ($scope, $stateParams, $location, $http, $modalInstance, Authentication, Organizations, modalOrganization) {
     $scope.authentication = Authentication;
+    $scope.organization = modalOrganization;
+
+    $scope.projectRoles = ['Installer', 'EPC', 'Developer', 'Other'];
+    $scope.quantities = ['0kW-100kW', '101kW-500kW', '501kW-1MW', '>1MW'];
+    $scope.presentDate = new Date();
+    $scope.shippingAddress = {};
 
     // Contact a supplier
     $scope.contact = function(isValid) {
@@ -24,7 +30,7 @@ angular.module('organizations').controller('ContactSupplierController', ['$scope
         shippingAddress: this.shippingAddress
       };
 
-      $http.post('/api/organizations/'+ modalOrganizationId + '/contact', contactOrganization)
+      $http.post('/api/organizations/'+ modalOrganization._id + '/contact', contactOrganization)
         .success(function(response) {
           $modalInstance.close();
         })

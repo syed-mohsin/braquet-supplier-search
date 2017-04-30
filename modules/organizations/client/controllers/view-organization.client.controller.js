@@ -128,8 +128,8 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
         controller: 'ContactSupplierController',
         resolve: {
-          modalOrganizationId: function() {
-            return organization._id;
+          modalOrganization: function() {
+            return organization;
           }
         },
         windowClass: 'app-modal-window'

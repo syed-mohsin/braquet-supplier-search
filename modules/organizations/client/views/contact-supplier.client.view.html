@@ -1,18 +1,86 @@
 <section>
   <div class="col-md-12">
     <form name="contactSupplierForm" class="form-horizontal" ng-submit="contact(contactSupplierForm.$valid)" novalidate>
-      <h2>Contact a supplier organization</h2>
+      <h2>Contact {{organization.companyName}}</h2>
+      <img ng-src="{{organization.logoImageUrl}}">
       <div class="form-group">
-          <strong>A representative from this seller will be in touch with you shortly.</strong>
+        <strong>A representative from this seller will be in touch with you shortly.</strong>
       </div>
       <fieldset>
         <div class="form-group" show-errors>
-          <label for="content">Please provide details on your inquiry</label>
-          <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10" required></textarea>
-          <div ng-messages="contactSupplierForm.content.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">An inquiry is required.</p>
+          <label for="projectRole">Your Project Role</label>
+          <select name="projectRole" ng-model="projectRole" id="projectRole" class="form-control" required>
+            <option ng-repeat="projectRole in projectRoles" value="projectRole">{{projectRole}}</option>
+          </select>
+         <div ng-messages="contactSupplierForm.projectRole.$error" role="alert">
+           <p class="help-block error-text" ng-message="required">Your project role is required.</p>
+         </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="quantity">Project Size</label>
+          <select name="quantity" ng-model="quantity" id="projectRole" class="form-control" required>
+            <option ng-repeat="quantity in quantities" value="quantity">{{quantity}}</option>
+          </select>
+          <div ng-messages="contactSupplierForm.quantity.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Project size is required.</p>
           </div>
         </div>
+
+        <div class="form-group" show-errors>
+          <label for="preferredModuleWattage">Preferred Module Wattage</label><br>
+          <input name="preferredModuleWattage" type="number" min="0" ng-model="preferredModuleWattage" id="preferredModuleWattage" class="form-control" placeholder="0" required>
+          <div ng-messages="contactSupplierForm.preferredModuleWattage.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Preferred Module Wattage is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="deliveryDate">Anticipated Delivery Date</label>
+          <md-datepicker name="deliveryDate" ng-model="deliveryDate" md-placeholder="Enter date" md-min-date="presentDate" required></md-datepicker>
+          <div ng-messages="contactSupplierForm.deliveryDate.$error" role="alert">
+            <p class="help-block error-text" ng-message="valid">Sorry! Not a valid date. Please try again.</p>
+            <p class="help-block error-text" ng-message="required">Anticipated delivery date is required.</p>
+            <p class="help-block error-text" ng-message="mindate">Anticipated delivery date should occur after quote received date.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="address1">Shipping Address</label>
+          <input name="address1" type="text" ng-model="shippingAddress.address1" id="address1" class="form-control" placeholder="Address Line 1" required>
+          <div ng-messages="contactSupplierForm.address1.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Address Line 1 is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="address2" type="text" ng-model="shippingAddress.address2" id="address2" class="form-control" placeholder="Address Line 2">
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="city" type="text" ng-model="shippingAddress.city" id="city" class="form-control" placeholder="City">
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="state" type="text" ng-model="shippingAddress.state" id="state" class="form-control" placeholder="State">
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="zipcode" type="text" ng-model="shippingAddress.zipcode" id="zipcode" class="form-control" placeholder="Zipcode">
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="country" type="text" ng-model="shippingAddress.country" id="country" class="form-control" placeholder="Country" required>
+          <div ng-messages="contactSupplierForm.country.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Country is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="content">Contact Details (optional)</label>
+          <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="30" rows="10"></textarea>
+        </div>
+
         <div class="form-group submit">
           <input type="submit" class="btn btn-default">
         </div>
