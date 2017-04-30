@@ -6,8 +6,14 @@
 </head>
 
 <body>
-  <p>User {{name}} from {{userOrg}} would like to contact supplier {{orgName}}.</p>
-  <p>inquiry: {{formData.content}}</p>
+  <p>User: {{name}}</p>
+  <p>User Organization: {{userOrg}}</p>
+  <p>Contact Organization: {{orgName}}.</p>
+  <p>User Role: {{formData.projectRole}}</p>
+  <p>Preferred Module Wattage: {{formData.preferredModuleWattage}}</p>
+  <p>Project Size: {{formData.quantity}}</p>
+  <p>Delivery Date: {{formData.deliveryDate | date('Y-m-d')}}</p>
+  <p>Contact Details: {{formData.content}}</p>
 </body>
 
 </html>

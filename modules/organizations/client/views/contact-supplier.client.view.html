@@ -10,7 +10,7 @@
         <div class="form-group" show-errors>
           <label for="projectRole">Your Project Role</label>
           <select name="projectRole" ng-model="projectRole" id="projectRole" class="form-control" required>
-            <option ng-repeat="projectRole in projectRoles" value="projectRole">{{projectRole}}</option>
+            <option ng-repeat="projectRole in projectRoles" ng-value="projectRole">{{projectRole}}</option>
           </select>
          <div ng-messages="contactSupplierForm.projectRole.$error" role="alert">
            <p class="help-block error-text" ng-message="required">Your project role is required.</p>
@@ -20,7 +20,7 @@
         <div class="form-group" show-errors>
           <label for="quantity">Project Size</label>
           <select name="quantity" ng-model="quantity" id="projectRole" class="form-control" required>
-            <option ng-repeat="quantity in quantities" value="quantity">{{quantity}}</option>
+            <option ng-repeat="quantity in quantities" ng-value="quantity">{{quantity}}</option>
           </select>
           <div ng-messages="contactSupplierForm.quantity.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Project size is required.</p>

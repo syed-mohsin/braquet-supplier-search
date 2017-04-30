@@ -7,6 +7,7 @@ var path = require('path'),
   config = require(path.resolve('./config/config')),
   multer = require('multer'),
   multerS3 = require('multer-s3'),
+  mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN }),
   mongoose = require('mongoose'),
   OrganizationService = require('../services/organizations.server.service'),
   ContactOrganization = mongoose.model('ContactOrganization'),
@@ -33,8 +34,11 @@ exports.contact = function (req, res) {
   var userDisplayName = req.user.displayName;
   var organizationName = req.organization.companyName;
 
-  Organization.findOne({ _id: req.user.organization })
-  .exec()
+  contactOrganizationForm.save()
+  .then(function(savedContactOrganizationForm) {
+    return Organization.findOne({ _id: req.user.organization })
+    .exec();
+  })
   .then(function(organization) {
 
     // check if organization doesn't exist
@@ -64,22 +68,15 @@ exports.contact = function (req, res) {
 
     var mailOptions = {
       to: mailList,
-      from: config.mailer.from,
+      from: process.env.MAILER_EMAIL_ID,
       subject: 'Braquet - Request to Contact a Supplier',
       html: emailHTML
     };
 
-    return new Promise(function(resolve, reject) {
-      smtpTransport.sendMail(mailOptions, function (err) {
-        if (err) {
-          reject(err);
-        }
-        resolve(mailOptions);
-      });
-    });
+    return mailgun.messages().send(mailOptions);
   })
-  .then(function(mailOptions) {
-    res.json(mailOptions);
+  .then(function(resp) {
+    res.json(resp);
   })
   .catch(function(err) {
     if(err) {
