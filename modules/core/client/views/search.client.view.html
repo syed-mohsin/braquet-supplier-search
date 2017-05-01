@@ -1,29 +1,44 @@
 <section ng-controller="HomeController">
-    <section class="welcome banner">
-    	<div class="banner-shade">
-	        <div class="detail container">
+  <section class="welcome banner">
+    <div class="banner-shade">
+      <div class="detail container">
 
-	            <h1>Search module supplier reviews and quotes</h1>
+        <h1>Search module supplier reviews and quotes</h1>
 
-	            <form ng-submit="searchSubmit()" class="ng-pristine ng-valid no-background no-padding no-margin">
-                        <input class="form-control col-md-12 ng-pristine ng-valid ng-touched" type="text" ng-model="search" placeholder="Search for solar module suppliers" aria-invalid="false">
-                        <button type="submit" class="btn btn-primary submit">Submit</button>
-                </form>
-	            <a href="/organizations/58bc97b799aba5addcb37e75/public">
-	            	<div class="review">
-    				<img src="/modules/core/client/img/asset/logo_canadian_solar.png">
-    				<div class="info" style="overflow:auto; color:white;">
-    					<div class="title">Canadian Solar</div>
-    					<div>"Can't go wrong with Canadian Solar"</div>
-    					<div class="reviews">
-                        	<rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
-                    	</div>
-    				</div>
-   		 		</div>
-   		 		</a>
-	        </div>
-	        
-        </div>
+        <form ng-submit="searchCatalog()" class="ng-pristine ng-valid no-background no-padding no-margin">
+          <label for="panelType">Technology Type</label>
+          <md-radio-group name="panelType" ng-model="panelType">
+            <md-radio-button value="Mono">Monocrystalline</md-radio-button>
+            <md-radio-button value="Poly">Polycrystalline</md-radio-button>
+          </md-radio-group>
 
-    </section>
+          <label for="quantity">Project Size</label>
+          <md-radio-group name="quantity" ng-model="quantity">
+            <md-radio-button value="0kW-100kW">0kW-100kW</md-radio-button>
+            <md-radio-button value="101kW-500kW">101kW-500kW</md-radio-button>
+            <md-radio-button value="501kW-1MW">501kW-1MW</md-radio-button>
+            <md-radio-button value=">1MW">>1MW</md-radio-button>
+          </md-radio-group>
+
+          <button type="submit" class="btn btn-primary submit">Submit</button>
+        </form>
+        <button type="button" ng-click="goToCatalog()" class="btn btn-primary">See Full Catalog</button>
+
+        <a href="/organizations/58bc97b799aba5addcb37e75/public">
+          <div class="review">
+            <img src="/modules/core/client/img/asset/logo_canadian_solar.png">
+            <div class="info" style="overflow:auto; color:white;">
+              <div class="title">Canadian Solar</div>
+              <div>"Can't go wrong with Canadian Solar"</div>
+              <div class="reviews">
+                <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+  </section>
 </section>
