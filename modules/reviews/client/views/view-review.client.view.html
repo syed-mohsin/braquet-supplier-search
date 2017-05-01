@@ -1,6 +1,6 @@
 <section ng-controller="ReviewsController" ng-init="findOne()" class="container reviews list-view border">
     <img src="/modules/core/client/img/loaders/loader.gif" style="display: block; margin:0 auto;" ng-if="!review.$resolved">
-    <div "review-view" ng-show="review.$resolved">
+    <div id="review-view" ng-show="review.$resolved">
       <div class="page-header">
         <div class="title">
           "<span ng-bind="review.title"></span>"
@@ -10,7 +10,7 @@
             <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ui-sref="reviews.edit({reviewId: review._id})">
                 <span class="glyphicon glyphicon-new-window"></span><span>Edit Review</span>
             </a>
-            <a ng-click="remove();">
+            <a ng-show="authentication.user.roles.indexOf('admin') !== -1" ng-click="remove();">
                 <span class="glyphicon glyphicon-trash"></span><span>Delete Review</span>
             </a>
         </div>

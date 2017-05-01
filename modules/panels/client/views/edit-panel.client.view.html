@@ -1,0 +1,77 @@
+<section class="container" ng-controller="PanelController" ng-init="findOne()">
+  <div class="page-header">
+  </div>
+  <div class="col-md-12">
+    <form name="editPanelForm" class="form-horizontal" ng-submit="update(editPanelForm.$valid)" novalidate>
+      <h2>Add new Panel Module</h2>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <input name="manufacturer" type="text" ng-model="panel.manufacturer" id="manufacturer" class="form-control" placeholder="manufacturer" required>
+          <div ng-messages="editPanelForm.manufacturer.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">manufacturer is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="model" type="text" ng-model="panel.model" id="model" class="form-control" placeholder="model" required>
+          <div ng-messages="editPanelForm.model.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">model is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="technologyType" type="text" ng-model="panel.technologyType" id="technologyType" class="form-control" placeholder="TechnologyType" required>
+          <div ng-messages="editPanelForm.technologyType.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Technology Type is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="stcModuleEfficiency" type="text" ng-model="panel.stcModuleEfficiency" id="stcModuleEfficiency" class="form-control" placeholder="Module Efficiency" required>
+          <div ng-messages="editPanelForm.stcModuleEfficiency.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Module Efficiency is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="crystallineType" type="text" ng-model="panel.crystallineType" id="crystallineType" class="form-control" placeholder="crystalline type" required>
+          <div ng-messages="editPanelForm.crystallineType.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">crystalline type is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="stcPower" type="number" ng-model="panel.stcPower" id="stcPower" class="form-control" placeholder="Wattage" required>
+          <div ng-messages="editPanelForm.stcPower.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Wattage is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="frameColor" type="text" ng-model="panel.frameColor" id="frameColor" class="form-control" placeholder="Frame Color" required>
+          <div ng-messages="editPanelForm.frameColor.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">frame color is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="numberOfCells" type="number" ng-model="panel.numberOfCells" id="numberOfCells" class="form-control" placeholder="Number Of Cells" required>
+          <div ng-messages="editPanelForm.numberOfCells.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Number Of Cells is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="manufacturingLocations" type="text" ng-model="panel.manufacturingLocations" id="manufacturingLocations" class="form-control" placeholder="Manufacturing Locations">
+          <div ng-messages="editPanelForm.manufacturingLocations.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Manufacturing Locations is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <input name="specSheetLink" type="text" ng-model="panel.specSheetLink" id="specSheetLink" class="form-control" placeholder="specsheet Link">
+          <div ng-messages="editPanelForm.specSheetLink.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">specsheet Link is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

@@ -59,6 +59,18 @@ exports.verifyUser = function (req, res) {
       // only make reviews public if
       // email has already been verified
       if (user.emailVerified) {
+
+        var io = req.app.get('socketio');
+        var sockets = req.app.get('socket-users');
+        var recipientSockets = sockets[user._id];
+
+        recipientSockets.forEach(function(socketId) {
+          io.to(socketId).emit('notifyUser', {
+            err: false, 
+            message: 'Reviews are now public. All future reviews you submit will be public.'
+          });
+        });
+
         return (
           Review.update(
             {

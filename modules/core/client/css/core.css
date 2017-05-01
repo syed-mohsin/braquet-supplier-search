@@ -37,6 +37,7 @@ html,
 body {
     height: 100%;
     /* The html and body elements cannot have any padding or margin. */
+    background-color: rgb(255,255,255);
 }
 
 body {
@@ -90,11 +91,6 @@ a:hover {
     border-color: lightgrey;
     border-width: 1px;
 }
-.list-view, .bid-view {
-    background: white;
-    margin-top: 35px;
-    padding: 10px 15px 40px;
-}
 .welcome form {
     border-style: none;
     border-width: 0;
@@ -131,14 +127,8 @@ form label {
     width: 100%;
     background: white;
     z-index: 200;
-    left: 0px;
+    left: 0;
     padding: 10px;
-}
-.extend .chat-profile-image {
-    margin-right: 10px;
-}
-.extend .chat-message {
-    border-top: 0px solid #e7e7e7;
 }
 .chat-message-details {
     overflow: auto;
@@ -147,19 +137,6 @@ form label {
     min-width: initial;
     max-width: initial;
     padding: inherit;
-}
-.extend .chat-section {
-    position: relative;
-    /*height: 700px;*/
-    overflow: hidden;
-    width: 100%;
-    background: white;
-}
-.extend .chat-content {
-    position: absolute;
-    overflow: auto;
-    bottom: 0;
-    /*max-height: 700px;*/
 }
 .extend button {
     float: left;
@@ -200,6 +177,10 @@ form label {
 .notice.error {
     background: #C74B4B;
 }
+.warning {
+    color: #C74B4B;
+    font-weight: 700;
+}
 .notice.user-specific, .project .notice.user-specific {
     font-size: 11px;
     background: initial;
@@ -221,12 +202,12 @@ form label {
 .form-group div {
     padding-top: 8px;
 }
-input[type="checkbox"] {
+input[type="checkbox"], input[type="radio"] {
     margin-right: 10px;
 }
 .signup {
     margin: 40px auto 0 auto;
-    padding: 0px 50px 40px 50px;
+    padding: 0 50px 40px 50px;
     max-width: 450px;
     font-weight: 700;
 }
@@ -350,6 +331,7 @@ section h2 {
 }
 .banner-shade {
     height: 100vh;
+    background-color: black;
     background-color: rgba(0,0,0,0.2);
 }
 .welcome.banner {
@@ -378,8 +360,8 @@ section h2 {
 }
 
 .welcome .signup {
-    font-size: 11px; 
-    margin: 20px 0 10px 0px;
+    font-size: 11px;
+    margin: 20px 0 10px 0;
     width: initial;
     padding: initial;
 }
@@ -508,7 +490,6 @@ section h2 {
     border-right-width: 1px;
     border-color: lightgrey;
     border-right-style: solid;
-    border-right-width: 1px;
     background: initial;
     border-radius: initial;
     text-align: center;
@@ -517,6 +498,7 @@ section h2 {
     padding: 6px 20px;
 }
 .menu a:hover {
+    background:rgb(1,1,1);
     background:rgba(1,1,1,0.1);
 }
 .list-view .menu.edit {
@@ -570,7 +552,7 @@ section h2 {
     margin-bottom: 20px;
 }
 .form-group div.md-chip-content, .form-group div.md-chip-remove-container {
-    padding-top: 0px;
+    padding-top: 0;
 }
 .footer {
     background: #222;
@@ -589,7 +571,6 @@ section h2 {
 .list-item img.profile, .list-group img.profile {
     width: 25px;
     margin-right: 5px;
-    border-radius: 50%;
     float: left;
 }
 .logo-background {
@@ -672,7 +653,7 @@ section h2 {
     color: #555;
 }
 .horizontal .list-group-item {
-    border: 0px;
+    border: 0;
     border-top: 1px solid #eee;
 }
 a .view-quote:hover {
@@ -763,8 +744,12 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
     color: white;
 }
 
-.md-autocomplete-suggestions-container{  
+.md-autocomplete-suggestions-container{
     z-index:100000 !important; /* any number of choice > 1050*/
+}
+
+.md-datepicker-calendar-pane{
+    z-index:1200 !important;
 }
 
 .connections.profile .page-header {
@@ -794,12 +779,12 @@ md-chips.md-default-theme md-chip, md-chips md-chip {
 }
 .profile .company-logo {
     width: 75px;
-    margin-top: -27px; 
+    margin-top: -27px;
 }
 .profile-photo {
     float: left;
     text-align: center;
-    padding: 10px; 
+    padding: 10px;
     background: white;
 }
 .organization .profile-photo {
@@ -810,6 +795,9 @@ img.company-logo {
     margin: 15px 30px 0 0;
     border-radius: inherit;
     float: left;
+}
+.profile-info .reviews {
+    margin-top: 5px;
 }
 .reviews .sub-title {
     margin-bottom: 3px;
@@ -822,7 +810,7 @@ img.company-logo {
 }
 .reviews .glyphicon-star-empty, .reviews .glyphicon-star {
     padding: 2px 2px 2px 3px;
-    margin-right: 2px;
+    margin-right: 0;
     border-radius: 2px;
     color: white;
 }
@@ -873,4 +861,51 @@ img.company-logo {
 }
 .app-modal-window .modal-content {
   padding: 0 10px;
+}
+.brand-list {
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid lightgrey;
+}
+.brand-list table {
+    width: 95%;
+    max-width: 350px;
+}
+.brand-list td {
+    text-align: center;
+    padding-bottom: 5px;
+    min-width: 75px;
+    width: 50%;
+}
+.brand-list .category {
+    max-width: 77px;
+    margin: auto auto;
+    margin-top: 5px;
+}
+.brand-list .price {
+    color: darkslategrey;
+    font-size: 17px;
+    font-weight: 500;
+}
+.brand-list .img-wrapper {
+    height: 84px;
+}
+.brand-list .helper {
+    height: 100%;
+    display: inline-block;
+}
+.brand-list img {
+    width: 50px;
+    vertical-align: inherit;
+}
+.quote-header {
+    margin-bottom: 10px;
+}
+.table.quote {
+    font-size: 85%;
+}
+.quantity-filter label {
+    font-weight: inherit;
 }

@@ -8,12 +8,21 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
+ * Load Currency type to the Mongoose Schema types
+ */
+require('mongoose-currency').loadType(mongoose);
+var Currency = mongoose.Types.Currency;
+
+/**
  * Organization Schema
  */
 var OrganizationSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  updated: {
+    type: Date
   },
   verified: {
     type: Boolean
@@ -42,11 +51,19 @@ var OrganizationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Review'
   }],
+  priceReviews: [{
+    type: Schema.ObjectId,
+    ref: 'PriceReview'
+  }],
   avg_review: {
     type: Number,
     default: 0
   },
   reviews_length: {
+    type: Number,
+    default: 0
+  },
+  price_reviews_length: {
     type: Number,
     default: 0
   },
@@ -73,6 +90,13 @@ var OrganizationSchema = new Schema({
   panel_stcPowers: [{
     type: Number
   }],
+  manufacturers: [{
+    type: String
+  }],
+  isManufacturer: {
+    type: Boolean,
+    default: false
+  },
   industry: {
     type: String
   },
@@ -108,18 +132,79 @@ var OrganizationSchema = new Schema({
 
 OrganizationSchema.pre('save', function(next) {
 
-  var Review = mongoose.model('Review');
+  var Review = mongoose.model('Review'),
+    PriceReview = mongoose.model('PriceReview'),
+    PanelModel = mongoose.model('PanelModel');
+
+  var self = this;
 
   // set number of panels
-  this.panels_length = this.panel_models.length;
+  self.panels_length = self.panel_models.length;
 
-  // set reviews_length and avg_review and remove stale reviews
-  var self = this;
-  Review.find({ _id: { $in: this.reviews }, verified: true }, 'rating')
-  .exec()
+  PanelModel.find({ _id: { $in: self.panel_models } }).exec()
+  .then(function(panelModels) {
+    // reset panel filtering fields
+    self.panel_manufacturers = [];
+    self.panel_stcPowers = [];
+    self.panel_crystalline_types = [];
+    self.panel_frame_colors = [];
+    self.panel_number_of_cells = [];
+
+    // add panel model filter fields
+    panelModels.forEach(function(panel) {
+      if (self.panel_manufacturers.indexOf(panel.manufacturer) === -1) {
+        self.panel_manufacturers.push(panel.manufacturer);
+      }
+
+      if (self.panel_stcPowers.indexOf(panel.stcPower) === -1) {
+        self.panel_stcPowers.push(panel.stcPower);
+      }
+
+      if (self.panel_crystalline_types.indexOf(panel.crystallineType) === -1) {
+        self.panel_crystalline_types.push(panel.crystallineType);
+      }
+
+      if (self.panel_frame_colors.indexOf(panel.frameColor) === -1) {
+        self.panel_frame_colors.push(panel.frameColor);
+      }
+
+      if (self.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
+        self.panel_number_of_cells.push(panel.numberOfCells);
+      }
+    });
+
+    // extract all brands from panels
+    self.manufacturers = panelModels.reduce(function(manArr, panelModel) {
+      if (manArr.indexOf(panelModel.manufacturer) === -1) {
+        manArr.push(panelModel.manufacturer);
+      }
+
+      return manArr;
+    }, []);
+
+    // associate all organization with its panel models
+    var panelModelPromises = panelModels.map(function(panelModel) {
+      var sellerAlreadyExists = panelModel.sellers.some(function(sellerId) {
+        return sellerId.equals(self._id);
+      });
+
+      if (!sellerAlreadyExists) {
+        panelModel.sellers.push(self._id);
+      }
+
+      return panelModel.save();
+    });
+
+    return Promise.all(panelModelPromises);
+  })
+  .then(function(savedPanelModels) {
+    // set reviews_length and avg_review and remove stale reviews
+    return Review.find({ organization: self._id, verified: true }, 'rating')
+    .exec();
+  })
   .then(function(reviews) {
     // remove invalid review ids if any
-    self.reviews = self.reviews.map(function(review) {
+    self.reviews = reviews.map(function(review) {
       if (mongoose.Types.ObjectId.isValid(review._id)) {
         return review._id;
       } else {
@@ -134,6 +219,22 @@ OrganizationSchema.pre('save', function(next) {
     self.avg_review = reviews.reduce(function(a,b) {
       return a + b.rating;
     }, 0) / reviews.length || 0;
+
+    return PriceReview.find({ organization: self._id, verified: true }, 'price quantity')
+      .exec();
+  })
+  .then(function(priceReviews) {
+    // remove invalid price review ids if any
+    self.priceReviews = priceReviews.map(function(priceReview) {
+      if (mongoose.Types.ObjectId.isValid(priceReview._id)) {
+        return priceReview._id;
+      } else {
+        return priceReview;
+      }
+    });
+
+    // update reviews length for querying in catalog
+    self.price_reviews_length = priceReviews.length;
 
     // finish
     next();

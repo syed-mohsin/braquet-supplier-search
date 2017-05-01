@@ -35,6 +35,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       // Create new Organization object
       var organization = new Organizations({
         companyName: this.companyName,
+        isManufacturer: this.isManufacturer,
         industry: this.industry,
         productTypes: this.productTypes,
         panel_models: this.panel_models,
@@ -67,6 +68,9 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       }
 
       var organization = $scope.organization;
+      // unnecessary fields that cause the request body to become huge
+      delete organization.reviews;
+      delete organization.priceReviews;
 
       organization.$update(function () {
         $state.go('organizations.view', {
@@ -104,7 +108,6 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         organizationId: $stateParams.organizationId
       }, function(organization) {
         $scope.organization = organization;
-        $scope.buildUploader(organization._id);
       }, function(error) {
         $location.path('/forbidden');
       });

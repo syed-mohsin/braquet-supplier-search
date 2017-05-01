@@ -14,6 +14,50 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
+ * Create a panelmodel
+ */
+exports.create = function (req, res) {
+  var panelmodel = new PanelModel(req.body);
+
+  panelmodel.save()
+  .then(function(savedPanelModel) {
+    res.json(panelmodel);
+  })
+  .catch(function(err) {
+    res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+/**
+ * Update a panel model
+ */
+exports.update = function (req, res) {
+  var panelmodel = req.panelmodel;
+  panelmodel.manufacturer = req.body.manufacturer;
+  panelmodel.model = req.body.model;
+  panelmodel.technologyType = req.body.technologyType;
+  panelmodel.stcModuleEfficiency = req.body.stcModuleEfficiency;
+  panelmodel.crystallineType = req.body.crystallineType;
+  panelmodel.stcPower = req.body.stcPower;
+  panelmodel.frameColor = req.body.frameColor;
+  panelmodel.numberOfCells = req.body.numberOfCells;
+  panelmodel.manufacturingLocations = req.body.manufacturingLocations;
+  panelmodel.specSheetLink = req.body.specSheetLink;
+
+  panelmodel.save()
+  .then(function(updatedPanelModel) {
+    res.json(panelmodel);
+  })
+  .catch(function(err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+/**
  * Return a json array of panel models based on name
  */
 exports.searchByName = function (req, res) {
@@ -90,22 +134,47 @@ exports.uploadPhoto = function (req, res) {
 exports.getFilters = function(req, res) {
   var filters = {};
   // Get panel Manufacturers
+  var promises = [
+    PanelModel.distinct('manufacturer').exec(),
+    PanelModel.distinct('crystallineType').exec(),
+    PanelModel.distinct('frameColor').exec(),
+    PanelModel.distinct('numberOfCells').exec(),
+  ];
+
+  Promise.all(promises)
+  .then(function(results) {
+    filters.manufacturers = results[0];
+    filters.crystallineTypes = results[1];
+    filters.frameColors = results[2];
+    filters.numberOfCells = results[3];
+
+    res.json(filters);
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
+  });
+};
+
+/**
+ * Get distinct wattage values
+ */
+exports.getWattageValues = function(req, res) {
+  PanelModel.distinct('stcPower').exec()
+  .then(function(stcPowers) {
+    res.json(stcPowers);
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
+  });
+};
+
+/**
+ * Get distinct manufacturer values
+ */
+exports.getManufacturerValues = function(req, res) {
   PanelModel.distinct('manufacturer').exec()
   .then(function(manufacturers) {
-    filters.manufacturers = manufacturers;
-    return PanelModel.distinct('crystallineType').exec();
-  })
-  .then(function(crystallineTypes) {
-    filters.crystallineTypes = crystallineTypes;
-    return PanelModel.distinct('frameColor').exec();
-  })
-  .then(function(frameColors) {
-    filters.frameColors = frameColors;
-    return PanelModel.distinct('numberOfCells').exec();
-  })
-  .then(function(numberOfCells) {
-    filters.numberOfCells = numberOfCells;
-    res.json(filters);
+    res.json(manufacturers);
   })
   .catch(function(err) {
     res.status(400).json(err);

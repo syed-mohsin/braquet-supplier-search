@@ -16,6 +16,12 @@ angular.module('users.admin').run(['Menus',
     });
 
     Menus.addSubMenuItem('topbar', 'admin', {
+      title: 'Create New Panel Model',
+      state: 'panels.create',
+      roles: ['admin']
+    });
+
+    Menus.addSubMenuItem('topbar', 'admin', {
       title: 'Manage Organizations',
       state: 'admin.organizations',
       roles: ['admin']
@@ -30,6 +36,12 @@ angular.module('users.admin').run(['Menus',
     Menus.addSubMenuItem('topbar', 'admin', {
       title: 'Manage Reviews',
       state: 'reviews.admin-list',
+      roles: ['admin']
+    });
+
+    Menus.addSubMenuItem('topbar', 'admin', {
+      title: 'Manage Price Reviews',
+      state: 'pricereviews.admin-list',
       roles: ['admin']
     });
   }

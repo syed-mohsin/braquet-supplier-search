@@ -5,7 +5,8 @@ module.exports = {
     title: 'Braquet',
     description: 'Search for qualified solar hardware suppliers',
     keywords: 'mongodb, express, angularjs, node.js, mongoose, passport',
-    googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
+    googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
+    facebookPixelTrackingID: process.env.FACEBOOK_PIXEL_TRACKING_ID
   },
   port: process.env.PORT || 3000,
   templateEngine: 'swig',

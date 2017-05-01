@@ -56,6 +56,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/organization-auth/send-invite',
       permissions: ['post']
+    }, {
+      resources: '/api/organizations/:organizationId/contact',
+      permissions: ['post']
     }]
   }]);
 };

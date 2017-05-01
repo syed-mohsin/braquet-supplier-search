@@ -106,15 +106,17 @@ exports.update = function (req, res) {
  */
 exports.delete = function (req, res) {
   var review = req.review;
-
-  review.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(review);
-    }
+  review.remove()
+  .then(function(removedPriceReview) {
+    return review.organization.save();
+  })
+  .then(function(updatedOrganization) {
+    res.json(review);
+  })
+  .catch(function(err) {
+    res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -197,7 +199,7 @@ exports.reviewByID = function (req, res, next, id) {
 
   Review.findById(id)
   .populate('user', 'displayName')
-  .populate('organization', 'companyName logoImageUrl')
+  .populate('organization', 'companyName logoImageUrl panel_models')
   .exec(function (err, review) {
     if (err) {
       return next(err);

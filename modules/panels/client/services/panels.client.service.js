@@ -1,10 +1,10 @@
 'use strict';
 
-//Projects service used for communicating with the projects REST endpoints
+//Panels service used for communicating with the panels REST endpoints
 angular.module('panels').factory('PanelModels', ['$resource',
   function ($resource) {
     return $resource('api/panelmodels/:panelId', {
-      organizationId: '@_id'
+      panelId: '@_id'
     }, {
       update: {
         method: 'PUT'

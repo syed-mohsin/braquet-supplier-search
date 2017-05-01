@@ -1,25 +1,51 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Reviews',
-  function ($scope, $stateParams, $location, $http, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$state', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'Reviews', 'Notification',
+  function ($scope, $state, $stateParams, $location, $http, $mdDialog, Authentication, Reviews, Notification) {
     $scope.authentication = Authentication;
+    $scope.shouldShowReviews = true;
+
+    // showPrices
+    $scope.showPrices = function() {
+      $state.go('pricereviews.list');
+    };
 
     // Remove existing Review
     $scope.remove = function (review) {
-      if (review) {
-        review.$remove();
+      var confirm = $mdDialog.confirm({ onComplete: function afterShowAnimation() {
+        var $dialog = angular.element(document.querySelector('md-dialog'));
+        var $actionsSection = $dialog.find('md-dialog-actions');
+        var $cancelButton = $actionsSection.children()[0];
+        var $confirmButton = $actionsSection.children()[1];
+        angular.element($confirmButton).removeClass('md-focused');
+        angular.element($cancelButton).addClass('md-focused');
+        $cancelButton.focus();
+      } })
+        .title('Are you sure you want to delete this review?')
+        .clickOutsideToClose(true)
+        .ok('Yes')
+        .cancel('No');
 
-        for (var i in $scope.reviews) {
-          if ($scope.reviews[i] === review) {
-            $scope.reviews.splice(i, 1);
+      $mdDialog.show(confirm).then(function() {
+        if (review) {
+          review.$remove();
+          Notification.primary('Successully Deleted Review');
+
+          for (var i in $scope.reviews) {
+            if ($scope.reviews[i] === review) {
+              $scope.reviews.splice(i, 1);
+            }
           }
+        } else {
+          $scope.review.$remove(function () {
+            Notification.primary('Successully Deleted Review');
+            $location.path('reviews');
+          });
         }
-      } else {
-        $scope.review.$remove(function () {
-          $location.path('reviews');
-        });
-      }
+      }, function() {
+        Notification.error('Failed to Delete Review');
+      });
     };
 
     // Update existing Review
@@ -59,8 +85,12 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$statePara
 
     // Find existing Review
     $scope.findOne = function () {
-      $scope.review = Reviews.get({
+      Reviews.get({
         reviewId: $stateParams.reviewId
+      }, function(review) {
+        $scope.review = review;
+      }, function(error) {
+        $location.path('/forbidden');
       });
     };
   }

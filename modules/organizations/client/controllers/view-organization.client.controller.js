@@ -1,9 +1,76 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations) {
+angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
+    $scope.resolvedResources = 0;
+    $scope.expectedResources = 3;
+
+    $scope.initializePageNavBar = function() {
+      // tab viewing booleans
+      $scope.shouldShowReviews = false;
+      $scope.shouldShowPrices = true;
+      $scope.shouldShowProducts = false;
+    };
+
+    $scope.showReviews = function() {
+      $scope.shouldShowReviews = true;
+      $scope.shouldShowPrices = false;
+      $scope.shouldShowProducts = false;
+    };
+
+    $scope.showPrices = function() {
+      $scope.shouldShowReviews = false;
+      $scope.shouldShowPrices = true;
+      $scope.shouldShowProducts = false;
+    };
+
+    $scope.showProducts = function() {
+      $scope.shouldShowReviews = false;
+      $scope.shouldShowPrices = false;
+      $scope.shouldShowProducts = true;
+    };
+
+    // initialize tabs
+    $scope.initializePageNavBar();
+
+    $scope.getUserEmailNotification = function() {
+      if (!Authentication.user) {
+        $scope.emailNotification = {};
+        $scope.resolvedResources++;
+        return;
+      }
+
+      $http.get('/api/emailnotifications/get-my-notification')
+      .then(function(resp) {
+        $scope.emailNotification = resp.data ? resp.data : {};
+        $scope.resolvedResources++;
+      })
+      .catch(function(err) {
+        console.log('Unable to load user email settings', err);
+      });
+    };
+
+    $scope.followOrganization = function(ev, organization) {
+      if (!Authentication.user) {
+        return $state.go('authentication.signin');
+      }
+
+      $http.get('/api/emailnotifications-follow/' + organization._id)
+      .then(function(response) {
+        $scope.emailNotification = response.data.newEmailNotification;
+        var isFollowing = response.data.isFollowing;
+
+        var notificationString = isFollowing ? 'Following' : 'Unfollowed';
+        Notification.primary(notificationString + ' ' + organization.companyName);
+        $analytics.eventTrack('User ' + Authentication.user.displayName + ' ' + (isFollowing ? 'Following' : 'Unfollowed') + ' ' + organization.companyName);
+      })
+      .catch(function(err) {
+        console.log('unable to follow organization', err);
+        Notification.error('Error updating supplier following settings');
+      });
+    };
 
     $scope.findOne = function () {
       // get organization
@@ -11,6 +78,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         organizationId: $stateParams.organizationId
       }, function(organization) {
         $scope.organization = organization;
+        $scope.resolvedResources++;
         $scope.buildUploader(organization._id);
       }, function(error) {
         $location.path('/forbidden');
@@ -23,7 +91,14 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       })
       .then(function(response) {
         $scope.isReviewSubmitted = response.data.existingReview;
+        $scope.resolvedResources++;
+      })
+      .catch(function(err) {
+        console.log('unable to determine if user has already submitted review' , err);
       });
+
+      // fetch users email notification settings
+      $scope.getUserEmailNotification();
     };
 
     // Create file uploader instance
@@ -95,14 +170,33 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       };
     };
 
+    $scope.contactSupplier = function(ev, organization) {
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
+        controller: 'ContactSupplierController',
+        resolve: {
+          modalOrganizationId: function() {
+            return organization._id;
+          }
+        },
+        windowClass: 'app-modal-window'
+      });
+
+      modalInstance.result.then(function() {
+        if (organization) {
+          Notification.primary('A contact request has been sent to ' + organization.companyName + '.');
+        }
+      });
+    };
+
     // popup dialog that allows user to create a review
-    $scope.showReviewView = function(ev, organizationId) {
+    $scope.showReviewView = function(ev, organization) {
       var modalInstance = $modal.open({
         templateUrl: '/modules/reviews/client/views/create-review.client.view.html',
         controller: 'CreateReviewsController',
         resolve: {
-          modalOrganizationId: function() {
-            return organizationId;
+          modalOrganization: function() {
+            return organization;
           }
         },
         windowClass: 'app-modal-window'
@@ -110,9 +204,34 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
 
       // successfully created a review
       modalInstance.result.then(function() {
-        if (organizationId) {
+        if (organization) {
           $scope.findOne();
           $scope.isReviewSubmitted = true;
+
+          // Notify user that their review was successully created
+          Notification.primary('Submitted Review Successfully');
+        }
+      });
+    };
+
+    // popup dialog that allows user to create a review
+    $scope.showPriceReviewView = function(ev, organization) {
+      var modalInstance = $modal.open({
+        templateUrl: '/modules/pricereviews/client/views/create-pricereview.client.view.html',
+        controller: 'CreatePriceReviewsController',
+        resolve: {
+          modalOrganization: function() {
+            return organization;
+          }
+        },
+        windowClass: 'app-modal-window'
+      });
+
+      // successfully created a review
+      modalInstance.result.then(function() {
+        if (organization) {
+          $scope.findOne();
+          $scope.showPrices();
         }
       });
     };
