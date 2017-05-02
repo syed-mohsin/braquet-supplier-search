@@ -18,8 +18,8 @@
                 <button ng-if="false" class="btn-primary last" ng-click="sortBy()" data-target="side-navbar">Sort By Price</button>
             </div>
             <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
-                <label>Filters</label><br>
-                <a ng-click="clearAllFilter()">Clear All</a>
+                <label>Filters | <a class="clear-filter" ng-click="clearAllFilter()">Clear all</a></label><br>
+                
 
                 <div class="list-group quantity-filter">
                     <span class="catalog-label"><small>Quantity ></small></span>
