@@ -3,20 +3,7 @@
   <div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4">
     <form name="userForm" ng-submit="signup(userForm.$valid)" class="signin border" novalidate autocomplete="off">
       <fieldset>
-        <div class="form-group" show-errors>
-
-          <h2 for="user_role">Sign up on Braquet</h2>
-
-          <select name="user_role" ng-model="credentials.user_role" id="user_role" class="form-control" required>
-            <option value="">---Please select a role---</option>
-            <option value="0">You specify/buy equipment for projects</option>
-            <option value="1">You sell equipment for solar projects</option>
-            <option value="2">Other</option> 
-          </select>
-          <div ng-messages="userForm.user_role.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Please indicate whether you are requesting or supplying solar services and products.</p>
-          </div>
-        </div>
+        <h2 >Sign up on Braquet</h2>
         <div class="form-group" show-errors>
           <select name="organization" ng-model="credentials.organization" id="organization" class="form-control" required>
             <option value="">---Select Organization---</option>
@@ -24,7 +11,7 @@
             <option value="other">Other</option>
           </select>
 
-          <div ng-messages="userForm.user_role.$error" role="alert">
+          <div ng-messages="userForm.organization.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Please indicate your organization or create another.</p>
           </div>
         </div>
