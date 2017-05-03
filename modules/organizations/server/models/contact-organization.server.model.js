@@ -25,7 +25,7 @@ var ContactOrganizationSchema = new Schema({
   },
   projectRole: {
     type: String,
-    enum: ['Installer', 'EPC', 'Developer', 'Other'],
+    enum: ['Contractor', 'EPC', 'Developer', 'Other'],
     required: 'Project Role is required'
   },
   preferredModuleWattage: {

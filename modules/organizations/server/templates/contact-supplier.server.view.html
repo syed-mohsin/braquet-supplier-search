@@ -9,11 +9,22 @@
   <p>User: {{name}}</p>
   <p>User Organization: {{userOrg}}</p>
   <p>Contact Organization: {{orgName}}.</p>
-  <p>User Role: {{formData.projectRole}}</p>
+  <p>Project Role: {{formData.projectRole}}</p>
   <p>Preferred Module Wattage: {{formData.preferredModuleWattage}}</p>
   <p>Project Size: {{formData.quantity}}</p>
   <p>Delivery Date: {{formData.deliveryDate | date('Y-m-d')}}</p>
-  <p>Contact Details: {{formData.content}}</p>
+  <br>
+  Shipping Address
+  <p>Address1: {{ formData.shippingAddress.address1 }}</p>
+  <p>Address2: {{ formData.shippingAddress.address2 }}</p>
+  <p>City: {{ formData.shippingAddress.city }}</p>
+  <p>State: {{ formData.shippingAddress.state }}</p>
+  <p>Postal/Zipcode: {{ formData.shippingAddress.zipcode }}</p>
+  <p>Country: {{ formData.shippingAddress.country }}</p>
+  <br>
+  Additional Details:
+  <br>
+  {{formData.content}}
 </body>
 
 </html>

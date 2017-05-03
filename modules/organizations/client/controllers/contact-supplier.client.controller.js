@@ -6,7 +6,7 @@ angular.module('organizations').controller('ContactSupplierController', ['$scope
     $scope.authentication = Authentication;
     $scope.organization = modalOrganization;
 
-    $scope.projectRoles = ['Installer', 'EPC', 'Developer', 'Other'];
+    $scope.projectRoles = ['Contractor', 'EPC', 'Developer', 'Other'];
     $scope.quantities = ['0kW-100kW', '101kW-500kW', '501kW-1MW', '>1MW'];
     $scope.presentDate = new Date();
     $scope.shippingAddress = {};
