@@ -6,16 +6,19 @@
         <h1>Search module supplier reviews and quotes for your business</h1>
 
         <form ng-submit="searchCatalog()" class="ng-pristine ng-valid no-background no-padding no-margin">
-          <select for="panelType">Panel Type
-          
+
+          <label for="panelType">Technology Type</label>
+          <select name="panelType" ng-model="panelType" id="panelType" class="form-control">
             <option value="Mono">Monocrystalline</option>
             <option value="Poly">Polycrystalline</option>
           </select>
 
-          <select name="Project Size">
-            <option value="">0kW-100kW</option>
+
+          <label for="quantity">Project Size</label>
+          <select name="quantity" ng-model="quantity" id="quantity" class="form-control">
             <option value="0kW-100kW">0kW-100kW</option>
-            <option value="101kW-500kW">101kW-500kW</option>
+            <option value="101kW-500kW" selected>101kW-500kW</option>
+
             <option value="501kW-1MW">501kW-1MW</option>
             <option value=">1MW">>1MW</option>
           </select>

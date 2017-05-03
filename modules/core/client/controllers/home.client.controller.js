@@ -4,6 +4,8 @@ angular.module('core').controller('HomeController', ['$scope', '$state', 'Authen
   function ($scope, $state, Authentication) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
+    $scope.panelType = 'Mono';
+    $scope.quantity = '0kW-100kW';
 
     $scope.searchCatalog = function() {
       var query = {};
