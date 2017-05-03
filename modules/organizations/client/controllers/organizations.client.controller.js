@@ -35,6 +35,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       // Create new Organization object
       var organization = new Organizations({
         companyName: this.companyName,
+        urlName: this.urlName,
         isManufacturer: this.isManufacturer,
         industry: this.industry,
         productTypes: this.productTypes,

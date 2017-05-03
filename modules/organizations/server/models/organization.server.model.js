@@ -43,6 +43,10 @@ var OrganizationSchema = new Schema({
     type: String,
     required: 'Organization name is required'
   },
+  urlName: {
+    type: String,
+    required: 'Url name is required.'
+  },
   logoImageUrl: {
     type: String,
     default: 'modules/users/client/img/profile/default.png'
