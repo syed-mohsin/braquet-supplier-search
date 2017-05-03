@@ -3,7 +3,7 @@
     <form name="contactSupplierForm" class="form-horizontal" ng-submit="contact(contactSupplierForm.$valid)" novalidate>
       <h2>Contact {{organization.companyName}}</h2>
       <div class="form-group">
-        <strong>A representative from this seller will be in touch with you shortly.</strong>
+        <strong>Please fill out the following information so a representative from {{organization.companyName}} can be in touch with you. Someone will be in touch with you within 24 hours.</strong>
       </div>
       <fieldset>
         <div class="form-group" show-errors>
@@ -27,7 +27,8 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label for="preferredModuleWattage">Preferred Module Wattage</label><br>
+          <label for="preferredModuleWattage">Minimum Module Wattage</label><br>
+
           <input name="preferredModuleWattage" type="number" min="0" ng-model="preferredModuleWattage" id="preferredModuleWattage" class="form-control" placeholder="0" required>
           <div ng-messages="contactSupplierForm.preferredModuleWattage.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Preferred module wattage is required.</p>
