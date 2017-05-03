@@ -3,29 +3,28 @@
     <div class="banner-shade">
       <div class="detail container">
 
-        <h1>Search module supplier reviews and quotes for your business</h1>
+        <h1>Lookup 1000s of quotes from module manufacturers and resellers</h1>
 
         <form ng-submit="searchCatalog()" class="ng-pristine ng-valid no-background no-padding no-margin">
-
-          <label for="panelType">Technology Type</label>
-          <select name="panelType" ng-model="panelType" id="panelType" class="form-control">
+        <h4>Make sure your company is receiving competitive quotes from your module suppliers.</h4>
+          <select name="panelType" ng-model="panelType" id="panelType" class="form-control pull-left">
+            <option value="">Type of module</option>
             <option value="Mono">Monocrystalline</option>
             <option value="Poly">Polycrystalline</option>
           </select>
 
-
-          <label for="quantity">Project Size</label>
-          <select name="quantity" ng-model="quantity" id="quantity" class="form-control">
+          <select name="quantity" ng-model="quantity" id="quantity" class="form-control pull-right">
+            <option value="">Project Size</option>
             <option value="0kW-100kW">0kW-100kW</option>
             <option value="101kW-500kW" selected>101kW-500kW</option>
-
             <option value="501kW-1MW">501kW-1MW</option>
             <option value=">1MW">>1MW</option>
           </select>
 
-          <button type="submit" class="btn btn-primary submit">Submit</button>
+          <button type="submit" class="btn btn-primary submit">Get quotes</button>
         </form>
-        <button type="button" ng-click="goToCatalog()" class="btn btn-primary">See Full Catalog</button>
+      <!--   <h4>If you are flexible on module specifications</h4>
+        <button type="button" ng-click="goToCatalog()" class="btn btn-primary">See Full Catalog</button> -->
 
         <a href="/organizations/58bc97b799aba5addcb37e75/public">
           <div class="review">
