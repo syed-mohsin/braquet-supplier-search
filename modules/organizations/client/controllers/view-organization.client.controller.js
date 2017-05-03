@@ -1,9 +1,11 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification) {
+angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
+  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
+    $scope.resolvedResources = 0;
+    $scope.expectedResources = 3;
 
     $scope.initializePageNavBar = function() {
       // tab viewing booleans
@@ -33,12 +35,50 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     // initialize tabs
     $scope.initializePageNavBar();
 
+    $scope.getUserEmailNotification = function() {
+      if (!Authentication.user) {
+        $scope.emailNotification = {};
+        $scope.resolvedResources++;
+        return;
+      }
+
+      $http.get('/api/emailnotifications/get-my-notification')
+      .then(function(resp) {
+        $scope.emailNotification = resp.data ? resp.data : {};
+        $scope.resolvedResources++;
+      })
+      .catch(function(err) {
+        console.log('Unable to load user email settings', err);
+      });
+    };
+
+    $scope.followOrganization = function(ev, organization) {
+      if (!Authentication.user) {
+        return $state.go('authentication.signin');
+      }
+
+      $http.get('/api/emailnotifications-follow/' + organization._id)
+      .then(function(response) {
+        $scope.emailNotification = response.data.newEmailNotification;
+        var isFollowing = response.data.isFollowing;
+
+        var notificationString = isFollowing ? 'Following' : 'Unfollowed';
+        Notification.primary(notificationString + ' ' + organization.companyName);
+        $analytics.eventTrack('User ' + Authentication.user.displayName + ' ' + (isFollowing ? 'Following' : 'Unfollowed') + ' ' + organization.companyName);
+      })
+      .catch(function(err) {
+        console.log('unable to follow organization', err);
+        Notification.error('Error updating supplier following settings');
+      });
+    };
+
     $scope.findOne = function () {
       // get organization
       Organizations.get({
         organizationId: $stateParams.organizationId
       }, function(organization) {
         $scope.organization = organization;
+        $scope.resolvedResources++;
         $scope.buildUploader(organization._id);
       }, function(error) {
         $location.path('/forbidden');
@@ -51,7 +91,14 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       })
       .then(function(response) {
         $scope.isReviewSubmitted = response.data.existingReview;
+        $scope.resolvedResources++;
+      })
+      .catch(function(err) {
+        console.log('unable to determine if user has already submitted review' , err);
       });
+
+      // fetch users email notification settings
+      $scope.getUserEmailNotification();
     };
 
     // Create file uploader instance
@@ -128,8 +175,8 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
         controller: 'ContactSupplierController',
         resolve: {
-          modalOrganizationId: function() {
-            return organization._id;
+          modalOrganization: function() {
+            return organization;
           }
         },
         windowClass: 'app-modal-window'

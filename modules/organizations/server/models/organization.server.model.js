@@ -21,6 +21,9 @@ var OrganizationSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  updated: {
+    type: Date
+  },
   verified: {
     type: Boolean
   },

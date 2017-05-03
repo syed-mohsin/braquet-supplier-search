@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'Notification',
-  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, Notification) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification', '$analytics',
+  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, EmailNotifications, Notification, $analytics) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resolvedResources = 0;
+    $scope.expectedResources = 4;
     $scope.search = $stateParams.q;
 
     $scope.query = {};
@@ -24,6 +25,40 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
+
+    $scope.getOrganizations = function() {
+      $http({
+        url: '/api/organizations-catalog',
+        params: $scope.query
+      })
+      .then(function(resp) {
+        $scope.orgs = resp.data.orgs;
+        $scope.buildPager(resp.data.count);
+
+        // increment resolvedResources
+        $scope.resolvedResources++;
+      })
+      .catch(function(err) {
+        console.log('err', err);
+      });
+    };
+
+    $scope.getUserEmailNotification = function() {
+      if (!Authentication.user) {
+        $scope.emailNotification = {};
+        $scope.resolvedResources++;
+        return;
+      }
+
+      $http.get('/api/emailnotifications/get-my-notification')
+      .then(function(resp) {
+        $scope.emailNotification = resp.data ? resp.data : {};
+        $scope.resolvedResources++;
+      })
+      .catch(function(err) {
+        console.log('Unable to load user email settings', err);
+      });
+    };
 
     $scope.updateFilter = function() {
       var man = '';
@@ -77,6 +112,52 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.query.isreseller = $scope.isreseller;
       $scope.query.page = 1;
       $state.go('catalog', $scope.query);
+    };
+
+    $scope.clearSectionCheckboxes = function(arg) {
+      switch(arg) {
+        case 'supplierType':
+          $scope.isman = undefined;
+          $scope.isreseller = undefined;
+          break;
+        case 'frameColor':
+          // clear all checked frame colors
+          for (var key in $scope.fColorCheckboxes) {
+            $scope.fColorCheckboxes[key] = false;
+          }
+          break;
+        case 'crystallineType':
+          // clear all checked crystalline types
+          for (key in $scope.crysCheckboxes) {
+            $scope.crysCheckboxes[key] = false;
+          }
+          break;
+        case 'numCells':
+          // clear all checked cells
+          for (key in $scope.numCellsCheckboxes) {
+            $scope.numCellsCheckboxes[key] = false;
+          }
+          break;
+        case 'moduleWatt':
+          // clear all checked watt check boxes
+          for (key in $scope.wattCheckboxes) {
+            $scope.wattCheckboxes[key] = false;
+          }
+          break;
+        case 'brand':
+          // clear all checked organizations
+          for (key in $scope.orgCheckboxes) {
+            $scope.orgCheckboxes[key] = false;
+          }
+          break;
+        default:
+          return;
+      }
+      $scope.updateFilter();
+    };
+
+    $scope.clearAllFilter = function() {
+      $state.transitionTo('catalog');
     };
 
 
@@ -215,8 +296,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         templateUrl: '/modules/organizations/client/views/contact-supplier.client.view.html',
         controller: 'ContactSupplierController',
         resolve: {
-          modalOrganizationId: function() {
-            return organization._id;
+          modalOrganization: function() {
+            return organization;
           }
         },
         windowClass: 'app-modal-window'
@@ -229,23 +310,31 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       });
     };
 
+    $scope.followOrganization = function(ev, organization) {
+      if (!Authentication.user) {
+        return $state.go('authentication.signin');
+      }
+
+      $http.get('/api/emailnotifications-follow/' + organization._id)
+      .then(function(response) {
+        $scope.emailNotification = response.data.newEmailNotification;
+        var isFollowing = response.data.isFollowing;
+
+        var notificationString = isFollowing ? 'Following' : 'Unfollowed';
+        Notification.primary(notificationString + ' ' + organization.companyName);
+        $analytics.eventTrack('User ' + Authentication.user.displayName + ' ' + (isFollowing ? 'Following' : 'Unfollowed') + ' ' + organization.companyName);
+      })
+      .catch(function(err) {
+        console.log('unable to follow organization', err);
+        Notification.error('Error updating supplier following settings');
+      });
+    };
+
     // load resources from server after inititalizing all controller functions
 
     // fetch results based on query
-    $http({
-      url: '/api/organizations-catalog',
-      params: $scope.query
-    })
-    .then(function(resp) {
-      $scope.orgs = resp.data.orgs;
-      $scope.buildPager(resp.data.count);
-
-      // increment resolvedResources
-      $scope.resolvedResources++;
-    })
-    .catch(function(err) {
-      console.log('err', err);
-    });
+    $scope.getOrganizations();
+    $scope.getUserEmailNotification();
 
     // initialize filter boxes
     $scope.buildWattCheckboxes();

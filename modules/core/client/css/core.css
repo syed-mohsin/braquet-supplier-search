@@ -257,6 +257,12 @@ form .btn-primary, form .btn-default {
     font-size: 0;
 /*    cursor: pointer;*/
 }
+
+a.clear-filter {
+    color: #337ab7;
+    font-weight: 500;
+}
+
 section.content {
     position: relative;
     top: 50px;

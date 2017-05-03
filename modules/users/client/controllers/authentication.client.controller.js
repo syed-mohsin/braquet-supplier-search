@@ -6,12 +6,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
     $http.get('/api/organizations-basic')
-      .success(function(data) {
-        $scope.organizations = data;
-      })
-      .error(function(err) {
-        console.log(err);
-      });
+    .then(function(res) {
+      $scope.organizations = res.data;
+    })
+    .catch(function(err) {
+      console.log('error fetching organizations', err);
+    });
 
     // Get an eventual error defined in the URL query string:
     $scope.error = $location.search().err;
@@ -31,14 +31,14 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       }
 
       $scope.credentials.inviteToken = $state.params.i;
-      $http.post('/api/auth/signup', $scope.credentials).success(function (response) {
+      $http.post('/api/auth/signup', $scope.credentials).then(function (response) {
         // If successful we assign the response to the global user model
-        $scope.authentication.user = response;
+        $scope.authentication.user = response.data;
 
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
-      }).error(function (response) {
-        $scope.error = response.message;
+      }).catch(function (response) {
+        $scope.error = response.data.message;
       });
     };
 
@@ -51,13 +51,13 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         return false;
       }
 
-      $http.post('/api/auth/signin', $scope.credentials).success(function (response) {
+      $http.post('/api/auth/signin', $scope.credentials).then(function (response) {
         // If successful we assign the response to the global user model
-        $scope.authentication.user = response;
+        $scope.authentication.user = response.data;
 
         // User should be notified if they have not submitted a review yet
         if($scope.authentication.user.reviews.length === 0) {
-          Notification.primary({ 
+          Notification.primary({
             message: 'You have not written a review yet. Write your first review.',
             delay: null
           });
@@ -65,8 +65,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
-      }).error(function (response) {
-        $scope.error = response.message;
+      }).catch(function (response) {
+        $scope.error = response.data.message;
       });
     };
 
