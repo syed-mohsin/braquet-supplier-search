@@ -19,7 +19,7 @@
             </div>
             <div class="col-sm-3 side-navbar {{hiddenFilterClass}}" id="side-navbar">
                 <label>Filters | <a class="clear-filter" ng-click="clearAllFilter()">Clear all</a></label><br>
-                
+
 
                 <div class="list-group quantity-filter">
                     <span class="catalog-label"><small>Quantity ></small></span>
@@ -30,7 +30,7 @@
 
                 <div class="list-group">
                     <span class="catalog-label"><small>Supplier Type ></small></span>
-                    <div ng-if="isman || isreseller"><a ng-click="clearSectionCheckboxes('supplierType')">Clear</a></div>
+                    <div ng-if="isman || isreseller"><a class="clear-filter" ng-click="clearSectionCheckboxes('supplierType')">Clear</a></div>
                     <li>
                       <label>
                         <input type="checkbox" ng-model="isman" analytics-on="click" analytics-event="Click Manufacturer Only Filter: {{!isman}}" ng-change="updateFilter()">
@@ -47,7 +47,7 @@
 
                 <div class="list-group">
                     <span class="catalog-label"><small>Technology Type ></small></span>
-                    <div ng-if="query.crys"><a ng-click="clearSectionCheckboxes('crystallineType')">Clear</a></div>
+                    <div ng-if="query.crys"><a class="clear-filter" ng-click="clearSectionCheckboxes('crystallineType')">Clear</a></div>
                     <li ng-repeat="crys in crystallineTypes">
                         <label>
                       <input type="checkbox" ng-model="crysCheckboxes[crys]" analytics-on="click" analytics-event="Click Supplier Type Filter: {{crys}}" ng-change="updateFilter()">
@@ -58,7 +58,7 @@
 
                 <div class="list-group">
                     <span class="catalog-label"><small>Frame Color ></small></span>
-                    <div ng-if="query.color"><a ng-click="clearSectionCheckboxes('frameColor')">Clear</a></div>
+                    <div ng-if="query.color"><a class="clear-filter" ng-click="clearSectionCheckboxes('frameColor')">Clear</a></div>
                     <li ng-repeat="color in frameColors">
                         <label>
                       <input type="checkbox" ng-model="fColorCheckboxes[color]" analytics-on="click" analytics-event="Click Frame Color Filter: {{color}}" ng-change="updateFilter()">
@@ -69,7 +69,7 @@
 
                 <div class="list-group">
                     <span class="catalog-label"><small>Number of Cells ></small></span>
-                    <div ng-if="query.cells"><a ng-click="clearSectionCheckboxes('numCells')">Clear</a></div>
+                    <div ng-if="query.cells"><a class="clear-filter" ng-click="clearSectionCheckboxes('numCells')">Clear</a></div>
                     <li ng-repeat="cells in numberOfCells">
                         <label>
                       <input type="checkbox" ng-model="numCellsCheckboxes[cells]" analytics-on="click" analytics-event="Click Number of Cells Filter: {{cells}}" ng-change="updateFilter()">
@@ -88,7 +88,7 @@
               </div> -->
                 <div class="list-group">
                     <span class="catalog-label"><small>Brand ></small></span>
-                    <div ng-if="query.man"><a ng-click="clearSectionCheckboxes('brand')">Clear</a></div>
+                    <div ng-if="query.man"><a class="clear-filter" ng-click="clearSectionCheckboxes('brand')">Clear</a></div>
                     <li ng-repeat="man in manufacturers">
                         <label>
                       <input type="checkbox" ng-model="orgCheckboxes[man]" analytics-on="click" analytics-event="Click Brand Filter: {{man}}" ng-change="updateFilter()">
