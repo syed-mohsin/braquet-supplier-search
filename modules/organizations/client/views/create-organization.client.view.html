@@ -11,12 +11,21 @@
             <p class="help-block error-text" ng-message="required">Company name is required.</p>
           </div>
         </div>
+
+        <div class="form-group" show-errors>
+          braquet.io/organizations/<input name="urlName" type="text" ng-model="urlName" id="urlName" class="form-control" placeholder="url Display Name" required>
+          <div ng-messages="organizationForm.urlName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Display name is required. This is how your company name will appear in your url.</p>
+          </div>
+        </div>
+
         <div class="form-group" show-errors>
           <label>
             <input name="isManufacturer" type="checkbox" ng-model="isManufacturer" id="isManufacturer">
             <span>Is this a manufacturer?</span>
           </label>
         </div>
+
         <div class="form-group" show-errors>
           <input name="industry" type="text" ng-model="industry" id="industry" class="form-control" placeholder="Industry" required>
           <div ng-messages="organizationForm.industry.$error" role="alert">
