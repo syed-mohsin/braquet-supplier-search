@@ -267,6 +267,10 @@ form .btn-primary, form .btn-default {
 /*    cursor: pointer;*/
 }
 
+a.clear-filter {
+    color: #337ab7;
+    font-weight: 500;
+}
 section.content {
     min-height: 82%;
     height: auto !important;

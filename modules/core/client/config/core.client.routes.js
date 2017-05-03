@@ -20,10 +20,8 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         if (user) {
           if (user.roles[0] === 'tempUser' || user.roles[0] === 'tempSeller') {
             $state.go('awaiting-confirmation', {}, { location: false });
-          } else if (user.roles.indexOf('seller') !== -1) {
-            $state.go('organizations.view', { organizationId: user.organization }, { location: false });
-          } else if (user.roles.indexOf('user') !== -1) {
-            $state.go('catalog', {}, { location: false });
+          } else {
+            $state.go('catalog', {});
           }
         } else {
           $state.go('search', {}, { location: false });
