@@ -154,7 +154,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr ng-repeat="brand in organization.manufacturers" class="line-item">
+                                <tr ng-repeat="brand in organization.manufacturers" ng-show="!query.man || query.man.indexOf(brand) !== -1" class="line-item">
                                     <td ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1">
                                         <span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
