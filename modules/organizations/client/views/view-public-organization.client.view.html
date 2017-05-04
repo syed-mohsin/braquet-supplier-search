@@ -4,7 +4,7 @@
       <div class="page-header">
           <div>
               <div class="profile-photo">
-                  <!-- <img ng-src="{{organization.logo}}"> -->
+                  
                   <img ng-src="{{organization.logoImageUrl}}">
               </div>
               <div class="content no-wrap title-content">
@@ -26,7 +26,7 @@
                   <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                   <small><span ng-bind="organization.productTypes"></span></small>
 
-                  <div class="menu">
+                  <div class="menu split">
                       <a ui-sref="organizations.view({organizationId: organization._id})">
                           <span class="glyphicon glyphicon-star"></span><span>Login to write anonymous review</span>
                       </a>

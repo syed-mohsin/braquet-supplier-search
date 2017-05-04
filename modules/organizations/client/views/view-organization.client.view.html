@@ -31,6 +31,11 @@
                         <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
                     </div>
                     <div class="menu edit">
+                        <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
+                            <span class="glyphicon glyphicon-new-window"></span><span>Edit organization</span>
+                        </a>
+                    </div>
+                    <div class="menu edit">
                         <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
                             <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                         </a>
@@ -38,10 +43,6 @@
                             <span ng-class="{ 'glyphicon': true, 'glyphicon-plus': !displayUserIsFollowing(organization), 'glyphicon-ok': displayUserIsFollowing(organization) }"></span>
                             <span>{{displayUserIsFollowing(organization) ? ('Following') : ('Follow') }}</span>
                         </a>
-                        <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
-                            <span class="glyphicon glyphicon-new-window"></span><span>Edit organization</span>
-                        </a>
-
                     </div>
                     <div class="bio">
                         <span ng-bind="organization.about"></span>
@@ -50,14 +51,14 @@
                     <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                     <small><span ng-bind="organization.productTypes"></span></small>
 
-                    <div class="menu">
-                        <a ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization)">
+                    <div class="menu split">
+                        <a class="pull-left first" ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization)">
                             <span class="glyphicon glyphicon-star"></span><span>Write anonymous review</span>
                         </a>
-                        <button ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
-                        <span>You already submitted a review</span>
-                    </button>
-                        <a ng-if="organization._id !== authentication.user.organization" ng-click="showPriceReviewView($event, organization)">
+                        <a ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
+                            <span class="glyphicon glyphicon-remove"></span><span>You already submitted a review</span>
+                        </a>
+                        <a class="pull-left" ng-if="organization._id !== authentication.user.organization" ng-click="showPriceReviewView($event, organization)">
                             <span class="glyphicon glyphicon-usd"></span><span>Add quote</span>
                         </a>
                         <a ng-if="organization.admin === user._id" ng-click="showAddUsers($event)">
