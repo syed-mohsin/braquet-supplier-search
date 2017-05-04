@@ -147,6 +147,25 @@ exports.readPublic = function(req, res) {
 };
 
 /**
+ * Public read view of organization by url name
+ */
+exports.readPublicByUrlName = function(req, res) {
+  Organization.findOne({ urlName: req.params.urlName })
+    .populate('panel_models')
+    .populate({ path: 'reviews', match: { verified: true } })
+    .populate({ path: 'priceReviews', match: { verified: true } })
+    .exec(function (err, organization) {
+      if (err) {
+        return res.status(400).json(err);
+      } else if (!organization) {
+        return res.status(400).json(new Error('Failed to load organization ' + req.params.urlName));
+      }
+
+      res.json(organization);
+    });
+};
+
+/**
  * Update a organization
  */
 exports.update = function (req, res) {
@@ -429,6 +448,28 @@ exports.organizationByID = function (req, res, next, id) {
         return next(err);
       } else if (!organization) {
         return next(new Error('Failed to load organization ' + id));
+      }
+      req.organization = organization;
+      return next();
+    });
+};
+
+/**
+ * Organization middleware
+ */
+exports.organizationByUrlName = function (req, res, next, urlName) {
+  Organization.findOne({ urlName: urlName })
+    .populate('panel_models')
+    .populate('users', 'displayName organization connections email firstName lastName')
+    .populate('possibleUsers', 'displayName organization connections email firstName lastName')
+    .populate('admin', 'displayName')
+    .populate({ path: 'reviews', match: { verified: true } })
+    .populate({ path: 'priceReviews', match: { verified: true } })
+    .exec(function (err, organization) {
+      if (err) {
+        return next(err);
+      } else if (!organization) {
+        return next(new Error('Failed to load organization ' + urlName));
       }
       req.organization = organization;
       return next();
