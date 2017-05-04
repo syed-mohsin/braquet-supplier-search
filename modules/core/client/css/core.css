@@ -44,16 +44,17 @@ body {
     color: #444;
     background: white;
 }
-
 a {
     color: #222;
     font-weight: 700;
 }
-
-.navbar a {
+.navbar a, .navbar-inverse .navbar-nav > li > a {
     font-weight: 500;
+    color: white;
 }
-
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .active > a {
+    background-image: linear-gradient(to bottom, #222 0%, #0f0f0f 100%);
+}
 a:hover {
     text-decoration: none;
     cursor: pointer;
@@ -294,8 +295,9 @@ section h2 {
     padding: 0;
 }
 .navbar-inverse {
-    background: black;
+    background: #222;
     border-radius: 0;
+    border-style: none;
 }
 .side-navbar .catalog-label {
     font-weight: 700;
@@ -324,7 +326,7 @@ section h2 {
 }
 .welcome.banner .detail {
     position: relative;
-    top: 10em;
+    top: 10%;
     padding: 20px 36px;
 }
 .braquet-dropdown {
@@ -368,10 +370,10 @@ section h2 {
 @media (max-width: 767px) {
     .banner h1 {
         line-height: 34px;
-        font-size: 23pt;
+        font-size: 20pt;
     }
     .welcome.banner .detail {
-        top:5em;
+        top:2em;
     }
     .welcome .review {
         margin-top: 20px;
@@ -867,4 +869,10 @@ img.company-logo {
 }
 .quantity-filter label {
     font-weight: inherit;
+}
+.team {
+    margin-top: 20px;
+}
+.team .list-view {
+    margin-top: 20px;
 }
