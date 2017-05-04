@@ -442,6 +442,9 @@ section h2 {
 .menu {
     margin: 10px 0 5px 0;
 }
+.menu .disable {
+    cursor: not-allowed;
+}
 .menu.split a{
     padding: 3px 13px;
     float: left;

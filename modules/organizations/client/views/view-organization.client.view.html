@@ -55,9 +55,9 @@
                         <a class="pull-left first" ng-if="organization._id !== authentication.user.organization && !isReviewSubmitted" ng-click="showReviewView($event, organization)">
                             <span class="glyphicon glyphicon-star"></span><span>Write anonymous review</span>
                         </a>
-                        <button ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
-                        <span>You already submitted a review</span>
-                    </button>
+                        <a ng-if="organization._id !== authentication.user.organization && isReviewSubmitted" disabled>
+                            <span class="glyphicon glyphicon-remove"></span><span>You already submitted a review</span>
+                        </a>
                         <a class="pull-left" ng-if="organization._id !== authentication.user.organization" ng-click="showPriceReviewView($event, organization)">
                             <span class="glyphicon glyphicon-usd"></span><span>Add quote</span>
                         </a>
