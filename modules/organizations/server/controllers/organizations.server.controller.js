@@ -94,7 +94,16 @@ exports.create = function (req, res) {
   organization.verified = true;
   organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
-  organization.save()
+  Organization.findOne({ urlName: organization.urlName }).exec()
+  .then(function(duplicateOrganization) {
+    if (duplicateOrganization) {
+      var err = { errors: { duplicate: { message: 'this url display name is already taken' } } };
+      throw err;
+    }
+
+    // there was no duplicate, proceed to save organization
+    return organization.save();
+  })
   .then(function(savedOrg) {
     res.json(organization);
   })
@@ -143,6 +152,7 @@ exports.readPublic = function(req, res) {
 exports.update = function (req, res) {
   var organization = req.organization;
   organization.companyName = req.body.companyName;
+  organization.urlName = req.body.urlName;
   organization.isManufacturer = req.body.isManufacturer;
   organization.panel_models = req.body.panel_models;
   organization.industry = req.body.industry;
@@ -158,7 +168,16 @@ exports.update = function (req, res) {
 
   organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
-  organization.save()
+  Organization.findOne({ urlName: organization.urlName }).exec()
+  .then(function(duplicateOrganization) {
+    if (duplicateOrganization) {
+      var err = { errors: { duplicate: { message: 'this url display name is already taken' } } };
+      throw err;
+    }
+
+    // there was no duplicate, proceed to save organization
+    return organization.save();
+  })
   .then(function(updatedOrg) {
     res.json(organization);
   })
