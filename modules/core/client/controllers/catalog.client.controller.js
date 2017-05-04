@@ -26,6 +26,16 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
+    // show following conditional
+    $scope.displayUserIsFollowing = function(organization) {
+      return (
+        organization &&
+        $scope.emailNotification &&
+        $scope.emailNotification.followingOrganizations &&
+        $scope.emailNotification.followingOrganizations.indexOf(organization._id) !== -1
+      );
+    };
+
     $scope.getOrganizations = function() {
       $http({
         url: '/api/organizations-catalog',
