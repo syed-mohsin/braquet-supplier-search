@@ -315,6 +315,7 @@ section h2 {
 }
 .banner-shade {
     height: 100vh;
+    background-color: #222;
     background-color: rgba(0,0,0,0.3);
 }
 .welcome.banner {
@@ -352,6 +353,7 @@ section h2 {
 .welcome .review {
     margin-top: 2em;
     padding:15px; 
+    background: #222;
     background: rgba(1,1,1,0.2); 
     max-width: 450px;
 }
