@@ -266,10 +266,8 @@ a.clear-filter {
 section.content {
     position: relative;
     top: 50px;
-    height: 100%;
-}
-.footer {
-    background-color: #f5f5f5;
+    min-height: 82%;
+    height: auto!important;
 }
 /* Lastly, apply responsive CSS fixes as necessary */
 
@@ -518,10 +516,10 @@ section h2 {
     color: white;
     font-weight: 200;
     text-align: center;
-    padding: 30px 0;
+    padding: 40px 0;
     margin-top: 50px;
     width: 100%;
-    height: 80px;
+    height: 100px;
 }
 .footer a {
     color: white;
