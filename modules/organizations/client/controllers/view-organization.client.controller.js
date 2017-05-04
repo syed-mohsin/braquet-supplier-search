@@ -73,6 +73,8 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     };
 
     $scope.findOne = function () {
+      $scope.resolvedResources = 0;
+      
       // get organization
       Organizations.get({
         organizationId: $stateParams.organizationId

@@ -35,7 +35,7 @@
                             <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                         </a>
                         <a ng-if="organization._id !== authentication.user.organization" ng-click="followOrganization($event, organization)">
-                            <span class=""></span>
+                            <span class="glyphicon glyphicon-plus"></span>
                             <span>
                               {{(!emailNotification.followingOrganizations || emailNotification.followingOrganizations.indexOf(organization._id) === -1) ?
                                     ('Follow') : ('Following')
