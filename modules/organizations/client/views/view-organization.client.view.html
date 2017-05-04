@@ -35,12 +35,8 @@
                             <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                         </a>
                         <a ng-if="organization._id !== authentication.user.organization" ng-click="followOrganization($event, organization)">
-                            <span class=""></span>
-                            <span>
-                              {{(!emailNotification.followingOrganizations || emailNotification.followingOrganizations.indexOf(organization._id) === -1) ?
-                                    ('Follow') : ('Following')
-                              }}
-                            </span>
+                            <span ng-class="{ 'glyphicon': true, 'glyphicon-plus': !displayUserIsFollowing(organization), 'glyphicon-ok': displayUserIsFollowing(organization) }"></span>
+                            <span>{{displayUserIsFollowing(organization) ? ('Following') : ('Follow') }}</span>
                         </a>
                         <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">
                             <span class="glyphicon glyphicon-new-window"></span><span>Edit organization</span>
