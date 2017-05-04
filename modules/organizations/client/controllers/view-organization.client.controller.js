@@ -222,7 +222,10 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
           $scope.isReviewSubmitted = true;
 
           // Notify user that their review was successully created
-          Notification.primary('Submitted Review Successfully');
+          Notification.primary('Submitted Review Successfully. Your review may need to be verified.');
+          if ($scope.user && !$scope.user.emailVerified) {
+            Notification.warning('Please confirm your email to speed up the verification process');
+          }
         }
       });
     };

@@ -24,7 +24,7 @@ exports.create = function (req, res) {
   review.organization = req.organization._id;
 
   // review is unverified unless both email and admin verified
-  if (req.user.emailVerified === false || req.user.verified === false) {
+  if (req.user.emailVerified === false) {
     review.verified = false;
   }
 
