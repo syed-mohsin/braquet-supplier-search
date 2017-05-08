@@ -137,7 +137,7 @@
                             <table>
                                 <tr class="header">
 
-                                    <td ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1">
+                                    <td ng-show="showPolyModule(organization)">
                                         <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/poly-module.jpg">
@@ -147,7 +147,7 @@
                                           <div><small>(USD per watt)</small></div>
                                         </div>
                                     </td>
-                                    <td ng-show="organization.panel_crystalline_types.indexOf('Mono') !== -1">
+                                    <td ng-show="showMonoModule(organization)">
                                         <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/mono-module.jpg">
@@ -159,11 +159,11 @@
                                     </td>
                                 </tr>
                                 <tr ng-repeat="brand in organization.manufacturers" ng-show="!query.man || query.man.indexOf(brand) !== -1" class="line-item">
-                                    <td ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1">
+                                    <td ng-show="showPolyModule(organization)">
                                         <span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
-                                    <td ng-show="organization.panel_crystalline_types.indexOf('Mono') !== -1">
+                                    <td ng-show="showMonoModule(organization)">
                                         <span ng-bind="organization.brands[brand+'#Mono'] ? (organization.brands[brand+'#Mono']/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>

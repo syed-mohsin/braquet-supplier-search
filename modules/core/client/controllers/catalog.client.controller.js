@@ -26,6 +26,30 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
+    $scope.showPolyModule = function(organization) {
+      return organization.panel_crystalline_types.indexOf('Poly') !== -1
+        && (
+          // both poly or mono are selected in query string
+          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
+          // neither poly or mono are selected in query string
+          ($scope.query.crys.indexOf('Mono') === -1 && $scope.query.crys.indexOf('Poly') === -1) ||
+          // only poly is selected in query string
+          ($scope.query.crys.indexOf('Mono') === -1 && $scope.query.crys.indexOf('Poly') !== -1)
+        );
+    };
+
+    $scope.showMonoModule = function(organization) {
+      return organization.panel_crystalline_types.indexOf('Mono') !== -1
+        && (
+          // both poly or mono are selected in query string
+          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
+          // neither poly or mono are selected in query string
+          ($scope.query.crys.indexOf('Mono') === -1 && $scope.query.crys.indexOf('Poly') === -1) ||
+          // only mono is selected in query string
+          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') === -1)
+        );
+    };
+
     // show following conditional
     $scope.displayUserIsFollowing = function(organization) {
       return (
