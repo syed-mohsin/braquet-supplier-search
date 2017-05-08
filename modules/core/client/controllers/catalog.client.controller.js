@@ -331,7 +331,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         var isFollowing = response.data.isFollowing;
 
         var notificationString = isFollowing ? 'Following' : 'Unfollowed';
-        Notification.primary(notificationString + ' ' + organization.companyName);
+        var description = isFollowing ?
+          '. Updates about this company will appear in your weekly/monthly emails.'
+          :
+          '';
+        Notification.primary(notificationString + ' ' + organization.companyName + description);
         $analytics.eventTrack('User ' + Authentication.user.displayName + ' ' + (isFollowing ? 'Following' : 'Unfollowed') + ' ' + organization.companyName);
       })
       .catch(function(err) {
