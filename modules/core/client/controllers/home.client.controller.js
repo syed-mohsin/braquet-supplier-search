@@ -10,6 +10,7 @@ angular.module('core').controller('HomeController', ['$scope', '$state', 'Authen
       var query = {};
       query.crys = $scope.panelType;
       query.quantity = $scope.quantity;
+      query.isman = true;
 
       if (query.crys === 'all') {
         query.crys = 'Mono|Poly';
