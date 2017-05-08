@@ -45,7 +45,6 @@ var OrganizationSchema = new Schema({
   },
   urlName: {
     type: String,
-    required: 'Url name is required.'
   },
   logoImageUrl: {
     type: String,

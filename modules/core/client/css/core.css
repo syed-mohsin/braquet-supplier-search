@@ -44,16 +44,17 @@ body {
     color: #444;
     background: white;
 }
-
 a {
     color: #222;
     font-weight: 700;
 }
-
-.navbar a {
+.navbar a, .navbar-inverse .navbar-nav > li > a {
     font-weight: 500;
+    color: white;
 }
-
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .active > a {
+    background-image: linear-gradient(to bottom, #222 0%, #0f0f0f 100%);
+}
 a:hover {
     text-decoration: none;
     cursor: pointer;
@@ -83,6 +84,9 @@ a:hover {
 .no-margin {
     margin: 0;
 }
+.no-background {
+    background: initial;
+}
 .no-border {
     border-style: none;
 }
@@ -91,15 +95,6 @@ a:hover {
     border-color: lightgrey;
     border-width: 1px;
 }
-.welcome form {
-    border-style: none;
-    border-width: 0;
-    border-color: inherit;
-    padding: inherit;
-    width: inherit;
-    min-width: initial;
-}
-
 form {
     background: white;
     padding: 40px 50px 40px 50px;
@@ -129,9 +124,6 @@ form label {
     z-index: 200;
     left: 0;
     padding: 10px;
-}
-.chat-message-details {
-    overflow: auto;
 }
 .extend form {
     min-width: initial;
@@ -271,18 +263,12 @@ a.clear-filter {
     color: #337ab7;
     font-weight: 500;
 }
+
 section.content {
-    min-height: 82%;
-    height: auto !important;
-    height: 100%;
     position: relative;
     top: 50px;
-    margin-bottom: 20px;
-    /* Negative indent footer by it's height */
-    /*  margin: 0 auto -60px;*/
-}
-.footer {
-    background-color: #f5f5f5;
+    min-height: 82%;
+    height: auto!important;
 }
 /* Lastly, apply responsive CSS fixes as necessary */
 
@@ -309,8 +295,9 @@ section h2 {
     padding: 0;
 }
 .navbar-inverse {
-    background: black;
+    background: #222;
     border-radius: 0;
+    border-style: none;
 }
 .side-navbar .catalog-label {
     font-weight: 700;
@@ -328,117 +315,87 @@ section h2 {
     margin: 0 0 10px 0;
     padding-left: inherit;
 }
-.banner {
-    background: url('/modules/core/client/img/asset/home_banner.jpg');
-    background-size: cover;
-    margin-bottom: 0;
-}
 .banner-shade {
     height: 100vh;
-    background-color: black;
-    background-color: rgba(0,0,0,0.2);
+    background-color: #222;
+    background-color: rgba(0,0,0,0.3);
 }
 .welcome.banner {
-    text-align: center;
-    background: url('/modules/core/client/img/asset/home_banner2.jpg');
-    height: 100vh;
+    background: url('https://c1.staticflickr.com/8/7126/8167308930_b50811e2a7_k.jpg');
     background-size: cover;
-    margin-bottom: 0;
 }
 .welcome.banner .detail {
     position: relative;
-    top: 10em;
+    top: 10%;
     padding: 20px 36px;
-    margin: 0 auto;
 }
-.banner h2 {
-    margin-bottom: 20px;
-}
-
 .braquet-dropdown {
     height: 45px;
 }
-
-.welcome .braquet-dropdown {
-    width: 165px;
+.welcome select {
+    width: 49%;
 }
-
-.welcome .signup {
-    font-size: 11px;
-    margin: 20px 0 10px 0;
-    width: initial;
-    padding: initial;
-}
-
-.welcome .signup input {
-    padding: 7px 5px;
-    margin: 3px 0;
-    text-align: center;
-}
-
 .container .banner {
     border-radius: 0;
 }
-.banner .detail {
-    margin: 180px auto 133px auto;
-    max-width: 500px;
-    text-align: center;
-}
 .banner h1 {
-    text-align: center;
-    line-height: 55px;
-    font-weight: 400;
+    line-height: 48px;
+    font-weight: 700;
     color: white;
-    font-size: 35px;
+    font-size: 36pt;
     position: relative;
     top: -39px;
+    max-width: 462px;
+}
+.banner h4 {
+    text-align: left;
+    color: white;
+    margin-bottom: 20px;
+}
+.welcome .review {
+    margin-top: 2em;
+    padding:15px; 
+    background: #222;
+    background: rgba(1,1,1,0.2); 
+    max-width: 450px;
+}
+.welcome .reviews {
+    margin-top: 5px;
+}
+.welcome .review img {
+    width:100px; 
+    float:left; 
+    margin-right:10px;
+}
+@media (max-width: 767px) {
+    .banner h1 {
+        line-height: 34px;
+        font-size: 20pt;
+    }
+    .welcome.banner .detail {
+        top:2em;
+    }
+    .welcome .review {
+        margin-top: 20px;
+        min-width: 268px;
+    }
+    .welcome .title {
+        display: none;
+    }
+    .welcome .review .info {
+        width: 100%;
+    }
+    form {
+        padding: initial;
+        min-width: inherit;
+    }
+    .border{
+        border-style: initial;
+    }
 }
 .banner .btn {
     background: #4CAF50;
     color: white;
-}
-.hiw {
-    padding-top: 40px 0;
-}
-.hiw .content {
-    width: 300px;
-    margin: auto auto;
-}
-.hiw .developers img {
-    width: 150px;
-}
-.hiw .epc img {
-    width: 85px;
-    margin-top: 33px;
-}
-.lapn .fpyl {
-    background: url('/modules/core/client/img/asset/faded_solar.jpg');
-    background-size: cover;
-}
-.lapn h3 {
-    padding-top: 51px;
-    font-weight: 200;
-}
-.lapn .btn {
-    margin-top: 20px;
-    background: grey;
-    color: white;
-}
-.lapn .detail {
-    padding-bottom: 38px;
-}
-.fpyl .detail {
-    background: white;
-    min-width: 250px;
-    width: 67%;
-    margin: 45px auto;
-}
-.fpyl .content {
-    margin-top: 30px;
-    padding: 0 20px;
-}
-.fpyl button {
-    margin-top: 24px;
 }
 .brands img {
     width: 147px;
@@ -485,6 +442,13 @@ section h2 {
 .menu {
     margin: 10px 0 5px 0;
 }
+.menu .disable {
+    cursor: not-allowed;
+}
+.menu.split a{
+    padding: 3px 13px;
+    float: left;
+}
 .menu a, .menu .btn-file {
     color: #444;
     font-size: 12px;
@@ -504,9 +468,6 @@ section h2 {
 .menu a:hover {
     background:rgb(1,1,1);
     background:rgba(1,1,1,0.1);
-}
-.list-view .menu.edit {
-    margin: 10px 0;
 }
 .side-title {
     position: relative;
@@ -563,10 +524,10 @@ section h2 {
     color: white;
     font-weight: 200;
     text-align: center;
-    padding: 30px 0;
+    padding: 40px 0;
     margin-top: 50px;
     width: 100%;
-    height: 80px;
+    height: 100px;
 }
 .footer a {
     color: white;
@@ -800,6 +761,14 @@ img.company-logo {
     border-radius: inherit;
     float: left;
 }
+@media (max-width: 767px) {
+    img.company-logo {
+      float: initial;
+    }
+    .profile-info {
+      margin-top: 20px;
+    }
+}
 .profile-info .reviews {
     margin-top: 5px;
 }
@@ -912,4 +881,10 @@ img.company-logo {
 }
 .quantity-filter label {
     font-weight: inherit;
+}
+.team {
+    margin-top: 20px;
+}
+.team .list-view {
+    margin-top: 20px;
 }

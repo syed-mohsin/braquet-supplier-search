@@ -7,6 +7,16 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     $scope.resolvedResources = 0;
     $scope.expectedResources = 3;
 
+    // show following conditional
+    $scope.displayUserIsFollowing = function(organization) {
+      return (
+        organization &&
+        $scope.emailNotification &&
+        $scope.emailNotification.followingOrganizations &&
+        $scope.emailNotification.followingOrganizations.indexOf(organization._id) !== -1
+      );
+    };
+
     $scope.initializePageNavBar = function() {
       // tab viewing booleans
       $scope.shouldShowReviews = false;
@@ -45,6 +55,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       $http.get('/api/emailnotifications/get-my-notification')
       .then(function(resp) {
         $scope.emailNotification = resp.data ? resp.data : {};
+
         $scope.resolvedResources++;
       })
       .catch(function(err) {
@@ -73,6 +84,8 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
     };
 
     $scope.findOne = function () {
+      $scope.resolvedResources = 0;
+
       // get organization
       Organizations.get({
         organizationId: $stateParams.organizationId
@@ -209,7 +222,10 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
           $scope.isReviewSubmitted = true;
 
           // Notify user that their review was successully created
-          Notification.primary('Submitted Review Successfully');
+          Notification.primary('Submitted Review Successfully. Your review may need to be verified.');
+          if ($scope.user && !$scope.user.emailVerified) {
+            Notification.warning('Please confirm your email to speed up the verification process');
+          }
         }
       });
     };

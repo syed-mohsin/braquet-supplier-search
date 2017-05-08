@@ -26,6 +26,40 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
+    $scope.showPolyModule = function(organization) {
+      return organization.panel_crystalline_types.indexOf('Poly') !== -1
+        && (
+          // both poly or mono are selected in query string
+          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
+          // neither poly or mono are selected in query string
+          ($scope.query.crys.indexOf('Mono') === -1 && $scope.query.crys.indexOf('Poly') === -1) ||
+          // only poly is selected in query string
+          ($scope.query.crys.indexOf('Mono') === -1 && $scope.query.crys.indexOf('Poly') !== -1)
+        );
+    };
+
+    $scope.showMonoModule = function(organization) {
+      return organization.panel_crystalline_types.indexOf('Mono') !== -1
+        && (
+          // both poly or mono are selected in query string
+          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
+          // neither poly or mono are selected in query string
+          ($scope.query.crys.indexOf('Mono') === -1 && $scope.query.crys.indexOf('Poly') === -1) ||
+          // only mono is selected in query string
+          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') === -1)
+        );
+    };
+
+    // show following conditional
+    $scope.displayUserIsFollowing = function(organization) {
+      return (
+        organization &&
+        $scope.emailNotification &&
+        $scope.emailNotification.followingOrganizations &&
+        $scope.emailNotification.followingOrganizations.indexOf(organization._id) !== -1
+      );
+    };
+
     $scope.getOrganizations = function() {
       $http({
         url: '/api/organizations-catalog',
@@ -321,7 +355,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         var isFollowing = response.data.isFollowing;
 
         var notificationString = isFollowing ? 'Following' : 'Unfollowed';
-        Notification.primary(notificationString + ' ' + organization.companyName);
+        var description = isFollowing ?
+          '. Updates about this company will appear in your weekly/monthly emails.'
+          :
+          '';
+        Notification.primary(notificationString + ' ' + organization.companyName + description);
         $analytics.eventTrack('User ' + Authentication.user.displayName + ' ' + (isFollowing ? 'Following' : 'Unfollowed') + ' ' + organization.companyName);
       })
       .catch(function(err) {

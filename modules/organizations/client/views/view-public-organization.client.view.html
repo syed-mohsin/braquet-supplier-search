@@ -4,7 +4,7 @@
       <div class="page-header">
           <div>
               <div class="profile-photo">
-                  <!-- <img ng-src="{{organization.logo}}"> -->
+
                   <img ng-src="{{organization.logoImageUrl}}">
               </div>
               <div class="content no-wrap title-content">
@@ -26,7 +26,7 @@
                   <small><span class="glyphicon glyphicon-tags"></span><span ng-bind="organization.industry"></span></small>,
                   <small><span ng-bind="organization.productTypes"></span></small>
 
-                  <div class="menu">
+                  <div class="menu split">
                       <a ui-sref="organizations.view({organizationId: organization._id})">
                           <span class="glyphicon glyphicon-star"></span><span>Login to write anonymous review</span>
                       </a>
@@ -38,9 +38,9 @@
           </div>
 
           <ul class="nav nav-tabs">
-            <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">Quotes</a></li>
-            <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">Reviews</a></li>
-            <li ng-class="{ active: shouldShowProducts }"><a ng-click="showProducts()">Products</a></li>
+            <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">{{organization.priceReviews.length}} Quotes</a></li>
+            <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">{{organization.reviews.length}} Reviews</a></li>
+            <li ng-class="{ active: shouldShowProducts }"><a ng-click="showProducts()">{{organization.panel_models.length}} Products</a></li>
           </ul>
       </div>
       <div class="row" ng-show="shouldShowReviews">
@@ -143,7 +143,9 @@
                                   <h4 class="list-group-item-heading" ng-bind="panel_model.model"></h4><small class="manufacturer"><span>by <span ng-bind="panel_model.manufacturer"></span></span></small>
                               </a>
                               <div class="specifications sub-text">
-                                  Power (w): <span ng-bind="panel_model.stcPower"></span><br> Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br> Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
+                                  Power (w): <span ng-bind="panel_model.stcPower"></span><br>
+                                  Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br>
+                                  Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
                               </div>
 
                           </div>

@@ -1,15 +1,45 @@
 <section ng-controller="HomeController">
-    <section class="welcome banner">
-    	<div class="banner-shade">
-	        <div class="detail container">
+  <section class="welcome banner">
+    <div class="banner-shade">
+      <div class="detail container">
 
-		            <h1>Search hundreds of solar suppliers at once</h1>
-		            <!-- <a ui-sref="catalog">Panel Modules</a> -->
-		            <select ng-model="groupId" ng-change="goToCatalog()" class="braquet-dropdown">
-		            	<option value="">Select a product type</option>
-		            	<option value="catalog">Solar Modules</option>
-		            </select>
-	        </div>
-        </div>
-    </section>
+        <h1>Lookup quotes from solar module manufacturers and resellers</h1>
+
+        <form ng-submit="searchCatalog()" class="ng-pristine ng-valid no-background no-padding no-margin">
+        <h4>Make sure your company is receiving competitive quotes from your suppliers.</h4>
+          <select name="panelType" ng-model="panelType" id="panelType" class="form-control pull-left">
+            <option value="">Type of Module</option>
+            <option value="Mono">Monocrystalline</option>
+            <option value="Poly">Polycrystalline</option>
+            <option value="all">Both</option>
+          </select>
+
+          <select name="quantity" ng-model="quantity" id="quantity" class="form-control pull-right">
+            <option value="">Project Size</option>
+            <option value="0kW-100kW">0kW-100kW</option>
+            <option value="101kW-500kW">101kW-500kW</option>
+            <option value="501kW-1MW">501kW-1MW</option>
+            <option value=">1MW">>1MW</option>
+          </select>
+
+          <button type="submit" class="btn btn-primary submit">Find quotes</button>
+        </form>
+
+        <a href="/organizations/58bc97b799aba5addcb37e75/public">
+          <div class="review">
+            <img src="/modules/core/client/img/asset/logo_canadian_solar.png">
+            <div class="info" style="overflow:auto; color:white;">
+              <div class="title">Canadian Solar</div>
+              <div>"Can't go wrong with Canadian Solar"</div>
+              <div class="reviews">
+                <rating ng-model="canadianSolarRating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+  </section>
 </section>

@@ -1,8 +1,39 @@
-<section ng-controller="HomeController">
-    <section class="list-view container">
-        <div class="content no-wrap title-content">
-            <div class="title name">Contact Braquet</div>
-            <div class="bio">Please email <a href="mailto:taka@braquet.io">taka@braquet.io</a> for any review or media related inquiries.</div>
+<section ng-controller="ContactController">
+  <div class="col-md-12">
+    <form name="contactForm" class="form-horizontal" ng-submit="contact(contactForm.$valid)" novalidate>
+      <h2>Contact Braquet</h2>
+      <div class="form-group">
+        <strong>Please let us know about any questions, concerns, or media-related inquiries</strong>
+      </div>
+      <fieldset>
+
+        <div class="form-group" ng-show="!authentication.user" show-errors>
+          <input type="text" id="fullName" name="fullName" class="form-control" ng-model="fullName" placeholder="Full Name">
+          <div ng-messages="contactForm.fullName.$error" role="alert">
+          </div>
         </div>
-    </section>
+
+        <div class="form-group" ng-show="!authentication.user" show-errors>
+          <input type="email" id="email" name="email" class="form-control" ng-model="email" placeholder="Email" lowercase>
+          <div ng-messages="contactForm.email.$error" role="alert">
+            <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <textarea name="content" ng-model="content" id="content" minLength="1" class="form-control" cols="50" rows="10" required></textarea>
+          <div ng-messages="contactForm.content.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Message is required.</p>
+          </div>
+        </div>
+        
+        <div class="form-group submit">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </section>
