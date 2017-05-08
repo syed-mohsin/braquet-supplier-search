@@ -27,8 +27,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.hiddenFilterClass = 'hidden-xs';
 
     $scope.showPolyModule = function(organization) {
-      return organization.panel_crystalline_types.indexOf('Poly') !== -1
-        && (
+      return organization.panel_crystalline_types.indexOf('Poly') !== -1 &&
+        (
           // both poly or mono are selected in query string
           ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
           // neither poly or mono are selected in query string
@@ -39,8 +39,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     };
 
     $scope.showMonoModule = function(organization) {
-      return organization.panel_crystalline_types.indexOf('Mono') !== -1
-        && (
+      return organization.panel_crystalline_types.indexOf('Mono') !== -1 &&
+        (
           // both poly or mono are selected in query string
           ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
           // neither poly or mono are selected in query string
