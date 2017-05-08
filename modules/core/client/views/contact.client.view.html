@@ -6,12 +6,14 @@
         <strong>Please let us know about any questions, concerns, or media-related inquiries</strong>
       </div>
       <fieldset>
-        <div class="form-group" ng-if="!authentication.user" show-errors>
+
+        <div class="form-group" ng-show="!authentication.user" show-errors>
           <input type="text" id="fullName" name="fullName" class="form-control" ng-model="fullName" placeholder="Full Name">
           <div ng-messages="contactForm.fullName.$error" role="alert">
           </div>
         </div>
-        <div class="form-group" ng-if="!authentication.user" show-errors>
+
+        <div class="form-group" ng-show="!authentication.user" show-errors>
           <input type="email" id="email" name="email" class="form-control" ng-model="email" placeholder="Email" lowercase>
           <div ng-messages="contactForm.email.$error" role="alert">
             <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
@@ -24,7 +26,7 @@
             <p class="help-block error-text" ng-message="required">Message is required.</p>
           </div>
         </div>
-
+        
         <div class="form-group submit">
           <input type="submit" class="btn btn-default">
         </div>
