@@ -122,31 +122,6 @@ exports.read = function (req, res) {
 };
 
 /**
- * Public read view of organization
- */
-exports.readPublic = function(req, res) {
-  if (!mongoose.Types.ObjectId.isValid(req.params.organizationId)) {
-    return res.status(400).send({
-      message: 'Organization is invalid'
-    });
-  }
-
-  Organization.findById(req.params.organizationId)
-    .populate('panel_models')
-    .populate({ path: 'reviews', match: { verified: true } })
-    .populate({ path: 'priceReviews', match: { verified: true } })
-    .exec(function (err, organization) {
-      if (err) {
-        return res.status(400).json(err);
-      } else if (!organization) {
-        return res.status(400).json(new Error('Failed to load organization ' + req.params.organizationId));
-      }
-
-      res.json(organization);
-    });
-};
-
-/**
  * Update a organization
  */
 exports.update = function (req, res) {
@@ -408,6 +383,31 @@ exports.setOrganizationAdmin = function(req, res) {
 };
 
 /**
+ * Public read view of organization
+ */
+exports.readPublic = function(req, res) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.organizationId)) {
+    return res.status(400).send({
+      message: 'Organization is invalid'
+    });
+  }
+
+  Organization.findById(req.params.organizationId)
+    .populate('panel_models')
+    .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
+    .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } })
+    .exec(function (err, organization) {
+      if (err) {
+        return res.status(400).json(err);
+      } else if (!organization) {
+        return res.status(400).json(new Error('Failed to load organization ' + req.params.organizationId));
+      }
+
+      res.json(organization);
+    });
+};
+
+/**
  * Organization middleware
  */
 exports.organizationByID = function (req, res, next, id) {
@@ -422,8 +422,8 @@ exports.organizationByID = function (req, res, next, id) {
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .populate('admin', 'displayName')
-    .populate({ path: 'reviews', match: { verified: true } })
-    .populate({ path: 'priceReviews', match: { verified: true } })
+    .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
+    .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } })
     .exec(function (err, organization) {
       if (err) {
         return next(err);
