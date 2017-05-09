@@ -457,8 +457,8 @@ exports.organizationByID = function (req, res, next, id) {
 /**
  * Organization middleware
  */
-exports.organizationByUrlName = function (req, res, next, urlName) {
-  Organization.findOne({ urlName: urlName })
+exports.organizationByUrlName = function (req, res) {
+  Organization.findOne({ urlName: req.params.urlName })
     .populate('panel_models')
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
@@ -467,11 +467,11 @@ exports.organizationByUrlName = function (req, res, next, urlName) {
     .populate({ path: 'priceReviews', match: { verified: true } })
     .exec(function (err, organization) {
       if (err) {
-        return next(err);
+        return res.status(400).json(err);
       } else if (!organization) {
-        return next(new Error('Failed to load organization ' + urlName));
+        return res.status(400).json(new Error('Failed to load organization ' + req.params.urlName));
       }
-      req.organization = organization;
-      return next();
+
+      res.json(organization);
     });
 };

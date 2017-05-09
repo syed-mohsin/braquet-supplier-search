@@ -319,11 +319,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     };
 
     $scope.routeToOrg = function (organizationId) {
-      if (Authentication.user) {
-        $state.go('organizations.view', { organizationId: organizationId });
-      } else {
-        $state.go('organizations.view-public', { organizationId: organizationId });
-      }
+      $state.go('organizations.view', { organizationId: organizationId });
     };
 
     $scope.contactSupplier = function(ev, organization) {

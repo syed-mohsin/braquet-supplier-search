@@ -23,7 +23,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
   // Event listener for a notifyUser notifications
   Socket.on('notifyUser', function(notification) {
     if(!notification.err) {
-      Notification.primary({ 
+      Notification.primary({
         message: notification.message,
         delay: null
       });
@@ -54,7 +54,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
           // override when attempt is to view organization, go to public view
           if (fromState.name !== 'organizations.view-public' &&
             toState.name === 'organizations.view') {
-            return $state.go('organizations.view-public', toParams);
+            return $state.go('organizations.view-public', toParams, { location: 'replace' });
           }
 
           $state.go('authentication.signin').then(function () {
