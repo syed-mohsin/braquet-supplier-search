@@ -95,8 +95,9 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
         $scope.resolvedResources++;
         $scope.buildUploader(organization._id);
 
-        // set page title for SEO
+        // set page title+description for SEO
         $rootScope.title = $scope.organization.companyName + ' | Braquet';
+        $rootScope.description = $scope.organization.about;
 
         return $http({
           url: '/api/reviews/is-reviewed',

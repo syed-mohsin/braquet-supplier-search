@@ -74,6 +74,13 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
       $rootScope.title = toState.data.pageTitle;
     }
 
+    // set page description for SEO
+    if (toState.data && toState.data.pageDescription) {
+      $rootScope.description = toState.data.pageDescription;
+    } else {
+      $rootScope.description = 'Search for qualified solar hardware suppliers';
+    }
+
     storePreviousState(fromState, fromParams);
   });
 

@@ -26,7 +26,8 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     .state('home', {
       url: '/',
       data: {
-        pageTitle: 'Braquet'
+        pageTitle: 'Braquet',
+        pageDescription: 'Search for qualified solar hardware suppliers'
       },
       controller: function($state, Authentication) {
         var user = Authentication.user;

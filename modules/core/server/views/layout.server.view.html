@@ -6,27 +6,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <base href="/">
   <title ng-bind="title"></title>
-  <meta name="description" content="{{description}}">
+  <meta name="description" content="{% raw %}{{ description }}{% endraw %}">
   <meta name="fragment" content="!">
 
   <!-- Fav Icon -->
   <link href="{{favicon}}" rel="shortcut icon" type="image/x-icon">
 
   {% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %}
-</head>
-
-<body class="ng-cloak">
-  <header ng-include="'/modules/core/client/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>
-  <section class="content">
-
-    <section>
-      {% block content %}{% endblock %}
-    </section>
-  </section>
-
-  <script type="text/javascript">
-    var user = {{ user | json | safe }};
-  </script>
 
   {% if facebookPixelTrackingID %}
   <script>
@@ -52,6 +38,20 @@
     ga('create', '{{googleAnalyticsTrackingID}}', 'auto');
   </script>
   {% endif %}
+</head>
+
+<body class="ng-cloak">
+  <header ng-include="'/modules/core/client/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>
+  <section class="content">
+
+    <section>
+      {% block content %}{% endblock %}
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var user = {{ user | json | safe }};
+  </script>
 
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 

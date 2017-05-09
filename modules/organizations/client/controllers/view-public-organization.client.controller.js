@@ -45,8 +45,9 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
           $scope.organization = resp.data;
           $scope.organization.$resolved = true;
 
-          // set page title for SEO
+          // set page title+description for SEO
           $rootScope.title = $scope.organization.companyName + ' | Braquet';
+          $rootScope.description = $scope.organization.about;
         })
         .catch(function(resp) {
           console.log('error finding org', resp.data);

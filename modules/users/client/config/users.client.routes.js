@@ -40,11 +40,17 @@ angular.module('users').config(['$stateProvider',
       })
       .state('authentication.signup', {
         url: '/signup?i',
-        templateUrl: 'modules/users/client/views/authentication/signup.client.view.html'
+        templateUrl: 'modules/users/client/views/authentication/signup.client.view.html',
+        data: {
+          pageTitle: 'Sign Up - Braquet'
+        }
       })
       .state('authentication.signin', {
         url: '/signin?err',
-        templateUrl: 'modules/users/client/views/authentication/signin.client.view.html'
+        templateUrl: 'modules/users/client/views/authentication/signin.client.view.html',
+        data: {
+          pageTitle: 'Log In - Braquet'
+        }
       })
       .state('password', {
         abstract: true,
