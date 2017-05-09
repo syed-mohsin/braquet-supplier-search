@@ -25,6 +25,9 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     $stateProvider
     .state('home', {
       url: '/',
+      data: {
+        pageTitle: 'Braquet'
+      },
       controller: function($state, Authentication) {
         var user = Authentication.user;
         if (user) {
@@ -44,39 +47,54 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     })
     .state('catalog', {
       url: '/catalog?q&quantity&man&pow&crys&color&cells&page&price&isman&isreseller',
-      templateUrl: 'modules/core/client/views/catalog.client.view.html'
+      templateUrl: 'modules/core/client/views/catalog.client.view.html',
+      data: {
+        pageTitle: 'Search For Module Suppliers'
+      }
     })
     .state('team', {
       url: '/team',
-      templateUrl: 'modules/core/client/views/team.client.view.html'
+      templateUrl: 'modules/core/client/views/team.client.view.html',
+      data: {
+        pageTitle: 'Team - Braquet'
+      }
     })
     .state('contact', {
       url: '/contact',
-      templateUrl: 'modules/core/client/views/contact.client.view.html'
+      templateUrl: 'modules/core/client/views/contact.client.view.html',
+      data: {
+        pageTitle: 'Contact Us - Braquet'
+      }
     })
     .state('privacy-policy', {
       url: '/privacy-policy',
-      templateUrl: 'modules/core/client/views/privacy-policy.client.view.html'
+      templateUrl: 'modules/core/client/views/privacy-policy.client.view.html',
+      data: {
+        pageTitle: 'Privacy Policy - Braquet'
+      }
     })
     .state('not-found', {
       url: '/not-found',
       templateUrl: 'modules/core/client/views/404.client.view.html',
       data: {
-        ignoreState: true
+        ignoreState: true,
+        pageTitle: 'Braquet - Page Not Found (404)'
       }
     })
     .state('bad-request', {
       url: '/bad-request',
       templateUrl: 'modules/core/client/views/400.client.view.html',
       data: {
-        ignoreState: true
+        ignoreState: true,
+        pageTitle: 'Braquet - Bad Request'
       }
     })
     .state('forbidden', {
       url: '/forbidden',
       templateUrl: 'modules/core/client/views/403.client.view.html',
       data: {
-        ignoreState: true
+        ignoreState: true,
+        pageTitle: 'Forbidden (403)'
       }
     });
   }

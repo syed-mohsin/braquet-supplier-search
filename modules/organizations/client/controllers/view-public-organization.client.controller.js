@@ -2,8 +2,8 @@
 
 // Organizations controller
 
-angular.module('organizations').controller('PublicViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'Authentication', 'Socket',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, Authentication, Socket) {
+angular.module('organizations').controller('PublicViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'Authentication', 'Socket',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, Authentication, Socket) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -44,6 +44,9 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
         .then(function(resp) {
           $scope.organization = resp.data;
           $scope.organization.$resolved = true;
+
+          // set page title for SEO
+          $rootScope.title = $scope.organization.companyName + ' | Braquet';
         })
         .catch(function(resp) {
           console.log('error finding org', resp.data);

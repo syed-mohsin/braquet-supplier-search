@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
+angular.module('organizations').controller('ViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.resolvedResources = 0;
@@ -94,6 +94,9 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
         $scope.organization = organization;
         $scope.resolvedResources++;
         $scope.buildUploader(organization._id);
+
+        // set page title for SEO
+        $rootScope.title = $scope.organization.companyName + ' | Braquet';
 
         return $http({
           url: '/api/reviews/is-reviewed',

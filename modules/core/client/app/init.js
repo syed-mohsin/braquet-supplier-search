@@ -68,6 +68,12 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
   // Record previous state
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+    // set page title for SEO
+    if (toState.data && toState.data.pageTitle) {
+      $rootScope.title = toState.data.pageTitle;
+    }
+
     storePreviousState(fromState, fromParams);
   });
 
