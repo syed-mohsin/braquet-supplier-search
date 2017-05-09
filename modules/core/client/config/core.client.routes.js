@@ -35,7 +35,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
           if (user.roles[0] === 'tempUser' || user.roles[0] === 'tempSeller') {
             $state.go('awaiting-confirmation', {}, { location: false });
           } else {
-            $state.go('catalog', {});
+            $state.go('catalog', {}, { location: 'replace' });
           }
         } else {
           $state.go('search', {}, { location: false });
