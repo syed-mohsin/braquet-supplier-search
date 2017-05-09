@@ -38,10 +38,6 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         }
       }
     })
-    // home page for users
-    // .state('dashboard', {
-    //   url: '/dashboard'
-    // })
     .state('search', {
       url: '/search',
       templateUrl: 'modules/core/client/views/search.client.view.html'
@@ -50,23 +46,6 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/catalog?q&quantity&man&pow&crys&color&cells&page&price&isman&isreseller',
       templateUrl: 'modules/core/client/views/catalog.client.view.html'
     })
-    // .state('welcome', {
-    //   url: '/welcome',
-    //   templateUrl: 'modules/core/client/views/welcome.client.view.html',
-    //   data: {
-    //     ignoreState: true
-    //   }
-    // })
-    // .state('awaiting-confirmation', {
-    //   url: '/awaiting-confirmation',
-    //   templateUrl: 'modules/core/client/views/awaiting-confirmation.client.view.html',
-    //   controller: function($state, Authentication) {
-    //     var user = Authentication.user;
-    //     if (user.verified && user.emailVerified) {
-    //       $state.go('home');
-    //     }
-    //   }
-    // })
     .state('team', {
       url: '/team',
       templateUrl: 'modules/core/client/views/team.client.view.html'
@@ -79,10 +58,6 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/privacy-policy',
       templateUrl: 'modules/core/client/views/privacy-policy.client.view.html'
     })
-    // .state('invite', {
-    //   url: '/welcome/invite',
-    //   templateUrl: 'modules/core/client/views/invite.client.view.html'
-    // })
     .state('not-found', {
       url: '/not-found',
       templateUrl: 'modules/core/client/views/404.client.view.html',

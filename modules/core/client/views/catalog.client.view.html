@@ -106,11 +106,11 @@
                     <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
                 </div>
                 <div ng-repeat="organization in orgs" class="list-group-item col-sm-12">
-                    <a ng-click="routeToOrg(organization._id)">
+                    <a ng-click="routeToOrg(organization)">
                       <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
                     </a>
                     <div class="profile-info">
-                        <a ng-click="routeToOrg(organization._id)">
+                        <a ng-click="routeToOrg(organization)">
                         <div>
                             <h5 class="list-group-item-heading" ng-bind="organization.companyName"></h5>
 

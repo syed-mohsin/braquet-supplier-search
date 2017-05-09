@@ -3,21 +3,7 @@
 // Setting up route
 angular.module('organizations').config(['$stateProvider',
   function ($stateProvider) {
-    // organization routing by name
-    $stateProvider
-      .state('organization-view-by-name-public', {
-        url: '/:name',
-        templateUrl: 'modules/organizations/client/views/view-public-organization.client.view.html',
-      })
-      .state('organization-view-by-name', {
-        url: '/:name',
-        templateUrl: 'modules/organizations/client/views/view-organization.client.view.html',
-        data: {
-          roles: ['user', 'seller', 'admin']
-        }
-      });
-
-    // organizations state routing
+    // organizations general state routing
     $stateProvider
       .state('organizations', {
         abstract: true,
@@ -39,11 +25,11 @@ angular.module('organizations').config(['$stateProvider',
         }
       })
       .state('organizations.view-public', {
-        url: '/:organizationId',
+        url: '/:name',
         templateUrl: 'modules/organizations/client/views/view-public-organization.client.view.html',
       })
       .state('organizations.view', {
-        url: '/:organizationId',
+        url: '/:name',
         templateUrl: 'modules/organizations/client/views/view-organization.client.view.html',
         data: {
           roles: ['user', 'seller', 'admin']

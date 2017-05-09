@@ -37,13 +37,17 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
     $scope.findOne = function() {
       if (Authentication.user) {
-        $state.go('organizations.view', { organizationId: $stateParams.organizationId });
+        $state.go('organizations.view', { name: $stateParams.name });
       } else {
         // go to not-logged in view
-        $http.get('/api/organizations/' + $stateParams.organizationId + '/public')
+        $http.get('/api/organizations/' + $stateParams.name + '/name-public')
         .then(function(resp) {
           $scope.organization = resp.data;
           $scope.organization.$resolved = true;
+        })
+        .catch(function(resp) {
+          console.log('error finding org', resp.data);
+          $state.go('not-found');
         });
       }
     };

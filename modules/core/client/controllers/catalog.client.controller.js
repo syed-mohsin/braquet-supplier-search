@@ -318,8 +318,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $state.go('catalog', $scope.query);
     };
 
-    $scope.routeToOrg = function (organizationId) {
-      $state.go('organizations.view', { organizationId: organizationId });
+    $scope.routeToOrg = function (organization) {
+      $state.go('organizations.view', { name: organization.urlName });
     };
 
     $scope.contactSupplier = function(ev, organization) {
