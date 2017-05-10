@@ -163,7 +163,7 @@ exports.admin_list = function (req, res) {
  */
 exports.isReviewed = function (req, res) {
   if (!req.user || !mongoose.Types.ObjectId.isValid(req.query.organizationId)) {
-    res.status(400).json({
+    return res.status(400).json({
       message: req.query
     });
   }

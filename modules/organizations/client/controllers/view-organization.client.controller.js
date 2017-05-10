@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
-  function ($scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
+angular.module('organizations').controller('ViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.resolvedResources = 0;
@@ -83,31 +83,35 @@ angular.module('organizations').controller('ViewOrganizationController', ['$scop
       });
     };
 
-    $scope.findOne = function () {
+    $scope.findOne = function() {
       $scope.resolvedResources = 0;
 
-      // get organization
-      Organizations.get({
-        organizationId: $stateParams.organizationId
-      }, function(organization) {
+      // fetch organization by name
+      $http.get('/api/organizations/' + $stateParams.name + '/name')
+      .then(function(resp) {
+        // store returned organization
+        var organization = resp.data;
         $scope.organization = organization;
         $scope.resolvedResources++;
         $scope.buildUploader(organization._id);
-      }, function(error) {
-        $location.path('/forbidden');
-      });
 
-      // check if user has already submitted a review for this organization
-      $http({
-        url: '/api/reviews/is-reviewed',
-        params: { organizationId: $stateParams.organizationId }
+        // set page title+description for SEO
+        var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
+        $rootScope.title = $scope.organization.companyName + ' | Braquet';
+        $rootScope.description = defaultDescr + $scope.organization.about;
+
+        return $http({
+          url: '/api/reviews/is-reviewed',
+          params: { organizationId: organization._id }
+        });
       })
-      .then(function(response) {
-        $scope.isReviewSubmitted = response.data.existingReview;
+      .then(function(resp) {
+        $scope.isReviewSubmitted = resp.data.existingReview;
         $scope.resolvedResources++;
       })
       .catch(function(err) {
-        console.log('unable to determine if user has already submitted review' , err);
+        console.log('unable to fetch org or review submitted check:', err.data);
+        $state.go('not-found');
       });
 
       // fetch users email notification settings

@@ -23,7 +23,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
   // Event listener for a notifyUser notifications
   Socket.on('notifyUser', function(notification) {
     if(!notification.err) {
-      Notification.primary({ 
+      Notification.primary({
         message: notification.message,
         delay: null
       });
@@ -54,7 +54,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
           // override when attempt is to view organization, go to public view
           if (fromState.name !== 'organizations.view-public' &&
             toState.name === 'organizations.view') {
-            return $state.go('organizations.view-public', toParams);
+            return $state.go('organizations.view-public', toParams, { location: 'replace' });
           }
 
           $state.go('authentication.signin').then(function () {
@@ -68,6 +68,19 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
   // Record previous state
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+    // set page title for SEO
+    if (toState.data && toState.data.pageTitle) {
+      $rootScope.title = toState.data.pageTitle;
+    }
+
+    // set page description for SEO
+    if (toState.data && toState.data.pageDescription) {
+      $rootScope.description = toState.data.pageDescription;
+    } else {
+      $rootScope.description = 'Search for qualified solar hardware suppliers';
+    }
+
     storePreviousState(fromState, fromParams);
   });
 

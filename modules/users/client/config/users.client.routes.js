@@ -10,7 +10,8 @@ angular.module('users').config(['$stateProvider',
         url: '/settings',
         templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
         data: {
-          roles: ['user', 'admin', 'seller']
+          roles: ['user', 'admin', 'seller'],
+          pageTitle: 'Settings - Braquet'
         }
       })
       .state('settings.profile', {
@@ -40,11 +41,21 @@ angular.module('users').config(['$stateProvider',
       })
       .state('authentication.signup', {
         url: '/signup?i',
-        templateUrl: 'modules/users/client/views/authentication/signup.client.view.html'
+        templateUrl: 'modules/users/client/views/authentication/signup.client.view.html',
+        data: {
+          pageTitle: 'Sign Up - Braquet',
+          pageDescription: 'Sign up to start searching for the best suppliers' +
+           'by product, prices, and reviews, and start sharing your experiences.'
+        }
       })
       .state('authentication.signin', {
         url: '/signin?err',
-        templateUrl: 'modules/users/client/views/authentication/signin.client.view.html'
+        templateUrl: 'modules/users/client/views/authentication/signin.client.view.html',
+        data: {
+          pageTitle: 'Log In - Braquet',
+          pageDescription: 'Log in to start searching for the best suppliers' +
+           'by product, prices, and reviews, and start sharing your experiences.'
+        }
       })
       .state('password', {
         abstract: true,

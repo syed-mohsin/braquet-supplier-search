@@ -1,10 +1,14 @@
 'use strict';
 
 // Reviews controller
-angular.module('pricereviews').controller('PriceReviewsController', ['$scope', '$state', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'PriceReviews',
-  function ($scope, $state, $stateParams, $location, $http, $mdDialog, Authentication, PriceReviews) {
+angular.module('pricereviews').controller('PriceReviewsController', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'PriceReviews',
+  function ($rootScope, $scope, $state, $stateParams, $location, $http, $mdDialog, Authentication, PriceReviews) {
     $scope.authentication = Authentication;
     $scope.shouldShowPrices = true;
+
+    // SEO metadata
+    $rootScope.title = 'Quotes - Braquet';
+    $rootScope.description = 'Braquet - See all your quotes';
 
     $scope.showReviews = function() {
       $state.go('reviews.list');

@@ -1,10 +1,14 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$state', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'Reviews', 'Notification',
-  function ($scope, $state, $stateParams, $location, $http, $mdDialog, Authentication, Reviews, Notification) {
+angular.module('reviews').controller('ReviewsController', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$http', '$mdDialog', 'Authentication', 'Reviews', 'Notification',
+  function ($rootScope, $scope, $state, $stateParams, $location, $http, $mdDialog, Authentication, Reviews, Notification) {
     $scope.authentication = Authentication;
     $scope.shouldShowReviews = true;
+
+    // SEO metadata
+    $rootScope.title = 'Reviews - Braquet';
+    $rootScope.description = 'Braquet - See all your reviews';
 
     // showPrices
     $scope.showPrices = function() {

@@ -40,10 +40,18 @@ module.exports = function (app) {
   app.route('/api/organizations/:organizationId/public')
     .get(organizations.readPublic);
 
+  // view single organization for public access by url name
+  app.route('/api/organizations/:urlName/name-public')
+    .get(organizations.readPublicByUrlName);
+
   // Single organization routes (all require user-authentication)
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
     .get(organizations.read)
     .put(organizations.update);
+
+  // read organization by name (private view)
+  app.route('/api/organizations/:urlName/name').all(organizationsPolicy.isAllowed)
+    .get(organizations.organizationByUrlName);
 
   app.route('/api/organizations/logo/:organizationId').all(organizationsPolicy.isAllowed)
     .post(organizations.changeLogo);

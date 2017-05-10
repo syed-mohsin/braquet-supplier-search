@@ -34,7 +34,7 @@ angular.module('users.admin.routes').config(['$stateProvider',
         }
       })
       .state('admin.organizations', {
-        url: '/organizations/',
+        url: '/organizations',
         templateUrl: 'modules/organizations/client/views/admin-list-organizations.client.view.html',
         controller: 'AdminOrganizationsController',
         data: {

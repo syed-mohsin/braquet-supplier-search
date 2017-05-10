@@ -51,6 +51,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/organizations/:organizationId',
       permissions: ['get', 'put', 'post']
     }, {
+      resources: '/api/organizations/:urlName/name',
+      permissions: ['get']
+    }, {
       resources: '/api/organizations/logo/:organizationId',
       permissions: ['post']
     }, {
