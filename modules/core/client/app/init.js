@@ -71,7 +71,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
 
     // set page title for SEO
     if (toState.data && toState.data.pageTitle) {
-      $rootScope.title = toState.data.pageTitle;
+      $rootScope.pageTitle = toState.data.pageTitle;
     }
 
     // set page description for SEO

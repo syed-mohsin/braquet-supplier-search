@@ -7,7 +7,7 @@ angular.module('reviews').controller('ReviewsController', ['$rootScope', '$scope
     $scope.shouldShowReviews = true;
 
     // SEO metadata
-    $rootScope.title = 'Reviews - Braquet';
+    $rootScope.pageTitle = 'Reviews - Braquet';
     $rootScope.description = 'Braquet - See all your reviews';
 
     // showPrices
