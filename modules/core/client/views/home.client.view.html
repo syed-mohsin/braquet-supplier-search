@@ -1,53 +1,45 @@
 <section ng-controller="HomeController">
-<section class="banner jumbotron">
-    <div class="detail container">
-        <h1>We supply your hardware. <br>You develop solar projects.</h1>
-        <a class="btn" href="/authentication/signup">Start listing your projects</a>
-    </div>
-    </section>
+  <section class="welcome banner">
+    <div class="banner-shade">
+      <div class="detail container">
 
-<div class="home container">
-        <section class="col-sm-12 hiw">
-        <h2>How it Works</h2>
-            <div class="col-sm-6 developers">
-                <img src="/modules/core/client/img/asset/hiw_icon1.png">
-                <h4>List your on-going projects</h4>
-                <div class="content">
-                    <span>List your project to find the best hardware supplier and engineering services</span>
-                </div>
-            </div>
-            <div class="col-sm-6 epc">
-                <img src="/modules/core/client/img/asset/hiw_icon2.png">
-                <h4>Wait for bids from providers</h4>
-                <div class="content">
-                    <span>Our network of 1st tier manufacturers and service providers will bid on your project.</span>
-                </div>
-            </div>
-        </section>
-        <section class="col-sm-12 lapn">
-            <h2>We only supply hardware from 1st tier manufacturers</h2>
-            <div class="col-sm-6 fpyl">
-                <div class="detail">
-                    <h3>Find a panel you love</h3>
-                    <div class="content">
-                        <span>List your project to find the best hardware supplier and engineering services</span>
-                    </div>
-                    <a class="btn" href="/authentication/signup">Sign up as a developer</a>
-                </div>
-            </div>
-            <div class="col-sm-6 brands">
-                <h4>Premium Brands</h4>
-                <div class="content">
-                    <div class="col-sm-12"><img src="/modules/core/client/img/asset/logo_canadian_solar.png">
-                    </div>
-                    <div class="col-sm-12"><img src="/modules/core/client/img/asset/logo_solar_world.png">
-                    </div>
+        <h1>Lookup quotes from solar module manufacturers and resellers</h1>
 
-                    <div class="col-sm-12"><img src="/modules/core/client/img/asset/logo_yingli.png">
-                    </div>
-                </div>
+        <form ng-submit="searchCatalog()" class="ng-pristine ng-valid no-background no-padding no-margin">
+        <h4>Make sure your company is receiving competitive quotes from your suppliers.</h4>
+          <select name="panelType" ng-model="panelType" id="panelType" class="form-control pull-left">
+            <option value="">Type of Module</option>
+            <option value="Mono">Monocrystalline</option>
+            <option value="Poly">Polycrystalline</option>
+            <option value="all">Both</option>
+          </select>
+
+          <select name="quantity" ng-model="quantity" id="quantity" class="form-control pull-right">
+            <option value="">Project Size</option>
+            <option value="0kW-100kW">0kW-100kW</option>
+            <option value="101kW-500kW">101kW-500kW</option>
+            <option value="501kW-1MW">501kW-1MW</option>
+            <option value=">1MW">>1MW</option>
+          </select>
+
+          <button type="submit" class="btn btn-primary submit">Find quotes</button>
+        </form>
+
+        <a href="/organizations/canadian-solar">
+          <div class="review">
+            <img src="/modules/core/client/img/asset/logo_canadian_solar.png">
+            <div class="info" style="overflow:auto; color:white;">
+              <div class="title">Canadian Solar</div>
+              <div>"Can't go wrong with Canadian Solar"</div>
+              <div class="reviews">
+                <rating ng-model="canadianSolarRating" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+              </div>
             </div>
-        </section>
-        
+          </div>
+        </a>
+      </div>
+
     </div>
+
+  </section>
 </section>

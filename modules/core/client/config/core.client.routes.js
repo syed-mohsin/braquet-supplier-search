@@ -38,13 +38,13 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
             $state.go('catalog', {}, { location: 'replace' });
           }
         } else {
-          $state.go('search', {}, { location: false });
+          $state.go('landing', {}, { location: false });
         }
       }
     })
-    .state('search', {
-      url: '/search',
-      templateUrl: 'modules/core/client/views/search.client.view.html'
+    .state('landing', {
+      url: '/landing',
+      templateUrl: 'modules/core/client/views/home.client.view.html'
     })
     .state('catalog', {
       url: '/catalog?q&quantity&man&pow&crys&color&cells&page&price&isman&isreseller',
