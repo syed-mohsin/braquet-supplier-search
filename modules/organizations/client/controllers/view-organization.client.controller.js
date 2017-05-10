@@ -96,8 +96,9 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
         $scope.buildUploader(organization._id);
 
         // set page title+description for SEO
+        var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
         $rootScope.title = $scope.organization.companyName + ' | Braquet';
-        $rootScope.description = $scope.organization.about;
+        $rootScope.description = defaultDescr + $scope.organization.about;
 
         return $http({
           url: '/api/reviews/is-reviewed',

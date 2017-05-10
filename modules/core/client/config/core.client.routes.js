@@ -50,21 +50,25 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/catalog?q&quantity&man&pow&crys&color&cells&page&price&isman&isreseller',
       templateUrl: 'modules/core/client/views/catalog.client.view.html',
       data: {
-        pageTitle: 'Search For Module Suppliers'
+        pageTitle: 'Search For Module Suppliers',
+        pageDescription: 'Compare thousands of module suppliers by price per watt,' +
+          'module type, quantity, project size, wattage, and reviews'
       }
     })
     .state('team', {
       url: '/team',
       templateUrl: 'modules/core/client/views/team.client.view.html',
       data: {
-        pageTitle: 'Team - Braquet'
+        pageTitle: 'Team - Braquet',
+        pageDescription: 'See the team that created the best place to find quality solar suppliers'
       }
     })
     .state('contact', {
       url: '/contact',
       templateUrl: 'modules/core/client/views/contact.client.view.html',
       data: {
-        pageTitle: 'Contact Us - Braquet'
+        pageTitle: 'Contact Us - Braquet',
+        pageDescription: 'Please let us know about any questions, concerns, or media-related inquiries'
       }
     })
     .state('privacy-policy', {
