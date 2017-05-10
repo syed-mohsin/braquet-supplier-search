@@ -10,7 +10,7 @@ angular.module('core').controller('HomeController', ['$scope', '$state', 'Authen
       var query = {};
       query.crys = $scope.panelType;
       query.quantity = $scope.quantity;
-      query.isman = true;
+      query.isman = ['501kW-1MW', '>1MW'].indexOf($scope.quantity) !== -1 ? true : false;
 
       if (query.crys === 'all') {
         query.crys = 'Mono|Poly';
