@@ -9,7 +9,6 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
     $scope.maxViewsExceeded = function() {
       var count = $window.localStorage ? parseInt($window.localStorage.getItem('c')) : 1;
-      console.log('views exceeded?', count, count < 1 || count > 3);
       return count < 1 || count > 3;
     };
 
