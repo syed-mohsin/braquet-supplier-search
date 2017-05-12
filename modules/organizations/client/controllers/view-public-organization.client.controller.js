@@ -7,6 +7,12 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
+    $scope.maxViewsExceeded = function() {
+      var count = $window.localStorage ? parseInt($window.localStorage.getItem('c')) : 1;
+      console.log('views exceeded?', count, count < 1 || count > 3);
+      return count < 1 || count > 3;
+    };
+
     $scope.initializePageNavBar = function() {
       // tab viewing booleans
       $scope.shouldShowReviews = false;
@@ -39,8 +45,23 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       if (Authentication.user) {
         $state.go('organizations.view', { name: $stateParams.name });
       } else {
-        // go to not-logged in view
-        $http.get('/api/organizations/' + $stateParams.name + '/name-public')
+        // track supplier views
+        if ($window.localStorage &&
+          (!$window.localStorage.getItem('c') ||
+          isNaN(parseInt($window.localStorage.getItem('c'))))) {
+          // initialize counter
+          $window.localStorage.setItem('c', 1);
+        } else if ($window.localStorage && window.localStorage.getItem('c')) {
+          var count = $window.localStorage.getItem('c');
+          $window.localStorage.setItem('c', parseInt(count)+1);
+        }
+
+        console.log($window.localStorage.getItem('c'));
+
+        $http({
+          url: '/api/organizations/' + $stateParams.name + '/name-public',
+          params: { c: $window.localStorage ? $window.localStorage.getItem('c') : 1 }
+        })
         .then(function(resp) {
           $scope.organization = resp.data;
           $scope.organization.$resolved = true;
