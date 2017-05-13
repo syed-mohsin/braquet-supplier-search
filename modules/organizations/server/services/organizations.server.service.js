@@ -116,7 +116,7 @@ exports.calculateBrandsAveragePrice = function(org) {
   var brands_length_poly = 0;
 
   for (var key in org.brands) {
-    if (key.split('#')[1] === 'Mono') {
+    if (org.brands[key]) {
       price_sum_mono += org.brands[key];
       ++brands_length_mono;
     } else if (key.split('#')[1] === 'Poly') {
@@ -140,7 +140,7 @@ exports.extractBrands = function(organizations) {
       return priceReview.manufacturer + '#' + priceReview.panelType;
     });
 
-    org.testbrands = _.chain(org.priceReviews)
+    org.brands = _.chain(org.priceReviews)
       .groupBy(function(priceReview) {
         return priceReview.manufacturer;
       })
@@ -169,14 +169,7 @@ exports.extractBrands = function(organizations) {
       })
       .value();
 
-    // calcuate median of all price reviews under a brand
-    org.brands = _.mapObject(org.brands, function(brand) {
-      brand.sort(function (a, b) { return a.price - b.price; });
-      var lowMiddle = Math.floor((brand.length - 1) / 2);
-      var highMiddle = Math.ceil((brand.length - 1) / 2);
-      var median = (brand[lowMiddle].price + brand[highMiddle].price) / 2;
-      return median;
-    });
+    console.log('brands', org.brands);
 
     // calculate average for each type of panel
     org = exports.calculateBrandsAveragePrice(org);
