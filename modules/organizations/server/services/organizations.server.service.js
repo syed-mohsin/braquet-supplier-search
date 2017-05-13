@@ -115,7 +115,7 @@ exports.calculateBrandsAveragePrice = function(org, query) {
   var averages = {};
 
   // the organization already has only prices of type query.quantity
-  // therefore, we can use the key query.quantity
+  // therefore, we can use the key query.quantity to lookup the correct quotes
 
   for (var brandKey in org.brands) {
 
@@ -136,16 +136,8 @@ exports.calculateBrandsAveragePrice = function(org, query) {
     averages[panelKey] = sums[panelKey] / lengths[panelKey] || Infinity;
   }
 
+  // average price per panel for specified quantity
   org.brand_avgs = averages;
-  var averagesArray = Object.keys(averages).map(function(key) {
-    return averages[key];
-  });
-
-  console.log('averages array', averagesArray);
-
-  // calcuate average for each panel type across brands
-  org.brands_avg_min = Math.min.apply(this, averagesArray);
-  console.log(org.brands_avg_min);
 
   return org;
 };
@@ -186,8 +178,6 @@ exports.extractBrands = function(organizations, query) {
       })
       .value();
 
-    console.log('brands', org.brands);
-
     // calculate average for each type of panel
     org = exports.calculateBrandsAveragePrice(org, query);
 
@@ -216,10 +206,24 @@ exports.sortByQuery = function(orgs, query) {
           return org.brand_avgs.CIGS;
         } else if (panelTypes.indexOf('CdTe') !== -1) {
           return org.brand_avgs.CdTe;
+        } else { // invalid input, default sort by Poly
+          return org.brand_avgs.Poly;
         }
       // return lowest of existing values
       } else {
-        return org.brands_avg_min;
+        var relevantAverages = _.chain(Object.keys(org.brand_avgs))
+          .map(function(panelType) {
+            if (!panelTypes.length || panelTypes.indexOf(panelType) !== -1) {
+              return org.brand_avgs[panelType];
+            }
+          })
+          .value();
+
+        // calcuate min of averages for each panel type across brands
+        var min = Math.min.apply(this, relevantAverages);
+
+        // sort by min value
+        return min;
       }
     })
     .value();
