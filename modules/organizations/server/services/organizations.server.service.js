@@ -109,31 +109,48 @@ exports.processQuery = function(query) {
   };
 };
 
-exports.calculateBrandsAveragePrice = function(org) {
-  var price_sum_mono = 0;
-  var price_sum_poly = 0;
-  var brands_length_mono = 0;
-  var brands_length_poly = 0;
+exports.calculateBrandsAveragePrice = function(org, query) {
+  var sums = {};
+  var lengths = {};
+  var averages = {};
 
-  for (var key in org.brands) {
-    if (org.brands[key]) {
-      price_sum_mono += org.brands[key];
-      ++brands_length_mono;
-    } else if (key.split('#')[1] === 'Poly') {
-      price_sum_poly += org.brands[key];
-      ++brands_length_poly;
+  // the organization already has only prices of type query.quantity
+  // therefore, we can use the key query.quantity
+
+  for (var brandKey in org.brands) {
+
+    for (var panelTypeKey in org.brands[brandKey]) {
+      if (sums[panelTypeKey]) {
+        sums[panelTypeKey] += org.brands[brandKey][panelTypeKey][query.quantity];
+        lengths[panelTypeKey] += 1;
+      } else {
+        sums[panelTypeKey] = org.brands[brandKey][panelTypeKey][query.quantity];
+        lengths[panelTypeKey] = 1;
+      }
     }
+
   }
 
+  // store averages for panel prices across brands
+  for (var panelKey in sums) {
+    averages[panelKey] = sums[panelKey] / lengths[panelKey] || Infinity;
+  }
+
+  org.averages = averages;
+  var averagesArray = Object.keys(averages).map(function(key) {
+    return averages[key];
+  });
+
+  console.log('averages', averages);
+  console.log('averages array', averagesArray);
+
   // calcuate average for each panel type across brands
-  org.brands_avg_mono = (price_sum_mono / brands_length_mono) || Infinity;
-  org.brands_avg_poly = (price_sum_poly / brands_length_poly) || Infinity;
-  org.brands_avg_min = Math.min(org.brands_avg_poly, org.brands_avg_mono);
+  org.brands_avg_min = Math.min.apply(this, averagesArray);
 
   return org;
 };
 
-exports.extractBrands = function(organizations) {
+exports.extractBrands = function(organizations, query) {
   return organizations.map(function(org) {
     // group all price reviews by brand
     org.brands = _.groupBy(org.priceReviews, function(priceReview) {
@@ -172,7 +189,7 @@ exports.extractBrands = function(organizations) {
     console.log('brands', org.brands);
 
     // calculate average for each type of panel
-    org = exports.calculateBrandsAveragePrice(org);
+    org = exports.calculateBrandsAveragePrice(org, query);
 
     return org;
   });

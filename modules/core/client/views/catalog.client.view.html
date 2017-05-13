@@ -160,11 +160,11 @@
                                 </tr>
                                 <tr ng-repeat="brand in organization.manufacturers" ng-show="!query.man || query.man.indexOf(brand) !== -1" class="line-item">
                                     <td ng-show="showPolyModule(organization)">
-                                        <span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency): 'no quotes'" class="price"></span><br>
+                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['Poly'] ? (organization.brands[brand]['Poly'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
                                     <td ng-show="showMonoModule(organization)">
-                                        <span ng-bind="organization.brands[brand+'#Mono'] ? (organization.brands[brand+'#Mono']/100 | currency): 'no quotes'" class="price"></span><br>
+                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['Mono'] ? (organization.brands[brand]['Mono'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
                                 </tr>
