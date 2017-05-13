@@ -147,6 +147,7 @@
                                           <div><small>(USD per watt)</small></div>
                                         </div>
                                     </td>
+
                                     <td ng-show="showMonoModule(organization)">
                                         <div class="img-wrapper">
                                           <span class="helper"></span>
@@ -154,6 +155,28 @@
                                         </div>
                                         <div class="category">
                                           <small>Monocrystalline Module</small>
+                                          <div><small>(USD per watt)</small></div>
+                                        </div>
+                                    </td>
+
+                                    <td ng-show="showCIGSModule(organization)">
+                                        <div class="img-wrapper">
+                                          <span class="helper"></span>
+                                          <img src="/modules/core/client/img/asset/mono-module.jpg">
+                                        </div>
+                                        <div class="category">
+                                          <small>Thin-Film CIGS Module</small>
+                                          <div><small>(USD per watt)</small></div>
+                                        </div>
+                                    </td>
+
+                                    <td ng-show="showCdTeModule(organization)">
+                                        <div class="img-wrapper">
+                                          <span class="helper"></span>
+                                          <img src="/modules/core/client/img/asset/mono-module.jpg">
+                                        </div>
+                                        <div class="category">
+                                          <small>Thin-Film CdTe Module</small>
                                           <div><small>(USD per watt)</small></div>
                                         </div>
                                     </td>

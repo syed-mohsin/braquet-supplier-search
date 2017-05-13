@@ -200,33 +200,28 @@ exports.sortByQuery = function(orgs, query) {
 
   if (query.crys) {
     panelTypes = query.crys.split('|').filter(function(c) { return c.length !== 0; });
-    console.log(panelTypes);
   }
 
-  // build query for crystalline types
-  if (panelTypes.indexOf('Poly') !== -1 && panelTypes.length === 1) { // sort by poly
-
-    return _.chain(orgs)
-      .sortBy('reviews_length')
-      .reverse()
-      .sortBy(function(org) {
-        return org.brand_avgs.Poly;
-      })
-      .value();
-  } else if (panelTypes.indexOf('Mono') !== -1 && panelTypes.length === 1) { // sort by mono
-
-    return _.chain(orgs)
-      .sortBy('reviews_length')
-      .reverse()
-      .sortBy(function(org) {
-        return org.brand_avgs.Mono;
-      })
-      .value();
-  }
-
+  // sort based on queried panel type
   return _.chain(orgs)
     .sortBy('reviews_length')
     .reverse()
-    .sortBy('brands_avg_min')
+    .sortBy(function(org) {
+      if (panelTypes.length === 1) {
+        if (panelTypes.indexOf('Poly') !== -1) {
+          return org.brand_avgs.Poly;
+        } else if (panelTypes.indexOf('Mono') !== -1) {
+          return org.brand_avgs.Mono;
+        } else if (panelTypes.indexOf('CIGS') !== -1) {
+          return org.brand_avgs.CIGS;
+        } else if (panelTypes.indexOf('CdTe') !== -1) {
+          return org.brand_avgs.CdTe;
+        }
+      // return lowest of existing values
+      } else {
+        return org.brands_avg_min;
+      }
+    })
     .value();
+
 };
