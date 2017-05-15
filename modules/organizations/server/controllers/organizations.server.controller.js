@@ -148,7 +148,8 @@ exports.update = function (req, res) {
 
   Organization.findOne({ urlName: organization.urlName }).exec()
   .then(function(duplicateOrganization) {
-    if (duplicateOrganization) {
+    // check for a unique duplicate organization
+    if (duplicateOrganization && !duplicateOrganization._id.equals(organization._id)) {
       var err = { errors: { duplicate: { message: 'this url display name is already taken' } } };
       throw err;
     }
