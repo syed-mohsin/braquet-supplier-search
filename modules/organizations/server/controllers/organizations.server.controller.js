@@ -414,8 +414,8 @@ exports.readPublic = function(req, res) {
 exports.readPublicByUrlName = function(req, res) {
   Organization.findOne({ urlName: req.params.urlName })
     .populate('panel_models')
-    .populate({ path: 'reviews', match: { verified: true } })
-    .populate({ path: 'priceReviews', match: { verified: true } })
+    .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
+    .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } })
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);
@@ -464,8 +464,8 @@ exports.organizationByUrlName = function (req, res) {
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .populate('admin', 'displayName')
-    .populate({ path: 'reviews', match: { verified: true } })
-    .populate({ path: 'priceReviews', match: { verified: true } })
+    .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
+    .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } })
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);

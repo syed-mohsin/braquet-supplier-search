@@ -7,7 +7,7 @@ angular.module('pricereviews').controller('PriceReviewsController', ['$rootScope
     $scope.shouldShowPrices = true;
 
     // SEO metadata
-    $rootScope.title = 'Quotes - Braquet';
+    $rootScope.pageTitle = 'Quotes - Braquet';
     $rootScope.description = 'Braquet - See all your quotes';
 
     $scope.showReviews = function() {

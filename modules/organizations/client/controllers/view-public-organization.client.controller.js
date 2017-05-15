@@ -47,7 +47,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
           // set page title+description for SEO
           var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
-          $rootScope.title = $scope.organization.companyName + ' | Braquet';
+          $rootScope.pageTitle = $scope.organization.companyName + ' | Braquet';
           $rootScope.description = defaultDescr + $scope.organization.about;
         })
         .catch(function(resp) {
