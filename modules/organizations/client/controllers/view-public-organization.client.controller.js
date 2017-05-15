@@ -2,8 +2,8 @@
 
 // Organizations controller
 
-angular.module('organizations').controller('PublicViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'Authentication', 'Socket',
-  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, Authentication, Socket) {
+angular.module('organizations').controller('PublicViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$mdDialog', 'Authentication', 'Socket',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $mdDialog, Authentication, Socket) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -35,6 +35,28 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       $scope. shouldShowReviews = false;
       $scope.shouldShowPrices = false;
       $scope.shouldShowProducts = true;
+    };
+
+    function DialogController($scope, $state, $mdDialog) {
+      $scope.login = function() {
+        $mdDialog.hide();
+        $state.go('authentication.signin');
+      };
+
+      $scope.signup = function() {
+        $mdDialog.hide();
+        $state.go('authentication.signup');
+      };
+    }
+
+    // alert to sign up
+    $scope.showSignUpAlert = function(ev) {
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'modules/organizations/client/views/signup-dialog.client.template.html',
+        targetEvent: ev,
+        clickOutsideToClose:true
+      });
     };
 
     // initialize tabs
@@ -69,6 +91,11 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
           var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
           $rootScope.pageTitle = $scope.organization.companyName + ' | Braquet';
           $rootScope.description = defaultDescr + $scope.organization.about;
+
+          // show modal
+          if ($scope.maxViewsExceeded()) {
+            $scope.showSignUpAlert();
+          }
         })
         .catch(function(resp) {
           console.log('error finding org', resp.data);
