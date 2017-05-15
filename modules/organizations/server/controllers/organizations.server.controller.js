@@ -140,6 +140,9 @@ exports.update = function (req, res) {
   organization.zipcode = req.body.zipcode;
   organization.country = req.body.country;
   organization.about = req.body.about;
+  organization.standardPaymentTerms = req.body.standardPaymentTerms;
+  organization.outsourceDelivery = req.body.outsourceDelivery;
+  organization.bankability = req.body.bankability;
 
   organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 

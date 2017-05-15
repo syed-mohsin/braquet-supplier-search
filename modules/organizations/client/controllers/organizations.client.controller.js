@@ -47,7 +47,10 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         state: this.state,
         zipcode: this.zipcode,
         country: this.country,
-        about: this.about
+        about: this.about,
+        standardPaymentTerms: this.standardPaymentTerms,
+        outsourceDelivery: this.outsourceDelivery,
+        bankability: this.bankability
       });
 
       // Redirect after save
