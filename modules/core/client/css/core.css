@@ -617,6 +617,12 @@ section h2 {
 .list-group-item a {
     color: #555;
 }
+.list-group-item .company-name {
+    color: #337ab7;
+}
+.list-group-item .company-name:hover {
+    color: #1861bf;
+}
 .horizontal .list-group-item {
     border: 0;
     border-top: 1px solid #eee;
