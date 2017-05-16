@@ -60,6 +60,11 @@ var PriceReviewSchema = new Schema({
     type: String,
     enum: ['Asia/Australia', 'Africa', 'Europe', 'North America', 'South America'],
   },
+  incoterm: {
+    type: String,
+    enum: ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP'],
+    required: 'Please specify Incoterm'
+  },
   verified: {
     type: Boolean,
     default: true

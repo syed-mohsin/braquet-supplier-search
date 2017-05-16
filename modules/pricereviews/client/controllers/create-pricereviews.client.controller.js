@@ -7,6 +7,8 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
     $scope.currentDate = new Date();
     modalOrganization.manufacturers.push('other');
 
+    $scope.incoterms = ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP'];
+
     $http.get('/api/panelmodels-wattages')
     .then(function(response) {
       var wattages = response.data.sort(function(a,b) { return a-b; });
@@ -51,7 +53,6 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
       }
 
       // Create new Price Review object
-      console.log(this.otherManufacturer);
       var priceReview = {
         quoteDate: this.quoteDate,
         deliveryDate: this.deliveryDate,
@@ -61,7 +62,8 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
         quantity: this.quantity,
         panelType: this.panelType,
         includesShipping: this.includesShipping === 'true' ? true : false,
-        shippingLocation: this.includesShipping === 'true' ? this.shippingLocation : undefined
+        shippingLocation: this.includesShipping === 'true' ? this.shippingLocation : undefined,
+        incoterm: this.incoterm
       };
 
       // Redirect after save
