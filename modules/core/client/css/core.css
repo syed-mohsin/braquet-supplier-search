@@ -619,7 +619,6 @@ section h2 {
 }
 .list-group-item .company-name {
     color: #337ab7;
-    font-size: large;
 }
 .list-group-item .company-name:hover {
     color: #1861bf;
