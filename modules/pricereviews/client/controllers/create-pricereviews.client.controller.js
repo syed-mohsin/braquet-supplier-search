@@ -7,7 +7,7 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
     $scope.currentDate = new Date();
     modalOrganization.manufacturers.push('other');
 
-    $scope.incoterms = ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP'];
+    $scope.incoterms = ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP', 'Not Sure'];
 
     $http.get('/api/panelmodels-wattages')
     .then(function(response) {

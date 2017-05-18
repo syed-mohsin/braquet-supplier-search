@@ -62,7 +62,7 @@ var PriceReviewSchema = new Schema({
   },
   incoterm: {
     type: String,
-    enum: ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP'],
+    enum: ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP', 'Not Sure'],
     required: 'Please specify Incoterm'
   },
   verified: {
