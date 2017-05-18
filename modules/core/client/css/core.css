@@ -354,17 +354,17 @@ section h2 {
 }
 .welcome .review {
     margin-top: 2em;
-    padding:15px; 
+    padding:15px;
     background: #222;
-    background: rgba(1,1,1,0.2); 
+    background: rgba(1,1,1,0.2);
     max-width: 450px;
 }
 .welcome .reviews {
     margin-top: 5px;
 }
 .welcome .review img {
-    width:100px; 
-    float:left; 
+    width:100px;
+    float:left;
     margin-right:10px;
 }
 @media (max-width: 767px) {
@@ -619,9 +619,11 @@ section h2 {
 }
 .list-group-item .company-name {
     color: #337ab7;
+    font-size: large;
 }
 .list-group-item .company-name:hover {
     color: #1861bf;
+    text-decoration: underline;
 }
 .horizontal .list-group-item {
     border: 0;
