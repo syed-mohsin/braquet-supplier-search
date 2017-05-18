@@ -130,6 +130,16 @@ var OrganizationSchema = new Schema({
   },
   about: {
     type: String
+  },
+  standardPaymentTerms: {
+    type: String
+  },
+  outsourceDelivery: {
+    type: Boolean
+  },
+  bankability: {
+    type: String,
+    enum: ['Tier-1', 'Tier-2', 'Tier-3', 'Bankrupt']
   }
 });
 

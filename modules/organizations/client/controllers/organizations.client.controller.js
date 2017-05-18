@@ -47,13 +47,16 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         state: this.state,
         zipcode: this.zipcode,
         country: this.country,
-        about: this.about
+        about: this.about,
+        standardPaymentTerms: this.standardPaymentTerms,
+        outsourceDelivery: this.outsourceDelivery,
+        bankability: this.bankability
       });
 
       // Redirect after save
       organization.$save(function (response) {
         $state.go('organizations.view', {
-          organizationId: response._id
+          name: response.urlName
         });
 
       }, function (errorResponse) {
@@ -75,7 +78,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
 
       organization.$update(function () {
         $state.go('organizations.view', {
-          organizationId: organization._id
+          name: organization.urlName
         });
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
@@ -104,6 +107,8 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       });
     };
 
+    // continue to look up by id or editing and other
+    // non-read operations
     $scope.findOne = function () {
       Organizations.get({
         organizationId: $stateParams.organizationId

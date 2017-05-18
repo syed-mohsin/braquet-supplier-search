@@ -140,12 +140,16 @@ exports.update = function (req, res) {
   organization.zipcode = req.body.zipcode;
   organization.country = req.body.country;
   organization.about = req.body.about;
+  organization.standardPaymentTerms = req.body.standardPaymentTerms;
+  organization.outsourceDelivery = req.body.outsourceDelivery;
+  organization.bankability = req.body.bankability;
 
   organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
   Organization.findOne({ urlName: organization.urlName }).exec()
   .then(function(duplicateOrganization) {
-    if (duplicateOrganization) {
+    // check for a unique duplicate organization
+    if (duplicateOrganization && !duplicateOrganization._id.equals(organization._id)) {
       var err = { errors: { duplicate: { message: 'this url display name is already taken' } } };
       throw err;
     }
