@@ -13,7 +13,7 @@ angular.module('core').controller('HomeController', ['$scope', '$state', 'Authen
       query.isman = ['501kW-1MW', '>1MW'].indexOf($scope.quantity) !== -1 ? true : false;
 
       if (query.crys === 'all') {
-        query.crys = 'Mono|Poly';
+        query.crys = 'Mono|Poly|CIGS|CdTe|';
       }
 
       $state.go('catalog', query);

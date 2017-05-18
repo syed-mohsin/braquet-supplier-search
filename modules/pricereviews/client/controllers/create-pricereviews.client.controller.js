@@ -5,10 +5,13 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
   function ($scope, $stateParams, $location, $http, $filter, $modalInstance, Authentication, PriceReviews, modalOrganization) {
     $scope.authentication = Authentication;
     $scope.currentDate = new Date();
+
+    // add an extra 'other' option for manufacturers field
     modalOrganization.manufacturers.push('other');
 
     $scope.incoterms = ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP', 'Not Sure'];
 
+    // fetch wattages for quote form wattage slider
     $http.get('/api/panelmodels-wattages')
     .then(function(response) {
       var wattages = response.data.sort(function(a,b) { return a-b; });
@@ -16,6 +19,7 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
       $scope.maxStcPower = wattages[wattages.length-1];
     });
 
+    // fetch manufacturers for manufacturers field
     $http.get('/api/panelmodels-manufacturers')
     .then(function(response) {
       $scope.otherBrands = response.data.filter(function(brand) {

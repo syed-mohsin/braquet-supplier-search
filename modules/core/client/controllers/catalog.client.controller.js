@@ -26,32 +26,15 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
-    $scope.showPolyModule = function(organization) {
-      if (organization.panel_crystalline_types.indexOf('Poly') !== -1 && !$scope.query.crys) {
+    $scope.showModule = function(organization, type) {
+      if ((!$scope.query.crys &&
+           organization.panel_crystalline_types.indexOf(type) !== -1) ||
+          (organization.panel_crystalline_types.indexOf(type) !== -1 &&
+           $scope.query.crys.indexOf(type) !== -1)) {
         return true;
       }
 
-      return organization.panel_crystalline_types.indexOf('Poly') !== -1 &&
-        (
-          // both poly or mono are selected in query string
-          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
-          // only poly is selected in query string
-          ($scope.query.crys.indexOf('Mono') === -1 && $scope.query.crys.indexOf('Poly') !== -1)
-        );
-    };
-
-    $scope.showMonoModule = function(organization) {
-      if (organization.panel_crystalline_types.indexOf('Mono') !== -1 && !$scope.query.crys) {
-        return true;
-      }
-
-      return organization.panel_crystalline_types.indexOf('Mono') !== -1 &&
-        (
-          // both poly or mono are selected in query string
-          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
-          // only mono is selected in query string
-          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') === -1)
-        );
+      return false;
     };
 
     // show following conditional
