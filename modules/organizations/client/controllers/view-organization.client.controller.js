@@ -21,8 +21,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       $scope.viewType = viewType;
 
       $scope.pageSettings = Pagination.buildPage(itemsArray, page);
-      $stateParams.view = viewType;
-      $stateParams.page = page || 1;
     };
 
     $scope.shouldShowType = function(viewType) {
@@ -30,48 +28,51 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
     };
 
     $scope.changeTab = function(viewType) {
-      var query = {
-        name: $stateParams.name, // name of organization
-        view: viewType,
-        page: undefined
-      };
+      $stateParams.view = viewType;
+      $stateParams.page = undefined;
 
-      $state.go('organizations.view', query);
+      $state.go('organizations.view', $stateParams);
     };
 
     $scope.initializePageNavBar = function() {
-      var viewType = $stateParams.view;
       var page = $stateParams.page;
 
-      if (viewType === 'reviews') {
-        $scope.showView('reviews', $scope.organization.reviews, page);
-      } else if (viewType === 'prices') {
+      var viewTypes = {
+        'reviews': $scope.organization.reviews,
+        'prices': $scope.organization.priceReviews,
+        'products': $scope.organization.panel_models
+      };
+
+      // by default or by invalid param, set default to show Prices
+      if (!($stateParams.view in viewTypes)) {
         $scope.showView('prices', $scope.organization.priceReviews, page);
-      } else if (viewType === 'products') {
-        $scope.showView('products', $scope.organization.panel_models, page);
-      } else {
-        // by default or by invalid param, set default to show Prices
-        $scope.showView('prices', $scope.organization.priceReviews, page);
+        return;
       }
+
+      // find valid view
+      Object.keys(viewTypes).forEach(function(viewType) {
+        if (viewType === $stateParams.view) {
+          $scope.showView(viewType, viewTypes[viewType], page);
+        }
+      });
     };
 
     $scope.pageChanged = function() {
-      var query = {
-        name: $stateParams.name,
-        page: $scope.pageSettings.currentPage
-      };
+      $stateParams.page = $scope.pageSettings.currentPage;
+      $stateParams.view = null;
 
-      if ($scope.viewType === 'reviews') {
-        query.view = 'reviews';
-      } else if ($scope.viewType === 'prices') {
-        query.view = 'prices';
-      } else if ($scope.viewType === 'products') {
-        query.view = 'products';
-      } else {
-        query.view = 'prices';
-      }
+      var viewTypes = ['reviews', 'prices', 'products'];
 
-      $state.go('organizations.view', query);
+      // find valid view
+      viewTypes.forEach(function(viewType) {
+        if (viewType === $scope.viewType) {
+          $stateParams.view = $scope.viewType;
+        }
+      });
+
+      if (!$stateParams.view) $stateParams.view = 'prices';
+
+      $state.go('organizations.view', $stateParams);
     };
 
     $scope.getUserEmailNotification = function() {

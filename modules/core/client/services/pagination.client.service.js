@@ -3,6 +3,13 @@
 // Create the Socket.io wrapper service
 angular.module('core').service('Pagination', [
   function () {
+    var page;
+    var currentPage;
+    var itemsPerPage;
+    var totalCount;
+    var itemsArray;
+    var currentViewType = 'dicks';
+
     // build pager system
     this.buildPage = function(itemsArray, currentPage, itemsPerPage) {
       // scroll to top of the page
@@ -17,6 +24,10 @@ angular.module('core').service('Pagination', [
         itemsPerPage: itemsPerPage || 15,
         totalCount: itemsArray.length
       };
+    };
+
+    this.shouldShowType = function(viewType) {
+      return currentViewType === viewType;
     };
   }
 ]);
