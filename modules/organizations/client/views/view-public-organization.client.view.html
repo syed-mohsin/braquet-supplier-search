@@ -50,7 +50,7 @@
                       <span ng-bind="organization.reviews.length"></span> <span> Reviews</span>
                   </div>
                   <div class="list-group" ng-show="maxViewsExceeded()">
-                    <a ui-sref="authentication.signup"><span>Please sign up or log in to see all the reviews!</span></a>
+                    <a ui-sref="authentication.signup"><span>Please sign up or log in to see all reviews!</span></a>
                   </div>
                   <div class="list-group" ng-if="!maxViewsExceeded()">
                       <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
@@ -78,7 +78,7 @@
                         <span ng-bind="organization.price_reviews_length"></span> <span> Quotes</span>
                     </div>
                     <div class="list-group" ng-show="maxViewsExceeded()">
-                      <a ui-sref="authentication.signup"><span>Please sign up or log in to see all the quotes!</span></a>
+                      <a ui-sref="authentication.signup"><span>Please sign up or log in to see all quotes!</span></a>
                     </div>
                     <div class="list-group" ng-if="!maxViewsExceeded()">
                         <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
