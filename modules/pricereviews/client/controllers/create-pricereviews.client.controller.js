@@ -9,6 +9,8 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
     // add an extra 'other' option for manufacturers field
     modalOrganization.manufacturers.push('other');
 
+    $scope.incoterms = ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP', 'Not Sure'];
+
     // fetch wattages for quote form wattage slider
     $http.get('/api/panelmodels-wattages')
     .then(function(response) {
@@ -55,7 +57,6 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
       }
 
       // Create new Price Review object
-      console.log(this.otherManufacturer);
       var priceReview = {
         quoteDate: this.quoteDate,
         deliveryDate: this.deliveryDate,
@@ -65,7 +66,8 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
         quantity: this.quantity,
         panelType: this.panelType,
         includesShipping: this.includesShipping === 'true' ? true : false,
-        shippingLocation: this.includesShipping === 'true' ? this.shippingLocation : undefined
+        shippingLocation: this.includesShipping === 'true' ? this.shippingLocation : undefined,
+        incoterm: this.incoterm
       };
 
       // Redirect after save
