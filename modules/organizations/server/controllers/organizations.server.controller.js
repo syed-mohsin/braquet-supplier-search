@@ -411,10 +411,19 @@ exports.readPublic = function(req, res) {
  * Public read view of organization by url name
  */
 exports.readPublicByUrlName = function(req, res) {
-  Organization.findOne({ urlName: req.params.urlName })
-    .populate('panel_models')
-    .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
-    .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } })
+  console.log('count', req.query.c);
+
+  var organizationQuery = Organization.findOne({ urlName: req.params.urlName })
+    .populate('panel_models');
+
+  if (req.query.c && !isNaN(parseInt(req.query.c)) &&
+      parseInt(req.query.c) > 0 && parseInt(req.query.c) < 3) {
+    organizationQuery
+      .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
+      .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } });
+  }
+
+  organizationQuery
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);
