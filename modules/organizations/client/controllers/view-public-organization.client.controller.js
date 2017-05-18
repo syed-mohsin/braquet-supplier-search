@@ -66,10 +66,11 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     };
 
     $scope.sortBy = function(sortType) {
-      console.log($stateParams, sortType === $stateParams.sortType, sortType, $stateParams.sortType);
       $stateParams.ascending = sortType === $stateParams.sortType ? !$stateParams.ascending : false;
       $stateParams.sortType = sortType;
       $stateParams.page = 1;
+      console.log($stateParams);
+
       $state.go('organizations.view-public', $stateParams);
     };
 

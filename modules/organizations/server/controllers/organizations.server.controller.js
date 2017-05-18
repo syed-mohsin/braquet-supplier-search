@@ -408,43 +408,6 @@ exports.readPublic = function(req, res) {
 };
 
 /**
- * Public read view of organization by url name
- */
-exports.readPublicByUrlName = function(req, res) {
-  var query = Organization.findOne({ urlName: req.params.urlName });
-
-  if (req.query.view === 'products') {
-    query.populate('panel_models');
-  } else if (req.query.view === 'reviews') {
-    query.populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } });
-  } else {
-    var sortCondition = {};
-    var typeOptions = ['quoteDate', 'quantity', 'price'];
-
-    if (typeOptions.indexOf(req.query.sortType) !== -1) {
-      sortCondition[req.query.sortType] = req.query.ascending === 'true' ? 1 : -1;
-    } else {
-      sortCondition.quoteDate = -1;
-    }
-
-    console.log(sortCondition);
-
-    query.populate({ path: 'priceReviews', match: { verified: true }, options: { sort: sortCondition } });
-  }
-
-  query
-    .exec(function (err, organization) {
-      if (err) {
-        return res.status(400).json(err);
-      } else if (!organization) {
-        return res.status(400).json(new Error('Failed to load organization ' + req.params.urlName));
-      }
-
-      res.json(organization);
-    });
-};
-
-/**
  * Organization middleware
  */
 exports.organizationByID = function (req, res, next, id) {
@@ -483,12 +446,11 @@ exports.organizationByUrlName = function (req, res) {
   } else if (req.query.view === 'reviews') {
     query.populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } });
   } else {
-    console.log(req.query);
     var sortCondition = {};
     var typeOptions = ['quoteDate', 'quantity', 'price'];
 
     if (typeOptions.indexOf(req.query.sortType) !== -1) {
-      sortCondition[req.query.sortType] = req.query.ascending ? 1 : -1;
+      sortCondition[req.query.sortType] = req.query.ascending === 'true' ? 1 : -1;
     } else {
       sortCondition.quoteDate = -1;
     }
@@ -496,10 +458,17 @@ exports.organizationByUrlName = function (req, res) {
     query.populate({ path: 'priceReviews', match: { verified: true }, options: { sort: sortCondition } });
   }
 
+  console.log(req.route.path, 'asdfjals;dfkjas;ldfkj');
+
+  // only add these values for logged in route
+  if (req.route.path === '/api/organizations/:urlName/name') {
+    query
+      .populate('users', 'displayName organization connections email firstName lastName')
+      .populate('possibleUsers', 'displayName organization connections email firstName lastName')
+      .populate('admin', 'displayName');
+  }
+
   query
-    .populate('users', 'displayName organization connections email firstName lastName')
-    .populate('possibleUsers', 'displayName organization connections email firstName lastName')
-    .populate('admin', 'displayName')
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);
