@@ -37,7 +37,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
     $scope.findOne = function() {
       if (Authentication.user) {
-        $state.go('organizations.view', { name: $stateParams.name });
+        $state.go('organizations.view', $stateParams);
       } else {
         // go to not-logged in view
         $http.get('/api/organizations/' + $stateParams.name + '/name-public')

@@ -458,13 +458,20 @@ exports.organizationByID = function (req, res, next, id) {
  * Organization middleware
  */
 exports.organizationByUrlName = function (req, res) {
-  Organization.findOne({ urlName: req.params.urlName })
-    .populate('panel_models')
+  var query = Organization.findOne({ urlName: req.params.urlName });
+
+  if (req.query.view === 'products') {
+    query.populate('panel_models');
+  } else if (req.query.view === 'reviews') {
+    query.populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } });
+  } else {
+    query.populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } });
+  }
+
+  query
     .populate('users', 'displayName organization connections email firstName lastName')
     .populate('possibleUsers', 'displayName organization connections email firstName lastName')
     .populate('admin', 'displayName')
-    .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
-    .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } })
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);

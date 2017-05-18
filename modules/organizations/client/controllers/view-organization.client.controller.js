@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
-  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
+angular.module('organizations').controller('ViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics', 'Pagination',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics, Pagination) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.resolvedResources = 0;
@@ -17,33 +17,62 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       );
     };
 
+    $scope.showView = function(viewType, itemsArray, page) {
+      $scope.viewType = viewType;
+
+      $scope.pageSettings = Pagination.buildPage(itemsArray, page);
+      $stateParams.view = viewType;
+      $stateParams.page = page || 1;
+    };
+
+    $scope.shouldShowType = function(viewType) {
+      return $scope.viewType === viewType;
+    };
+
+    $scope.changeTab = function(viewType) {
+      var query = {
+        name: $stateParams.name, // name of organization
+        view: viewType,
+        page: undefined
+      };
+
+      $state.go('organizations.view', query);
+    };
+
     $scope.initializePageNavBar = function() {
-      // tab viewing booleans
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+      var viewType = $stateParams.view;
+      var page = $stateParams.page;
+
+      if (viewType === 'reviews') {
+        $scope.showView('reviews', $scope.organization.reviews, page);
+      } else if (viewType === 'prices') {
+        $scope.showView('prices', $scope.organization.priceReviews, page);
+      } else if (viewType === 'products') {
+        $scope.showView('products', $scope.organization.panel_models, page);
+      } else {
+        // by default or by invalid param, set default to show Prices
+        $scope.showView('prices', $scope.organization.priceReviews, page);
+      }
     };
 
-    $scope.showReviews = function() {
-      $scope.shouldShowReviews = true;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = false;
-    };
+    $scope.pageChanged = function() {
+      var query = {
+        name: $stateParams.name,
+        page: $scope.pageSettings.currentPage
+      };
 
-    $scope.showPrices = function() {
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
-    };
+      if ($scope.viewType === 'reviews') {
+        query.view = 'reviews';
+      } else if ($scope.viewType === 'prices') {
+        query.view = 'prices';
+      } else if ($scope.viewType === 'products') {
+        query.view = 'products';
+      } else {
+        query.view = 'prices';
+      }
 
-    $scope.showProducts = function() {
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = true;
+      $state.go('organizations.view', query);
     };
-
-    // initialize tabs
-    $scope.initializePageNavBar();
 
     $scope.getUserEmailNotification = function() {
       if (!Authentication.user) {
@@ -87,7 +116,10 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       $scope.resolvedResources = 0;
 
       // fetch organization by name
-      $http.get('/api/organizations/' + $stateParams.name + '/name')
+      $http({
+        url: '/api/organizations/' + $stateParams.name + '/name',
+        params: $stateParams
+      })
       .then(function(resp) {
         // store returned organization
         var organization = resp.data;
@@ -95,11 +127,15 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
         $scope.resolvedResources++;
         $scope.buildUploader(organization._id);
 
+        // initialize tabs ang pagination
+        $scope.initializePageNavBar();
+
         // set page title+description for SEO
         var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
         $rootScope.pageTitle = $scope.organization.companyName + ' | Braquet';
         $rootScope.description = defaultDescr + $scope.organization.about;
 
+        // determine if user has previously reviewed organization
         return $http({
           url: '/api/reviews/is-reviewed',
           params: { organizationId: organization._id }
@@ -128,7 +164,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       // change uploader url
       $scope.uploader.url = 'api/organizations/logo/' + organizationId;
 
-          // Set file uploader image filter
+      // Set file uploader image filter
       $scope.uploader.filters.push({
         name: 'imageFilter',
         fn: function (item, options) {

@@ -70,19 +70,19 @@
             </div>
 
             <ul class="nav nav-tabs">
-              <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">{{organization.priceReviews.length}} Quotes</a></li>
-              <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">{{organization.reviews.length}} Reviews</a></li>
-              <li ng-class="{ active: shouldShowProducts }"><a ng-click="showProducts()">{{organization.panel_models.length}} Products</a></li>
+              <li ng-class="{ active: shouldShowType('prices') }"><a ng-click="changeTab('prices')">{{organization.priceReviews.length}} Quotes</a></li>
+              <li ng-class="{ active: shouldShowType('reviews') }"><a ng-click="changeTab('reviews')">{{organization.reviews.length}} Reviews</a></li>
+              <li ng-class="{ active: shouldShowType('products') }"><a ng-click="changeTab('products')">{{organization.panel_models.length}} Products</a></li>
             </ul>
         </div>
-        <div class="row" ng-show="shouldShowReviews">
+        <div class="row" ng-show="shouldShowType('reviews')">
             <div class="box no-border reviews">
                 <div class="content no-wrap">
                     <div class="sub-title name">
                         <span ng-bind="organization.reviews.length"></span> <span> Reviews</span>
                     </div>
                     <div class="list-group">
-                        <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
+                        <div class="list-group-item col-sm-12" ng-repeat="review in pageSettings.items">
                             <img ng-src="{{organization.logoImageUrl}}" class="profile">
                             <div class="detail no-wrap">
                                 <a class="project-title">
@@ -100,14 +100,14 @@
                 </div>
             </div>
         </div>
-        <div class="row" ng-show="shouldShowPrices">
+        <div class="row" ng-show="shouldShowType('prices')">
             <div class="box no-border">
                 <div class="content no-wrap">
                     <div class="sub-title name">
                         <span ng-bind="organization.price_reviews_length"></span> <span> Quotes</span>
                     </div>
                     <div class="list-group">
-                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
+                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in pageSettings.items">
 
                             <div class="detail no-wrap">
 
@@ -153,21 +153,20 @@
                                             </table>
                                         </div>
                                     </section>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row" ng-show="shouldShowProducts">
+        <div class="row" ng-show="shouldShowType('products')">
             <div class="box title-content no-border product">
                 <div class="content no-wrap">
                     <div class="sub-title name">
                         <span>Products</span>
                     </div>
                     <div class="list-group">
-                        <div class="list-group-item col-sm-2" ng-repeat="panel_model in organization.panel_models">
+                        <div class="list-group-item col-sm-2" ng-repeat="panel_model in pageSettings.items">
                             <img src="/modules/core/client/img/asset/generic-module.jpg">
                             <div class="detail">
                                 <a class="project-title">
@@ -179,13 +178,14 @@
                                     Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br>
                                     Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+            <pagination ng-show="pageSettings.totalCount" boundary-links="true" max-size="8" items-per-page="pageSettings.itemsPerPage" total-items="pageSettings.totalCount" ng-model="pageSettings.currentPage" ng-change="pageChanged()"></pagination>
         </div>
     </div>
 </section>
