@@ -65,12 +65,23 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       $state.go('organizations.view-public', $stateParams);
     };
 
+    $scope.sortBy = function(sortType) {
+      console.log($stateParams, sortType === $stateParams.sortType, sortType, $stateParams.sortType);
+      $stateParams.ascending = sortType === $stateParams.sortType ? !$stateParams.ascending : false;
+      $stateParams.sortType = sortType;
+      $stateParams.page = 1;
+      $state.go('organizations.view-public', $stateParams);
+    };
+
     $scope.findOne = function() {
       if (Authentication.user) {
         $state.go('organizations.view', $stateParams);
       } else {
         // go to not-logged in view
-        $http.get('/api/organizations/' + $stateParams.name + '/name-public')
+        $http({
+          url: '/api/organizations/' + $stateParams.name + '/name-public',
+          params: $stateParams
+        })
         .then(function(resp) {
           $scope.organization = resp.data;
           $scope.organization.$resolved = true;

@@ -411,10 +411,28 @@ exports.readPublic = function(req, res) {
  * Public read view of organization by url name
  */
 exports.readPublicByUrlName = function(req, res) {
-  Organization.findOne({ urlName: req.params.urlName })
-    .populate('panel_models')
-    .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
-    .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } })
+  var query = Organization.findOne({ urlName: req.params.urlName });
+
+  if (req.query.view === 'products') {
+    query.populate('panel_models');
+  } else if (req.query.view === 'reviews') {
+    query.populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } });
+  } else {
+    var sortCondition = {};
+    var typeOptions = ['quoteDate', 'quantity', 'price'];
+
+    if (typeOptions.indexOf(req.query.sortType) !== -1) {
+      sortCondition[req.query.sortType] = req.query.ascending === 'true' ? 1 : -1;
+    } else {
+      sortCondition.quoteDate = -1;
+    }
+
+    console.log(sortCondition);
+
+    query.populate({ path: 'priceReviews', match: { verified: true }, options: { sort: sortCondition } });
+  }
+
+  query
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);
@@ -465,7 +483,17 @@ exports.organizationByUrlName = function (req, res) {
   } else if (req.query.view === 'reviews') {
     query.populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } });
   } else {
-    query.populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } });
+    console.log(req.query);
+    var sortCondition = {};
+    var typeOptions = ['quoteDate', 'quantity', 'price'];
+
+    if (typeOptions.indexOf(req.query.sortType) !== -1) {
+      sortCondition[req.query.sortType] = req.query.ascending ? 1 : -1;
+    } else {
+      sortCondition.quoteDate = -1;
+    }
+
+    query.populate({ path: 'priceReviews', match: { verified: true }, options: { sort: sortCondition } });
   }
 
   query

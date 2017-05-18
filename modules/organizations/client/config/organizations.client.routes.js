@@ -27,11 +27,11 @@ angular.module('organizations').config(['$stateProvider',
         }
       })
       .state('organizations.view-public', {
-        url: '/:name?view&page',
+        url: '/:name?view&page&sortType&{ascending:bool}',
         templateUrl: 'modules/organizations/client/views/view-public-organization.client.view.html',
       })
       .state('organizations.view', {
-        url: '/:name?view&page',
+        url: '/:name?view&page&sortType&{ascending:bool}',
         templateUrl: 'modules/organizations/client/views/view-organization.client.view.html',
         data: {
           roles: ['user', 'seller', 'admin']

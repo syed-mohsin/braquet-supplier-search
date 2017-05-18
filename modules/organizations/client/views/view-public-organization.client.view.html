@@ -73,6 +73,7 @@
                 <div class="content no-wrap">
                     <div class="sub-title name">
                         <span ng-bind="organization.price_reviews_length"></span> <span> Quotes</span>
+                        <span>Sort: <a ng-click="sortBy('quoteDate')">Date</a> | <a ng-click="sortBy('quantity')">Quantity</a></span> | <a ng-click="sortBy('price')">Unit Price</a></span> 
                     </div>
                     <div class="list-group">
                         <div class="list-group-item col-sm-12" ng-repeat="priceReview in pageSettings.items">
