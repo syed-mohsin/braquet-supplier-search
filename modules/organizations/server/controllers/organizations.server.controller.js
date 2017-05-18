@@ -252,7 +252,7 @@ exports.get_catalog = function (req, res) {
   .exec()
   .then(function(orgs) {
     // get brands for organizations
-    orgs = OrganizationService.extractBrands(orgs);
+    orgs = OrganizationService.extractBrands(orgs, req.query);
     // sort organizations
     orgs = OrganizationService.sortByQuery(orgs, req.query);
 
