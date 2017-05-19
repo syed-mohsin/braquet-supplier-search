@@ -7,6 +7,10 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
     $scope.resolvedResources = 0;
     $scope.expectedResources = 3;
 
+    // set filter params if exists
+    $scope.manufacturer = $stateParams.manufacturer;
+    $scope.panelType = $stateParams.panelType;
+
     // show following conditional
     $scope.displayUserIsFollowing = function(organization) {
       return (

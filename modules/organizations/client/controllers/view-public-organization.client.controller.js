@@ -7,6 +7,10 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
+    // set filter params if exists
+    $scope.manufacturer = $stateParams.manufacturer;
+    $scope.panelType = $stateParams.panelType;
+
     $scope.showView = function(viewType, itemsArray, page) {
       $scope.viewType = viewType;
 
@@ -93,6 +97,14 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       return $filter('filter')($scope.organization.manufacturers, {
         $: searchManufacturerText
       });
+    };
+
+    $scope.applyFilters = function() {
+      $stateParams.page = 1;
+      $stateParams.manufacturer = $scope.manufacturer;
+      $stateParams.panelType = $scope.panelType;
+
+      $state.go('organizations.view-public', $stateParams);
     };
 
     $scope.findOne = function() {

@@ -447,6 +447,7 @@ exports.organizationByUrlName = function (req, res) {
     query.populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } });
   } else {
     var sortCondition = {};
+    var filterCondition = { verified: true };
     var typeOptions = ['quoteDate', 'quantity', 'price'];
 
     if (typeOptions.indexOf(req.query.sortType) !== -1) {
@@ -455,10 +456,17 @@ exports.organizationByUrlName = function (req, res) {
       sortCondition.quoteDate = -1;
     }
 
-    query.populate({ path: 'priceReviews', match: { verified: true }, options: { sort: sortCondition } });
+    if (req.query.manufacturer) {
+      filterCondition.manufacturer = req.query.manufacturer;
+    }
+
+    if (req.query.panelType) {
+      filterCondition.panelType = req.query.panelType;
+    }
+
+    query.populate({ path: 'priceReviews', match: filterCondition, options: { sort: sortCondition } });
   }
 
-  console.log(req.route.path, 'asdfjals;dfkjas;ldfkj');
 
   // only add these values for logged in route
   if (req.route.path === '/api/organizations/:urlName/name') {
