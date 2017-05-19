@@ -99,10 +99,7 @@
                         <div class="form-group">
                           <select name="panelType" ng-model="panelType" id="panelType" class="form-control pull-left">
                             <option value="">Type of Module</option>
-                            <option value="Mono">Monocrystalline</option>
-                            <option value="Poly">Polycrystalline</option>
-                            <option value="CIGS">CIGS</option>
-                            <option value="CdTe">CdTe</option>
+                            <option ng-repeat="pType in organization.panel_crystalline_types" value="{{pType}}">{{ ['Mono', 'Poly'].indexOf(pType) !== -1 ? pType + 'crystalline' : pType }}</option>
                           </select>
                         </div>
                         <div class="form-group">
