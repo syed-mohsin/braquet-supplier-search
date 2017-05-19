@@ -76,7 +76,7 @@
                 <div class="content no-wrap">
                     <div class="sub-title name" ng-show="!maxViewsExceeded()">
                         Filters:
-                        <div class="form-group" ng-if="!organization.isManufacturer">
+                        <div class="form-group" ng-show="!organization.isManufacturer">
                           <label for="manufacturer">Brand</label><br>
                           <md-autocomplete
                             name="manufacturer"
@@ -97,7 +97,7 @@
                         </div>
 
                         <div class="form-group">
-                          <select name="panelType" ng-model="panelType" id="panelType" class="form-control pull-left">
+                          <select name="panelType" ng-model="panelType" id="panelType" class="form-control">
                             <option value="">Type of Module</option>
                             <option ng-repeat="pType in organization.panel_crystalline_types" value="{{pType}}">{{ ['Mono', 'Poly'].indexOf(pType) !== -1 ? pType + 'crystalline' : pType }}</option>
                           </select>

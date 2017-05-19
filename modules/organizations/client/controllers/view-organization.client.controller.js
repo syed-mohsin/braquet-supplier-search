@@ -114,7 +114,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       $stateParams.manufacturer = $scope.manufacturer;
       $stateParams.panelType = $scope.panelType;
 
-      $state.go('organizations.view-public', $stateParams);
+      $state.go('organizations.view', $stateParams);
     };
 
     $scope.getUserEmailNotification = function() {
