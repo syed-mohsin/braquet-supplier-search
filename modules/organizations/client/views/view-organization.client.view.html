@@ -104,6 +104,39 @@
             <div class="box no-border">
                 <div class="content no-wrap">
                     <div class="sub-title name">
+                        Filters:
+                        <div class="form-group" ng-if="!organization.isManufacturer">
+                          <label for="manufacturer">Brand</label><br>
+                          <md-autocomplete
+                            name="manufacturer"
+                            ng-model="manufacturer"
+                            md-selected-item="manufacturer"
+                            md-search-text="searchManufacturerText"
+                            md-items="man in search(searchManufacturerText)"
+                            md-item-text="man"
+                            md-min-length="0"
+                            placeholder="Please select a brand">
+                            <md-item-template>
+                              <span md-highlight-text="searchManufacturerText" md-highlight-flags="^i">{{man}}</span>
+                            </md-item-template>
+                            <md-not-found>
+                              No brands matching "{{searchManufacturerText}}" were found.
+                            </md-not-found>
+                          </md-autocomplete>
+                        </div>
+
+                        <div class="form-group">
+                          <select name="panelType" ng-model="panelType" id="panelType" class="form-control pull-left">
+                            <option value="">Type of Module</option>
+                            <option value="Mono">Monocrystalline</option>
+                            <option value="Poly">Polycrystalline</option>
+                            <option value="CIGS">CIGS</option>
+                            <option value="CdTe">CdTe</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <a ng-click="applyFilters()"><span>Apply Filters</span></a>
+                        </div>
                         <span ng-bind="showNumberOfResultsOnPage()"></span>
                         <span>Sort: <a ng-click="sortBy('quoteDate')">Date</a> | <a ng-click="sortBy('quantity')">Quantity</a></span> | <a ng-click="sortBy('price')">Unit Price</a></span>
                     </div>

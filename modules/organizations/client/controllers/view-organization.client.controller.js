@@ -103,6 +103,20 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
     };
 
+    $scope.search = function(searchManufacturerText) {
+      return $filter('filter')($scope.organization.manufacturers, {
+        $: searchManufacturerText
+      });
+    };
+
+    $scope.applyFilters = function() {
+      $stateParams.page = 1;
+      $stateParams.manufacturer = $scope.manufacturer;
+      $stateParams.panelType = $scope.panelType;
+
+      $state.go('organizations.view-public', $stateParams);
+    };
+
     $scope.getUserEmailNotification = function() {
       if (!Authentication.user) {
         $scope.emailNotification = {};

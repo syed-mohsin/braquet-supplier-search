@@ -73,7 +73,7 @@
                 <div class="content no-wrap">
                     <div class="sub-title name">
                         Filters:
-                        <div class="form-group">
+                        <div class="form-group" ng-if="!organization.isManufacturer">
                           <label for="manufacturer">Brand</label><br>
                           <md-autocomplete
                             name="manufacturer"
