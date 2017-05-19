@@ -36,13 +36,13 @@ exports.cachePanelFields = function(organization, panelModels) {
     }
 
     // iterate through all locations in locations array on panel
-    organization.panel_manufacturing_locations = panel.manufacturingLocations.reduce(function(arr, loc) {
+    self.panel_manufacturing_locations = panel.manufacturingLocations.reduce(function(arr, loc) {
       if (arr.indexOf(loc) === -1) {
         arr.push(loc);
       }
 
       return arr;
-    }, []);
+    }, self.panel_manufacturing_locations);
   });
 
   return organization;

@@ -195,7 +195,7 @@ OrganizationSchema.pre('save', function(next) {
         }
 
         return arr;
-      }, []);
+      }, self.panel_manufacturing_locations);
     });
 
     // extract all brands from panels
