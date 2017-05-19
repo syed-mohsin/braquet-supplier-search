@@ -27,6 +27,25 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
+    $scope.showBrandIfMatchingLocation = function(brand, organization) {
+      var matchingPanels = organization.panel_models.filter(function(panel) {
+        return panel.manufacturer === brand;
+      });
+
+      var isValidBrandByLocation = matchingPanels.some(function(panel) {
+        return panel.manufacturingLocations.some(function(location) {
+          return $scope.query.locs.indexOf(location) !== -1;
+        });
+      });
+
+      return isValidBrandByLocation;
+    };
+
+    $scope.showBrand = function(brand, organization) {
+      return (!$scope.query.man || $scope.query.man.indexOf(brand) !== -1) &&
+             (!$scope.query.locs || $scope.showBrandIfMatchingLocation(brand, organization));
+    };
+
     $scope.showPolyModule = function(organization) {
       if (organization.panel_crystalline_types.indexOf('Poly') !== -1 && !$scope.query.crys) {
         return true;

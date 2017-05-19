@@ -248,6 +248,7 @@ exports.get_catalog = function (req, res) {
   Organization.find(organizationQueryParams)
   .populate({ path: 'priceReviews', match: priceReviewQueryParams
   })
+  .populate('panel_models', 'manufacturer manufacturingLocations')
   .lean() // returns documents as plain JS objects so you can modify them
   .exec()
   .then(function(orgs) {

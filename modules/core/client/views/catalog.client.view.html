@@ -98,7 +98,7 @@
                     </label>
                   </li>
               </div> -->
-              
+
                 <div class="list-group">
                     <span class="catalog-label"><small>Brand ></small></span>
                     <div ng-if="query.man"><a class="clear-filter" ng-click="clearSectionCheckboxes('brand')">Clear</a></div>
@@ -171,7 +171,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr ng-repeat="brand in organization.manufacturers" ng-show="!query.man || query.man.indexOf(brand) !== -1" class="line-item">
+                                <tr ng-repeat="brand in organization.manufacturers" ng-show="showBrand(brand, organization)" class="line-item">
                                     <td ng-show="showPolyModule(organization)">
                                         <span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
