@@ -140,12 +140,16 @@ exports.update = function (req, res) {
   organization.zipcode = req.body.zipcode;
   organization.country = req.body.country;
   organization.about = req.body.about;
+  organization.standardPaymentTerms = req.body.standardPaymentTerms;
+  organization.outsourceDelivery = req.body.outsourceDelivery;
+  organization.bankability = req.body.bankability;
 
   organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
   Organization.findOne({ urlName: organization.urlName }).exec()
   .then(function(duplicateOrganization) {
-    if (duplicateOrganization) {
+    // check for a unique duplicate organization
+    if (duplicateOrganization && !duplicateOrganization._id.equals(organization._id)) {
       var err = { errors: { duplicate: { message: 'this url display name is already taken' } } };
       throw err;
     }
@@ -252,7 +256,7 @@ exports.get_catalog = function (req, res) {
   .exec()
   .then(function(orgs) {
     // get brands for organizations
-    orgs = OrganizationService.extractBrands(orgs);
+    orgs = OrganizationService.extractBrands(orgs, req.query);
     // sort organizations
     orgs = OrganizationService.sortByQuery(orgs, req.query);
 
@@ -440,6 +444,26 @@ exports.organizationByID = function (req, res, next, id) {
  */
 exports.organizationByUrlName = function (req, res) {
   var query = Organization.findOne({ urlName: req.params.urlName });
+
+  // page tracker for public view
+  if (req.query.c && !isNaN(parseInt(req.query.c)) &&
+      (parseInt(req.query.c) < 1 || parseInt(req.query.c) > 3) &&
+      req.route.path === '/api/organizations/:urlName/name-public') {
+
+    query
+      .populate('panel_models')
+      .exec(function (err, organization) {
+        if (err) {
+          return res.status(400).json(err);
+        } else if (!organization) {
+          return res.status(400).json(new Error('Failed to load organization ' + req.params.urlName));
+        }
+
+        res.json(organization);
+      });
+
+    return;
+  }
 
   if (req.query.view === 'products') {
     query.populate('panel_models');

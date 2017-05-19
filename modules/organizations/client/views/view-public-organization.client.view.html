@@ -46,10 +46,13 @@
       <div class="row" ng-show="shouldShowType('reviews')">
           <div class="box no-border reviews">
               <div class="content no-wrap">
-                  <div class="sub-title name">
+                  <div class="sub-title name" ng-show="!maxViewsExceeded()">
                     <span ng-bind="showNumberOfResultsOnPage()"></span>
                   </div>
-                  <div class="list-group">
+                  <div class="list-group" ng-show="maxViewsExceeded()">
+                    <a ui-sref="authentication.signup"><span>Please sign up or log in to see all reviews!</span></a>
+                  </div>
+                  <div class="list-group" ng-if="!maxViewsExceeded()">
                       <div class="list-group-item col-sm-12" ng-repeat="review in pageSettings.items">
                           <img ng-src="{{organization.logoImageUrl}}" class="profile">
                           <div class="detail no-wrap">
@@ -71,7 +74,7 @@
       <div class="row" ng-show="shouldShowType('prices')">
             <div class="box no-border">
                 <div class="content no-wrap">
-                    <div class="sub-title name">
+                    <div class="sub-title name" ng-show="!maxViewsExceeded()">
                         Filters:
                         <div class="form-group" ng-if="!organization.isManufacturer">
                           <label for="manufacturer">Brand</label><br>
@@ -109,9 +112,12 @@
                         <span ng-bind="showNumberOfResultsOnPage()"></span>
                         <span>Sort: <a ng-click="sortBy('quoteDate')">Date</a> | <a ng-click="sortBy('quantity')">Quantity</a></span> | <a ng-click="sortBy('price')">Unit Price</a></span>
                     </div>
-                    <div class="list-group">
-                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in pageSettings.items">
 
+                    <div class="list-group" ng-show="maxViewsExceeded()">
+                      <a ui-sref="authentication.signup"><span>Please sign up or log in to see all quotes!</span></a>
+                    </div>
+                    <div class="list-group" ng-show="!maxViewsExceeded()">
+                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in pageSettings.items">
                             <div class="detail no-wrap">
 
                                     <section>

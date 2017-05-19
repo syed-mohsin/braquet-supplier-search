@@ -13,13 +13,6 @@
         </div>
 
         <div class="form-group" show-errors>
-          braquet.io/organizations/<input name="urlName" type="text" ng-model="organization.urlName" id="urlName" class="form-control" placeholder="URL Display Name" required>
-          <div ng-messages="organizationForm.urlName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Display name is required. This is how your company name will appear in your url.</p>
-          </div>
-        </div>
-
-        <div class="form-group" show-errors>
           <label>
             <input name="isManufacturer" type="checkbox" ng-model="organization.isManufacturer" id="isManufacturer">
             <span>Is this a manufacturer?</span>
@@ -114,6 +107,27 @@
         <div class="form-group" show-errors>
           <input name="about" type="text" ng-model="organization.about" id="about" class="form-control" placeholder="About">
         </div>
+
+        <div class="form-group" show-errors>
+         <input name="standardPaymentTerms" type="text" ng-model="organization.standardPaymentTerms" id="standardPaymentTerms" class="form-control" placeholder="Standard Payment Terms">
+       </div>
+
+       <div class="form-group" show-errors>
+         <label>
+           <input name="outsourceDelivery" type="checkbox" ng-model="organization.outsourceDelivery" id="outsourceDelivery">
+           <span>Is Delivery Outsourced?</span>
+         </label>
+       </div>
+
+       <div class="form-group" show-errors>
+         <select name="bankability" ng-model="organization.bankability" id="bankability" class="form-control">
+           <option value="">Bankability</option>
+           <option value="Tier-1">Tier-1</option>
+           <option value="Tier-2">Tier-2</option>
+           <option value="Tier-3">Tier-3</option>
+           <option value="Bankrupt">Bankrupt</option>
+         </select>
+       </div>
 
         <div class="form-group">
           <input type="submit" class="btn btn-default">

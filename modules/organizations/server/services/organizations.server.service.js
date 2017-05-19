@@ -109,38 +109,47 @@ exports.processQuery = function(query) {
   };
 };
 
-exports.calculateBrandsAveragePrice = function(org) {
-  var price_sum_mono = 0;
-  var price_sum_poly = 0;
-  var brands_length_mono = 0;
-  var brands_length_poly = 0;
+exports.calculateBrandsAveragePrice = function(org, query) {
+  var sums = {};
+  var lengths = {};
+  var averages = {};
 
-  for (var key in org.brands) {
-    if (key.split('#')[1] === 'Mono') {
-      price_sum_mono += org.brands[key];
-      ++brands_length_mono;
-    } else if (key.split('#')[1] === 'Poly') {
-      price_sum_poly += org.brands[key];
-      ++brands_length_poly;
+  // the organization already has only prices of type query.quantity
+  // therefore, we can use the key query.quantity to lookup the correct quotes
+
+  for (var brandKey in org.brands) {
+
+    for (var panelTypeKey in org.brands[brandKey]) {
+      if (sums[panelTypeKey]) {
+        sums[panelTypeKey] += org.brands[brandKey][panelTypeKey][query.quantity];
+        lengths[panelTypeKey] += 1;
+      } else {
+        sums[panelTypeKey] = org.brands[brandKey][panelTypeKey][query.quantity];
+        lengths[panelTypeKey] = 1;
+      }
     }
+
   }
 
-  // calcuate average for each panel type across brands
-  org.brands_avg_mono = (price_sum_mono / brands_length_mono) || Infinity;
-  org.brands_avg_poly = (price_sum_poly / brands_length_poly) || Infinity;
-  org.brands_avg_min = Math.min(org.brands_avg_poly, org.brands_avg_mono);
+  // store averages for panel prices across brands
+  for (var panelKey in sums) {
+    averages[panelKey] = sums[panelKey] / lengths[panelKey] || Infinity;
+  }
+
+  // average price per panel for specified quantity
+  org.brand_avgs = averages;
 
   return org;
 };
 
-exports.extractBrands = function(organizations) {
+exports.extractBrands = function(organizations, query) {
   return organizations.map(function(org) {
     // group all price reviews by brand
     org.brands = _.groupBy(org.priceReviews, function(priceReview) {
       return priceReview.manufacturer + '#' + priceReview.panelType;
     });
 
-    org.testbrands = _.chain(org.priceReviews)
+    org.brands = _.chain(org.priceReviews)
       .groupBy(function(priceReview) {
         return priceReview.manufacturer;
       })
@@ -169,46 +178,54 @@ exports.extractBrands = function(organizations) {
       })
       .value();
 
-    // calcuate median of all price reviews under a brand
-    org.brands = _.mapObject(org.brands, function(brand) {
-      brand.sort(function (a, b) { return a.price - b.price; });
-      var lowMiddle = Math.floor((brand.length - 1) / 2);
-      var highMiddle = Math.ceil((brand.length - 1) / 2);
-      var median = (brand[lowMiddle].price + brand[highMiddle].price) / 2;
-      return median;
-    });
-
     // calculate average for each type of panel
-    org = exports.calculateBrandsAveragePrice(org);
+    org = exports.calculateBrandsAveragePrice(org, query);
 
     return org;
   });
 };
 
 exports.sortByQuery = function(orgs, query) {
-  // build query for crystalline types
-  if (query.crys &&
-      query.crys.indexOf('Mono') === -1 &&
-      query.crys.indexOf('Poly') !== -1) { // sort by mono
+  var panelTypes = [];
 
-    return _.chain(orgs)
-      .sortBy('reviews_length')
-      .reverse()
-      .sortBy('brands_avg_poly')
-      .value();
-  } else if (query.crys &&
-      query.crys.indexOf('Mono') !== -1 &&
-      query.crys.indexOf('Poly') === -1) {
-    return _.chain(orgs)
-      .sortBy('reviews_length')
-      .reverse()
-      .sortBy('brands_avg_mono')
-      .value();
+  if (query.crys) {
+    panelTypes = query.crys.split('|').filter(function(c) { return c.length !== 0; });
   }
 
+  // sort based on queried panel type
   return _.chain(orgs)
     .sortBy('reviews_length')
     .reverse()
-    .sortBy('brands_avg_min')
+    .sortBy(function(org) {
+      if (panelTypes.length === 1) {
+        if (panelTypes.indexOf('Poly') !== -1) {
+          return org.brand_avgs.Poly;
+        } else if (panelTypes.indexOf('Mono') !== -1) {
+          return org.brand_avgs.Mono;
+        } else if (panelTypes.indexOf('CIGS') !== -1) {
+          return org.brand_avgs.CIGS;
+        } else if (panelTypes.indexOf('CdTe') !== -1) {
+          return org.brand_avgs.CdTe;
+        } else { // invalid input, default sort by Poly
+          return org.brand_avgs.Poly;
+        }
+      // return lowest of existing values
+      } else {
+        var relevantAverages = _.chain(Object.keys(org.brand_avgs))
+          .map(function(panelType) {
+            if (!panelTypes.length || panelTypes.indexOf(panelType) !== -1) {
+              return org.brand_avgs[panelType];
+            }
+          })
+          .value();
+
+        // calcuate min of averages for each panel type across brands
+        var min = Math.min.apply(this, relevantAverages);
+
+        // sort by min value
+        return min;
+      }
+    })
     .value();
+
 };
