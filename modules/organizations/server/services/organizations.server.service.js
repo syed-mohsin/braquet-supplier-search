@@ -35,9 +35,14 @@ exports.cachePanelFields = function(organization, panelModels) {
       organization.panel_number_of_cells.push(panel.numberOfCells);
     }
 
-    if (organization.panel_manufacturing_locations.indexOf(panel.manufacturingLocations) === -1) {
-      organization.panel_manufacturing_locations.push(panel.manufacturingLocations);
-    }
+    // iterate through all locations in locations array on panel
+    organization.panel_manufacturing_locations = panel.manufacturingLocations.reduce(function(arr, loc) {
+      if (arr.indexOf(loc) === -1) {
+        arr.push(loc);
+      }
+
+      return arr;
+    }, []);
   });
 
   return organization;
