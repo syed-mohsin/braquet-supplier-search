@@ -472,7 +472,7 @@ exports.organizationByUrlName = function (req, res) {
   } else {
     var sortCondition = {};
     var filterCondition = { verified: true };
-    var typeOptions = ['quoteDate', 'quantity', 'price'];
+    var typeOptions = ['quoteDate', 'quantity', 'price', 'stcPower'];
 
     if (typeOptions.indexOf(req.query.sortType) !== -1) {
       sortCondition[req.query.sortType] = req.query.ascending === 'true' ? 1 : -1;
