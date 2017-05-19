@@ -25,9 +25,6 @@
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
       <li ui-sref-active="active">
-        <a ui-sref="team"><span></span>Team</a>
-      </li>
-      <li ui-sref-active="active">
         <a ui-sref="authentication.signup"><span></span>Sign Up</a>
       </li>
       <li class="divider-vertical"></li>
@@ -66,6 +63,21 @@
           <li class="divider"></li>
           <li>
             <a href="/api/auth/signout" target="_self">Signout</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li class="dropdown" dropdown>
+        <a class="dropdown-toggle" dropdown-toggle role="button">
+          <span>About Us </span><b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li ui-sref-active="active">
+            <a ui-sref="team">Team</a>
+          </li>
+          <li ui-sref-active="active">
+            <a ui-sref="faq">FAQ</a>
           </li>
         </ul>
       </li>

@@ -33,7 +33,7 @@ exports.create = function(req, res) {
   .then(function(savedPriceReview) {
     req.organization.priceReviews.push(priceReview._id);
     req.organization.updated = Date.now(); // update timestamp
-    
+
     return req.organization.save();
   })
   .then(function(savedOrg) {
@@ -62,7 +62,6 @@ exports.update = function (req, res) {
   priceReview.price = req.body.price;
   priceReview.quantity = req.body.quantity;
   priceReview.panelType = req.body.panelType;
-  priceReview.shippingLocation = req.body.shippingLocation;
 
   priceReview.save(function (err) {
     if (err) {

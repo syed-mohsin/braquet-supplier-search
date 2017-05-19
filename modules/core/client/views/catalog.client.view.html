@@ -123,19 +123,20 @@
                       <img class="company-logo" ng-src="{{organization.logoImageUrl}}">
                     </a>
                     <div class="profile-info">
-                        <a ng-click="routeToOrg(organization)">
                         <div>
-                            <h5 class="list-group-item-heading" ng-bind="organization.companyName"></h5>
+                            <a class="company-name" ng-click="routeToOrg(organization)" ng-bind="organization.companyName">
+                            </a>
 
-                        <div class="reviews">
-                            <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
-                            <span>{{organization.reviews_length}} reviews</span>
+                            <div class="reviews">
+                                <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
+                                <span>{{organization.reviews_length}} reviews</span>
+                            </div>
+                            <div class="detail">
+                                <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
+                            </div>
                         </div>
-                        <div class="detail">
-                            <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
-                        </div>
-                        </a>
-                        </div>
+
+
                         <div class="menu">
                             <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
@@ -150,7 +151,7 @@
                             <table>
                                 <tr class="header">
 
-                                    <td ng-show="showPolyModule(organization)">
+                                    <td ng-show="showModule(organization, 'Poly')">
                                         <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/poly-module.jpg">
@@ -160,7 +161,8 @@
                                           <div><small>(USD per watt)</small></div>
                                         </div>
                                     </td>
-                                    <td ng-show="showMonoModule(organization)">
+
+                                    <td ng-show="showModule(organization, 'Mono')">
                                         <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/mono-module.jpg">
@@ -170,14 +172,48 @@
                                           <div><small>(USD per watt)</small></div>
                                         </div>
                                     </td>
+
+                                    <td ng-show="showModule(organization, 'CIGS')">
+                                        <div class="img-wrapper">
+                                          <span class="helper"></span>
+                                          <img src="/modules/core/client/img/asset/cigs-module.png">
+                                        </div>
+                                        <div class="category">
+                                          <small>Thin-Film CIGS Module</small>
+                                          <div><small>(USD per watt)</small></div>
+                                        </div>
+                                    </td>
+
+                                    <td ng-show="showModule(organization, 'CdTe')">
+                                        <div class="img-wrapper">
+                                          <span class="helper"></span>
+                                          <img src="/modules/core/client/img/asset/cdte-module.png">
+                                        </div>
+                                        <div class="category">
+                                          <small>Thin-Film CdTe Module</small>
+                                          <div><small>(USD per watt)</small></div>
+                                        </div>
+                                    </td>
                                 </tr>
+
                                 <tr ng-repeat="brand in organization.manufacturers" ng-show="showBrand(brand, organization)" class="line-item">
-                                    <td ng-show="showPolyModule(organization)">
-                                        <span ng-bind="organization.brands[brand+'#Poly'] ? (organization.brands[brand+'#Poly']/100 | currency): 'no quotes'" class="price"></span><br>
+                                    <td ng-show="showModule(organization, 'Poly')">
+                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['Poly'] ? (organization.brands[brand]['Poly'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
-                                    <td ng-show="showMonoModule(organization)">
-                                        <span ng-bind="organization.brands[brand+'#Mono'] ? (organization.brands[brand+'#Mono']/100 | currency): 'no quotes'" class="price"></span><br>
+
+                                    <td ng-show="showModule(organization, 'Mono')">
+                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['Mono'] ? (organization.brands[brand]['Mono'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
+                                        <span><small>{{brand}}</small></span>
+                                    </td>
+
+                                    <td ng-show="showModule(organization, 'CIGS')">
+                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['CIGS'] ? (organization.brands[brand]['CIGS'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
+                                        <span><small>{{brand}}</small></span>
+                                    </td>
+
+                                    <td ng-show="showModule(organization, 'CdTe')">
+                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['CdTe'] ? (organization.brands[brand]['CdTe'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
                                 </tr>

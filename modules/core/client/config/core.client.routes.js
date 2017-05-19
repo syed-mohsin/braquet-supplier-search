@@ -63,6 +63,14 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         pageDescription: 'See the team that created the best place to find quality solar suppliers'
       }
     })
+    .state('faq', {
+      url: '/faq',
+      templateUrl: '/modules/core/client/views/faq.client.view.html',
+      data: {
+        pageTitle: 'Frequently Asked Questions - Braquet',
+        pageDescription: 'How are reviews and quotes moderated on Braquet? Can manufacturers and resellers review themselves? Can companies edit or remove reviews about them?'
+      }
+    })
     .state('contact', {
       url: '/contact',
       templateUrl: 'modules/core/client/views/contact.client.view.html',

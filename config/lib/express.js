@@ -80,6 +80,9 @@ module.exports.initMiddleware = function (app) {
   // Enable logger (morgan)
   app.use(morgan(logger.getFormat(), logger.getOptions()));
 
+  // Prerender IO
+  app.use(require('prerender-node').set('prerenderToken', app.locals.prerenderToken));
+
   // Environment dependent middleware
   if (process.env.NODE_ENV === 'development') {
     // Disable views cache

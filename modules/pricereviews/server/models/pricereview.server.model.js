@@ -49,7 +49,7 @@ var PriceReviewSchema = new Schema({
   },
   panelType: {
     type: String,
-    enum: ['Poly', 'Mono', 'other'],
+    enum: ['Poly', 'Mono', 'CIGS', 'CdTe', 'other'],
     required: 'Please specify panel type'
   },
   includesShipping: {
@@ -59,6 +59,11 @@ var PriceReviewSchema = new Schema({
   shippingLocation: {
     type: String,
     enum: ['Asia/Australia', 'Africa', 'Europe', 'North America', 'South America'],
+  },
+  incoterm: {
+    type: String,
+    enum: ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP', 'Not Sure'],
+    required: 'Please specify Incoterm'
   },
   verified: {
     type: Boolean,
