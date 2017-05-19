@@ -69,9 +69,30 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       $stateParams.ascending = sortType === $stateParams.sortType ? !$stateParams.ascending : false;
       $stateParams.sortType = sortType;
       $stateParams.page = 1;
-      console.log($stateParams);
 
       $state.go('organizations.view-public', $stateParams);
+    };
+
+    $scope.showNumberOfResultsOnPage = function() {
+      if (!$scope.pageSettings) return;
+
+      var page = $scope.pageSettings.currentPage;
+      var itemsPerPage = $scope.pageSettings.itemsPerPage;
+      var totalCount = $scope.pageSettings.totalCount;
+
+      var upperLimit = (page * itemsPerPage) < totalCount ? (page * itemsPerPage) : totalCount;
+      var lowerLimit = (upperLimit - itemsPerPage + 1) > 0 ? (upperLimit - itemsPerPage + 1) : 1;
+      if (totalCount === 0) {
+        lowerLimit = 0;
+      }
+
+      return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
+    };
+
+    $scope.search = function(searchManufacturerText) {
+      return $filter('filter')($scope.organization.manufacturers, {
+        $: searchManufacturerText
+      });
     };
 
     $scope.findOne = function() {
