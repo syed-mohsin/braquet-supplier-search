@@ -34,3 +34,13 @@
   min-height: 150px;
   max-height: 150px;
 }
+.oauth img {
+  width:20px; 
+  float:left;
+}
+button.fb {
+  background:#3b5998;
+}
+button.linked-in {
+  background:#0077B5;
+}
