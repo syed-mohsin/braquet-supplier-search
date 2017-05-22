@@ -103,10 +103,8 @@
         <div class="row" ng-show="shouldShowType('prices')">
             <div class="box no-border">
                 <div class="content no-wrap">
-                    <div class="sub-title name">
-                        Filters:
-                        <div class="form-group" ng-show="!organization.isManufacturer">
-                          <label for="manufacturer">Brand</label><br>
+                    <div class="name">
+                        <div class="col-sm-4" ng-show="!organization.isManufacturer">
                           <md-autocomplete
                             name="manufacturer"
                             ng-model="manufacturer"
@@ -125,18 +123,25 @@
                           </md-autocomplete>
                         </div>
 
-                        <div class="form-group">
-                          <select name="panelType" ng-model="panelType" id="panelType" class="form-control">
+                        <div class="col-sm-4">
+                          <select style="height:40px;" name="panelType" ng-model="panelType" id="panelType" class="form-control">
                             <option value="">Type of Module</option>
                             <option ng-repeat="pType in organization.panel_crystalline_types" value="{{pType}}">{{ ['Mono', 'Poly'].indexOf(pType) !== -1 ? pType + 'crystalline' : pType }}</option>
                           </select>
                         </div>
-                        <div class="form-group">
+                       <!--  <div class="form-group">
                           <a ng-click="applyFilters()"><span>Apply Filters</span></a>
+                        </div> -->
+                        <div class="col-sm-12" style="margin: 20px 0">
+                            <span ng-bind="showNumberOfResultsOnPage()"></span>
+                            <select>
+                                <option>Sort by</option> 
+                                <option><a ng-click="sortBy('quoteDate')">Quote Date</a></option> 
+                                <option><a ng-click="sortBy('quantity')">Quantity</a></option> 
+                                <option><a ng-click="sortBy('price')">Unit Price</a></option> 
+                                <option><a ng-click="sortBy('stcPower')">Module Wattage</a></option> 
+                            </select>
                         </div>
-                        <span ng-bind="showNumberOfResultsOnPage()"></span>
-                        <span>Sort: <a ng-click="sortBy('quoteDate')">Date</a> | <a ng-click="sortBy('quantity')">Quantity</a></span> | <a ng-click="sortBy('price')">Unit Price</a> | <a ng-click="sortBy('stcPower')">Wattage</a></span>
-                    </div>
                     <div class="list-group">
                         <div class="list-group-item col-sm-12" ng-repeat="priceReview in pageSettings.items">
 
