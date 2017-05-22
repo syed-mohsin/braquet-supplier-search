@@ -20,6 +20,12 @@ module.exports = function () {
       if (err) {
         return done(err);
       }
+      if (user && user.provider !== 'local') {
+        return done(null, false, {
+          message: 'Your email was registered through LinkedIn or Facebook. ' +
+          'Please use the appropriate service to login!'
+        });
+      }
       if (!user || !user.authenticate(password)) {
         return done(null, false, {
           message: 'Invalid email or password'
