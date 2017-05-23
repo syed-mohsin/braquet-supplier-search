@@ -240,6 +240,23 @@ exports.list_basic = function (req, res) {
 };
 
 /**
+ * List of only organization names
+ */
+exports.list_catalog_names = function (req, res) {
+  Organization.find({ verified: true }, 'companyName panel_models')
+  .sort('companyName')
+  .exec(function(err, organizations) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(organizations);
+    }
+  });
+};
+
+/**
  * List of fully populated organizations for catalog
  * Available to all
  */

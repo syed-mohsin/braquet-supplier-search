@@ -20,6 +20,10 @@ module.exports = function (app) {
   app.route('/api/organizations-basic')
     .get(organizations.list_basic);
 
+  // for catalog search
+  app.route('/api/organizations/catalog-name-search')
+    .get(organizations.list_catalog_names);
+
   // admin-only view of unverified projects
   app.route('/api/organizations-unverified').all(organizationsPolicy.isAllowed)
     .get(organizations.list_unverified);

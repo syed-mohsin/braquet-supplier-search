@@ -26,6 +26,25 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
+    // get list of organization names for search
+    $http.get('/api/organizations/catalog-name-search')
+    .then(function(res) {
+      console.log(res.data.length);
+      // filter orgs by either man or reseller
+      $scope.organizationNames = res.data.filter(function(org) {
+        return org.panel_models.length > 0;
+      });
+    })
+    .catch(function(err) {
+      console.log('error fetching organizations', err);
+    });
+
+    $scope.orgSearch = function(searchOrganizationText) {
+      return $filter('filter')($scope.organizationNames, {
+        $: searchOrganizationText
+      });
+    };
+
     $scope.showModule = function(organization, type) {
       if ((!$scope.query.crys &&
            organization.panel_crystalline_types.indexOf(type) !== -1) ||
@@ -295,10 +314,12 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $state.go('catalog', $scope.query);
     };
 
-    $scope.searchSubmit = function() {
-      $scope.query.q = $scope.search;
-      $scope.query.page = 1;
-      $state.go('catalog', $scope.query);
+    $scope.searchSubmit = function(foundOrganization) {
+      if (foundOrganization) {
+        $scope.query.q = $scope.foundOrganization.companyName;
+        $scope.query.page = 1;
+        $state.go('catalog', $scope.query);
+      }
     };
 
     $scope.routeToOrg = function (organization) {
