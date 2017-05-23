@@ -38,9 +38,38 @@
   width:20px; 
   float:left;
 }
-button.fb {
+button.fb, .btn-primary.fb:hover {
   background:#3b5998;
 }
-button.linked-in {
+button.linked-in, .btn-primary.linked-in:hover {
   background:#0077B5;
+}
+.signin {
+    padding: 40px 50px 40px 50px;
+    min-width: 268px;
+    max-width: 450px;
+    text-align: center;
+}
+.signin .btn-primary, .signin .btn-default {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+@media (max-width: 767px) {
+    .signin {
+      padding: initial;
+      min-width: inherit;
+  }
+}
+.signup {
+    margin: 20px 0;
+    padding: 0 0 40px 0;
+    max-width: 450px;
+    font-weight: 700;
+}
+.remember-password {
+    float: left;
+}
+.forgot-password {
+    float: right;
 }
