@@ -2,13 +2,13 @@
   <h3 class="col-md-12 text-center"></h3>
   <div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4 form">
   <div class="signin border">
-    
+
         <h2 >Sign up on Braquet</h2>
         <div class="text-center form-group">
-          <button type="submit" class="btn btn-primary fb oauth"><img ng-click="callOauthProvider('/api/auth/facebook')" ng-src="modules/users/client/img/buttons/fb.png">Sign Up with Facebook</button>
+          <button ng-click="callOauthProvider('/api/auth/facebook')" class="btn btn-primary fb oauth"><img ng-src="modules/users/client/img/buttons/fb.png">Sign In with Facebook</button>
         </div>
         <div class="text-center form-group">
-          <button type="submit" class="btn btn-primary linked-in oauth"><img ng-click="callOauthProvider('/api/auth/linkedin')" ng-src="modules/users/client/img/buttons/li.png">Sign Up with LinkedIn</button>
+          <button ng-click="callOauthProvider('/api/auth/linkedin')" class="btn btn-primary linked-in oauth"><img ng-src="modules/users/client/img/buttons/li.png">Sign In with LinkedIn</button>
         </div>
         <small>Don't worry, we never post without your permission</small>
         <div>
