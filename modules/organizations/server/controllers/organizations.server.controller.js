@@ -446,6 +446,7 @@ exports.organizationByUrlName = function (req, res) {
   var query = Organization.findOne({ urlName: req.params.urlName });
 
   // page tracker for public view
+  // if condition is met, return bare minimum results required by public view
   if (req.query.c && !isNaN(parseInt(req.query.c)) &&
       (parseInt(req.query.c) < 1 || parseInt(req.query.c) > 3) &&
       req.route.path === '/api/organizations/:urlName/name-public') {
@@ -472,12 +473,17 @@ exports.organizationByUrlName = function (req, res) {
   } else {
     var sortCondition = {};
     var filterCondition = { verified: true };
-    var typeOptions = ['quoteDate', 'quantity', 'price', 'stcPower'];
+    var typeOptions = ['quoteDate', 'stcPower'];
 
     if (typeOptions.indexOf(req.query.sortType) !== -1) {
-      sortCondition[req.query.sortType] = req.query.ascending === 'true' ? 1 : -1;
+      sortCondition[req.query.sortType] = -1;
+    } else if (req.query.sortType && req.query.sortType === 'priceLow') {
+      sortCondition.price = 1;
+    } else if (req.query.sortType && req.query.sortType === 'priceHigh') {
+      sortCondition.price = -1;
     } else {
       sortCondition.quoteDate = -1;
+      sortCondition.quantity = -1;
     }
 
     if (req.query.manufacturer) {
@@ -488,9 +494,12 @@ exports.organizationByUrlName = function (req, res) {
       filterCondition.panelType = req.query.panelType;
     }
 
+    if (req.query.quantity && req.query.quantity !== 'all') {
+      filterCondition.quantity = req.query.quantity;
+    }
+
     query.populate({ path: 'priceReviews', match: filterCondition, options: { sort: sortCondition } });
   }
-
 
   // only add these values for logged in route
   if (req.route.path === '/api/organizations/:urlName/name') {

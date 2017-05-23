@@ -10,6 +10,8 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
     // set filter params if exists
     $scope.manufacturer = $stateParams.manufacturer;
     $scope.panelType = $stateParams.panelType;
+    $scope.quantity = $stateParams.quantity;
+    $scope.sortType = $stateParams.sortType;
 
     // show following conditional
     $scope.displayUserIsFollowing = function(organization) {
@@ -80,7 +82,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
     };
 
     $scope.sortBy = function(sortType) {
-      $stateParams.ascending = sortType === $stateParams.sortType ? !$stateParams.ascending : false;
       $stateParams.sortType = sortType;
       $stateParams.page = 1;
 
@@ -113,7 +114,8 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       $stateParams.page = 1;
       $stateParams.manufacturer = $scope.manufacturer;
       $stateParams.panelType = $scope.panelType;
-
+      $stateParams.quantity = $scope.quantity;
+  
       $state.go('organizations.view', $stateParams);
     };
 
