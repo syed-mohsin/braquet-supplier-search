@@ -43,7 +43,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       }
     })
     .state('landing', {
-      url: '/landing',
+      url: '/',
       templateUrl: 'modules/core/client/views/home.client.view.html'
     })
     .state('catalog', {

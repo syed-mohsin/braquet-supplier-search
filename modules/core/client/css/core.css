@@ -96,7 +96,7 @@ a:hover {
     border-width: 1px;
 }
 form {
-    background: white;
+    background: #fff;
     padding: 40px 50px 40px 50px;
     min-width: 268px;
     max-width: 450px;
@@ -104,18 +104,15 @@ form {
     text-align: center;
 }
 
-form h2 {
+form h2, .form h2 {
     margin: 30px auto;
 }
-
-form span {
+form span, .form span {
     margin: 15px 0 0 0;
 }
-
-form label {
+form label, .form label {
     font-weight: normal;
 }
-
 .extend .page-header {
     position: fixed;
     top: -19px;
@@ -187,8 +184,8 @@ form label {
     max-width: initial;
 }
 .form-group {
-    text-align: left;
     margin-top: 10px;
+    text-align: left;
     margin-bottom: 0;
 }
 .form-group div {
@@ -197,20 +194,6 @@ form label {
 input[type="checkbox"], input[type="radio"] {
     margin-right: 10px;
 }
-.signup {
-    margin: 40px auto 0 auto;
-    padding: 0 50px 40px 50px;
-    max-width: 450px;
-    font-weight: 700;
-}
-
-.remember-password {
-    float: left;
-}
-.forgot-password {
-    float: right;
-}
-
 .btn-primary, .btn-default {
     font-weight: 700;
     padding: 9px 22px;
