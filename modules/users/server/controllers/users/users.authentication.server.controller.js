@@ -357,6 +357,11 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
               emailVerified: true
             });
 
+            // create email notification settings for user
+            var emailNotification = new EmailNotification();
+            emailNotification.user = user._id;
+            emailNotification.save();
+
             // And save the user
             user.save(function (err) {
               return done(err, user);
