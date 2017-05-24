@@ -258,9 +258,37 @@ form .btn-primary, form .btn-default {
     font-size: 0;
 /*    cursor: pointer;*/
 }
+.filter {
+    margin: 10px 0;
+    padding-left: 0;
+}
+.filter select {
+    height: 40px;
+}
 .apply-filter {
+    text-align: center;
+    margin: 10px 0 15px 0;
+}
+.apply-filter a {
+    color: white;
+}
+.sort-section {
+    margin: 20px 0;
+}
+.sort-result {
+    padding:0;
+}
+.number-results {
+    position: relative;
     top: 10px;
-    left: 15px;
+}
+@media (max-width: 767px) {
+    .apply-filter {
+        margin: 0 15px 0 0;
+    }
+    .sort-result {
+        padding-right: 10px;
+    }
 }
 a.clear-filter {
     color: #337ab7;

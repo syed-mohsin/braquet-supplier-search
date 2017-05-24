@@ -123,8 +123,8 @@
                           </md-autocomplete>
                         </div>
 
-                        <div class="col-sm-4">
-                          <select style="height:40px;" name="panelType" ng-model="panelType" id="panelType" class="form-control">
+                        <div class="col-sm-4 filter">
+                          <select name="panelType" ng-model="panelType" id="panelType" class="form-control">
                             <option value="">Type of Module</option>
                             <option ng-show="organization.panel_crystalline_types.indexOf('Mono') !== -1" value="Mono">Monocrystalline</option>
                             <option ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1" value="Poly">Polycrystalline</option>
@@ -132,8 +132,8 @@
                             <option ng-show="organization.panel_crystalline_types.indexOf('CdTe') !== -1" value="CdTe">CdTe</option>
                           </select>
                         </div>
-                        <div class="col-sm-4">
-                          <select style="height:40px;" name="quantity" ng-model="quantity" id="quantity" class="form-control">
+                        <div class="col-sm-4 filter">
+                          <select name="quantity" ng-model="quantity" id="quantity" class="form-control">
                             <option value="">Project Size</option>
                             <option value="0kW-100kW">0kW-100kW</option>
                             <option value="101kW-500kW">101kW-500kW</option>
@@ -142,11 +142,15 @@
                             <option value="all">All</option>
                           </select>
                         </div>
-                        <a ng-click="applyFilters()" class="btn-primary apply-filter"><span>Apply Filters</span></a>
+                        <div class="col-sm-4 btn-primary apply-filter">
+                            <a ng-click="applyFilters()">
+                                <span>Apply Filters</span>
+                            </a>
+                        </div>
                         
-                        <div class="col-sm-12" style="margin: 20px 0;">
-                            <span ng-bind="showNumberOfResultsOnPage()"></span>
-                            <div class="col-sm-4 pull-right">
+                        <div class="sort-section">
+                            <span class="number-results" ng-bind="showNumberOfResultsOnPage()"></span>
+                            <div class="col-sm-4 pull-right sort-result">
                                 <select class="form-control sort" style="float:right;" name="sortType" ng-model="sortType" id="sortType" ng-change="sortBy(sortType)">
                                     <option value="">Sort By</option>
                                     <option value="quoteDate">Most Recent</option>
