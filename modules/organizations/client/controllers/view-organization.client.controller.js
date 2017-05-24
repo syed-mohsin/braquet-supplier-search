@@ -93,13 +93,17 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       if (!$scope.pageSettings) return;
 
       var page = $scope.pageSettings.currentPage;
+      var itemsOnCurrentPage = $scope.pageSettings.items.length;
       var itemsPerPage = $scope.pageSettings.itemsPerPage;
       var totalCount = $scope.pageSettings.totalCount;
 
-      var upperLimit = (page * itemsPerPage) < totalCount ? (page * itemsPerPage) : totalCount;
-      var lowerLimit = (upperLimit - itemsPerPage + 1) > 0 ? (upperLimit - itemsPerPage + 1) : 1;
+      var lowerLimit = ((page-1) * (itemsPerPage) + 1);
+      var upperLimit = lowerLimit + itemsOnCurrentPage + 1;
+
+      // edge case with no results
       if (totalCount === 0) {
         lowerLimit = 0;
+        upperLimit = 0;
       }
 
       return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
