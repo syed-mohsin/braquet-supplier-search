@@ -21,6 +21,21 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       $location.path('/');
     }
 
+    function identifyFullStoryUser(user) {
+      if (!$window.FS) {
+        console.log('full story not setup');
+        return;
+      }
+      
+      // Identify FullStory user
+      $window.FS.identify(user._id, {
+        displayName: user.displayName,
+        email: user.email,
+        // http://help.fullstory.com/develop-js/setuservars.
+        reviewsWritten_int: user.reviews.length,
+      });
+    }
+
     $scope.signup = function (isValid) {
       $scope.error = null;
 
@@ -34,6 +49,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       $http.post('/api/auth/signup', $scope.credentials).then(function (response) {
         // If successful we assign the response to the global user model
         $scope.authentication.user = response.data;
+
+        // set user for full story
+        identifyFullStoryUser($scope.authentication.user);
 
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
@@ -54,6 +72,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       $http.post('/api/auth/signin', $scope.credentials).then(function (response) {
         // If successful we assign the response to the global user model
         $scope.authentication.user = response.data;
+
+        // set user for full story
+        identifyFullStoryUser($scope.authentication.user);
 
         // User should be notified if they have not submitted a review yet
         if($scope.authentication.user.reviews.length === 0) {
