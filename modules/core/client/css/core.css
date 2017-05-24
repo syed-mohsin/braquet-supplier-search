@@ -219,6 +219,7 @@ input[type="checkbox"], input[type="radio"] {
     color: white;
     background: #222;
     border:none;
+    position: relative;
 }
 .menu .btn-primary {
     float: left;
@@ -240,7 +241,6 @@ button.cancel {
 .submit {
     margin-top: 10px;
 }
-
 form .btn-primary, form .btn-default {
     width: 100%;
     margin-top: 5px;
@@ -258,12 +258,14 @@ form .btn-primary, form .btn-default {
     font-size: 0;
 /*    cursor: pointer;*/
 }
-
+.apply-filter {
+    top: 10px;
+    left: 15px;
+}
 a.clear-filter {
     color: #337ab7;
     font-weight: 500;
 }
-
 section.content {
     position: relative;
     top: 50px;
