@@ -139,6 +139,7 @@ exports.getFilters = function(req, res) {
     PanelModel.distinct('crystallineType').exec(),
     PanelModel.distinct('frameColor').exec(),
     PanelModel.distinct('numberOfCells').exec(),
+    PanelModel.distinct('manufacturingLocations').exec()
   ];
 
   Promise.all(promises)
@@ -147,6 +148,7 @@ exports.getFilters = function(req, res) {
     filters.crystallineTypes = results[1];
     filters.frameColors = results[2];
     filters.numberOfCells = results[3];
+    filters.manufacturingLocations = results[4];
 
     res.json(filters);
   })

@@ -15,6 +15,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.query.crys = $stateParams.crys;
     $scope.query.color = $stateParams.color;
     $scope.query.cells = $stateParams.cells;
+    $scope.query.locs = $stateParams.locs;
     $scope.query.page = $stateParams.page;
     $stateParams.quantity = $stateParams.quantity ? $stateParams.quantity : '0kW-100kW';
     $scope.query.quantity = $stateParams.quantity;
@@ -26,11 +27,31 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
+    $scope.showBrandIfMatchingLocation = function(brand, organization) {
+      var matchingPanels = organization.panel_models.filter(function(panel) {
+        return panel.manufacturer === brand;
+      });
+
+      var isValidBrandByLocation = matchingPanels.some(function(panel) {
+        return panel.manufacturingLocations.some(function(location) {
+          return $scope.query.locs.indexOf(location) !== -1;
+        });
+      });
+
+      return isValidBrandByLocation;
+    };
+
+    $scope.showBrand = function(brand, organization) {
+      return (!$scope.query.man || $scope.query.man.indexOf(brand) !== -1) &&
+             (!$scope.query.locs || $scope.showBrandIfMatchingLocation(brand, organization));
+    };
+
     $scope.showModule = function(organization, type) {
       if ((!$scope.query.crys &&
            organization.panel_crystalline_types.indexOf(type) !== -1) ||
           (organization.panel_crystalline_types.indexOf(type) !== -1 &&
            $scope.query.crys.indexOf(type) !== -1)) {
+
         return true;
       }
 
@@ -87,6 +108,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       var crys = '';
       var color = '';
       var cells = '';
+      var locs = '';
 
       // // find all checked boxes for wattage
       // for (var key in $scope.wattCheckboxes) {
@@ -123,11 +145,19 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         }
       }
 
+      // find all checked manufacturing locations
+      for (key in $scope.manufacturingLocationsCheckboxes) {
+        if ($scope.manufacturingLocationsCheckboxes[key]) {
+          locs += key + '|';
+        }
+      }
+
       $scope.query.man = man;
       $scope.query.pow = pow;
       $scope.query.crys = crys;
       $scope.query.color = color;
       $scope.query.cells = cells;
+      $scope.query.locs = locs;
       $scope.query.quantity = $scope.quantity;
       $scope.query.isman = $scope.isman;
       $scope.query.isreseller = $scope.isreseller;
@@ -165,6 +195,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
             $scope.wattCheckboxes[key] = false;
           }
           break;
+        case 'manufacturingLocations':
+          for (key in $scope.manufacturingLocationsCheckboxes) {
+            $scope.manufacturingLocationsCheckboxes[key] = false;
+          }
+          break;
         case 'brand':
           // clear all checked organizations
           for (key in $scope.orgCheckboxes) {
@@ -174,6 +209,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         default:
           return;
       }
+
+      // now update the filter
       $scope.updateFilter();
     };
 
@@ -213,70 +250,87 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.buildFilterCheckboxes = function() {
       // get panel model filters
       $http.get('/api/panelmodels-filters')
-        .then(function(resp) {
-          var filters = resp.data;
-          $scope.manufacturers = filters.manufacturers;
-          $scope.crystallineTypes = filters.crystallineTypes;
-          $scope.frameColors = filters.frameColors;
-          $scope.numberOfCells = filters.numberOfCells;
+      .then(function(resp) {
+        var filters = resp.data;
+        $scope.manufacturers = filters.manufacturers;
+        $scope.crystallineTypes = filters.crystallineTypes;
+        $scope.frameColors = filters.frameColors;
+        $scope.numberOfCells = filters.numberOfCells;
+        $scope.manufacturingLocations = filters.manufacturingLocations;
 
-          $scope.orgCheckboxes = {};
-          var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
-          $scope.manufacturers.sort(function(a,b) {
-            if (a.toLowerCase() < b.toLowerCase()) return -1;
-            if (a.toLowerCase() > b.toLowerCase()) return 1;
-            return 0;
-          });
-          $scope.manufacturers.forEach(function(manufacturer) {
-            $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
-          });
-
-          $scope.crysCheckboxes = {};
-          queryCheckedBoxes = $stateParams.crys ? $stateParams.crys.split('|') : [];
-          $scope.crystallineTypes.forEach(function(crystallineType) {
-            $scope.crysCheckboxes[crystallineType] = queryCheckedBoxes.indexOf(crystallineType) !== -1 ? true : false;
-          });
-
-          $scope.fColorCheckboxes = {};
-          queryCheckedBoxes = $stateParams.color ? $stateParams.color.split('|') : [];
-          $scope.frameColors.forEach(function(frameColor) {
-            $scope.fColorCheckboxes[frameColor] = queryCheckedBoxes.indexOf(frameColor) !== -1 ? true : false;
-          });
-
-          $scope.numCellsCheckboxes = {};
-          queryCheckedBoxes = $stateParams.cells ? $stateParams.cells.split('|').filter(function(c) { return c.length && !isNaN(c); }) : [];
-          $scope.numberOfCells.sort(function(a,b) { return a-b; });
-          $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1); // remove one null item
-
-          // only accept 3 number of cells
-          var accepted = [60, 72, 96];
-          $scope.numberOfCells = $scope.numberOfCells.filter(function(numCells) { return accepted.indexOf(numCells) !== -1; });
-
-          $scope.numberOfCells.forEach(function(numCells) {
-            if (!numCells) return;
-            $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
-          });
-
-          // add checkbox values for is man or reseller
-          $scope.isman = $stateParams.isman === 'true' ? true : false;
-          $scope.isreseller = $stateParams.isreseller === 'true' ? true : false;
-
-          // increment resolved resources
-          $scope.resolvedResources++;
+        $scope.orgCheckboxes = {};
+        var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
+        $scope.manufacturers.sort(function(a,b) {
+          if (a.toLowerCase() < b.toLowerCase()) return -1;
+          if (a.toLowerCase() > b.toLowerCase()) return 1;
+          return 0;
         });
+        $scope.manufacturers.forEach(function(manufacturer) {
+          $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
+        });
+
+        $scope.crysCheckboxes = {};
+        queryCheckedBoxes = $stateParams.crys ? $stateParams.crys.split('|') : [];
+        $scope.crystallineTypes.forEach(function(crystallineType) {
+          $scope.crysCheckboxes[crystallineType] = queryCheckedBoxes.indexOf(crystallineType) !== -1 ? true : false;
+        });
+
+        $scope.fColorCheckboxes = {};
+        queryCheckedBoxes = $stateParams.color ? $stateParams.color.split('|') : [];
+        $scope.frameColors.forEach(function(frameColor) {
+          $scope.fColorCheckboxes[frameColor] = queryCheckedBoxes.indexOf(frameColor) !== -1 ? true : false;
+        });
+
+        // build checkboxes for number of cells
+        $scope.numCellsCheckboxes = {};
+        queryCheckedBoxes = $stateParams.cells ? $stateParams.cells.split('|').filter(function(c) { return c.length && !isNaN(c); }) : [];
+        $scope.numberOfCells.sort(function(a,b) { return a-b; });
+        $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1); // remove one null item
+
+        // only accept 3 number of cells
+        var accepted = [60, 72, 96];
+        $scope.numberOfCells = $scope.numberOfCells.filter(function(numCells) { return accepted.indexOf(numCells) !== -1; });
+
+        $scope.numberOfCells.forEach(function(numCells) {
+          if (!numCells) return;
+          $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
+        });
+
+        // add checkbox values for is man or reseller
+        $scope.isman = $stateParams.isman === 'true' ? true : false;
+        $scope.isreseller = $stateParams.isreseller === 'true' ? true : false;
+
+        // add manufacturing location crysCheckboxes
+        $scope.manufacturingLocationsCheckboxes = {};
+        queryCheckedBoxes = $stateParams.locs ? $stateParams.locs.split('|') : [];
+        $scope.manufacturingLocations = $scope.manufacturingLocations.filter(function(l) { return l.length; });
+        $scope.manufacturingLocations.sort(function(a,b) {
+          if (a.toLowerCase() < b.toLowerCase()) return -1;
+          if (a.toLowerCase() > b.toLowerCase()) return 1;
+          return 0;
+        });
+
+        $scope.manufacturingLocations.forEach(function(manufacturingLocation) {
+          if (!manufacturingLocation) return;
+          $scope.manufacturingLocationsCheckboxes[manufacturingLocation] = queryCheckedBoxes.indexOf(manufacturingLocation) !== -1 ? true : false;
+        });
+
+        // increment resolved resources
+        $scope.resolvedResources++;
+      });
 
       // get pricereview filters
       $http.get('/api/pricereviews-filters')
-        .then(function(resp) {
-          var filters = resp.data;
-          $scope.quantities = filters.quantities.sort(function(a,b) {
-            if (a.toLowerCase() < b.toLowerCase()) return -1;
-            if (a.toLowerCase() > b.toLowerCase()) return 1;
-            return 0;
-          });
-
-          $scope.resolvedResources++;
+      .then(function(resp) {
+        var filters = resp.data;
+        $scope.quantities = filters.quantities.sort(function(a,b) {
+          if (a.toLowerCase() < b.toLowerCase()) return -1;
+          if (a.toLowerCase() > b.toLowerCase()) return 1;
+          return 0;
         });
+
+        $scope.resolvedResources++;
+      });
     };
 
     $scope.buildPager = function (count) {

@@ -34,6 +34,15 @@ exports.cachePanelFields = function(organization, panelModels) {
     if (organization.panel_number_of_cells.indexOf(panel.numberOfCells) === -1) {
       organization.panel_number_of_cells.push(panel.numberOfCells);
     }
+
+    // iterate through all locations in locations array on panel
+    organization.panel_manufacturing_locations = panel.manufacturingLocations.reduce(function(arr, loc) {
+      if (arr.indexOf(loc) === -1) {
+        arr.push(loc);
+      }
+
+      return arr;
+    }, organization.panel_manufacturing_locations);
   });
 
   return organization;
@@ -80,6 +89,12 @@ exports.processQuery = function(query) {
   if (query.cells) {
     var cellsCondition = query.cells.split('|').filter(function(m) { return m.length !== 0; });
     organizationQueryParams.panel_number_of_cells = { '$in' :  cellsCondition };
+  }
+
+  // build query for manufacturing locations
+  if (query.locs) {
+    var locsCondition = query.locs.split('|').filter(function(l) { return l.length !== 0; });
+    organizationQueryParams.panel_manufacturing_locations = { '$in': locsCondition };
   }
 
   // build query for wattage filter
