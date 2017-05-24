@@ -258,6 +258,11 @@ form .btn-primary, form .btn-default {
     font-size: 0;
 /*    cursor: pointer;*/
 }
+.mobile-filter {
+    width: 100%;
+    float: left;
+    margin: 5px 0;
+}
 .filter {
     margin: 10px 0;
     padding-left: 0;

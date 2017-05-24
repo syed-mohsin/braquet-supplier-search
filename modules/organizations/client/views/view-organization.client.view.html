@@ -104,7 +104,8 @@
             <div class="box no-border">
                 <div class="content no-wrap">
                     <div class="name">
-                        <div class="col-sm-4" ng-show="!organization.isManufacturer">
+                    <div class="mobile-filter">
+                        <div class="col-sm-4 filter" ng-show="!organization.isManufacturer">
                           <md-autocomplete
                             name="manufacturer"
                             ng-model="manufacturer"
@@ -142,12 +143,12 @@
                             <option value="all">All</option>
                           </select>
                         </div>
-                        <div class="col-sm-4 btn-primary apply-filter">
-                            <a ng-click="applyFilters()">
+                    </div>
+                    <div class="mobile-filter">
+                            <a class="col-sm-4 btn-primary apply-filter" ng-click="applyFilters()">
                                 <span>Apply Filters</span>
                             </a>
-                        </div>
-                        
+                    </div>
                         <div class="sort-section">
                             <span class="number-results" ng-bind="showNumberOfResultsOnPage()"></span>
                             <div class="col-sm-4 pull-right sort-result">
