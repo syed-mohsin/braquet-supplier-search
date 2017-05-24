@@ -95,14 +95,14 @@ a:hover {
     border-color: lightgrey;
     border-width: 1px;
 }
-/*form {
-    background: white;
+form {
+    background: #fff;
     padding: 40px 50px 40px 50px;
     min-width: 268px;
     max-width: 450px;
     margin: 20px auto;
     text-align: center;
-}*/
+}
 
 form h2, .form h2 {
     margin: 30px auto;
@@ -184,6 +184,7 @@ form label, .form label {
     max-width: initial;
 }
 .form-group {
+    margin-top: 10px;
     text-align: left;
     margin-bottom: 0;
 }

@@ -49,6 +49,11 @@ button.linked-in, .btn-primary.linked-in:hover {
     min-width: 268px;
     max-width: 450px;
     text-align: center;
+    margin-bottom: 10px;
+}
+.signin form {
+  padding: 0;
+  min-width: initial;
 }
 .signin .btn-primary, .signin .btn-default {
     width: 100%;
