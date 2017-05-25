@@ -30,11 +30,19 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // get list of organization names for search
     $http.get('/api/organizations/catalog-name-search')
     .then(function(res) {
-      console.log(res.data.length);
       // filter orgs by either man or reseller
       $scope.organizationNames = res.data.filter(function(org) {
         return org.panel_models.length > 0;
       });
+
+      // find matching org if exists
+      if ($scope.query.q) {
+        $scope.orgSearch($scope.query.q).forEach(function(org) {
+          if (org.companyName === $scope.query.q) {
+            $scope.foundOrganization = org;
+          }
+        });
+      }
     })
     .catch(function(err) {
       console.log('error fetching organizations', err);
@@ -45,7 +53,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $: searchOrganizationText
       });
     };
-    
+
     $scope.showBrandIfMatchingLocation = function(brand, organization) {
       var matchingPanels = organization.panel_models.filter(function(panel) {
         return panel.manufacturer === brand;
@@ -370,7 +378,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
     $scope.searchSubmit = function(foundOrganization) {
       if (foundOrganization) {
-        $scope.query.q = $scope.foundOrganization.companyName;
+        $scope.query.q = foundOrganization.companyName;
         $scope.query.page = 1;
         $state.go('catalog', $scope.query);
       }
