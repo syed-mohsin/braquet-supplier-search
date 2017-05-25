@@ -70,19 +70,19 @@
             </div>
 
             <ul class="nav nav-tabs">
-              <li ng-class="{ active: shouldShowPrices }"><a ng-click="showPrices()">{{organization.priceReviews.length}} Quotes</a></li>
-              <li ng-class="{ active: shouldShowReviews }"><a ng-click="showReviews()">{{organization.reviews.length}} Reviews</a></li>
-              <li ng-class="{ active: shouldShowProducts }"><a ng-click="showProducts()">{{organization.panel_models.length}} Products</a></li>
+              <li ng-class="{ active: shouldShowType('prices') }"><a ng-click="changeTab('prices')">{{organization.priceReviews.length}} Quotes</a></li>
+              <li ng-class="{ active: shouldShowType('reviews') }"><a ng-click="changeTab('reviews')">{{organization.reviews.length}} Reviews</a></li>
+              <li ng-class="{ active: shouldShowType('products') }"><a ng-click="changeTab('products')">{{organization.panel_models.length}} Products</a></li>
             </ul>
         </div>
-        <div class="row" ng-show="shouldShowReviews">
+        <div class="row" ng-show="shouldShowType('reviews')">
             <div class="box no-border reviews">
                 <div class="content no-wrap">
                     <div class="sub-title name">
-                        <span ng-bind="organization.reviews.length"></span> <span> Reviews</span>
+                      <span ng-bind="showNumberOfResultsOnPage()"></span>
                     </div>
                     <div class="list-group">
-                        <div class="list-group-item col-sm-12" ng-repeat="review in organization.reviews">
+                        <div class="list-group-item col-sm-12" ng-repeat="review in pageSettings.items">
                             <img ng-src="{{organization.logoImageUrl}}" class="profile">
                             <div class="detail no-wrap">
                                 <a class="project-title">
@@ -100,14 +100,69 @@
                 </div>
             </div>
         </div>
-        <div class="row" ng-show="shouldShowPrices">
+        <div class="row" ng-show="shouldShowType('prices')">
             <div class="box no-border">
                 <div class="content no-wrap">
-                    <div class="sub-title name">
-                        <span ng-bind="organization.price_reviews_length"></span> <span> Quotes</span>
+                    <div class="name">
+                    <div class="mobile-filter">
+                        <div class="col-sm-4 filter" ng-show="!organization.isManufacturer">
+                          <md-autocomplete
+                            name="manufacturer"
+                            ng-model="manufacturer"
+                            md-selected-item="manufacturer"
+                            md-search-text="searchManufacturerText"
+                            md-items="man in search(searchManufacturerText)"
+                            md-item-text="man"
+                            md-min-length="0"
+                            placeholder="Please select a brand">
+                            <md-item-template>
+                              <span md-highlight-text="searchManufacturerText" md-highlight-flags="^i">{{man}}</span>
+                            </md-item-template>
+                            <md-not-found>
+                              No brands matching "{{searchManufacturerText}}" were found.
+                            </md-not-found>
+                          </md-autocomplete>
+                        </div>
+
+                        <div class="col-sm-4 filter">
+                          <select name="panelType" ng-model="panelType" id="panelType" class="form-control">
+                            <option value="">Type of Module</option>
+                            <option ng-show="organization.panel_crystalline_types.indexOf('Mono') !== -1" value="Mono">Monocrystalline</option>
+                            <option ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1" value="Poly">Polycrystalline</option>
+                            <option ng-show="organization.panel_crystalline_types.indexOf('CIGS') !== -1" value="CIGS">CIGS</option>
+                            <option ng-show="organization.panel_crystalline_types.indexOf('CdTe') !== -1" value="CdTe">CdTe</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-4 filter">
+                          <select name="quantity" ng-model="quantity" id="quantity" class="form-control">
+                            <option value="">Project Size</option>
+                            <option value="0kW-100kW">0kW-100kW</option>
+                            <option value="101kW-500kW">101kW-500kW</option>
+                            <option value="501kW-1MW">501kW-1MW</option>
+                            <option value=">1MW">>1MW</option>
+                            <option value="all">All</option>
+                          </select>
+                        </div>
                     </div>
+                    <div class="mobile-filter">
+                            <a class="btn-primary apply-filter" ng-click="applyFilters()">
+                                <span>Apply Filters</span>
+                            </a>
+                    </div>
+                        <div class="sort-section">
+                            <span class="number-results" ng-bind="showNumberOfResultsOnPage()"></span>
+                            <div class="col-sm-4 pull-right sort-result">
+                                <select class="form-control sort" style="float:right;" name="sortType" ng-model="sortType" id="sortType" ng-change="sortBy(sortType)">
+                                    <option value="">Sort By</option>
+                                    <option value="quoteDate">Most Recent</option>
+                                    <option value="priceLow">Price Low to High</option>
+                                    <option value="priceHigh">Price High to Low</option>
+                                    <option value="stcPower">Wattage</option>
+                                </select>
+                            </div>
+                        </div>
                     <div class="list-group">
-                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in organization.priceReviews">
+                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in pageSettings.items">
 
                             <div class="detail no-wrap">
 
@@ -153,25 +208,24 @@
                                             </table>
                                         </div>
                                     </section>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
         </div>
-        <div class="row" ng-show="shouldShowProducts">
+        <div class="row" ng-show="shouldShowType('products')">
             <div class="box title-content no-border product">
                 <div class="content no-wrap">
                     <div class="sub-title name">
-                        <span>Products</span>
+                      <span ng-bind="showNumberOfResultsOnPage()"></span>
                     </div>
                     <div class="list-group">
-                        <div class="list-group-item col-sm-2" ng-repeat="panel_model in organization.panel_models">
+                        <div class="list-group-item col-sm-2" ng-repeat="panel_model in pageSettings.items">
                             <img src="/modules/core/client/img/asset/generic-module.jpg">
                             <div class="detail">
                                 <a class="project-title">
-                                    <!-- ng-show="authentication.user._id == project.user._id" -->
                                     <h4 class="list-group-item-heading" ng-bind="panel_model.model"></h4><small class="manufacturer"><span>by <span ng-bind="panel_model.manufacturer"></span></span></small>
                                 </a>
                                 <div class="specifications sub-text">
@@ -179,13 +233,14 @@
                                     Module Efficiency (%): <span ng-bind="panel_model.stcModuleEfficiency"></span><br>
                                     Made in: <span ng-bind="panel_model.manufacturingLocations"></span><br>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+            <pagination ng-show="pageSettings.totalCount" boundary-links="true" max-size="8" items-per-page="pageSettings.itemsPerPage" total-items="pageSettings.totalCount" ng-model="pageSettings.currentPage" ng-change="pageChanged()"></pagination>
         </div>
     </div>
 </section>

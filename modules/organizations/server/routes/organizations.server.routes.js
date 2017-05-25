@@ -42,7 +42,7 @@ module.exports = function (app) {
 
   // view single organization for public access by url name
   app.route('/api/organizations/:urlName/name-public')
-    .get(organizations.readPublicByUrlName);
+    .get(organizations.organizationByUrlName);
 
   // Single organization routes (all require user-authentication)
   app.route('/api/organizations/:organizationId').all(organizationsPolicy.isAllowed)
