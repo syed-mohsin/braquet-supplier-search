@@ -38,7 +38,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       // find matching org if exists
       if ($scope.query.q) {
         $scope.orgSearch($scope.query.q).forEach(function(org) {
-          if (org.companyName === $scope.query.q) {
+          if (org.companyName.indexOf($scope.query.q) !== -1) {
             $scope.foundOrganization = org;
           }
         });
