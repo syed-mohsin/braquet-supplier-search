@@ -1,40 +1,115 @@
 'use strict';
 
 // Organizations controller
-
-angular.module('organizations').controller('PublicViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$mdDialog', 'Authentication', 'Socket',
-  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $mdDialog, Authentication, Socket) {
+angular.module('organizations').controller('PublicViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$mdDialog', 'Authentication', 'Socket', 'Pagination',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $mdDialog, Authentication, Socket, Pagination) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
+
+    // set filter params if exists
+    $scope.manufacturer = $stateParams.manufacturer;
+    $scope.panelType = $stateParams.panelType;
 
     $scope.maxViewsExceeded = function() {
       var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
       return count < 1 || count > 3;
     };
 
+    $scope.showView = function(viewType, itemsArray, page) {
+      $scope.viewType = viewType;
+
+      $scope.pageSettings = Pagination.buildPage(itemsArray, page);
+    };
+
+    $scope.shouldShowType = function(viewType) {
+      return $scope.viewType === viewType;
+    };
+
+    $scope.changeTab = function(viewType) {
+      $stateParams.view = viewType;
+      $stateParams.page = undefined;
+
+      $state.go('organizations.view-public', $stateParams);
+    };
+
     $scope.initializePageNavBar = function() {
-      // tab viewing booleans
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+      var page = $stateParams.page;
+
+      var viewTypes = {
+        'reviews': $scope.organization.reviews,
+        'prices': $scope.organization.priceReviews,
+        'products': $scope.organization.panel_models
+      };
+
+      // by default or by invalid param, set default to show Prices
+      if (!($stateParams.view in viewTypes)) {
+        $scope.showView('prices', $scope.organization.priceReviews, page);
+        return;
+      }
+
+      // find valid view
+      Object.keys(viewTypes).forEach(function(viewType) {
+        if (viewType === $stateParams.view) {
+          $scope.showView(viewType, viewTypes[viewType], page);
+        }
+      });
     };
 
-    $scope.showReviews = function() {
-      $scope. shouldShowReviews = true;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = false;
+    $scope.pageChanged = function() {
+      $stateParams.page = $scope.pageSettings.currentPage;
+      $stateParams.view = null;
+
+      var viewTypes = ['reviews', 'prices', 'products'];
+
+      // find valid view
+      viewTypes.forEach(function(viewType) {
+        if (viewType === $scope.viewType) {
+          $stateParams.view = $scope.viewType;
+        }
+      });
+
+      if (!$stateParams.view) $stateParams.view = 'prices';
+
+      $state.go('organizations.view-public', $stateParams);
     };
 
-    $scope.showPrices = function() {
-      $scope. shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+    $scope.sortBy = function(sortType) {
+      $stateParams.ascending = sortType === $stateParams.sortType ? !$stateParams.ascending : false;
+      $stateParams.sortType = sortType;
+      $stateParams.page = 1;
+
+      $state.go('organizations.view-public', $stateParams);
     };
 
-    $scope.showProducts = function() {
-      $scope. shouldShowReviews = false;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = true;
+    $scope.showNumberOfResultsOnPage = function() {
+      if (!$scope.pageSettings) return;
+
+      var page = $scope.pageSettings.currentPage;
+      var itemsPerPage = $scope.pageSettings.itemsPerPage;
+      var totalCount = $scope.pageSettings.totalCount;
+
+      var upperLimit = (page * itemsPerPage) < totalCount ? (page * itemsPerPage) : totalCount;
+      var lowerLimit = (upperLimit - itemsPerPage + 1) > 0 ? (upperLimit - itemsPerPage + 1) : 1;
+      if (totalCount === 0) {
+        lowerLimit = 0;
+      }
+
+      return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
+    };
+
+    $scope.search = function(searchManufacturerText) {
+      return $filter('filter')($scope.organization.manufacturers, {
+        $: searchManufacturerText
+      });
+    };
+
+
+    $scope.applyFilters = function() {
+      $stateParams.page = 1;
+      $stateParams.manufacturer = $scope.manufacturer;
+      $stateParams.panelType = $scope.panelType;
+
+      $state.go('organizations.view-public', $stateParams);
     };
 
     function DialogController($scope, $state, $mdDialog) {
@@ -59,13 +134,11 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       });
     };
 
-    // initialize tabs
-    $scope.initializePageNavBar();
-
     $scope.findOne = function() {
       if (Authentication.user) {
-        $state.go('organizations.view', { name: $stateParams.name });
+        $state.go('organizations.view', $stateParams);
       } else {
+
         // track supplier views
         if ($window.localStorage &&
           (!$window.localStorage.getItem('c'))) {
@@ -83,9 +156,12 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
         console.log('localStorage', $window.localStorage.getItem('c'));
 
+        // merge url queries with view tracker
+        $stateParams.c = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
+
         $http({
           url: '/api/organizations/' + $stateParams.name + '/name-public',
-          params: { c: $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1 }
+          params: $stateParams
         })
         .then(function(resp) {
           $scope.organization = resp.data;
@@ -95,6 +171,9 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
           var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
           $rootScope.pageTitle = $scope.organization.companyName + ' | Braquet';
           $rootScope.description = defaultDescr + $scope.organization.about;
+
+          // initialize tabs
+          $scope.initializePageNavBar();
 
           // show modal
           if ($scope.maxViewsExceeded()) {

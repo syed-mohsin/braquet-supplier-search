@@ -1,11 +1,17 @@
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
-  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
+angular.module('organizations').controller('ViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics', 'Pagination',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics, Pagination) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.resolvedResources = 0;
     $scope.expectedResources = 3;
+
+    // set filter params if exists
+    $scope.manufacturer = $stateParams.manufacturer;
+    $scope.panelType = $stateParams.panelType;
+    $scope.quantity = $stateParams.quantity;
+    $scope.sortType = $stateParams.sortType;
 
     // show following conditional
     $scope.displayUserIsFollowing = function(organization) {
@@ -17,33 +23,106 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       );
     };
 
+    $scope.showView = function(viewType, itemsArray, page) {
+      $scope.viewType = viewType;
+
+      $scope.pageSettings = Pagination.buildPage(itemsArray, page);
+      console.log($scope.pageSettings.items);
+    };
+
+    $scope.shouldShowType = function(viewType) {
+      return $scope.viewType === viewType;
+    };
+
+    $scope.changeTab = function(viewType) {
+      $stateParams.view = viewType;
+      $stateParams.page = undefined;
+
+      $state.go('organizations.view', $stateParams);
+    };
+
     $scope.initializePageNavBar = function() {
-      // tab viewing booleans
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+      var page = $stateParams.page;
+
+      var viewTypes = {
+        'reviews': $scope.organization.reviews,
+        'prices': $scope.organization.priceReviews,
+        'products': $scope.organization.panel_models
+      };
+
+      // by default or by invalid param, set default to show Prices
+      if (!($stateParams.view in viewTypes)) {
+        $scope.showView('prices', $scope.organization.priceReviews, page);
+        return;
+      }
+
+      // find valid view
+      Object.keys(viewTypes).forEach(function(viewType) {
+        if (viewType === $stateParams.view) {
+          $scope.showView(viewType, viewTypes[viewType], page);
+        }
+      });
     };
 
-    $scope.showReviews = function() {
-      $scope.shouldShowReviews = true;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = false;
+    $scope.pageChanged = function() {
+      $stateParams.page = $scope.pageSettings.currentPage;
+      $stateParams.view = null;
+
+      var viewTypes = ['reviews', 'prices', 'products'];
+
+      // find valid view
+      viewTypes.forEach(function(viewType) {
+        if (viewType === $scope.viewType) {
+          $stateParams.view = $scope.viewType;
+        }
+      });
+
+      if (!$stateParams.view) $stateParams.view = 'prices';
+
+      $state.go('organizations.view', $stateParams);
     };
 
-    $scope.showPrices = function() {
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+    $scope.sortBy = function(sortType) {
+      $stateParams.sortType = sortType;
+      $stateParams.page = 1;
+
+      $state.go('organizations.view', $stateParams);
     };
 
-    $scope.showProducts = function() {
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = true;
+    $scope.showNumberOfResultsOnPage = function() {
+      if (!$scope.pageSettings) return;
+
+      var page = $scope.pageSettings.currentPage;
+      var itemsOnCurrentPage = $scope.pageSettings.items.length;
+      var itemsPerPage = $scope.pageSettings.itemsPerPage;
+      var totalCount = $scope.pageSettings.totalCount;
+
+      var lowerLimit = ((page-1) * (itemsPerPage) + 1);
+      var upperLimit = lowerLimit + itemsOnCurrentPage + 1;
+
+      // edge case with no results
+      if (totalCount === 0) {
+        lowerLimit = 0;
+        upperLimit = 0;
+      }
+
+      return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
     };
 
-    // initialize tabs
-    $scope.initializePageNavBar();
+    $scope.search = function(searchManufacturerText) {
+      return $filter('filter')($scope.organization.manufacturers, {
+        $: searchManufacturerText
+      });
+    };
+
+    $scope.applyFilters = function() {
+      $stateParams.page = 1;
+      $stateParams.manufacturer = $scope.manufacturer;
+      $stateParams.panelType = $scope.panelType;
+      $stateParams.quantity = $scope.quantity;
+
+      $state.go('organizations.view', $stateParams);
+    };
 
     $scope.getUserEmailNotification = function() {
       if (!Authentication.user) {
@@ -87,7 +166,10 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       $scope.resolvedResources = 0;
 
       // fetch organization by name
-      $http.get('/api/organizations/' + $stateParams.name + '/name')
+      $http({
+        url: '/api/organizations/' + $stateParams.name + '/name',
+        params: $stateParams
+      })
       .then(function(resp) {
         // store returned organization
         var organization = resp.data;
@@ -95,11 +177,15 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
         $scope.resolvedResources++;
         $scope.buildUploader(organization._id);
 
+        // initialize tabs ang pagination
+        $scope.initializePageNavBar();
+
         // set page title+description for SEO
         var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
         $rootScope.pageTitle = $scope.organization.companyName + ' | Braquet';
         $rootScope.description = defaultDescr + $scope.organization.about;
 
+        // determine if user has previously reviewed organization
         return $http({
           url: '/api/reviews/is-reviewed',
           params: { organizationId: organization._id }
@@ -128,7 +214,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       // change uploader url
       $scope.uploader.url = 'api/organizations/logo/' + organizationId;
 
-          // Set file uploader image filter
+      // Set file uploader image filter
       $scope.uploader.filters.push({
         name: 'imageFilter',
         fn: function (item, options) {

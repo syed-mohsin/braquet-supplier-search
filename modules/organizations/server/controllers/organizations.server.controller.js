@@ -413,34 +413,6 @@ exports.readPublic = function(req, res) {
 };
 
 /**
- * Public read view of organization by url name
- */
-exports.readPublicByUrlName = function(req, res) {
-  console.log('count', req.query.c);
-
-  var organizationQuery = Organization.findOne({ urlName: req.params.urlName })
-    .populate('panel_models');
-
-  if (req.query.c && !isNaN(parseInt(req.query.c)) &&
-      parseInt(req.query.c) > 0 && parseInt(req.query.c) < 3) {
-    organizationQuery
-      .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
-      .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } });
-  }
-
-  organizationQuery
-    .exec(function (err, organization) {
-      if (err) {
-        return res.status(400).json(err);
-      } else if (!organization) {
-        return res.status(400).json(new Error('Failed to load organization ' + req.params.urlName));
-      }
-
-      res.json(organization);
-    });
-};
-
-/**
  * Organization middleware
  */
 exports.organizationByID = function (req, res, next, id) {
@@ -472,13 +444,73 @@ exports.organizationByID = function (req, res, next, id) {
  * Organization middleware
  */
 exports.organizationByUrlName = function (req, res) {
-  Organization.findOne({ urlName: req.params.urlName })
-    .populate('panel_models')
-    .populate('users', 'displayName organization connections email firstName lastName')
-    .populate('possibleUsers', 'displayName organization connections email firstName lastName')
-    .populate('admin', 'displayName')
-    .populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } })
-    .populate({ path: 'priceReviews', match: { verified: true }, options: { sort: { quoteDate: -1 } } })
+  var query = Organization.findOne({ urlName: req.params.urlName });
+
+  // page tracker for public view
+  // if condition is met, return bare minimum results required by public view
+  if (req.query.c && !isNaN(parseInt(req.query.c)) &&
+      (parseInt(req.query.c) < 1 || parseInt(req.query.c) > 3) &&
+      req.route.path === '/api/organizations/:urlName/name-public') {
+
+    query
+      .populate('panel_models')
+      .exec(function (err, organization) {
+        if (err) {
+          return res.status(400).json(err);
+        } else if (!organization) {
+          return res.status(400).json(new Error('Failed to load organization ' + req.params.urlName));
+        }
+
+        res.json(organization);
+      });
+
+    return;
+  }
+
+  if (req.query.view === 'products') {
+    query.populate('panel_models');
+  } else if (req.query.view === 'reviews') {
+    query.populate({ path: 'reviews', match: { verified: true }, options: { sort: { created: -1 } } });
+  } else {
+    var sortCondition = {};
+    var filterCondition = { verified: true };
+    var typeOptions = ['quoteDate', 'stcPower'];
+
+    if (typeOptions.indexOf(req.query.sortType) !== -1) {
+      sortCondition[req.query.sortType] = -1;
+    } else if (req.query.sortType && req.query.sortType === 'priceLow') {
+      sortCondition.price = 1;
+    } else if (req.query.sortType && req.query.sortType === 'priceHigh') {
+      sortCondition.price = -1;
+    } else {
+      sortCondition.quoteDate = -1;
+      sortCondition.quantity = -1;
+    }
+
+    if (req.query.manufacturer) {
+      filterCondition.manufacturer = req.query.manufacturer;
+    }
+
+    if (req.query.panelType) {
+      filterCondition.panelType = req.query.panelType;
+    }
+
+    if (req.query.quantity && req.query.quantity !== 'all') {
+      filterCondition.quantity = req.query.quantity;
+    }
+
+    query.populate({ path: 'priceReviews', match: filterCondition, options: { sort: sortCondition } });
+  }
+
+  // only add these values for logged in route
+  if (req.route.path === '/api/organizations/:urlName/name') {
+    query
+      .populate('users', 'displayName organization connections email firstName lastName')
+      .populate('possibleUsers', 'displayName organization connections email firstName lastName')
+      .populate('admin', 'displayName');
+  }
+
+  query
     .exec(function (err, organization) {
       if (err) {
         return res.status(400).json(err);
