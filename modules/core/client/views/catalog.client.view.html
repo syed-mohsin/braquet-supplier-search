@@ -77,6 +77,18 @@
                     </label>
                     </li>
                 </div>
+
+                <div class="list-group">
+                    <span class="catalog-label"><small>Manufacturing Locations ></small></span>
+                    <div ng-if="query.locs"><a class="clear-filter" ng-click="clearSectionCheckboxes('manufacturingLocations')">Clear</a></div>
+                    <li ng-repeat="loc in manufacturingLocations">
+                        <label>
+                      <input type="checkbox" ng-model="manufacturingLocationsCheckboxes[loc]" analytics-on="click" analytics-event="Click Manufacturing Location Filter: {{loc}}" ng-change="updateFilter()">
+                      <span><small>{{loc}}</small></span>
+                    </label>
+                    </li>
+                </div>
+
               <!-- <div class="list-group">
                   <span class="catalog-label"><small>Module Wattage ></small></span>
                   <li ng-repeat="range in ranges">
@@ -86,6 +98,7 @@
                     </label>
                   </li>
               </div> -->
+
                 <div class="list-group">
                     <span class="catalog-label"><small>Brand ></small></span>
                     <div ng-if="query.man"><a class="clear-filter" ng-click="clearSectionCheckboxes('brand')">Clear</a></div>
@@ -122,8 +135,8 @@
                                 <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
                             </div>
                         </div>
-                        
-                        
+
+
                         <div class="menu">
                             <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
@@ -182,7 +195,8 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr ng-repeat="brand in organization.manufacturers" ng-show="!query.man || query.man.indexOf(brand) !== -1" class="line-item">
+
+                                <tr ng-repeat="brand in organization.manufacturers" ng-show="showBrand(brand, organization)" class="line-item">
                                     <td ng-show="showModule(organization, 'Poly')">
                                         <span ng-bind="organization.brands[brand] && organization.brands[brand]['Poly'] ? (organization.brands[brand]['Poly'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>

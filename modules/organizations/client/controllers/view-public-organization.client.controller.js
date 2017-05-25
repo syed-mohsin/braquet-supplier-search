@@ -11,7 +11,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     $scope.panelType = $stateParams.panelType;
 
     $scope.maxViewsExceeded = function() {
-      var count = $window.localStorage ? parseInt($window.localStorage.getItem('c')) : 1;
+      var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
       return count < 1 || count > 3;
     };
 
@@ -141,19 +141,23 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
         // track supplier views
         if ($window.localStorage &&
-          (!$window.localStorage.getItem('c') ||
-          isNaN(parseInt($window.localStorage.getItem('c'))))) {
+          (!$window.localStorage.getItem('c'))) {
           // initialize counter
-          $window.localStorage.setItem('c', 1);
+          $window.localStorage.setItem('c', JSON.stringify([]));
         } else if ($window.localStorage && window.localStorage.getItem('c')) {
-          var count = $window.localStorage.getItem('c');
-          $window.localStorage.setItem('c', parseInt(count)+1);
+          var names = JSON.parse($window.localStorage.getItem('c'));
+          var name = $stateParams.name;
+
+          if (names.indexOf(name) === -1) {
+            var newNames = JSON.stringify(names.concat([name]));
+            $window.localStorage.setItem('c', newNames);
+          }
         }
 
-        console.log($window.localStorage.getItem('c'));
+        console.log('localStorage', $window.localStorage.getItem('c'));
 
         // merge url queries with view tracker
-        $stateParams.c = $window.localStorage ? $window.localStorage.getItem('c') : 1;
+        $stateParams.c = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
 
         $http({
           url: '/api/organizations/' + $stateParams.name + '/name-public',
