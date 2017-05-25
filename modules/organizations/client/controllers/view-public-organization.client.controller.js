@@ -76,7 +76,6 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     };
 
     $scope.sortBy = function(sortType) {
-      $stateParams.ascending = sortType === $stateParams.sortType ? !$stateParams.ascending : false;
       $stateParams.sortType = sortType;
       $stateParams.page = 1;
 
@@ -87,13 +86,17 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       if (!$scope.pageSettings) return;
 
       var page = $scope.pageSettings.currentPage;
+      var itemsOnCurrentPage = $scope.pageSettings.items.length;
       var itemsPerPage = $scope.pageSettings.itemsPerPage;
       var totalCount = $scope.pageSettings.totalCount;
 
-      var upperLimit = (page * itemsPerPage) < totalCount ? (page * itemsPerPage) : totalCount;
-      var lowerLimit = (upperLimit - itemsPerPage + 1) > 0 ? (upperLimit - itemsPerPage + 1) : 1;
+      var lowerLimit = ((page-1) * (itemsPerPage) + 1);
+      var upperLimit = lowerLimit - 1 + itemsOnCurrentPage;
+
+      // edge case with no results
       if (totalCount === 0) {
         lowerLimit = 0;
+        upperLimit = 0;
       }
 
       return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
@@ -105,11 +108,11 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       });
     };
 
-
     $scope.applyFilters = function() {
       $stateParams.page = 1;
       $stateParams.manufacturer = $scope.manufacturer;
       $stateParams.panelType = $scope.panelType;
+      $stateParams.quantity = $scope.quantity;
 
       $state.go('organizations.view-public', $stateParams);
     };

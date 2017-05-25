@@ -97,7 +97,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       var totalCount = $scope.pageSettings.totalCount;
 
       var lowerLimit = ((page-1) * (itemsPerPage) + 1);
-      var upperLimit = lowerLimit + itemsOnCurrentPage + 1;
+      var upperLimit = lowerLimit - 1 + itemsOnCurrentPage;
 
       // edge case with no results
       if (totalCount === 0) {
