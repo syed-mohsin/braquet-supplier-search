@@ -9,10 +9,12 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     // set filter params if exists
     $scope.manufacturer = $stateParams.manufacturer;
     $scope.panelType = $stateParams.panelType;
+    $scope.quantity = $stateParams.quantity;
+    $scope.sortType = $stateParams.sortType;
 
     $scope.maxViewsExceeded = function() {
-      var count = $window.localStorage ? parseInt($window.localStorage.getItem('c')) : 1;
-      return count < 1 || count > 3;
+      var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
+      return count < 0 || count > 3;
     };
 
     $scope.showView = function(viewType, itemsArray, page) {
@@ -74,7 +76,6 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     };
 
     $scope.sortBy = function(sortType) {
-      $stateParams.ascending = sortType === $stateParams.sortType ? !$stateParams.ascending : false;
       $stateParams.sortType = sortType;
       $stateParams.page = 1;
 
@@ -85,13 +86,17 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       if (!$scope.pageSettings) return;
 
       var page = $scope.pageSettings.currentPage;
+      var itemsOnCurrentPage = $scope.pageSettings.items.length;
       var itemsPerPage = $scope.pageSettings.itemsPerPage;
       var totalCount = $scope.pageSettings.totalCount;
 
-      var upperLimit = (page * itemsPerPage) < totalCount ? (page * itemsPerPage) : totalCount;
-      var lowerLimit = (upperLimit - itemsPerPage + 1) > 0 ? (upperLimit - itemsPerPage + 1) : 1;
+      var lowerLimit = ((page-1) * (itemsPerPage) + 1);
+      var upperLimit = lowerLimit - 1 + itemsOnCurrentPage;
+
+      // edge case with no results
       if (totalCount === 0) {
         lowerLimit = 0;
+        upperLimit = 0;
       }
 
       return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
@@ -103,11 +108,11 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
       });
     };
 
-
     $scope.applyFilters = function() {
       $stateParams.page = 1;
       $stateParams.manufacturer = $scope.manufacturer;
       $stateParams.panelType = $scope.panelType;
+      $stateParams.quantity = $scope.quantity;
 
       $state.go('organizations.view-public', $stateParams);
     };
@@ -141,19 +146,21 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
         // track supplier views
         if ($window.localStorage &&
-          (!$window.localStorage.getItem('c') ||
-          isNaN(parseInt($window.localStorage.getItem('c'))))) {
+          (!$window.localStorage.getItem('c'))) {
           // initialize counter
-          $window.localStorage.setItem('c', 1);
+          $window.localStorage.setItem('c', JSON.stringify([$stateParams.name]));
         } else if ($window.localStorage && window.localStorage.getItem('c')) {
-          var count = $window.localStorage.getItem('c');
-          $window.localStorage.setItem('c', parseInt(count)+1);
+          var names = JSON.parse($window.localStorage.getItem('c'));
+          var name = $stateParams.name;
+
+          if (names.indexOf(name) === -1) {
+            var newNames = JSON.stringify(names.concat([name]));
+            $window.localStorage.setItem('c', newNames);
+          }
         }
 
-        console.log($window.localStorage.getItem('c'));
-
         // merge url queries with view tracker
-        $stateParams.c = $window.localStorage ? $window.localStorage.getItem('c') : 1;
+        $stateParams.c = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
 
         $http({
           url: '/api/organizations/' + $stateParams.name + '/name-public',

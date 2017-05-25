@@ -72,101 +72,124 @@
           </div>
       </div>
       <div class="row" ng-show="shouldShowType('prices')">
-            <div class="box no-border">
-                <div class="content no-wrap">
-                    <div class="sub-title name" ng-show="!maxViewsExceeded()">
-                        Filters:
-                        <div class="form-group" ng-show="!organization.isManufacturer">
-                          <label for="manufacturer">Brand</label><br>
-                          <md-autocomplete
-                            name="manufacturer"
-                            ng-model="manufacturer"
-                            md-selected-item="manufacturer"
-                            md-search-text="searchManufacturerText"
-                            md-items="man in search(searchManufacturerText)"
-                            md-item-text="man"
-                            md-min-length="0"
-                            placeholder="Please select a brand">
-                            <md-item-template>
-                              <span md-highlight-text="searchManufacturerText" md-highlight-flags="^i">{{man}}</span>
-                            </md-item-template>
-                            <md-not-found>
-                              No brands matching "{{searchManufacturerText}}" were found.
-                            </md-not-found>
-                          </md-autocomplete>
-                        </div>
+          <div class="box no-border">
+              <div class="content no-wrap">
+                  <div class="name">
+                  <div class="mobile-filter">
+                      <div class="col-sm-4 filter">
+                        <md-autocomplete
+                          name="manufacturer"
+                          ng-model="manufacturer"
+                          md-selected-item="manufacturer"
+                          md-search-text="searchManufacturerText"
+                          md-items="man in search(searchManufacturerText)"
+                          md-item-text="man"
+                          md-min-length="0"
+                          placeholder="Please select a brand">
+                          <md-item-template>
+                            <span md-highlight-text="searchManufacturerText" md-highlight-flags="^i">{{man}}</span>
+                          </md-item-template>
+                          <md-not-found>
+                            No brands matching "{{searchManufacturerText}}" were found.
+                          </md-not-found>
+                        </md-autocomplete>
+                      </div>
 
-                        <div class="form-group">
-                          <select name="panelType" ng-model="panelType" id="panelType" class="form-control">
-                            <option value="">Type of Module</option>
-                            <option ng-repeat="pType in organization.panel_crystalline_types" value="{{pType}}">{{ ['Mono', 'Poly'].indexOf(pType) !== -1 ? pType + 'crystalline' : pType }}</option>
+                      <div class="col-sm-4 filter">
+                        <select name="panelType" ng-model="panelType" id="panelType" class="form-control">
+                          <option value="">Type of Module</option>
+                          <option ng-show="organization.panel_crystalline_types.indexOf('Mono') !== -1" value="Mono">Monocrystalline</option>
+                          <option ng-show="organization.panel_crystalline_types.indexOf('Poly') !== -1" value="Poly">Polycrystalline</option>
+                          <option ng-show="organization.panel_crystalline_types.indexOf('CIGS') !== -1" value="CIGS">CIGS</option>
+                          <option ng-show="organization.panel_crystalline_types.indexOf('CdTe') !== -1" value="CdTe">CdTe</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-4 filter">
+                        <select name="quantity" ng-model="quantity" id="quantity" class="form-control">
+                          <option value="">Project Size</option>
+                          <option value="0kW-100kW">0kW-100kW</option>
+                          <option value="101kW-500kW">101kW-500kW</option>
+                          <option value="501kW-1MW">501kW-1MW</option>
+                          <option value=">1MW">>1MW</option>
+                          <option value="all">All</option>
+                        </select>
+                      </div>
+                  </div>
+                  <div class="mobile-filter">
+                          <a class="btn-primary apply-filter" ng-click="applyFilters()">
+                              <span>Apply Filters</span>
+                          </a>
+                  </div>
+                  <div class="sort-section">
+                      <span class="number-results" ng-bind="showNumberOfResultsOnPage()"></span>
+                      <div class="col-sm-4 pull-right sort-result">
+                          <select class="form-control sort" style="float:right;" name="sortType" ng-model="sortType" id="sortType" ng-change="sortBy(sortType)">
+                              <option value="">Sort By</option>
+                              <option value="quoteDate">Most Recent</option>
+                              <option value="priceLow">Price Low to High</option>
+                              <option value="priceHigh">Price High to Low</option>
+                              <option value="stcPower">Wattage</option>
                           </select>
-                        </div>
-                        <div class="form-group">
-                          <a ng-click="applyFilters()"><span>Apply Filters</span></a>
-                        </div>
+                      </div>
+                  </div>
+                  <div class="list-group" ng-show="maxViewsExceeded()">
+                    <a ui-sref="authentication.signup"><span>Please sign up or log in to see all reviews!</span></a>
+                  </div>
+                  <div class="list-group" ng-show="!maxViewsExceeded()">
+                      <div class="list-group-item col-sm-12" ng-repeat="priceReview in pageSettings.items">
 
-                        <span ng-bind="showNumberOfResultsOnPage()"></span>
-                        <span>Sort: <a ng-click="sortBy('quoteDate')">Date</a> | <a ng-click="sortBy('quantity')">Quantity</a></span> | <a ng-click="sortBy('price')">Unit Price</a> | <a ng-click="sortBy('stcPower')">Wattage</a></span>
-                    </div>
+                          <div class="detail no-wrap">
 
-                    <div class="list-group" ng-show="maxViewsExceeded()">
-                      <a ui-sref="authentication.signup"><span>Please sign up or log in to see all quotes!</span></a>
-                    </div>
-                    <div class="list-group" ng-show="!maxViewsExceeded()">
-                        <div class="list-group-item col-sm-12" ng-repeat="priceReview in pageSettings.items">
-                            <div class="detail no-wrap">
-
-                                    <section>
-                                    <img ng-src="{{organization.logoImageUrl}}" class="profile">
-                                            <div class="quote-header no-wrap">
-                                                 <div>
-                                                 <small>
-                                                 <div>
-                                                    <span class="list-group-item-text" ng-bind="priceReview.quoteDate | date:'mediumDate'"></span>
-                                                  </div>
-                                                  <div ng-if="priceReview.includesShipping">
-                                                    Delivered quote to <span class="list-group-item-text" ng-bind="priceReview.shippingLocation"></span>
-                                                  </div>
-                                                  <div ng-if="!priceReview.includesShipping">
-                                                    <span class="list-group-item-text warning">Does not include shipping cost</span>
-                                                  </div>
-                                                </small>
+                                  <section>
+                                  <img ng-src="{{organization.logoImageUrl}}" class="profile">
+                                          <div class="quote-header no-wrap">
+                                               <div>
+                                               <small>
+                                               <div>
+                                                  <span class="list-group-item-text" ng-bind="priceReview.quoteDate | date:'mediumDate'"></span>
                                                 </div>
-                                            </div>
-                                        <div>
-                                            <table class="table quote">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Unit Price</th>
-                                                        <th>Description</th>
-                                                        <th>Quantity</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr class="line-item">
-                                                        <td>
-                                                            <span class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></span> per watt
-                                                        </td>
-                                                        <td>
-                                                            <span class="list-group-item-text" ng-bind="priceReview.stcPower"></span> W <span class="list-group-item-text" ng-bind="priceReview.manufacturer"></span> <span class="list-group-item-text" ng-bind="priceReview.panelType"></span>crystalline Solar Module
-                                                        </td>
-                                                        <td>
-                                                            <span class="list-group-item-text" ng-bind="priceReview.quantity"></span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </section>
-
+                                                <div ng-if="priceReview.includesShipping">
+                                                  Delivered quote to <span class="list-group-item-text" ng-bind="priceReview.shippingLocation"></span>
+                                                </div>
+                                                <div ng-if="!priceReview.includesShipping">
+                                                  <span class="list-group-item-text warning">Does not include shipping cost</span>
+                                                </div>
+                                              </small>
+                                              </div>
+                                          </div>
+                                      <div>
+                                          <table class="table quote">
+                                              <thead>
+                                                  <tr>
+                                                      <th>Unit Price</th>
+                                                      <th>Description</th>
+                                                      <th>Quantity</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                                  <tr class="line-item">
+                                                      <td>
+                                                          <span class="list-group-item-heading" ng-bind="priceReview.price / 100 | currency"></span> per watt
+                                                      </td>
+                                                      <td>
+                                                          <span class="list-group-item-text" ng-bind="priceReview.stcPower"></span> W <span class="list-group-item-text" ng-bind="priceReview.manufacturer"></span> {{ ['Mono', 'Poly'].indexOf(priceReview.panelType) !== -1 ? priceReview.panelType + 'crystalline' : priceReview.panelType }} Solar Module
+                                                      </td>
+                                                      <td>
+                                                          <span class="list-group-item-text" ng-bind="priceReview.quantity"></span>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                      </div>
+                                  </section>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row" ng-show="shouldShowType('products')">
+      </div>
+      <div class="row" ng-show="shouldShowType('products')">
           <div class="box title-content no-border product">
               <div class="content no-wrap">
                   <div class="sub-title name">

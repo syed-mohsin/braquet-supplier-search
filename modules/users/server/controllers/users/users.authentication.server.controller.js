@@ -62,15 +62,6 @@ exports.signup = function (req, res) {
     .join(' ')
   ;
 
-  // Define user role, seller if user_role = 1 (user_role = 0 defaults to user a.k.a buyer)
-  // if (req.body.user_role === '1')
-  //   user.roles = ['seller'];
-  // else {
-  //   user.roles = ['user'];
-  // }
-
-  user.roles = ['user'];
-
   // check if user was invited and connect upon signup
   var err = '';
   async.waterfall([
@@ -308,7 +299,7 @@ exports.oauthCallback = function (strategy) {
           return res.redirect('/authentication/signin');
         }
 
-        return res.redirect(redirectURL || sessionRedirectURL || '/');
+        return res.redirect(sessionRedirectURL || '/');
       });
     })(req, res, next);
   };
@@ -353,8 +344,14 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
               email: providerUserProfile.email,
               profileImageURL: providerUserProfile.profileImageURL,
               provider: providerUserProfile.provider,
-              providerData: providerUserProfile.providerData
+              providerData: providerUserProfile.providerData,
+              emailVerified: true
             });
+
+            // create email notification settings for user
+            var emailNotification = new EmailNotification();
+            emailNotification.user = user._id;
+            emailNotification.save();
 
             // And save the user
             user.save(function (err) {

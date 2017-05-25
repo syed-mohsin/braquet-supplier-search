@@ -269,6 +269,7 @@ exports.get_catalog = function (req, res) {
   Organization.find(organizationQueryParams)
   .populate({ path: 'priceReviews', match: priceReviewQueryParams
   })
+  .populate('panel_models', 'manufacturer manufacturingLocations')
   .lean() // returns documents as plain JS objects so you can modify them
   .exec()
   .then(function(orgs) {
@@ -465,7 +466,7 @@ exports.organizationByUrlName = function (req, res) {
   // page tracker for public view
   // if condition is met, return bare minimum results required by public view
   if (req.query.c && !isNaN(parseInt(req.query.c)) &&
-      (parseInt(req.query.c) < 1 || parseInt(req.query.c) > 3) &&
+      (parseInt(req.query.c) < 0 || parseInt(req.query.c) > 3) &&
       req.route.path === '/api/organizations/:urlName/name-public') {
 
     query

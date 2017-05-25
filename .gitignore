@@ -18,14 +18,12 @@ coverage/
 
 # MEAN.js app and assets
 # ======================
-public/dist/
-public/fonts/
 uploads
 modules/users/client/img/profile/uploads
 config/env/local.js
 *.pem
 
-# Ignoring MEAN.JS's gh-pages branch for documenation
+# Ignoring MEAN.JS's gh-pages branch for documentation
 _site/
 
 # General

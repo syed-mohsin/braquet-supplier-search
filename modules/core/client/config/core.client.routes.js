@@ -43,11 +43,11 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       }
     })
     .state('landing', {
-      url: '/landing',
+      url: '/',
       templateUrl: 'modules/core/client/views/home.client.view.html'
     })
     .state('catalog', {
-      url: '/catalog?q&quantity&man&pow&crys&color&cells&page&price&isman&isreseller',
+      url: '/catalog?q&quantity&man&pow&crys&color&cells&locs&page&price&isman&isreseller',
       templateUrl: 'modules/core/client/views/catalog.client.view.html',
       data: {
         pageTitle: 'Search For Module Suppliers',
