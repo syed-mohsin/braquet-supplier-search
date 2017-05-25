@@ -10,14 +10,6 @@ angular.module('organizations').config(['$stateProvider',
         url: '/organizations',
         template: '<ui-view/>'
       })
-      .state('organizations.list', {
-        url: '',
-        templateUrl: 'modules/organizations/client/views/list-organizations.client.view.html',
-        data: {
-          roles: ['user', 'seller'],
-          pageTitle: 'Company Directory - Braquet'
-        }
-      })
       .state('organizations.create', {
         url: '/create',
         templateUrl: 'modules/organizations/client/views/create-organization.client.view.html',

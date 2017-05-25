@@ -47423,11 +47423,11 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       }]
     })
     .state('landing', {
-      url: '/landing',
+      url: '/',
       templateUrl: 'modules/core/client/views/home.client.view.html'
     })
     .state('catalog', {
-      url: '/catalog?q&quantity&man&pow&crys&color&cells&page&price&isman&isreseller',
+      url: '/catalog?q&quantity&man&pow&crys&color&cells&locs&page&price&isman&isreseller',
       templateUrl: 'modules/core/client/views/catalog.client.view.html',
       data: {
         pageTitle: 'Search For Module Suppliers',
@@ -47441,6 +47441,14 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       data: {
         pageTitle: 'Team - Braquet',
         pageDescription: 'See the team that created the best place to find quality solar suppliers'
+      }
+    })
+    .state('faq', {
+      url: '/faq',
+      templateUrl: '/modules/core/client/views/faq.client.view.html',
+      data: {
+        pageTitle: 'Frequently Asked Questions - Braquet',
+        pageDescription: 'How are reviews and quotes moderated on Braquet? Can manufacturers and resellers review themselves? Can companies edit or remove reviews about them?'
       }
     })
     .state('contact', {
@@ -47502,6 +47510,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.query.crys = $stateParams.crys;
     $scope.query.color = $stateParams.color;
     $scope.query.cells = $stateParams.cells;
+    $scope.query.locs = $stateParams.locs;
     $scope.query.page = $stateParams.page;
     $stateParams.quantity = $stateParams.quantity ? $stateParams.quantity : '0kW-100kW';
     $scope.query.quantity = $stateParams.quantity;
@@ -47513,32 +47522,35 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     // used to toggle filter on xs screen size
     $scope.hiddenFilterClass = 'hidden-xs';
 
-    $scope.showPolyModule = function(organization) {
-      if (organization.panel_crystalline_types.indexOf('Poly') !== -1 && !$scope.query.crys) {
-        return true;
-      }
+    $scope.showBrandIfMatchingLocation = function(brand, organization) {
+      var matchingPanels = organization.panel_models.filter(function(panel) {
+        return panel.manufacturer === brand;
+      });
 
-      return organization.panel_crystalline_types.indexOf('Poly') !== -1 &&
-        (
-          // both poly or mono are selected in query string
-          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
-          // only poly is selected in query string
-          ($scope.query.crys.indexOf('Mono') === -1 && $scope.query.crys.indexOf('Poly') !== -1)
-        );
+      var isValidBrandByLocation = matchingPanels.some(function(panel) {
+        return panel.manufacturingLocations.some(function(location) {
+          return $scope.query.locs.indexOf(location) !== -1;
+        });
+      });
+
+      return isValidBrandByLocation;
     };
 
-    $scope.showMonoModule = function(organization) {
-      if (organization.panel_crystalline_types.indexOf('Mono') !== -1 && !$scope.query.crys) {
+    $scope.showBrand = function(brand, organization) {
+      return (!$scope.query.man || $scope.query.man.indexOf(brand) !== -1) &&
+             (!$scope.query.locs || $scope.showBrandIfMatchingLocation(brand, organization));
+    };
+
+    $scope.showModule = function(organization, type) {
+      if ((!$scope.query.crys &&
+           organization.panel_crystalline_types.indexOf(type) !== -1) ||
+          (organization.panel_crystalline_types.indexOf(type) !== -1 &&
+           $scope.query.crys.indexOf(type) !== -1)) {
+
         return true;
       }
 
-      return organization.panel_crystalline_types.indexOf('Mono') !== -1 &&
-        (
-          // both poly or mono are selected in query string
-          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') !== -1) ||
-          // only mono is selected in query string
-          ($scope.query.crys.indexOf('Mono') !== -1 && $scope.query.crys.indexOf('Poly') === -1)
-        );
+      return false;
     };
 
     // show following conditional
@@ -47591,6 +47603,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       var crys = '';
       var color = '';
       var cells = '';
+      var locs = '';
 
       // // find all checked boxes for wattage
       // for (var key in $scope.wattCheckboxes) {
@@ -47627,11 +47640,19 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         }
       }
 
+      // find all checked manufacturing locations
+      for (key in $scope.manufacturingLocationsCheckboxes) {
+        if ($scope.manufacturingLocationsCheckboxes[key]) {
+          locs += key + '|';
+        }
+      }
+
       $scope.query.man = man;
       $scope.query.pow = pow;
       $scope.query.crys = crys;
       $scope.query.color = color;
       $scope.query.cells = cells;
+      $scope.query.locs = locs;
       $scope.query.quantity = $scope.quantity;
       $scope.query.isman = $scope.isman;
       $scope.query.isreseller = $scope.isreseller;
@@ -47669,6 +47690,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
             $scope.wattCheckboxes[key] = false;
           }
           break;
+        case 'manufacturingLocations':
+          for (key in $scope.manufacturingLocationsCheckboxes) {
+            $scope.manufacturingLocationsCheckboxes[key] = false;
+          }
+          break;
         case 'brand':
           // clear all checked organizations
           for (key in $scope.orgCheckboxes) {
@@ -47678,6 +47704,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         default:
           return;
       }
+
+      // now update the filter
       $scope.updateFilter();
     };
 
@@ -47717,70 +47745,87 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.buildFilterCheckboxes = function() {
       // get panel model filters
       $http.get('/api/panelmodels-filters')
-        .then(function(resp) {
-          var filters = resp.data;
-          $scope.manufacturers = filters.manufacturers;
-          $scope.crystallineTypes = filters.crystallineTypes;
-          $scope.frameColors = filters.frameColors;
-          $scope.numberOfCells = filters.numberOfCells;
+      .then(function(resp) {
+        var filters = resp.data;
+        $scope.manufacturers = filters.manufacturers;
+        $scope.crystallineTypes = filters.crystallineTypes;
+        $scope.frameColors = filters.frameColors;
+        $scope.numberOfCells = filters.numberOfCells;
+        $scope.manufacturingLocations = filters.manufacturingLocations;
 
-          $scope.orgCheckboxes = {};
-          var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
-          $scope.manufacturers.sort(function(a,b) {
-            if (a.toLowerCase() < b.toLowerCase()) return -1;
-            if (a.toLowerCase() > b.toLowerCase()) return 1;
-            return 0;
-          });
-          $scope.manufacturers.forEach(function(manufacturer) {
-            $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
-          });
-
-          $scope.crysCheckboxes = {};
-          queryCheckedBoxes = $stateParams.crys ? $stateParams.crys.split('|') : [];
-          $scope.crystallineTypes.forEach(function(crystallineType) {
-            $scope.crysCheckboxes[crystallineType] = queryCheckedBoxes.indexOf(crystallineType) !== -1 ? true : false;
-          });
-
-          $scope.fColorCheckboxes = {};
-          queryCheckedBoxes = $stateParams.color ? $stateParams.color.split('|') : [];
-          $scope.frameColors.forEach(function(frameColor) {
-            $scope.fColorCheckboxes[frameColor] = queryCheckedBoxes.indexOf(frameColor) !== -1 ? true : false;
-          });
-
-          $scope.numCellsCheckboxes = {};
-          queryCheckedBoxes = $stateParams.cells ? $stateParams.cells.split('|').filter(function(c) { return c.length && !isNaN(c); }) : [];
-          $scope.numberOfCells.sort(function(a,b) { return a-b; });
-          $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1); // remove one null item
-
-          // only accept 3 number of cells
-          var accepted = [60, 72, 96];
-          $scope.numberOfCells = $scope.numberOfCells.filter(function(numCells) { return accepted.indexOf(numCells) !== -1; });
-
-          $scope.numberOfCells.forEach(function(numCells) {
-            if (!numCells) return;
-            $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
-          });
-
-          // add checkbox values for is man or reseller
-          $scope.isman = $stateParams.isman === 'true' ? true : false;
-          $scope.isreseller = $stateParams.isreseller === 'true' ? true : false;
-
-          // increment resolved resources
-          $scope.resolvedResources++;
+        $scope.orgCheckboxes = {};
+        var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
+        $scope.manufacturers.sort(function(a,b) {
+          if (a.toLowerCase() < b.toLowerCase()) return -1;
+          if (a.toLowerCase() > b.toLowerCase()) return 1;
+          return 0;
         });
+        $scope.manufacturers.forEach(function(manufacturer) {
+          $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
+        });
+
+        $scope.crysCheckboxes = {};
+        queryCheckedBoxes = $stateParams.crys ? $stateParams.crys.split('|') : [];
+        $scope.crystallineTypes.forEach(function(crystallineType) {
+          $scope.crysCheckboxes[crystallineType] = queryCheckedBoxes.indexOf(crystallineType) !== -1 ? true : false;
+        });
+
+        $scope.fColorCheckboxes = {};
+        queryCheckedBoxes = $stateParams.color ? $stateParams.color.split('|') : [];
+        $scope.frameColors.forEach(function(frameColor) {
+          $scope.fColorCheckboxes[frameColor] = queryCheckedBoxes.indexOf(frameColor) !== -1 ? true : false;
+        });
+
+        // build checkboxes for number of cells
+        $scope.numCellsCheckboxes = {};
+        queryCheckedBoxes = $stateParams.cells ? $stateParams.cells.split('|').filter(function(c) { return c.length && !isNaN(c); }) : [];
+        $scope.numberOfCells.sort(function(a,b) { return a-b; });
+        $scope.numberOfCells.splice($scope.numberOfCells.indexOf(null), 1); // remove one null item
+
+        // only accept 3 number of cells
+        var accepted = [60, 72, 96];
+        $scope.numberOfCells = $scope.numberOfCells.filter(function(numCells) { return accepted.indexOf(numCells) !== -1; });
+
+        $scope.numberOfCells.forEach(function(numCells) {
+          if (!numCells) return;
+          $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
+        });
+
+        // add checkbox values for is man or reseller
+        $scope.isman = $stateParams.isman === 'true' ? true : false;
+        $scope.isreseller = $stateParams.isreseller === 'true' ? true : false;
+
+        // add manufacturing location crysCheckboxes
+        $scope.manufacturingLocationsCheckboxes = {};
+        queryCheckedBoxes = $stateParams.locs ? $stateParams.locs.split('|') : [];
+        $scope.manufacturingLocations = $scope.manufacturingLocations.filter(function(l) { return l.length; });
+        $scope.manufacturingLocations.sort(function(a,b) {
+          if (a.toLowerCase() < b.toLowerCase()) return -1;
+          if (a.toLowerCase() > b.toLowerCase()) return 1;
+          return 0;
+        });
+
+        $scope.manufacturingLocations.forEach(function(manufacturingLocation) {
+          if (!manufacturingLocation) return;
+          $scope.manufacturingLocationsCheckboxes[manufacturingLocation] = queryCheckedBoxes.indexOf(manufacturingLocation) !== -1 ? true : false;
+        });
+
+        // increment resolved resources
+        $scope.resolvedResources++;
+      });
 
       // get pricereview filters
       $http.get('/api/pricereviews-filters')
-        .then(function(resp) {
-          var filters = resp.data;
-          $scope.quantities = filters.quantities.sort(function(a,b) {
-            if (a.toLowerCase() < b.toLowerCase()) return -1;
-            if (a.toLowerCase() > b.toLowerCase()) return 1;
-            return 0;
-          });
-
-          $scope.resolvedResources++;
+      .then(function(resp) {
+        var filters = resp.data;
+        $scope.quantities = filters.quantities.sort(function(a,b) {
+          if (a.toLowerCase() < b.toLowerCase()) return -1;
+          if (a.toLowerCase() > b.toLowerCase()) return 1;
+          return 0;
         });
+
+        $scope.resolvedResources++;
+      });
     };
 
     $scope.buildPager = function (count) {
@@ -47944,7 +47989,7 @@ angular.module('core').controller('HomeController', ['$scope', '$state', 'Authen
       query.isman = ['501kW-1MW', '>1MW'].indexOf($scope.quantity) !== -1 ? true : false;
 
       if (query.crys === 'all') {
-        query.crys = 'Mono|Poly';
+        query.crys = 'Mono|Poly|CIGS|CdTe|';
       }
 
       $state.go('catalog', query);
@@ -48281,6 +48326,40 @@ angular.module('core').service('Menus', [
 'use strict';
 
 // Create the Socket.io wrapper service
+angular.module('core').service('Pagination', [
+  function () {
+    var page;
+    var currentPage;
+    var itemsPerPage;
+    var totalCount;
+    var itemsArray;
+    var currentViewType = 'dicks';
+
+    // build pager system
+    this.buildPage = function(itemsArray, currentPage, itemsPerPage) {
+      // scroll to top of the page
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+      var begin = (((currentPage || 1) - 1) * (itemsPerPage || 15));
+      var end = begin + (itemsPerPage || 15);
+
+      return {
+        items: itemsArray.slice(begin, end),
+        currentPage: currentPage || 1,
+        itemsPerPage: itemsPerPage || 15,
+        totalCount: itemsArray.length
+      };
+    };
+
+    this.shouldShowType = function(viewType) {
+      return currentViewType === viewType;
+    };
+  }
+]);
+
+'use strict';
+
+// Create the Socket.io wrapper service
 angular.module('core').service('Socket', ['Authentication', '$state', '$timeout',
   function (Authentication, $state, $timeout) {
     // Connect to Socket.io server
@@ -48413,12 +48492,7 @@ angular.module('emailNotifications').factory('EmailNotifications', ['$resource',
 // Configuring the organizations module
 angular.module('organizations').run(['Menus',
   function (Menus) {
-    // Add the projects dropdown item
-    Menus.addMenuItem('topbar', {
-      title: 'Company Directory',
-      state: 'organizations.list',
-      roles: ['user', 'seller', 'admin']
-    });
+
   }
 ]);
 
@@ -48434,14 +48508,6 @@ angular.module('organizations').config(['$stateProvider',
         url: '/organizations',
         template: '<ui-view/>'
       })
-      .state('organizations.list', {
-        url: '',
-        templateUrl: 'modules/organizations/client/views/list-organizations.client.view.html',
-        data: {
-          roles: ['user', 'seller'],
-          pageTitle: 'Company Directory - Braquet'
-        }
-      })
       .state('organizations.create', {
         url: '/create',
         templateUrl: 'modules/organizations/client/views/create-organization.client.view.html',
@@ -48451,11 +48517,11 @@ angular.module('organizations').config(['$stateProvider',
         }
       })
       .state('organizations.view-public', {
-        url: '/:name',
+        url: '/:name?view&page&sortType&{ascending:bool}&manufacturer&panelType&quantity',
         templateUrl: 'modules/organizations/client/views/view-public-organization.client.view.html',
       })
       .state('organizations.view', {
-        url: '/:name',
+        url: '/:name?view&page&sortType&{ascending:bool}&manufacturer&panelType$quantity',
         templateUrl: 'modules/organizations/client/views/view-organization.client.view.html',
         data: {
           roles: ['user', 'seller', 'admin']
@@ -48568,13 +48634,16 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         state: this.state,
         zipcode: this.zipcode,
         country: this.country,
-        about: this.about
+        about: this.about,
+        standardPaymentTerms: this.standardPaymentTerms,
+        outsourceDelivery: this.outsourceDelivery,
+        bankability: this.bankability
       });
 
       // Redirect after save
       organization.$save(function (response) {
         $state.go('organizations.view', {
-          organizationId: response._id
+          name: response.urlName
         });
 
       }, function (errorResponse) {
@@ -48596,7 +48665,7 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
 
       organization.$update(function () {
         $state.go('organizations.view', {
-          organizationId: organization._id
+          name: organization.urlName
         });
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
@@ -48625,6 +48694,8 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
       });
     };
 
+    // continue to look up by id or editing and other
+    // non-read operations
     $scope.findOne = function () {
       Organizations.get({
         organizationId: $stateParams.organizationId
@@ -48660,12 +48731,18 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
 
 'use strict';
 
-angular.module('organizations').controller('ViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics',
-  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics) {
+angular.module('organizations').controller('ViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$modal', 'FileUploader', 'Authentication', 'Socket', 'Organizations', 'Notification', '$analytics', 'Pagination',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $modal, FileUploader, Authentication, Socket, Organizations, Notification, $analytics, Pagination) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.resolvedResources = 0;
     $scope.expectedResources = 3;
+
+    // set filter params if exists
+    $scope.manufacturer = $stateParams.manufacturer;
+    $scope.panelType = $stateParams.panelType;
+    $scope.quantity = $stateParams.quantity;
+    $scope.sortType = $stateParams.sortType;
 
     // show following conditional
     $scope.displayUserIsFollowing = function(organization) {
@@ -48677,33 +48754,105 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       );
     };
 
+    $scope.showView = function(viewType, itemsArray, page) {
+      $scope.viewType = viewType;
+
+      $scope.pageSettings = Pagination.buildPage(itemsArray, page);
+    };
+
+    $scope.shouldShowType = function(viewType) {
+      return $scope.viewType === viewType;
+    };
+
+    $scope.changeTab = function(viewType) {
+      $stateParams.view = viewType;
+      $stateParams.page = undefined;
+
+      $state.go('organizations.view', $stateParams);
+    };
+
     $scope.initializePageNavBar = function() {
-      // tab viewing booleans
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+      var page = $stateParams.page;
+
+      var viewTypes = {
+        'reviews': $scope.organization.reviews,
+        'prices': $scope.organization.priceReviews,
+        'products': $scope.organization.panel_models
+      };
+
+      // by default or by invalid param, set default to show Prices
+      if (!($stateParams.view in viewTypes)) {
+        $scope.showView('prices', $scope.organization.priceReviews, page);
+        return;
+      }
+
+      // find valid view
+      Object.keys(viewTypes).forEach(function(viewType) {
+        if (viewType === $stateParams.view) {
+          $scope.showView(viewType, viewTypes[viewType], page);
+        }
+      });
     };
 
-    $scope.showReviews = function() {
-      $scope.shouldShowReviews = true;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = false;
+    $scope.pageChanged = function() {
+      $stateParams.page = $scope.pageSettings.currentPage;
+      $stateParams.view = null;
+
+      var viewTypes = ['reviews', 'prices', 'products'];
+
+      // find valid view
+      viewTypes.forEach(function(viewType) {
+        if (viewType === $scope.viewType) {
+          $stateParams.view = $scope.viewType;
+        }
+      });
+
+      if (!$stateParams.view) $stateParams.view = 'prices';
+
+      $state.go('organizations.view', $stateParams);
     };
 
-    $scope.showPrices = function() {
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+    $scope.sortBy = function(sortType) {
+      $stateParams.sortType = sortType;
+      $stateParams.page = 1;
+
+      $state.go('organizations.view', $stateParams);
     };
 
-    $scope.showProducts = function() {
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = true;
+    $scope.showNumberOfResultsOnPage = function() {
+      if (!$scope.pageSettings) return;
+
+      var page = $scope.pageSettings.currentPage;
+      var itemsOnCurrentPage = $scope.pageSettings.items.length;
+      var itemsPerPage = $scope.pageSettings.itemsPerPage;
+      var totalCount = $scope.pageSettings.totalCount;
+
+      var lowerLimit = ((page-1) * (itemsPerPage) + 1);
+      var upperLimit = lowerLimit - 1 + itemsOnCurrentPage;
+
+      // edge case with no results
+      if (totalCount === 0) {
+        lowerLimit = 0;
+        upperLimit = 0;
+      }
+
+      return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
     };
 
-    // initialize tabs
-    $scope.initializePageNavBar();
+    $scope.search = function(searchManufacturerText) {
+      return $filter('filter')($scope.organization.manufacturers, {
+        $: searchManufacturerText
+      });
+    };
+
+    $scope.applyFilters = function() {
+      $stateParams.page = 1;
+      $stateParams.manufacturer = $scope.manufacturer;
+      $stateParams.panelType = $scope.panelType;
+      $stateParams.quantity = $scope.quantity;
+
+      $state.go('organizations.view', $stateParams);
+    };
 
     $scope.getUserEmailNotification = function() {
       if (!Authentication.user) {
@@ -48747,7 +48896,10 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       $scope.resolvedResources = 0;
 
       // fetch organization by name
-      $http.get('/api/organizations/' + $stateParams.name + '/name')
+      $http({
+        url: '/api/organizations/' + $stateParams.name + '/name',
+        params: $stateParams
+      })
       .then(function(resp) {
         // store returned organization
         var organization = resp.data;
@@ -48755,11 +48907,15 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
         $scope.resolvedResources++;
         $scope.buildUploader(organization._id);
 
+        // initialize tabs ang pagination
+        $scope.initializePageNavBar();
+
         // set page title+description for SEO
         var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
         $rootScope.pageTitle = $scope.organization.companyName + ' | Braquet';
         $rootScope.description = defaultDescr + $scope.organization.about;
 
+        // determine if user has previously reviewed organization
         return $http({
           url: '/api/reviews/is-reviewed',
           params: { organizationId: organization._id }
@@ -48788,7 +48944,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       // change uploader url
       $scope.uploader.url = 'api/organizations/logo/' + organizationId;
 
-          // Set file uploader image filter
+      // Set file uploader image filter
       $scope.uploader.filters.push({
         name: 'imageFilter',
         fn: function (item, options) {
@@ -48991,46 +49147,172 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
 'use strict';
 
 // Organizations controller
-
-angular.module('organizations').controller('PublicViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', 'Authentication', 'Socket',
-  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, Authentication, Socket) {
+angular.module('organizations').controller('PublicViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$mdDialog', 'Authentication', 'Socket', 'Pagination',
+  function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $mdDialog, Authentication, Socket, Pagination) {
+    DialogController.$inject = ["$scope", "$state", "$mdDialog"];
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
+    // set filter params if exists
+    $scope.manufacturer = $stateParams.manufacturer;
+    $scope.panelType = $stateParams.panelType;
+    $scope.quantity = $stateParams.quantity;
+    $scope.sortType = $stateParams.sortType;
+
+    $scope.maxViewsExceeded = function() {
+      var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
+      return count < 0 || count > 3;
+    };
+
+    $scope.showView = function(viewType, itemsArray, page) {
+      $scope.viewType = viewType;
+
+      $scope.pageSettings = Pagination.buildPage(itemsArray, page);
+    };
+
+    $scope.shouldShowType = function(viewType) {
+      return $scope.viewType === viewType;
+    };
+
+    $scope.changeTab = function(viewType) {
+      $stateParams.view = viewType;
+      $stateParams.page = undefined;
+
+      $state.go('organizations.view-public', $stateParams);
+    };
+
     $scope.initializePageNavBar = function() {
-      // tab viewing booleans
-      $scope.shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+      var page = $stateParams.page;
+
+      var viewTypes = {
+        'reviews': $scope.organization.reviews,
+        'prices': $scope.organization.priceReviews,
+        'products': $scope.organization.panel_models
+      };
+
+      // by default or by invalid param, set default to show Prices
+      if (!($stateParams.view in viewTypes)) {
+        $scope.showView('prices', $scope.organization.priceReviews, page);
+        return;
+      }
+
+      // find valid view
+      Object.keys(viewTypes).forEach(function(viewType) {
+        if (viewType === $stateParams.view) {
+          $scope.showView(viewType, viewTypes[viewType], page);
+        }
+      });
     };
 
-    $scope.showReviews = function() {
-      $scope. shouldShowReviews = true;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = false;
+    $scope.pageChanged = function() {
+      $stateParams.page = $scope.pageSettings.currentPage;
+      $stateParams.view = null;
+
+      var viewTypes = ['reviews', 'prices', 'products'];
+
+      // find valid view
+      viewTypes.forEach(function(viewType) {
+        if (viewType === $scope.viewType) {
+          $stateParams.view = $scope.viewType;
+        }
+      });
+
+      if (!$stateParams.view) $stateParams.view = 'prices';
+
+      $state.go('organizations.view-public', $stateParams);
     };
 
-    $scope.showPrices = function() {
-      $scope. shouldShowReviews = false;
-      $scope.shouldShowPrices = true;
-      $scope.shouldShowProducts = false;
+    $scope.sortBy = function(sortType) {
+      $stateParams.sortType = sortType;
+      $stateParams.page = 1;
+
+      $state.go('organizations.view-public', $stateParams);
     };
 
-    $scope.showProducts = function() {
-      $scope. shouldShowReviews = false;
-      $scope.shouldShowPrices = false;
-      $scope.shouldShowProducts = true;
+    $scope.showNumberOfResultsOnPage = function() {
+      if (!$scope.pageSettings) return;
+
+      var page = $scope.pageSettings.currentPage;
+      var itemsOnCurrentPage = $scope.pageSettings.items.length;
+      var itemsPerPage = $scope.pageSettings.itemsPerPage;
+      var totalCount = $scope.pageSettings.totalCount;
+
+      var lowerLimit = ((page-1) * (itemsPerPage) + 1);
+      var upperLimit = lowerLimit - 1 + itemsOnCurrentPage;
+
+      // edge case with no results
+      if (totalCount === 0) {
+        lowerLimit = 0;
+        upperLimit = 0;
+      }
+
+      return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
     };
 
-    // initialize tabs
-    $scope.initializePageNavBar();
+    $scope.search = function(searchManufacturerText) {
+      return $filter('filter')($scope.organization.manufacturers, {
+        $: searchManufacturerText
+      });
+    };
+
+    $scope.applyFilters = function() {
+      $stateParams.page = 1;
+      $stateParams.manufacturer = $scope.manufacturer;
+      $stateParams.panelType = $scope.panelType;
+      $stateParams.quantity = $scope.quantity;
+
+      $state.go('organizations.view-public', $stateParams);
+    };
+
+    function DialogController($scope, $state, $mdDialog) {
+      $scope.login = function() {
+        $mdDialog.hide();
+        $state.go('authentication.signin');
+      };
+
+      $scope.signup = function() {
+        $mdDialog.hide();
+        $state.go('authentication.signup');
+      };
+    }
+
+    // alert to sign up
+    $scope.showSignUpAlert = function(ev) {
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'modules/organizations/client/views/signup-dialog.client.template.html',
+        targetEvent: ev,
+        clickOutsideToClose:true
+      });
+    };
 
     $scope.findOne = function() {
       if (Authentication.user) {
-        $state.go('organizations.view', { name: $stateParams.name });
+        $state.go('organizations.view', $stateParams);
       } else {
-        // go to not-logged in view
-        $http.get('/api/organizations/' + $stateParams.name + '/name-public')
+
+        // track supplier views
+        if ($window.localStorage &&
+          (!$window.localStorage.getItem('c'))) {
+          // initialize counter
+          $window.localStorage.setItem('c', JSON.stringify([$stateParams.name]));
+        } else if ($window.localStorage && window.localStorage.getItem('c')) {
+          var names = JSON.parse($window.localStorage.getItem('c'));
+          var name = $stateParams.name;
+
+          if (names.indexOf(name) === -1) {
+            var newNames = JSON.stringify(names.concat([name]));
+            $window.localStorage.setItem('c', newNames);
+          }
+        }
+
+        // merge url queries with view tracker
+        $stateParams.c = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
+
+        $http({
+          url: '/api/organizations/' + $stateParams.name + '/name-public',
+          params: $stateParams
+        })
         .then(function(resp) {
           $scope.organization = resp.data;
           $scope.organization.$resolved = true;
@@ -49039,6 +49321,14 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
           var defaultDescr = 'See Reviews, Quotes, and Products for Suppliers. ';
           $rootScope.pageTitle = $scope.organization.companyName + ' | Braquet';
           $rootScope.description = defaultDescr + $scope.organization.about;
+
+          // initialize tabs
+          $scope.initializePageNavBar();
+
+          // show modal
+          if ($scope.maxViewsExceeded()) {
+            $scope.showSignUpAlert();
+          }
         })
         .catch(function(resp) {
           console.log('error finding org', resp.data);
@@ -49339,8 +49629,13 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
   function ($scope, $stateParams, $location, $http, $filter, $modalInstance, Authentication, PriceReviews, modalOrganization) {
     $scope.authentication = Authentication;
     $scope.currentDate = new Date();
+
+    // add an extra 'other' option for manufacturers field
     modalOrganization.manufacturers.push('other');
 
+    $scope.incoterms = ['EXW', 'FCA', 'FAS', 'FOB', 'CPT', 'CFR', 'CIF', 'CIP', 'DAT', 'DAP', 'DDP', 'Not Sure'];
+
+    // fetch wattages for quote form wattage slider
     $http.get('/api/panelmodels-wattages')
     .then(function(response) {
       var wattages = response.data.sort(function(a,b) { return a-b; });
@@ -49348,6 +49643,7 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
       $scope.maxStcPower = wattages[wattages.length-1];
     });
 
+    // fetch manufacturers for manufacturers field
     $http.get('/api/panelmodels-manufacturers')
     .then(function(response) {
       $scope.otherBrands = response.data.filter(function(brand) {
@@ -49385,7 +49681,6 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
       }
 
       // Create new Price Review object
-      console.log(this.otherManufacturer);
       var priceReview = {
         quoteDate: this.quoteDate,
         deliveryDate: this.deliveryDate,
@@ -49395,7 +49690,8 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
         quantity: this.quantity,
         panelType: this.panelType,
         includesShipping: this.includesShipping === 'true' ? true : false,
-        shippingLocation: this.includesShipping === 'true' ? this.shippingLocation : undefined
+        shippingLocation: this.includesShipping === 'true' ? this.shippingLocation : undefined,
+        incoterm: this.incoterm
       };
 
       // Redirect after save
@@ -50541,6 +50837,21 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       $location.path('/');
     }
 
+    function identifyFullStoryUser(user) {
+      if (!$window.FS) {
+        console.log('full story not setup');
+        return;
+      }
+      
+      // Identify FullStory user
+      $window.FS.identify(user._id, {
+        displayName: user.displayName,
+        email: user.email,
+        // http://help.fullstory.com/develop-js/setuservars.
+        reviewsWritten_int: user.reviews.length,
+      });
+    }
+
     $scope.signup = function (isValid) {
       $scope.error = null;
 
@@ -50554,6 +50865,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       $http.post('/api/auth/signup', $scope.credentials).then(function (response) {
         // If successful we assign the response to the global user model
         $scope.authentication.user = response.data;
+
+        // set user for full story
+        identifyFullStoryUser($scope.authentication.user);
 
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
@@ -50574,6 +50888,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       $http.post('/api/auth/signin', $scope.credentials).then(function (response) {
         // If successful we assign the response to the global user model
         $scope.authentication.user = response.data;
+
+        // set user for full story
+        identifyFullStoryUser($scope.authentication.user);
 
         // User should be notified if they have not submitted a review yet
         if($scope.authentication.user.reviews.length === 0) {
