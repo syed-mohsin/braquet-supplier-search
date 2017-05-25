@@ -27,7 +27,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       $scope.viewType = viewType;
 
       $scope.pageSettings = Pagination.buildPage(itemsArray, page);
-      console.log($scope.pageSettings.items);
     };
 
     $scope.shouldShowType = function(viewType) {

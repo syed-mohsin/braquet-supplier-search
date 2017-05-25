@@ -449,7 +449,7 @@ exports.organizationByUrlName = function (req, res) {
   // page tracker for public view
   // if condition is met, return bare minimum results required by public view
   if (req.query.c && !isNaN(parseInt(req.query.c)) &&
-      (parseInt(req.query.c) < 1 || parseInt(req.query.c) > 3) &&
+      (parseInt(req.query.c) < 0 || parseInt(req.query.c) > 3) &&
       req.route.path === '/api/organizations/:urlName/name-public') {
 
     query

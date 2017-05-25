@@ -9,10 +9,12 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     // set filter params if exists
     $scope.manufacturer = $stateParams.manufacturer;
     $scope.panelType = $stateParams.panelType;
+    $scope.quantity = $stateParams.quantity;
+    $scope.sortType = $stateParams.sortType;
 
     $scope.maxViewsExceeded = function() {
       var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
-      return count < 1 || count > 3;
+      return count < 0 || count > 3;
     };
 
     $scope.showView = function(viewType, itemsArray, page) {
@@ -143,7 +145,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
         if ($window.localStorage &&
           (!$window.localStorage.getItem('c'))) {
           // initialize counter
-          $window.localStorage.setItem('c', JSON.stringify([]));
+          $window.localStorage.setItem('c', JSON.stringify([$stateParams.name]));
         } else if ($window.localStorage && window.localStorage.getItem('c')) {
           var names = JSON.parse($window.localStorage.getItem('c'));
           var name = $stateParams.name;
@@ -153,8 +155,6 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
             $window.localStorage.setItem('c', newNames);
           }
         }
-
-        console.log('localStorage', $window.localStorage.getItem('c'));
 
         // merge url queries with view tracker
         $stateParams.c = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
