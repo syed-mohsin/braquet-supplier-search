@@ -63,8 +63,10 @@ exports.processQuery = function(query) {
   }
 
   // build query for search using regular expression
+  // escape passed in string
   if (query.q) {
-    organizationQueryParams.companyName = new RegExp(query.q, 'i');
+    var escapedString = query.q.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    organizationQueryParams.companyName = new RegExp(escapedString, 'i');
   }
 
   // build query for manufacturers

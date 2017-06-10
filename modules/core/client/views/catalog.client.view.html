@@ -128,6 +128,17 @@
                 <div class="alert alert-warning text-center" ng-if="resolvedResources === expectedResources && !orgs.length">
                     No search results
                 </div>
+
+                Selected Filters:
+                <div class="chips">
+                  <md-chips ng-model="selectedFilters" name="filter-chips" readonly="true"
+                          md-removable="true" ng-change="updateFilter()">
+                    <md-chip-template>
+                      <strong>{{$chip}}</strong>
+                    </md-chip-template>
+                  </md-chips>
+                </div>
+
                 <div>
                     <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
                 </div>
