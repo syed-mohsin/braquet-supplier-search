@@ -140,9 +140,9 @@
                             <a class="company-name" ng-click="routeToOrg(organization)" ng-bind="organization.companyName">
                             </a>
 
-                            <div class="reviews">
+                            <div class="reviews" ng-click="routeToOrg(organization, 'reviews')">
                                 <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
-                                <span>{{organization.reviews_length}} reviews</span>
+                                <a class="review-link">{{organization.reviews_length}} reviews</a>
                             </div>
                             <div class="detail">
                                 <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
@@ -163,7 +163,7 @@
                         <div class="brand-list">
                             <table>
                                 <tr class="header">
-                                    <td ng-show="showModule(organization, 'Poly')" ng-click="routeToOrg(organization, 'Poly')">
+                                    <td ng-show="showModule(organization, 'Poly')" ng-click="routeToOrg(organization, null, 'Poly')">
                                         <div class="img-wrapper" >
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/poly-module.jpg">
@@ -174,8 +174,8 @@
                                         </div>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'Mono')">
-                                        <div class="img-wrapper" ng-click="routeToOrg(organization, 'Mono')">
+                                    <td ng-show="showModule(organization, 'Mono')" ng-click="routeToOrg(organization, null, 'Mono')">
+                                        <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/mono-module.jpg">
                                         </div>
@@ -185,8 +185,8 @@
                                         </div>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'CIGS')">
-                                        <div class="img-wrapper" ng-click="routeToOrg(organization, 'CIGS')">
+                                    <td ng-show="showModule(organization, 'CIGS')" ng-click="routeToOrg(organization, null, 'CIGS')">
+                                        <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/cigs-module.png">
                                         </div>
@@ -196,8 +196,8 @@
                                         </div>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'CdTe')">
-                                        <div class="img-wrapper" ng-click="routeToOrg(organization, 'CdTe')">
+                                    <td ng-show="showModule(organization, 'CdTe')" ng-click="routeToOrg(organization, null, 'CdTe')">
+                                        <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/cdte-module.png">
                                         </div>
