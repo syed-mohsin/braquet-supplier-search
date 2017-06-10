@@ -27,8 +27,8 @@
                     <div class="title name">
                         <span ng-bind="organization.companyName"></span>
                     </div>
-                    <div class="reviews">
-                        <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
+                    <div class="reviews" ui-sref="organizations.view({ name: organization.urlName, view: 'reviews'})">
+                        <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <a class="review-link">{{organization.reviews_length}} Reviews</a>
                     </div>
                     <div class="menu edit">
                         <a ng-if="authentication.user.roles.indexOf('admin') !== -1 || (organization.admin && authentication.user._id === organization.admin._id)" ui-sref="organizations.edit({organizationId: organization._id})">

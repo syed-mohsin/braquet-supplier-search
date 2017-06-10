@@ -11,8 +11,8 @@
                   <div class="title name">
                       <span ng-bind="organization.companyName"></span>
                   </div>
-                  <div class="reviews">
-                   <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
+                  <div class="reviews" ui-sref="organizations.view-public({ name: organization.urlName, view: 'reviews'})">
+                   <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <a class="review-link">{{organization.reviews_length}} Reviews</a>
                   </div>
                    <div class="menu edit">
                      <a ng-click="showSignUpAlert($event)">
