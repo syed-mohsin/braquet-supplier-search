@@ -407,12 +407,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $state.go('catalog', $scope.query);
     };
 
-    $scope.searchSubmit = function(foundOrganization) {
-      if (foundOrganization) {
-        $scope.query.q = foundOrganization.companyName;
-        $scope.query.page = 1;
-        $state.go('catalog', $scope.query);
-      }
+    $scope.searchSubmit = function(foundOrganization, searchOrganizationText) {
+
+      $scope.query.q = foundOrganization ? foundOrganization.companyName : searchOrganizationText;
+      $scope.query.page = 1;
+      $state.go('catalog', $scope.query);
     };
 
     $scope.routeToOrg = function (organization, page, panelType) {
