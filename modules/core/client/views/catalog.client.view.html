@@ -151,10 +151,10 @@
 
 
                         <div class="menu">
-                            <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
+                            <a ng-if="organization._id !== authentication.user.organization" ng-click="authentication.user ? contactSupplier($event, organization) : showSignUpAlert($event)">
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                             </a>
-                            <a ng-if="organization._id !== authentication.user.organization" ng-click="followOrganization($event, organization)">
+                            <a ng-if="organization._id !== authentication.user.organization" ng-click="authentication.user ? followOrganization($event, organization) : showSignUpAlert($event)">
                               <span ng-class="{ 'glyphicon': true, 'glyphicon-plus': !displayUserIsFollowing(organization), 'glyphicon-ok': displayUserIsFollowing(organization) }"></span>
                               <span>{{displayUserIsFollowing(organization) ? ('Following') : ('Follow') }}</span>
                             </a>

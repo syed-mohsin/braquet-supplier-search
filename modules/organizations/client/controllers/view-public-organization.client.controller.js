@@ -130,13 +130,19 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     }
 
     // alert to sign up
-    $scope.showSignUpAlert = function(ev) {
-      $mdDialog.show({
+    $scope.showSignUpAlert = function(ev, isMaxAlert) {
+      var fileName = isMaxAlert ?
+        'signup-dialog.client.template.html' :
+        'join-braquet-dialog.client.template.html';
+
+      var config = {
         controller: DialogController,
-        templateUrl: 'modules/organizations/client/views/signup-dialog.client.template.html',
+        templateUrl: 'modules/organizations/client/views/' + fileName,
         targetEvent: ev,
         clickOutsideToClose:true
-      });
+      };
+
+      $mdDialog.show(config);
     };
 
     $scope.findOne = function() {
@@ -180,7 +186,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
           // show modal
           if ($scope.maxViewsExceeded()) {
-            $scope.showSignUpAlert();
+            $scope.showSignUpAlert(null, true);
           }
         })
         .catch(function(resp) {

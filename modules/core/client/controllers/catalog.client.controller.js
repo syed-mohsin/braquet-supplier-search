@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification', '$analytics',
-  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, EmailNotifications, Notification, $analytics) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', '$mdDialog', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification', '$analytics',
+  function ($scope, $filter, $http, $state, $stateParams, $modal, $mdDialog, Authentication, PanelModels, EmailNotifications, Notification, $analytics) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resolvedResources = 0;
@@ -51,6 +51,28 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.orgSearch = function(searchOrganizationText) {
       return $filter('filter')($scope.organizationNames, {
         $: searchOrganizationText
+      });
+    };
+
+    function DialogController($scope, $state, $mdDialog) {
+      $scope.login = function() {
+        $mdDialog.hide();
+        $state.go('authentication.signin');
+      };
+
+      $scope.signup = function() {
+        $mdDialog.hide();
+        $state.go('authentication.signup');
+      };
+    }
+
+    // alert to sign up
+    $scope.showSignUpAlert = function(ev) {
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'modules/organizations/client/views/join-braquet-dialog.client.template.html',
+        targetEvent: ev,
+        clickOutsideToClose:true
       });
     };
 

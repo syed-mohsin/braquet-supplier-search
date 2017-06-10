@@ -15,7 +15,7 @@
                    <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating> <span>{{organization.reviews_length}} Reviews</span>
                   </div>
                    <div class="menu edit">
-                     <a ui-sref="organizations.view({name: organization.urlName})">
+                     <a ng-click="showSignUpAlert($event)">
                           <span class="glyphicon glyphicon-envelope"></span><span>Login to contact seller</span>
                       </a>
                    </div>
@@ -27,10 +27,10 @@
                   <small><span ng-bind="organization.productTypes"></span></small>
 
                   <div class="menu split">
-                      <a ui-sref="organizations.view({name: organization.urlName})">
+                      <a ng-click="showSignUpAlert($event)">
                           <span class="glyphicon glyphicon-star"></span><span>Login to write anonymous review</span>
                       </a>
-                      <a ui-sref="organizations.view({name: organization.urlName})">
+                      <a ng-click="showSignUpAlert($event)">
                           <span class="glyphicon glyphicon-usd"></span><span>Login to submit quote</span>
                       </a>
                   </div>
