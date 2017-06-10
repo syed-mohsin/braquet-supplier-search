@@ -339,7 +339,11 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $scope.manufacturingLocations = filters.manufacturingLocations;
 
         // selected filters is is used to generate array of chips
-        $scope.selectedFilters = [$scope.quantity];
+        $scope.selectedReadOnlyFilters = [$stateParams.quantity];
+        $scope.selectedFilters = [];
+        if ($stateParams.q) {
+          $scope.selectedReadOnlyFilters.push($stateParams.q + ' (search keyword)');
+        }
 
         $scope.orgCheckboxes = {};
         var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
