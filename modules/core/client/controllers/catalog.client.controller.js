@@ -1,12 +1,17 @@
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', '$mdDialog', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification', '$analytics',
-  function ($scope, $filter, $http, $state, $stateParams, $modal, $mdDialog, Authentication, PanelModels, EmailNotifications, Notification, $analytics) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', '$mdDialog', '$window', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification', '$analytics',
+  function ($scope, $filter, $http, $state, $stateParams, $modal, $mdDialog, $window, Authentication, PanelModels, EmailNotifications, Notification, $analytics) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resolvedResources = 0;
     $scope.expectedResources = 4;
     $scope.search = $stateParams.q;
+
+    // store search settings in localStorage
+    if ($window) {
+      $window.localStorage.setItem('filterSettings', JSON.stringify($stateParams));
+    }
 
     $scope.query = {};
     $scope.query.q = $stateParams.q;

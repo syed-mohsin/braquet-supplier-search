@@ -12,6 +12,17 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     $scope.quantity = $stateParams.quantity;
     $scope.sortType = $stateParams.sortType;
 
+    $scope.isPreviousLocation = function() {
+      return $window && $window.localStorage.getItem('filterSettings');
+    };
+
+    $scope.goBack = function() {
+      if ($window.localStorage)
+        $state.go('catalog', JSON.parse($window.localStorage.getItem('filterSettings')));
+      else
+        $state.go('catalog');
+    };
+
     $scope.maxViewsExceeded = function() {
       var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
       return count < 0 || count > 3;
