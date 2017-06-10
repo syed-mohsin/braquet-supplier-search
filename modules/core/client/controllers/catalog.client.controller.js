@@ -85,6 +85,10 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       return false;
     };
 
+    $scope.isValidQuote = function(organization, brand, type) {
+      return organization.brands[brand] && organization.brands[brand][type];
+    };
+
     // show following conditional
     $scope.displayUserIsFollowing = function(organization) {
       return (
@@ -384,8 +388,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       }
     };
 
-    $scope.routeToOrg = function (organization) {
-      $state.go('organizations.view', { name: organization.urlName });
+    $scope.routeToOrg = function (organization, type) {
+      $state.go('organizations.view', { name: organization.urlName, panelType: type });
     };
 
     $scope.contactSupplier = function(ev, organization) {
