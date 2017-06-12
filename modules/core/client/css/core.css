@@ -871,6 +871,7 @@ img.company-logo {
 .brand-list table {
     width: 95%;
     max-width: 350px;
+    cursor: pointer;
 }
 .brand-list td {
     text-align: center;
