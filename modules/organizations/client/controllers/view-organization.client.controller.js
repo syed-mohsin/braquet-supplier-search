@@ -347,7 +347,7 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
       modalInstance.result.then(function() {
         if (organization) {
           $scope.findOne();
-          $scope.showPrices();
+          $scope.shouldShowType('prices');
         }
       });
     };
