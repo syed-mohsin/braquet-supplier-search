@@ -138,7 +138,7 @@
                     </md-chip-template>
                   </md-chips>
 
-                  <md-chips ng-model="selectedFilters" name="filter-chips" readonly="true"
+                  <md-chips ng-show="selectedFilters.length" ng-model="selectedFilters" name="filter-chips" readonly="true"
                           md-removable="true" ng-change="updateFilter()">
                     <md-chip-template>
                       <strong>{{$chip}}</strong>
