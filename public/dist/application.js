@@ -47495,13 +47495,18 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 
 'use strict';
 
-angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification', '$analytics',
-  function ($scope, $filter, $http, $state, $stateParams, $modal, Authentication, PanelModels, EmailNotifications, Notification, $analytics) {
+angular.module('core').controller('CatalogController', ['$scope', '$filter', '$http', '$state', '$stateParams', '$modal', '$mdDialog', '$window', 'Authentication', 'PanelModels', 'EmailNotifications', 'Notification', '$analytics',
+  function ($scope, $filter, $http, $state, $stateParams, $modal, $mdDialog, $window, Authentication, PanelModels, EmailNotifications, Notification, $analytics) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resolvedResources = 0;
     $scope.expectedResources = 4;
     $scope.search = $stateParams.q;
+
+    // store search settings in localStorage
+    if ($window) {
+      $window.localStorage.setItem('filterSettings', JSON.stringify($stateParams));
+    }
 
     $scope.query = {};
     $scope.query.q = $stateParams.q;
@@ -47529,15 +47534,6 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.organizationNames = res.data.filter(function(org) {
         return org.panel_models.length > 0;
       });
-
-      // find matching org if exists
-      if ($scope.query.q) {
-        $scope.orgSearch($scope.query.q).forEach(function(org) {
-          if (org.companyName.indexOf($scope.query.q) !== -1) {
-            $scope.foundOrganization = org;
-          }
-        });
-      }
     })
     .catch(function(err) {
       console.log('error fetching organizations', err);
@@ -47546,6 +47542,29 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
     $scope.orgSearch = function(searchOrganizationText) {
       return $filter('filter')($scope.organizationNames, {
         $: searchOrganizationText
+      });
+    };
+
+    function DialogController($scope, $state, $mdDialog) {
+      $scope.login = function() {
+        $mdDialog.hide();
+        $state.go('authentication.signin');
+      };
+
+      $scope.signup = function() {
+        $mdDialog.hide();
+        $state.go('authentication.signup');
+      };
+    }
+    DialogController.$inject = ['$scope', '$state', '$mdDialog'];
+
+    // alert to sign up
+    $scope.showSignUpAlert = function(ev) {
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'modules/organizations/client/views/join-braquet-dialog.client.template.html',
+        targetEvent: ev,
+        clickOutsideToClose:true
       });
     };
 
@@ -47578,6 +47597,10 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       }
 
       return false;
+    };
+
+    $scope.isValidQuote = function(organization, brand, type) {
+      return organization.brands[brand] && organization.brands[brand][type];
     };
 
     // show following conditional
@@ -47631,6 +47654,8 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       var color = '';
       var cells = '';
       var locs = '';
+      var isRemovedFromChips;
+      var isSelected;
 
       // // find all checked boxes for wattage
       // for (var key in $scope.wattCheckboxes) {
@@ -47641,35 +47666,55 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
 
       // find all checked manufacturers
       for (var key in $scope.orgCheckboxes) {
-        if ($scope.orgCheckboxes[key]) {
+        isRemovedFromChips = $stateParams.man &&
+          $stateParams.man.indexOf(key) !== -1 &&
+          $scope.selectedFilters.indexOf(key) === -1;
+
+        if ($scope.orgCheckboxes[key] && !isRemovedFromChips) {
           man += key + '|';
         }
       }
 
       // find all checked crystalline types
       for (key in $scope.crysCheckboxes) {
-        if ($scope.crysCheckboxes[key]) {
+        isRemovedFromChips = $stateParams.crys &&
+          $stateParams.crys.indexOf(key) !== -1 &&
+          $scope.selectedFilters.indexOf(key) === -1;
+
+        if ($scope.crysCheckboxes[key] && !isRemovedFromChips) {
           crys += key + '|';
         }
       }
 
       // find all checked frame colors
       for (key in $scope.fColorCheckboxes) {
-        if ($scope.fColorCheckboxes[key]) {
+        isRemovedFromChips = $stateParams.color &&
+          $stateParams.color.indexOf(key) !== -1 &&
+          $scope.selectedFilters.indexOf(key) === -1;
+
+        if ($scope.fColorCheckboxes[key] && !isRemovedFromChips) {
           color += key + '|';
         }
       }
 
       // find all checked number of cells
       for (key in $scope.numCellsCheckboxes) {
-        if ($scope.numCellsCheckboxes[key]) {
+        isRemovedFromChips = $stateParams.cells &&
+          $stateParams.cells.indexOf(key.toString()) !== -1 &&
+          $scope.selectedFilters.indexOf(key.toString()) === -1;
+
+        if ($scope.numCellsCheckboxes[key] && !isRemovedFromChips) {
           cells += key + '|';
         }
       }
 
       // find all checked manufacturing locations
       for (key in $scope.manufacturingLocationsCheckboxes) {
-        if ($scope.manufacturingLocationsCheckboxes[key]) {
+        isRemovedFromChips = $stateParams.locs &&
+          $stateParams.locs.indexOf(key) !== -1 &&
+          $scope.selectedFilters.indexOf(key) === -1;
+
+        if ($scope.manufacturingLocationsCheckboxes[key] && !isRemovedFromChips) {
           locs += key + '|';
         }
       }
@@ -47780,6 +47825,13 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $scope.numberOfCells = filters.numberOfCells;
         $scope.manufacturingLocations = filters.manufacturingLocations;
 
+        // selected filters is is used to generate array of chips
+        $scope.selectedReadOnlyFilters = [$stateParams.quantity];
+        $scope.selectedFilters = [];
+        if ($stateParams.q) {
+          $scope.selectedReadOnlyFilters.push($stateParams.q + ' (search keyword)');
+        }
+
         $scope.orgCheckboxes = {};
         var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
         $scope.manufacturers.sort(function(a,b) {
@@ -47788,18 +47840,27 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
           return 0;
         });
         $scope.manufacturers.forEach(function(manufacturer) {
+          if (queryCheckedBoxes.indexOf(manufacturer) !== -1) {
+            $scope.selectedFilters.push(manufacturer);
+          }
           $scope.orgCheckboxes[manufacturer] = queryCheckedBoxes.indexOf(manufacturer) !== -1 ? true : false;
         });
 
         $scope.crysCheckboxes = {};
         queryCheckedBoxes = $stateParams.crys ? $stateParams.crys.split('|') : [];
         $scope.crystallineTypes.forEach(function(crystallineType) {
+          if (queryCheckedBoxes.indexOf(crystallineType) !== -1) {
+            $scope.selectedFilters.push(crystallineType);
+          }
           $scope.crysCheckboxes[crystallineType] = queryCheckedBoxes.indexOf(crystallineType) !== -1 ? true : false;
         });
 
         $scope.fColorCheckboxes = {};
         queryCheckedBoxes = $stateParams.color ? $stateParams.color.split('|') : [];
         $scope.frameColors.forEach(function(frameColor) {
+          if (queryCheckedBoxes.indexOf(frameColor) !== -1) {
+            $scope.selectedFilters.push(frameColor);
+          }
           $scope.fColorCheckboxes[frameColor] = queryCheckedBoxes.indexOf(frameColor) !== -1 ? true : false;
         });
 
@@ -47814,6 +47875,10 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $scope.numberOfCells = $scope.numberOfCells.filter(function(numCells) { return accepted.indexOf(numCells) !== -1; });
 
         $scope.numberOfCells.forEach(function(numCells) {
+          if (queryCheckedBoxes.indexOf(numCells.toString()) !== -1) {
+            $scope.selectedFilters.push(numCells.toString());
+          }
+
           if (!numCells) return;
           $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
         });
@@ -47833,8 +47898,16 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         });
 
         $scope.manufacturingLocations.forEach(function(manufacturingLocation) {
+          if (queryCheckedBoxes.indexOf(manufacturingLocation) !== -1) {
+            $scope.selectedFilters.push(manufacturingLocation);
+          }
           if (!manufacturingLocation) return;
           $scope.manufacturingLocationsCheckboxes[manufacturingLocation] = queryCheckedBoxes.indexOf(manufacturingLocation) !== -1 ? true : false;
+        });
+
+        // listener in case filters are updated through chips
+        $scope.$watchCollection('selectedFilters', function() {
+          $scope.updateFilter();
         });
 
         // increment resolved resources
@@ -47871,16 +47944,19 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $state.go('catalog', $scope.query);
     };
 
-    $scope.searchSubmit = function(foundOrganization) {
-      if (foundOrganization) {
-        $scope.query.q = foundOrganization.companyName;
-        $scope.query.page = 1;
-        $state.go('catalog', $scope.query);
-      }
+    $scope.searchSubmit = function(foundOrganization, searchOrganizationText) {
+
+      $scope.query.q = foundOrganization ? foundOrganization.companyName : searchOrganizationText;
+      $scope.query.page = 1;
+      $state.go('catalog', $scope.query);
     };
 
-    $scope.routeToOrg = function (organization) {
-      $state.go('organizations.view', { name: organization.urlName });
+    $scope.routeToOrg = function (organization, page, panelType) {
+      $state.go('organizations.view', {
+        name: organization.urlName,
+        view: page,
+        panelType: panelType
+      });
     };
 
     $scope.contactSupplier = function(ev, organization) {
@@ -48666,7 +48742,8 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         about: this.about,
         standardPaymentTerms: this.standardPaymentTerms,
         outsourceDelivery: this.outsourceDelivery,
-        bankability: this.bankability
+        bankability: this.bankability,
+        leadTime: this.leadTime
       });
 
       // Redirect after save
@@ -48772,6 +48849,17 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
     $scope.panelType = $stateParams.panelType;
     $scope.quantity = $stateParams.quantity;
     $scope.sortType = $stateParams.sortType;
+
+    $scope.isPreviousLocation = function() {
+      return $window && $window.localStorage.getItem('filterSettings');
+    };
+
+    $scope.goBack = function() {
+      if ($window.localStorage)
+        $state.go('catalog', JSON.parse($window.localStorage.getItem('filterSettings')));
+      else
+        $state.go('catalog');
+    };
 
     // show following conditional
     $scope.displayUserIsFollowing = function(organization) {
@@ -49178,7 +49266,6 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
 // Organizations controller
 angular.module('organizations').controller('PublicViewOrganizationController', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$location', '$timeout', '$interval', '$filter', '$window', '$mdDialog', 'Authentication', 'Socket', 'Pagination',
   function ($rootScope, $scope, $state, $stateParams, $http, $location, $timeout, $interval, $filter, $window, $mdDialog, Authentication, Socket, Pagination) {
-    DialogController.$inject = ["$scope", "$state", "$mdDialog"];
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -49187,6 +49274,17 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     $scope.panelType = $stateParams.panelType;
     $scope.quantity = $stateParams.quantity;
     $scope.sortType = $stateParams.sortType;
+
+    $scope.isPreviousLocation = function() {
+      return $window && $window.localStorage.getItem('filterSettings');
+    };
+
+    $scope.goBack = function() {
+      if ($window.localStorage)
+        $state.go('catalog', JSON.parse($window.localStorage.getItem('filterSettings')));
+      else
+        $state.go('catalog');
+    };
 
     $scope.maxViewsExceeded = function() {
       var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
@@ -49304,15 +49402,22 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
         $state.go('authentication.signup');
       };
     }
+    DialogController.$inject = ['$scope', '$state', '$mdDialog'];
 
     // alert to sign up
-    $scope.showSignUpAlert = function(ev) {
-      $mdDialog.show({
+    $scope.showSignUpAlert = function(ev, isMaxAlert) {
+      var fileName = isMaxAlert ?
+        'signup-dialog.client.template.html' :
+        'join-braquet-dialog.client.template.html';
+
+      var config = {
         controller: DialogController,
-        templateUrl: 'modules/organizations/client/views/signup-dialog.client.template.html',
+        templateUrl: 'modules/organizations/client/views/' + fileName,
         targetEvent: ev,
         clickOutsideToClose:true
-      });
+      };
+
+      $mdDialog.show(config);
     };
 
     $scope.findOne = function() {
@@ -49356,7 +49461,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
           // show modal
           if ($scope.maxViewsExceeded()) {
-            $scope.showSignUpAlert();
+            $scope.showSignUpAlert(null, true);
           }
         })
         .catch(function(resp) {
@@ -50653,7 +50758,7 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/authentication/signup.client.view.html',
         data: {
           pageTitle: 'Sign Up - Braquet',
-          pageDescription: 'Sign up to start searching for the best suppliers' +
+          pageDescription: 'Sign up to start searching for the best suppliers ' +
            'by product, prices, and reviews, and start sharing your experiences.'
         }
       })
@@ -50662,7 +50767,7 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/authentication/signin.client.view.html',
         data: {
           pageTitle: 'Log In - Braquet',
-          pageDescription: 'Log in to start searching for the best suppliers' +
+          pageDescription: 'Log in to start searching for the best suppliers ' +
            'by product, prices, and reviews, and start sharing your experiences.'
         }
       })

@@ -61,6 +61,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $state.go('authentication.signup');
       };
     }
+    DialogController.$inject = ['$scope', '$state', '$mdDialog'];
 
     // alert to sign up
     $scope.showSignUpAlert = function(ev) {

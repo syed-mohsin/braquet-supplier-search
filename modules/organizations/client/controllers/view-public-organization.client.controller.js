@@ -139,6 +139,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
         $state.go('authentication.signup');
       };
     }
+    DialogController.$inject = ['$scope', '$state', '$mdDialog'];
 
     // alert to sign up
     $scope.showSignUpAlert = function(ev, isMaxAlert) {
