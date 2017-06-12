@@ -39,15 +39,6 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       $scope.organizationNames = res.data.filter(function(org) {
         return org.panel_models.length > 0;
       });
-
-      // find matching org if exists
-      if ($scope.query.q) {
-        $scope.orgSearch($scope.query.q).forEach(function(org) {
-          if (org.companyName.indexOf($scope.query.q) !== -1) {
-            $scope.foundOrganization = org;
-          }
-        });
-      }
     })
     .catch(function(err) {
       console.log('error fetching organizations', err);
