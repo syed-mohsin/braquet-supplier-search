@@ -224,6 +224,20 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         }
       }
 
+      // check if Manufacturers label has been removed
+      isRemovedFromChips = $stateParams.isman === 'true' &&
+        $scope.selectedFilters.indexOf('Showing Manufacturers') === -1;
+      if (isRemovedFromChips) {
+        $scope.isman = false;
+      }
+
+      // check if Resellers label has been removed
+      isRemovedFromChips = $stateParams.isreseller === 'true' &&
+        $scope.selectedFilters.indexOf('Showing Resellers') === -1;
+      if (isRemovedFromChips) {
+        $scope.isreseller = false;
+      }
+
       $scope.query.man = man;
       $scope.query.pow = pow;
       $scope.query.crys = crys;
@@ -337,6 +351,20 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
           $scope.selectedReadOnlyFilters.push($stateParams.q + ' (search keyword)');
         }
 
+        // add checkbox values for is man or reseller
+        $scope.isman = $stateParams.isman === 'true' ? true : false;
+        $scope.isreseller = $stateParams.isreseller === 'true' ? true : false;
+
+        // add Manufacturer label
+        if ($scope.isman) {
+          $scope.selectedFilters.push('Showing Manufacturers');
+        }
+
+        // add Resellers label
+        if ($scope.isreseller) {
+          $scope.selectedFilters.push('Showing Resellers');
+        }
+
         $scope.orgCheckboxes = {};
         var queryCheckedBoxes = $stateParams.man ? $stateParams.man.split('|') : [];
         $scope.manufacturers.sort(function(a,b) {
@@ -388,9 +416,6 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
           $scope.numCellsCheckboxes[numCells] = queryCheckedBoxes.indexOf(numCells.toString()) !== -1 ? true : false;
         });
 
-        // add checkbox values for is man or reseller
-        $scope.isman = $stateParams.isman === 'true' ? true : false;
-        $scope.isreseller = $stateParams.isreseller === 'true' ? true : false;
 
         // add manufacturing location crysCheckboxes
         $scope.manufacturingLocationsCheckboxes = {};
