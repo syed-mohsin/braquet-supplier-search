@@ -143,6 +143,10 @@ var OrganizationSchema = new Schema({
   bankability: {
     type: String,
     enum: ['Tier-1', 'Tier-2', 'Tier-3', 'Bankrupt']
+  },
+  leadTime: {
+    type: String,
+    enum: ['0-2', '2-4', '4-6', '6-10', '10-14', '>14']
   }
 });
 
