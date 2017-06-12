@@ -5,7 +5,7 @@
             <div class="row">
                 <h4 class="side-title col-md-3"><b>Best module suppliers</b></h4>
                 <div class="col-md-9 search extend">
-                  <form ng-submit="searchSubmit(foundOrganization)">
+                  <form ng-submit="searchSubmit(foundOrganization, searchOrganizationText)">
                     <md-autocomplete
                       name="foundOrganization"
                       ng-model="foundOrganization"
@@ -128,6 +128,24 @@
                 <div class="alert alert-warning text-center" ng-if="resolvedResources === expectedResources && !orgs.length">
                     No search results
                 </div>
+
+                Selected Filters: <a class="clear-filter" ng-click="clearAllFilter()">Clear all</a>
+                <div class="chips">
+                  <md-chips ng-model="selectedReadOnlyFilters" name="filter-chips" readonly="true"
+                          md-removable="false">
+                    <md-chip-template>
+                      <strong>{{$chip}}</strong>
+                    </md-chip-template>
+                  </md-chips>
+
+                  <md-chips ng-model="selectedFilters" name="filter-chips" readonly="true"
+                          md-removable="true" ng-change="updateFilter()">
+                    <md-chip-template>
+                      <strong>{{$chip}}</strong>
+                    </md-chip-template>
+                  </md-chips>
+                </div>
+
                 <div>
                     <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
                 </div>
@@ -140,9 +158,9 @@
                             <a class="company-name" ng-click="routeToOrg(organization)" ng-bind="organization.companyName">
                             </a>
 
-                            <div class="reviews">
+                            <div class="reviews" ng-click="routeToOrg(organization, 'reviews')">
                                 <rating ng-model="organization.avg_review" readonly="true" on-hover="" aria-labelledby="default-rating"></rating>
-                                <span>{{organization.reviews_length}} reviews</span>
+                                <a class="review-link">{{organization.reviews_length}} reviews</a>
                             </div>
                             <div class="detail">
                                 <small><span class="glyphicon glyphicon-map-marker"></span><span ng-bind="organization.address1"></span> <span ng-bind="organization.address2"></span>, <span ng-bind="organization.city"></span>, <span ng-bind="organization.state"></span> <span ng-bind="organization.zipcode"></span> <span ng-bind="organization.country"></span></small><br>
@@ -151,10 +169,10 @@
 
 
                         <div class="menu">
-                            <a ng-if="organization._id !== authentication.user.organization" ng-click="contactSupplier($event, organization)">
+                            <a ng-if="organization._id !== authentication.user.organization" ng-click="authentication.user ? contactSupplier($event, organization) : showSignUpAlert($event)">
                                 <span class="glyphicon glyphicon-envelope"></span><span>Contact seller</span>
                             </a>
-                            <a ng-if="organization._id !== authentication.user.organization" ng-click="followOrganization($event, organization)">
+                            <a ng-if="organization._id !== authentication.user.organization" ng-click="authentication.user ? followOrganization($event, organization) : showSignUpAlert($event)">
                               <span ng-class="{ 'glyphicon': true, 'glyphicon-plus': !displayUserIsFollowing(organization), 'glyphicon-ok': displayUserIsFollowing(organization) }"></span>
                               <span>{{displayUserIsFollowing(organization) ? ('Following') : ('Follow') }}</span>
                             </a>
@@ -163,9 +181,8 @@
                         <div class="brand-list">
                             <table>
                                 <tr class="header">
-
-                                    <td ng-show="showModule(organization, 'Poly')">
-                                        <div class="img-wrapper">
+                                    <td ng-show="showModule(organization, 'Poly')" ng-click="routeToOrg(organization, null, 'Poly')">
+                                        <div class="img-wrapper" >
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/poly-module.jpg">
                                         </div>
@@ -175,7 +192,7 @@
                                         </div>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'Mono')">
+                                    <td ng-show="showModule(organization, 'Mono')" ng-click="routeToOrg(organization, null, 'Mono')">
                                         <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/mono-module.jpg">
@@ -186,7 +203,7 @@
                                         </div>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'CIGS')">
+                                    <td ng-show="showModule(organization, 'CIGS')" ng-click="routeToOrg(organization, null, 'CIGS')">
                                         <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/cigs-module.png">
@@ -197,7 +214,7 @@
                                         </div>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'CdTe')">
+                                    <td ng-show="showModule(organization, 'CdTe')" ng-click="routeToOrg(organization, null, 'CdTe')">
                                         <div class="img-wrapper">
                                           <span class="helper"></span>
                                           <img src="/modules/core/client/img/asset/cdte-module.png">
@@ -211,22 +228,22 @@
 
                                 <tr ng-repeat="brand in organization.manufacturers" ng-show="showBrand(brand, organization)" class="line-item">
                                     <td ng-show="showModule(organization, 'Poly')">
-                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['Poly'] ? (organization.brands[brand]['Poly'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
+                                        <span ng-bind="isValidQuote(organization, brand, 'Poly') ? (organization.brands[brand]['Poly'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
 
                                     <td ng-show="showModule(organization, 'Mono')">
-                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['Mono'] ? (organization.brands[brand]['Mono'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
+                                        <span ng-bind="isValidQuote(organization, brand, 'Mono') ? (organization.brands[brand]['Mono'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
 
                                     <td ng-show="showModule(organization, 'CIGS')">
-                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['CIGS'] ? (organization.brands[brand]['CIGS'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
+                                        <span ng-bind="isValidQuote(organization, brand, 'CIGS') ? (organization.brands[brand]['CIGS'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
 
                                     <td ng-show="showModule(organization, 'CdTe')">
-                                        <span ng-bind="organization.brands[brand] && organization.brands[brand]['CdTe'] ? (organization.brands[brand]['CdTe'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
+                                        <span ng-bind="isValidQuote(organization, brand, 'CdTe') ? (organization.brands[brand]['CdTe'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
                                 </tr>

@@ -12,6 +12,17 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     $scope.quantity = $stateParams.quantity;
     $scope.sortType = $stateParams.sortType;
 
+    $scope.isPreviousLocation = function() {
+      return $window && $window.localStorage.getItem('filterSettings');
+    };
+
+    $scope.goBack = function() {
+      if ($window.localStorage)
+        $state.go('catalog', JSON.parse($window.localStorage.getItem('filterSettings')));
+      else
+        $state.go('catalog');
+    };
+
     $scope.maxViewsExceeded = function() {
       var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
       return count < 0 || count > 3;
@@ -130,13 +141,19 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
     }
 
     // alert to sign up
-    $scope.showSignUpAlert = function(ev) {
-      $mdDialog.show({
+    $scope.showSignUpAlert = function(ev, isMaxAlert) {
+      var fileName = isMaxAlert ?
+        'signup-dialog.client.template.html' :
+        'join-braquet-dialog.client.template.html';
+
+      var config = {
         controller: DialogController,
-        templateUrl: 'modules/organizations/client/views/signup-dialog.client.template.html',
+        templateUrl: 'modules/organizations/client/views/' + fileName,
         targetEvent: ev,
         clickOutsideToClose:true
-      });
+      };
+
+      $mdDialog.show(config);
     };
 
     $scope.findOne = function() {
@@ -180,7 +197,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
           // show modal
           if ($scope.maxViewsExceeded()) {
-            $scope.showSignUpAlert();
+            $scope.showSignUpAlert(null, true);
           }
         })
         .catch(function(resp) {

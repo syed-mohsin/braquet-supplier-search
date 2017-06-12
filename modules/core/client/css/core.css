@@ -914,3 +914,13 @@ img.company-logo {
 .team .list-view {
     margin-top: 20px;
 }
+.review-link {
+  color: #337ab7;
+}
+.list-group-item .review-link {
+  color: #337ab7;
+}
+.list-group-item .review-link:hover {
+    color: #1861bf;
+    text-decoration: underline;
+}

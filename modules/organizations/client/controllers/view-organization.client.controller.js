@@ -13,6 +13,17 @@ angular.module('organizations').controller('ViewOrganizationController', ['$root
     $scope.quantity = $stateParams.quantity;
     $scope.sortType = $stateParams.sortType;
 
+    $scope.isPreviousLocation = function() {
+      return $window && $window.localStorage.getItem('filterSettings');
+    };
+
+    $scope.goBack = function() {
+      if ($window.localStorage)
+        $state.go('catalog', JSON.parse($window.localStorage.getItem('filterSettings')));
+      else
+        $state.go('catalog');
+    };
+
     // show following conditional
     $scope.displayUserIsFollowing = function(organization) {
       return (

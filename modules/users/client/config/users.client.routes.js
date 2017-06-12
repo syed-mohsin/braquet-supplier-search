@@ -44,7 +44,7 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/authentication/signup.client.view.html',
         data: {
           pageTitle: 'Sign Up - Braquet',
-          pageDescription: 'Sign up to start searching for the best suppliers' +
+          pageDescription: 'Sign up to start searching for the best suppliers ' +
            'by product, prices, and reviews, and start sharing your experiences.'
         }
       })
@@ -53,7 +53,7 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/authentication/signin.client.view.html',
         data: {
           pageTitle: 'Log In - Braquet',
-          pageDescription: 'Log in to start searching for the best suppliers' +
+          pageDescription: 'Log in to start searching for the best suppliers ' +
            'by product, prices, and reviews, and start sharing your experiences.'
         }
       })
