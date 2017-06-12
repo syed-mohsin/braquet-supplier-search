@@ -50,7 +50,8 @@ angular.module('organizations').controller('OrganizationsController', ['$scope',
         about: this.about,
         standardPaymentTerms: this.standardPaymentTerms,
         outsourceDelivery: this.outsourceDelivery,
-        bankability: this.bankability
+        bankability: this.bankability,
+        leadTime: this.leadTime
       });
 
       // Redirect after save

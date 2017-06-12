@@ -27,14 +27,14 @@
         </div>
 
         <div class="form-group" show-errors>
-          <input name="industry" type="text" ng-model="industry" id="industry" class="form-control" placeholder="Industry" required>
+          <input name="industry" type="text" ng-model="industry" id="industry" class="form-control" placeholder="Industry">
           <div ng-messages="organizationForm.industry.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Industry is required.</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <input name="productTypes" type="text" ng-model="productTypes" id="productTypes" class="form-control" placeholder="Select Product Types" required>
+          <input name="productTypes" type="text" ng-model="productTypes" id="productTypes" class="form-control" placeholder="Select Product Types">
           <div ng-messages="organizationForm.productTypes.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Product Types are required.</p>
           </div>
@@ -42,7 +42,7 @@
 
         <div class="form-group" show-errors>
 
-          <md-chips name="panel_models" ng-model="panel_models" md-autocomplete-snap md-require-match="true" md-no-cache="true" required>
+          <md-chips name="panel_models" ng-model="panel_models" md-autocomplete-snap md-require-match="true" md-no-cache="true">
 
             <md-autocomplete
               md-selected-item="selectedItem"
@@ -73,7 +73,7 @@
         </div>
 
         <div class="form-group" show-errors>
-          <input name="address1" type="text" ng-model="address1" id="address1" class="form-control" placeholder="Address Line 1" required>
+          <input name="address1" type="text" ng-model="address1" id="address1" class="form-control" placeholder="Address Line 1">
           <div ng-messages="organizationForm.address1.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Address Line 1 is required.</p>
           </div>
@@ -84,28 +84,28 @@
         </div>
 
         <div class="form-group" show-errors>
-          <input name="city" type="text" ng-model="city" id="city" class="form-control" placeholder="City" required>
+          <input name="city" type="text" ng-model="city" id="city" class="form-control" placeholder="City">
           <div ng-messages="organizationForm.city.$error" role="alert">
             <p class="help-block error-text" ng-message="required">City is required.</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <input name="state" type="text" ng-model="state" id="state" class="form-control" placeholder="State" required>
+          <input name="state" type="text" ng-model="state" id="state" class="form-control" placeholder="State">
           <div ng-messages="organizationForm.state.$error" role="alert">
             <p class="help-block error-text" ng-message="required">State is required.</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <input name="zipcode" type="text" ng-model="zipcode" id="zipcode" class="form-control" placeholder="Zipcode" required>
+          <input name="zipcode" type="text" ng-model="zipcode" id="zipcode" class="form-control" placeholder="Zipcode">
           <div ng-messages="organizationForm.zipcode.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Zipcode is required.</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <input name="country" type="text" ng-model="country" id="country" class="form-control" placeholder="Country" required>
+          <input name="country" type="text" ng-model="country" id="country" class="form-control" placeholder="Country">
           <div ng-messages="organizationForm.country.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Country is required.</p>
           </div>
@@ -133,6 +133,18 @@
            <option value="Tier-2">Tier-2</option>
            <option value="Tier-3">Tier-3</option>
            <option value="Bankrupt">Bankrupt</option>
+         </select>
+       </div>
+
+       <div class="form-group" show-errors>
+         <select name="leadTime" ng-model="leadTime" id="leadTime" class="form-control">
+           <option value="">Lead Time</option>
+           <option value="0-2">0-2 Weeks</option>
+           <option value="2-4">2-4 Weeks</option>
+           <option value="4-6">4-6 Weeks</option>
+           <option value="6-10">6-10 Weeks</option>
+           <option value="10-14">10-14 Weeks</option>
+           <option value=">14">>14 Weeks</option>
          </select>
        </div>
 

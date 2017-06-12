@@ -143,6 +143,7 @@ exports.update = function (req, res) {
   organization.standardPaymentTerms = req.body.standardPaymentTerms;
   organization.outsourceDelivery = req.body.outsourceDelivery;
   organization.bankability = req.body.bankability;
+  organization.leadTime = req.body.leadTime;
 
   organization = OrganizationService.cachePanelFields(organization, req.body.panel_models);
 
