@@ -209,22 +209,22 @@
                                 </tr>
 
                                 <tr ng-repeat="brand in organization.manufacturers" ng-show="showBrand(brand, organization)" class="line-item">
-                                    <td ng-show="showModule(organization, 'Poly')">
+                                    <td ng-show="showModule(organization, 'Poly')" ng-click="routeToOrg(organization, 'Poly')">
                                         <span ng-bind="isValidQuote(organization, brand, 'Poly') ? (organization.brands[brand]['Poly'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'Mono')">
+                                    <td ng-show="showModule(organization, 'Mono')" ng-click="routeToOrg(organization, 'Mono')">
                                         <span ng-bind="isValidQuote(organization, brand, 'Mono') ? (organization.brands[brand]['Mono'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'CIGS')">
+                                    <td ng-show="showModule(organization, 'CIGS')" ng-click="routeToOrg(organization, 'CIGS')">
                                         <span ng-bind="isValidQuote(organization, brand, 'CIGS') ? (organization.brands[brand]['CIGS'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
 
-                                    <td ng-show="showModule(organization, 'CdTe')">
+                                    <td ng-show="showModule(organization, 'CdTe')" ng-click="routeToOrg(organization, 'CdTe')">
                                         <span ng-bind="isValidQuote(organization, brand, 'CdTe') ? (organization.brands[brand]['CdTe'][query.quantity]/100 | currency): 'no quotes'" class="price"></span><br>
                                         <span><small>{{brand}}</small></span>
                                     </td>
