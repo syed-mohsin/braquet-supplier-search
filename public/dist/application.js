@@ -47655,7 +47655,6 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       var cells = '';
       var locs = '';
       var isRemovedFromChips;
-      var isSelected;
 
       // // find all checked boxes for wattage
       // for (var key in $scope.wattCheckboxes) {
@@ -47839,7 +47838,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $scope.numberOfCells = filters.numberOfCells;
         $scope.manufacturingLocations = filters.manufacturingLocations;
 
-        // selected filters is is used to generate array of chips
+        // selected filters is used to generate array of chips
         $scope.selectedReadOnlyFilters = [$stateParams.quantity];
         $scope.selectedFilters = [];
         if ($stateParams.q) {
@@ -47931,8 +47930,10 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         });
 
         // listener in case filters are updated through chips
-        $scope.$watchCollection('selectedFilters', function() {
-          $scope.updateFilter();
+        $scope.$watchCollection('selectedFilters', function(newFilters, oldFilters) {
+          if (newFilters.length !== oldFilters.length) {
+            $scope.updateFilter();
+          }
         });
 
         // increment resolved resources
