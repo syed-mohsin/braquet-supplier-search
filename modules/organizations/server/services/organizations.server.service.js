@@ -168,7 +168,7 @@ exports.extractBrands = function(organizations, query) {
     });
 
     // get first lead time
-    org.leadTime = leadTimes.length ? leadTimes[0] : null;
+    org.leadTime = leadTimes.length ? leadTimes[0].leadTime : null;
 
 
     // group all price reviews by brand
