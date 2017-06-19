@@ -25,7 +25,7 @@ angular.module('organizations').controller('PublicViewOrganizationController', [
 
     $scope.maxViewsExceeded = function() {
       var count = $window.localStorage ? JSON.parse($window.localStorage.getItem('c')).length : 1;
-      return count < 0 || count > 3;
+      return count < 0 || count > 1;
     };
 
     $scope.showView = function(viewType, itemsArray, page) {

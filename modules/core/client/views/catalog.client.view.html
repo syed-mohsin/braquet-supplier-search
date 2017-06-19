@@ -145,7 +145,8 @@
                     </md-chip-template>
                   </md-chips>
                 </div>
-
+                <div ng-bind="showNumberOfResultsOnPage(query.page || 1, orgs.length, itemsPerPage, totalCount)">
+                </div>
                 <div>
                     <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>
                 </div>
@@ -250,6 +251,8 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div ng-bind="showNumberOfResultsOnPage(query.page || 1, orgs.length, itemsPerPage, totalCount)">
                 </div>
                 <div>
                     <pagination ng-show="totalCount" boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="totalCount" ng-model="currentPage" ng-change="pageChanged()"></pagination>

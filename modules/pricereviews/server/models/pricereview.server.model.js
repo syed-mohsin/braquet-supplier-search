@@ -38,6 +38,11 @@ var PriceReviewSchema = new Schema({
     max: 100000000,
     required: 'Unit price for quote is required'
   },
+  leadTime: {
+    type: String,
+    enum: ['0-2', '2-4', '4-6', '6-10', '10-14', '>14'],
+    required: 'Please enter a lead time'
+  },
   manufacturer: {
     type: String,
     required: 'Please select a brand'

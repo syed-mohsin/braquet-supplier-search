@@ -54,6 +54,7 @@ exports.processQuery = function(query) {
   var priceReviewQueryParams = {}; // query object for Price Review
   organizationQueryParams.verified = true; // get only verified organizations
   organizationQueryParams.panels_length = { '$gt': 0 }; // only show suppliers with any panel models
+  organizationQueryParams.bankability = { '$ne': 'Bankrupt' }; // remove bankrupt companies
 
   // check for filtering for manufacturers and/or resellers
   if (query.isman === 'true' && query.isreseller !== 'true') {
@@ -161,6 +162,15 @@ exports.calculateBrandsAveragePrice = function(org, query) {
 
 exports.extractBrands = function(organizations, query) {
   return organizations.map(function(org) {
+    // get latest lead time
+    var leadTimes = org.priceReviews.filter(function(price) {
+      return price.leadTime;
+    });
+
+    // get first lead time
+    org.leadTime = leadTimes.length ? leadTimes[0] : null;
+
+
     // group all price reviews by brand
     org.brands = _.groupBy(org.priceReviews, function(priceReview) {
       return priceReview.manufacturer + '#' + priceReview.panelType;
@@ -243,6 +253,7 @@ exports.sortByQuery = function(orgs, query) {
         return min;
       }
     })
+    .sortBy('bankability')
     .value();
 
 };

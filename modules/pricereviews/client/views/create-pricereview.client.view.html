@@ -84,6 +84,19 @@
         </div>
 
         <div class="form-group" show-errors>
+          <label for="leadTIme">Lead Time</label><br>
+          <select name="leadTime" ng-model="leadTime" id="leadTime" class="form-control">
+            <option value="">Lead Time</option>
+            <option value="0-2">0-2 Weeks</option>
+            <option value="2-4">2-4 Weeks</option>
+            <option value="4-6">4-6 Weeks</option>
+            <option value="6-10">6-10 Weeks</option>
+            <option value="10-14">10-14 Weeks</option>
+            <option value=">14">>14 Weeks</option>
+          </select>
+        </div>
+
+        <div class="form-group" show-errors>
             <label for="quantity">Project Size</label><br>
             <label><input type="radio" name="quantity" ng-model="quantity" value="0kW-100kW" required/> 0kW-100kW</label><br>
             <label><input type="radio" name="quantity" ng-model="quantity" value="101kW-500kW" required/> 101kW-500kW</label><br>
@@ -116,6 +129,7 @@
             <label><input type="radio" name="shippingLocation" ng-model="shippingLocation" value="North America"  /> North America</label><br>
             <label><input type="radio" name="shippingLocation" ng-model="shippingLocation" value="South America"  /> South America</label><br>
         </div>
+
         <div class="form-group submit">
           <input type="submit" class="btn btn-default">
         </div>

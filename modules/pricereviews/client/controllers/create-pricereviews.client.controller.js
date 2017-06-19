@@ -63,6 +63,7 @@ angular.module('pricereviews').controller('CreatePriceReviewsController', ['$sco
         stcPower: this.stcPower,
         manufacturer: this.manufacturer !== 'other' ? this.manufacturer : this.otherManufacturer,
         price: this.price * 100,
+        leadTime: this.leadTime,
         quantity: this.quantity,
         panelType: this.panelType,
         includesShipping: this.includesShipping === 'true' ? true : false,

@@ -44,6 +44,24 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
       console.log('error fetching organizations', err);
     });
 
+    $scope.showNumberOfResultsOnPage = function(currentPage, itemsOnCurrentPage,
+        itemsPerPage, totalCount) {
+      if (!currentPage || !itemsOnCurrentPage || !itemsPerPage || !totalCount) {
+        return;
+      }
+
+      var lowerLimit = ((currentPage-1) * (itemsPerPage) + 1);
+      var upperLimit = lowerLimit - 1 + itemsOnCurrentPage;
+
+      // edge case with no results
+      if (totalCount === 0) {
+        lowerLimit = 0;
+        upperLimit = 0;
+      }
+
+      return lowerLimit + '-' + upperLimit + ' of ' + totalCount + ' results';
+    };
+
     $scope.orgSearch = function(searchOrganizationText) {
       return $filter('filter')($scope.organizationNames, {
         $: searchOrganizationText
@@ -344,7 +362,7 @@ angular.module('core').controller('CatalogController', ['$scope', '$filter', '$h
         $scope.manufacturingLocations = filters.manufacturingLocations;
 
         // selected filters is used to generate array of chips
-        $scope.selectedReadOnlyFilters = [$stateParams.quantity];
+        $scope.selectedReadOnlyFilters = [$stateParams.quantity || '0kW-100kW'];
         $scope.selectedFilters = [];
         if ($stateParams.q) {
           $scope.selectedReadOnlyFilters.push($stateParams.q + ' (search keyword)');
