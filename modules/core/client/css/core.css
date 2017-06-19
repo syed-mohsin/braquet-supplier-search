@@ -925,3 +925,7 @@ img.company-logo {
     color: #1861bf;
     text-decoration: underline;
 }
+.lead-time {
+    margin-top:5px;
+    font-weight:500;
+}
