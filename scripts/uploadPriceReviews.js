@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   mg = require('../config/lib/mongoose'),
-  quotes = require('./priceReviewDump.json');
+  quotes = require('./leadTimeDump.json');
 
 // mongoose.connect(process.env.MONGO_PRODUCTION_CONNECTION_URL);
 mongoose.connect('mongodb://localhost/mean-dev');
@@ -17,6 +17,7 @@ var PanelModel = mongoose.model('PanelModel'),
   User = mongoose.model('User');
 
 var adminUser;
+var organizationsss;
 User.findOne({ email: 'syedm.90@gmail.com' })
 .exec()
 .then(function(user) {
@@ -26,37 +27,54 @@ User.findOne({ email: 'syedm.90@gmail.com' })
   adminUser = user;
 
   return Promise.all(quotes.map(function(quote) {
-    return Organization.findOne({ companyName: quote.seller }).exec();
+    return Organization.findOne({ companyName: quote.organization }).exec();
   }));
 })
 .then(function(organizations) {
+  organizationsss = organizations;
   var missingOrgs = [];
 
   organizations.forEach(function(org, i) {
     if (!org) {
-      missingOrgs.push(quotes[i].seller);
+      missingOrgs.push(quotes[i].organization);
     }
   });
 
   missingOrgs = Array.from(new Set(missingOrgs));
 
   if (missingOrgs.length) {
+    console.log(missingOrgs.length, missingOrgs)
     throw 'missing organizations: ' + missingOrgs.join(', ');
+  }
+
+  return Promise.all(quotes.map(function(quote) {
+    return PanelModel.findOne({ manufacturer: quote.manufacturer }).count().exec();
+  }));
+})
+.then(function(panelCounts) {
+  var missingPanels = panelCounts.reduce(function(a,b, i) {
+    return b === 0 ? a.push(quotes[i].manufacturer) && a : a
+  }, []);
+
+  if (missingPanels.length) {
+    throw 'missing panels: ' + missingPanels;
   }
 
   var promises = quotes.map(function(quote, i) {
     var obj = {};
     obj.quoteDate = new Date(quote.quoteDate);
     obj.deliveryDate = new Date(quote.deliveryDate);
-    obj.stcPower = quote.wattage;
+    obj.stcPower = quote.stcPower;
     obj.manufacturer = quote.manufacturer;
     obj.price = quote.price * 100;
     obj.quantity = quote.quantity.trim();
     obj.panelType = ['Mono', 'Poly'].indexOf(quote.panelType) !== -1 ? quote.panelType : 'other';
     obj.includesShipping = quote.includesShipping === 'Y' ? true : false;
     obj.shippingLocation = quote.includesShipping === 'Y' ? quote.shippingLocation : undefined;
+    obj.leadTime = quote.leadTime;
+    obj.incoterm = quote.incoterm;
     obj.user = adminUser._id;
-    obj.organization = organizations[i]._id;
+    obj.organization = organizationsss[i]._id;
 
     var priceReview = new PriceReview(obj);
 
