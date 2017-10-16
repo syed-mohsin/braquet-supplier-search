@@ -1,5 +1,5 @@
-## Braquet v2  
-v2, B2B Solar Supplier Search and price filtering application
+# Braquet v2  
+B2B Solar Supplier Search and price filtering application
 
 ## Stack
 AngularJS 1, Node+Express, MongoDB, Grunt
