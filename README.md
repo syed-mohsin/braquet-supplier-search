@@ -1,4 +1,4 @@
-# Braquet v2  
+# Braquet (Previous Iteration) 
 B2B Solar Supplier Search and price filtering application
 
 ## Stack
