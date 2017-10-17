@@ -2,7 +2,7 @@
 B2B Solar Supplier Search and price filtering application
 
 ## Stack
-AngularJS 1, Node+Express, MongoDB, Grunt
+AngularJS 1, Node+Express, MongoDB, Grunt. Built on MEAN stack (github.com/meanjs/mean).
 
 ## See it Live
 https://sleepy-bastion-51857.herokuapp.com
